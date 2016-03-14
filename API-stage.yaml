@@ -1,0 +1,889 @@
+swagger: "2.0"
+
+###############################################################################
+#                              API Information                                #
+###############################################################################
+info:
+  title: CasaBio API
+  description: |
+    ## What is CasaBio?
+    It's a platform for saving and managing observations of organisms (like plants and animals) for scientific use. See [the CasaBio website](http://casabio.org/) for more info.
+    ## What is this API all about?
+    We've build this API so that developers can access all the information CasaBio has without needing to use the website. You can use this API to build apps for phones, tablets, and desktop computers.
+    ## How do I use it?
+    All endpoints are located at `casabio.org`. For instance: you can see a list of all observations by accessing the following URL:
+    ```
+      http://stage.touchdreams.co.za/CsB/api/v1.0/observations
+    ```
+    ## Schema
+    All responses will be sent in JSON format by default. To request the data in XML, append '.xml' to the end of the endpoint URL. Eg.
+    ```
+      http://stage.touchdreams.co.za/CsB/api/v1.0/observations.xml
+    ```
+    ## Security & Authentication
+    Some of the operations require authentication. This is done in 2 steps: client logs in, then provides session headers in requests.
+    When the client logs in (using POST users/login), the response includes a session token, a session name, and a session id. Then for authenticated requests, the token must be provided as the value of a 'X-CSRF-Token' header, and the session name and id must be provided in a Cookie header with a value formatted as 'session_name=session_id'. For example, the headers could be:
+    ```
+      X-CSRF-Token: jJpPACexfZfjs9vF18uvR_a8jf76d5YILCsn9FxQr0M
+      Cookie: SESS542d3317f5w6db47f40e0ee4a5644b7f=nAnL6TdKf15t79k5glHSFNT0sG4c0Y1Fs-fXBSdgf-M
+    ```
+    Users who are not logged in (not authenticated) are called Anonymous.
+    ## Bugs and Missing Features
+    This API is still under active development. Anything marked '__ DEV __' is not ready to be used. So, if you find any bugs, please let us know, and we'll be happy to work on fixing them.
+
+  version: "1.0"
+  # termsOfService: http://helloreverb.com/terms/
+  contact:
+    name: touchdreams.co.za
+  # license:
+  #   name: Apache 2.0
+  #   url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: casabio.org
+# basePath: /api/v1.0
+host: stage.touchdreams.co.za #localhost
+basePath: /CsB/api/v1.0
+schemes:
+  - http
+
+
+
+###############################################################################
+#                                   Parameters                                #
+###############################################################################
+parameters:
+  # ---------------- Nodes
+  nid:
+    name: nid
+    in: path
+    description: The node identifier number
+    type: number
+    required: true
+  observation:
+    name: Observation
+    in: body
+    description: The complete observation.
+    required: true
+    schema:
+      $ref: "#/definitions/Observation"
+  identification:
+    name: Identification
+    in: body
+    description: The complete identification.
+    required: true
+    schema:
+      $ref: "#/definitions/Identification"
+  # ---------------- Users
+  uid:
+    name: uid
+    in: path
+    description: The user identifier number
+    type: number
+    required: true
+  user:
+    name: User
+    in: body
+    description: The complete user.
+    required: true
+    schema:
+      $ref: '#/definitions/User'
+  # ---------------- Taxonomy terms
+  tid:
+    name: tid
+    in: path
+    description: The taxon term identifier number
+    type: integer
+    format: int64
+    required: true
+  taxon:
+    name: taxon
+    in: body
+    description: A complete taxon.
+    required: true
+    schema:
+      $ref: "#/definitions/Taxon"
+  # ---------------- General
+  page:
+    name: page
+    in: query
+    description: The zero-based index of the page to get. Default is 0.
+    type: integer
+    format: int32
+    required: false
+  pagesize:
+    name: pagesize
+    in: query
+    description: Number of records to get per page. Default is 20.
+    type: integer
+    required: false
+  options:
+    name: options
+    in: query
+    description: Database query parameters; such as sorting.  Eg. parameters[orderby[sticky]=DESC]
+    type: integer
+    required: false
+  fields:
+    name: fields
+    in: query
+    description: The fields to get. Must be a comma-separated list of field machine names. Eg. uid,name
+    type: string
+    required: false
+  parameters:
+    name: parameters
+    in: query
+    description: Field values to filter the results by. Eg. parameters[uid]=1
+    type: string
+    required: false
+  # ---------------- Authentication
+  Session-id:
+    in: header
+    name: Cookie
+    description: Session id. This is required; although a browser will save and submit it automatically. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+    required: false
+    type: string
+  X-CSRF-Token:
+    in: header
+    name: X-CSRF-Token
+    description: Session token. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+    required: true
+    type: string
+
+
+
+###############################################################################
+#                                   Paths                                     #
+###############################################################################
+paths:
+
+  # ==========================================================================#
+  #                                                   Observations            #
+  # --------------------------------------------------------------------------#
+  /observations:
+    get:
+      tags:
+        - Observations
+      summary: View a list of observations
+      description: ""
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Observation"
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+
+    post:
+      tags:
+        - Observations
+      summary: Add an observation
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/observation'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Node_response"
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /observations/{nid}:
+    get:
+      tags:
+        - Observations
+      summary: View an observation
+      parameters:
+        - $ref: '#/parameters/nid'
+      description: ""
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Observation"
+        406:
+          description: Node {nid} is not an observation
+
+    put:
+      tags:
+        - Observations
+      summary: Edit an observation
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/nid'
+        - $ref: '#/parameters/observation'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: "Can only update observations."
+
+    delete:
+      tags:
+        - Observations
+      summary: Delete an observation
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: "Can only update observations."
+
+  # --------------------------------------------------------------------------#
+  /observations/{nid}/identifications:
+    get:
+      tags:
+        - Observations
+      summary: View an observation's identifications __ DEV __
+      parameters:
+        - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: OK
+          # schema:
+          #   $ref: "#/definitions/Identification"
+
+  # ==========================================================================#
+  #                                                   Taxa                    #
+  # --------------------------------------------------------------------------#
+  /taxa:
+    get:
+      tags:
+        - Taxa
+      summary: View a list of taxa.
+      description: "View a list of taxa such as species, genus, etc. Limited to 5000 results."
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Taxon"
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+
+    post:
+      tags:
+        - Taxa
+      summary: Add a taxon
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/taxon'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Term_reponse"
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /taxa/{tid}:
+    get:
+      tags:
+        - Taxa
+      summary: View a taxon
+      parameters:
+        - $ref: '#/parameters/tid'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Taxon"
+    put:
+      tags:
+        - Taxa
+      summary: Update a taxon
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/tid'
+        - $ref: '#/parameters/taxon'
+      security:
+        - token: []
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: Can only update taxa.
+
+  # ==========================================================================#
+  #                                                   Identifications         #
+  # --------------------------------------------------------------------------#
+  /identifications:
+    post:
+      tags:
+        - Identifications
+      summary: Add an identification
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/identification'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Node_response"
+        401:
+          description: "CSRF validation failed"
+
+  /identifications/{nid}:
+    get:
+      tags:
+        - Identifications
+      summary: View an identification
+      parameters:
+        - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: OK
+        406:
+          description: "Node {nid} is not an identification"
+
+  # ==========================================================================#
+  #                                                   Collections             #
+  # --------------------------------------------------------------------------#
+  /collections:
+    get:
+      tags:
+        - Collections
+      summary: View a list of collections __ DEV __
+      description: ""
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Collection" # @todo This definition must be fleshed out
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+
+  # --------------------------------------------------------------------------#
+  /collections/{nid}:
+    get:
+      tags:
+        - Collections
+      summary: View a collection
+      parameters:
+        - $ref: '#/parameters/nid'
+      description: ""
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Collection"
+        406:
+          description: "Node {nid} is not a collection"
+
+  # --------------------------------------------------------------------------#
+  /collections/{nid}/observations:
+    get:
+      tags:
+        - Collections
+      summary: View a list of a collection's observations __ DEV __
+      parameters:
+        - $ref: '#/parameters/nid'
+      description: ""
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Observation"
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+        406:
+          description: "Node {nid} is not a collection"
+
+  # ==========================================================================#
+  #                                                   Users                   #
+  # --------------------------------------------------------------------------#
+  /users:
+    get:
+      tags:
+        - Users
+      summary: View a list of users
+      description: View known users of CasaBio. Shows 20 results per page by default. Can optionally be filtered by field values.
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+    post:
+      tags:
+        - Users
+      summary: Add a user __ DEV __
+      description: Add a new user.
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/user'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /users/{uid}:
+    get:
+      tags:
+        - Users
+      summary: View a user
+      parameters:
+        - $ref: '#/parameters/uid'
+      responses:
+        200:
+          description: OK
+        406:
+          description: There is no user with ID {uid}.
+    put:
+      tags:
+        - Users
+      summary: Update a user.
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/uid'
+        - $ref: '#/parameters/user'
+      security:
+        - token: []
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: There is no user with ID {uid}.
+
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/uid'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        403:
+          description: "Access denied for user {username}"
+        406:
+          description: There is no user with ID {uid}.
+
+  # --------------------------------------------------------------------------#
+  /users/{uid}/password_reset:
+    post:
+      tags:
+        - Users
+      summary: Delete a user
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/uid'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+        403:
+          description: "Access denied for user {username}"
+        406:
+          description: There is no user with ID {uid}.
+
+  # --------------------------------------------------------------------------#
+  /users/{uid}/collections:
+    get:
+      tags:
+        - Users
+      summary: List user's collections __ DEV __
+      parameters:
+        - $ref: '#/parameters/uid'
+      responses:
+        200:
+          description: OK
+
+  # --------------------------------------------------------------------------#
+  /users/{uid}/observations:
+    get:
+      tags:
+        - Users
+      summary: List user's observations __ DEV __
+      parameters:
+        - $ref: '#/parameters/uid'
+      responses:
+        200:
+          description: OK
+
+  # --------------------------------------------------------------------------#
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Log in a user; this starts a new session for that user.
+      parameters:
+        - name: credentials
+          in: body
+          description: Username and password
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        200:
+          description: OK
+
+  # --------------------------------------------------------------------------#
+  /users/current_user:
+    post:
+      tags:
+        - Users
+      summary: View the current user; if logged in
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /users/logout:
+    post:
+      tags:
+        - Users
+      summary: Logs out the current user; this end's the user's session.
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+      responses:
+        200:
+          description: OK
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /users/token:
+    post:
+      tags:
+        - Users
+      summary: Get the CSRF token.
+      responses:
+        200:
+          description: OK
+
+  # --------------------------------------------------------------------------#
+  /users/request_new_password:
+    post:
+      tags:
+        - Users
+      summary: Request a new password, given a user name or e-mail address.
+      description: Authentication parameters must *not* be sent with this request. In other words; this works successfully if the user is not logged in.
+      parameters:
+        - name: Identifier
+          in: body
+          description: A username or email address.
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: A username or email address.
+      security:
+        - token: []
+      responses:
+        200:
+          description: Result. If false; that means an email was not sent successfully; please contact the website administrator or create a new account.
+        401:
+          description: "Missing required argument name"
+        406:
+          description: "Sorry, name is not recognized as a user name or an e-mail address."
+
+
+
+###############################################################################
+#                                   Security                                  #
+###############################################################################
+securityDefinitions:
+  token:
+    type: apiKey
+    name: token
+    in: header
+    # description: Session token. typically looks like: SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+
+security:
+  - token: []
+
+
+
+###############################################################################
+#                                   Resources                                 #
+###############################################################################
+definitions:
+
+  Node_response:
+    properties:
+      nid:
+        type: integer
+        format: int64
+      uri:
+        type: string
+
+  Collection:
+    type: object
+    properties:
+      nid:
+        type: integer
+        format: int64
+      title:
+        type: string
+
+  Observation:
+    type: object
+    properties:
+      nid:
+        type: integer
+        format: int64
+      title:
+        type: string
+      status:
+        type: boolean
+        description: Whether the observation is published or not.
+      vid: 
+        type: string
+      uid: 
+        type: string
+      log: 
+        type: string
+      comment: 
+        type: integer
+        format: int32
+      promote: 
+        type: string
+      sticky: 
+        type: boolean
+      type: 
+        type: string
+        description: The content type.
+        example: observation
+      language: 
+        type: string
+      created: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      changed: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      tnid: 
+        type: string
+      translate: 
+        type: string
+      revision_timestamp: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid: 
+        type: string
+      body: 
+        type: string
+
+  Identification:
+    type: object
+    properties:
+      nid:
+        type: integer
+        format: int64
+      title:
+        type: string
+      status:
+        type: boolean
+        description: Whether the identification is published or not.
+      vid: 
+        type: string
+      uid: 
+        type: string
+      log: 
+        type: string
+      comment: 
+        type: integer
+        format: int32
+      promote: 
+        type: string
+      sticky: 
+        type: boolean
+      type: 
+        type: string
+        description: The content type.
+        example: identification
+      language: 
+        type: string
+      created: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      changed: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      tnid: 
+        type: string
+      translate: 
+        type: string
+      revision_timestamp: 
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid: 
+        type: string
+      body: 
+        type: string
+
+  User:
+    type: object
+    properties:
+      uid:
+        type: integer
+        format: int64
+      pass:
+        type: string
+        format: password
+      name:
+        type: string
+      mail:
+        type: string
+        format: email
+      theme:
+        type: string
+      signature:
+        type: string
+      signature_format:
+        type: string
+        example: basic_html
+      created:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      access:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      login:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      # status:
+      #   type: boolean
+      #   roles:
+      #   type: []
+      timezone:
+        type: string
+        description: Eg. Africa/Johannesburg
+      language:
+        type: string
+      picture:
+        type: string
+      init:
+        type: string
+      data:
+        type: string
+        description: Additional data; must be serialised.
+      uri:
+        type: string
+      # notify:
+      #   type: boolean
+      #   description: For 
+
+  Term_reponse:
+    type: object
+    properties:
+      tid:
+        type: integer
+        format: int64
+      uri:
+        type: string
+
+  Taxon:
+    type: object
+    properties:
+      tid:
+          type: integer
+          format: int64
+      vid:
+          type: integer
+          format: int32
+      name:
+        type: string
+      description:
+        type: string
+      format:
+          type: string
+          example: basic_html
+      weight:
+          type: integer
+          format: int32
+      vocabulary_machine_name:
+        type: string
+        example: taxa
+      # field_common_names: []
+      #   type: string
+      # field_taxon_rank: []
+      #   type: string
+      # field_lsid: []
+      #   type: string
+      # field_scientific_name: []
+      #   type: string
+      # field_image: []
+      #   type: string
+      # field_identifications_count: []
+      #   type: string
+
+  Credentials:
+    type: object
+    properties:
+      username:
+        type: string
+        example: Test Admin
+      password:
+        type: string
+        format: password
+        example: w3bd3sign
