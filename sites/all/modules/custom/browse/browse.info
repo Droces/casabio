@@ -1,0 +1,39 @@
+; ==============================================================================
+; 													BASICS
+
+name = 			Browse
+description = 	Provides a way to easily find contributed content like observations.
+
+core = 			7.x
+package = 		Casabio
+version =		7.x-0.1-dev
+
+; configure = 	admin/config/content/example
+; php = 		5.3
+
+
+
+; ==============================================================================
+; 													DEPENDENCIES
+
+; dependencies[] = views
+; dependencies[] = entity
+
+
+
+; ==============================================================================
+; 													STYLESHEETS
+
+; stylesheets[all][] = node.css
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+scripts[] = scripts/browse.js
+
+
+
+; ==============================================================================
+; 													FILES

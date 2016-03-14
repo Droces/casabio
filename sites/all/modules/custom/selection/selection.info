@@ -1,0 +1,38 @@
+; ==============================================================================
+;                           BASICS
+
+name =          Selection
+description =   Enables selection of elements on a webpage, which can then be manipulated.
+
+core =          7.x
+package =       Casabio
+; configure =   admin/config/content/example
+; php =         5.3
+
+
+
+; ==============================================================================
+;                           DEPENDENCIES
+
+; dependencies[] = views
+
+
+
+; ==============================================================================
+;                           STYLESHEETS
+
+;stylesheets[all][] = stylesheets/group_selected.css
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] = scripts/selection.js
+
+
+
+; ==============================================================================
+;                           FILES
+
+; files[] = tests/example.test

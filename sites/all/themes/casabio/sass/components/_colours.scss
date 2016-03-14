@@ -1,0 +1,50 @@
+/**
+ * @file
+ */
+
+/*
+ * Contents
+
+	Region-dark
+*/
+
+
+/* -----------------------------------------------------------------------------
+                                                            Region-dark
+*/
+$colour-region-dark-links: tint( $colour-links, 80% );
+%region-dark {
+	// Links
+	a {
+		color: $colour-region-dark-links;
+
+		&:link {}
+		&:visited {
+			color: $colour-region-dark-links;
+		}
+		&:hover,
+		&:focus {
+			color: tint( $colour-region-dark-links, 40% );
+		}
+		&:active { /* a link when it is 'clicked' on */
+			color: tint( $colour-region-dark-links, 80% );
+		}
+		&.active,
+		&[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
+			font-weight: bold;
+		}
+	}
+
+	// Menu
+	.menu {
+		a{
+			&:hover,
+			&:focus {
+				background-color: rgba( black, 0.1 );
+			}
+			&:active { /* a link when it is 'clicked' on */
+				background-color: rgba( black, 0.2 );
+			}
+		}
+	}
+}

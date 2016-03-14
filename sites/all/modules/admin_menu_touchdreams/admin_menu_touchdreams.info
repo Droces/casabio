@@ -1,0 +1,7 @@
+name = 				Administration menu Touchdreams style
+description = 		A better Toolbar, redesigned by Touchdreams.
+
+package = 			Administration
+core = 				7.x
+dependencies[] = 	admin_menu
+

@@ -1,0 +1,13 @@
+name =          Casa Web Services
+core =          7.x
+package =       Casabio
+
+description =   Provides API functions for RESTful web services relating to CasaBio content.
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] =     scripts/casa_core.js
+; scripts[] =     scripts/casa_dialogs.js

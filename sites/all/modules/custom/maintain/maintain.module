@@ -1,0 +1,219 @@
+<?php
+  /**
+   * @file
+   * Description…
+   */
+
+
+
+  // =============================================================================
+  /**
+   * Implements hook_help().
+   */
+  // function maintain_help($path, $arg) {}
+
+
+
+
+
+  // =============================================================================
+  /**
+   * Implements hook_menu().
+   */
+  function maintain_menu() {
+    $items['ajax/popular_taxa_form/%'] = array(
+      // 'title'             => 'Number Specimens',
+      'page callback'     => 'get_maintain_popular_taxa_form',
+      'page arguments'    => array(2),
+      'delivery callback' => 'ajax_deliver_html',
+      'access callback'   => TRUE,
+      // 'access arguments'  => array('bulk upload media'),
+      // 'file'              => 'casa_upload.upload.inc',
+      'type'              => MENU_CALLBACK,
+    );
+
+    $items['maintain/taxa/most-popular'] = array(
+      // 'title'             => 'Number Specimens',
+      'page callback'     => 'maintain_popular_taxa_page',
+      // 'page arguments'    => array(2),
+      // 'delivery callback' => 'ajax_deliver_html',
+      'access callback'   => TRUE,
+      // 'access arguments'  => array('bulk upload media'),
+      // 'file'              => 'casa_upload.upload.inc',
+      // 'type'              => MENU_CALLBACK,
+    );
+
+    return $items;
+  }
+
+
+
+
+
+  /**
+   * Implements hook_init().
+   */
+  function maintain_init() {
+
+    if (drupal_match_path(current_path(), 'admin/taxa/most-popular*')) {
+
+      // Include required JavaScript files and libraries
+      $js_files = array(
+        drupal_get_path('module', 'maintain') . '/scripts/maintain.js',
+      );
+
+      foreach ($js_files as $path) {
+        drupal_add_js($path);
+      }
+    }
+  }
+
+
+
+
+
+  // =======================================================================================
+  /**
+   * Implements hook_block_info().
+   */
+  // function maintain_block_info() {
+  //   // $blocks = array(
+  //   //   'maintain_popular_observations' => array(
+  //   //     'info' => t('Edit the observation'),
+  //   //     'cache' => DRUPAL_CACHE_GLOBAL,
+  //   //   ),
+  //   // );
+
+  //   // return $blocks;
+  // }
+
+
+
+
+
+  // =======================================================================================
+  /**
+   * Implements hook_block_view().
+   */
+  // function maintain_block_view($delta = '') {
+  //   // switch ($delta) {
+  //   //   case 'maintain_popular_observations':
+  //   //     $block['subject'] = t('Edit the observation');
+  //   //     $block['content'] = maintain_popular_observations_block_view();
+  //   //     break;
+  //   // }
+  // }
+
+
+
+
+
+  function get_maintain_popular_taxa_form($nid) {
+    $taxon = taxonomy_term_load ($nid);
+    // dpm($taxon, 'taxon');
+    if ($taxon) {
+      module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+      $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+      $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+    }
+    else {
+      throw new Exception("Cannot load the observation", 1);
+    }
+
+    return $form;
+  }
+
+
+
+
+
+  function maintain_popular_taxa_page() {
+
+    $page_content = array();
+
+    // Add view (rendered)
+
+    $view_name = 'most_popular_taxon';
+    $display_id = 'default';
+    $view = views_get_view($view_name);
+    if (!$view || !$view->access($display_id)) {
+      return;
+    }
+
+    $args = array();
+    $view_rendered = $view->preview($display_id, $args);
+    // dpm($view_rendered, 'view_rendered');
+    $page_content[$view_name] = array(
+      '#type' => 'markup',
+      '#markup' => $view_rendered
+    );
+
+    // Add form
+
+    $form;
+    $tid = $view->result[0]->tid/*102260*/;
+    $taxon = taxonomy_term_load($tid);
+    // dpm($taxon, 'taxon');
+    if (!$taxon) {
+      throw new Exception("Cannot load the observation", 1);
+    }
+
+    module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+    $form_id = 'taxonomy_form_term';
+    // $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+    // $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+
+
+    $form_state = array();
+    $form_state['build_info']['args'] = array($taxon);
+
+    // use form_load_include() and drupal_build_form() instead of drupal_get_form()
+    form_load_include($form_state, 'inc', 'taxonomy', 'taxonomy.admin');
+
+    $form = drupal_build_form($form_id, $form_state);
+    // $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+
+    // // DPM the form.
+    // // Need to unset 'relations' value to dpm() the form; otherwise runs out of memory (lots of recursion?);
+    // $form_dup = $form;
+    // $form_dup['relations'] = '- UNSET -';
+    // dpm($form_dup, "form_dup");
+
+    // $page_content['maintain_form'] = $form;
+    $page_content['maintain_form'] = array(
+      '#type' => 'fieldset', 
+      '#title' => t('Edit the taxon'), 
+      // '#weight' => 5, 
+      '#collapsible' => TRUE, 
+      '#collapsed' => FALSE,
+      'form' => $form,
+  );
+
+    return array($page_content);
+  }
+
+
+
+  function hook_views_pre_view(&$view, &$display_id, &$args) {
+    // dpm($view, 'view');
+    // dpm($display_id, 'display_id');
+    // dpm($args, 'args');
+
+    // switch ($view['name']) {
+    //   case 'image_of_taxon_reference_widget':
+    //     $view[args]
+    //     break;
+    // }
+
+    // $tid = $view->result[0]->tid/*102260*/;
+    // $taxon = taxonomy_term_load ($tid);
+    // if ($taxon) {
+    //   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+    //   $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+    //   $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+    // }
+    // else {
+    //   throw new Exception("Cannot load the observation", 1);
+    // }
+    // $view->footer = $form;
+  }

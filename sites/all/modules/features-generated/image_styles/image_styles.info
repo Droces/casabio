@@ -1,0 +1,13 @@
+name = Image styles
+description = All image styles, which manipulate images before being displayed on the site
+core = 7.x
+package = Features: Configuration
+version = 7.x-1.0
+dependencies[] = image
+features[features_api][] = api:2
+features[image][] = medium_square
+features[image][] = thumbnail_square
+features[image][] = tiny
+features[image][] = very_large
+features[image][] = very_large_cropped
+project path = sites/all/modules/features-generated

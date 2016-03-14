@@ -1,0 +1,12 @@
+name =        Casa Node Management
+core =        7.x
+package =     Casabio
+
+description = Provides functions that manage nodes that are unique to CasaBio.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+scripts[] = scripts/casa_node_mgt.js

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Views: Entities feature.
+ */
+
+include_once 'views_entities.features.inc';

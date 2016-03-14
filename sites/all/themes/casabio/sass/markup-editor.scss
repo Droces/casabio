@@ -1,0 +1,133 @@
+/* ==============================================================================
+Filename    Markup Editor styles
+Usage       provides styles to be used exclusively by the on-site WYSiWYG editor
+*/
+
+@import "init/init";
+@import "base/normalize";
+
+
+
+/* -------------------------------------------------------------------------------------------
+                                                                Global defaults
+*/
+body {
+    padding: 0.8em 3%;
+    background: #FCFCFC;
+    color: #333;}
+
+body, pre {
+    color: inherit;
+    font-size: 0.8em;
+    line-height: 1.5em;
+}
+
+p, pre {
+    margin: 0.8em 0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 1.0em 0 0.5em;
+    line-height: 1.1em;}
+
+blockquote {
+    font-style: italic;
+    border-left: 2px solid #888;
+    padding-left: 1em;}
+
+pre {
+    padding: 0.5em 1em;
+    font-size: inherit;
+    background: none repeat scroll 0% 0% #EEE;
+    border: 1px solid #AAA;}
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------
+                                                                Utilities
+*/
+
+.subtle {
+    color: #999;
+    font-size: 0.9em;}
+
+.drop-cap {
+    font-size: 2.5em;
+    line-height: 1em;
+    float: left;
+    display: inline-block;
+    margin: 0 0.2em 0.1em 0;}
+
+.right {
+    float: right;
+    display: inline-block;
+    margin: 0 0 6% 6%;}
+.left {
+    float: left;
+    display: inline-block;
+    margin: 0 6% 6% 0;}
+
+table {
+    border-collapse: collapse;
+    font-size: 0.9em;
+    border: none !important;
+    
+    td, th {
+        border: solid 1px #bbb !important;
+        padding: 0.3em 0.5em;
+        font-size: inherit;}
+    th {
+        text-align: left;
+        font-weight: bold;
+        background: #ddd;}
+    thead {
+        font-size: 1.1em;
+        font-weight: bold;
+        text-transform: uppercase;}
+}
+
+
+
+/* -------------------------------------------------------------------------------------------
+                                                                Block element indicators
+*/
+p,
+h1, h2, h3, h4, h5, h6,
+blockquote,
+div,
+ul, ol,
+table,
+pre {
+    border-right: 1px dotted #aaa; //#D557DD;
+    padding-right: 1.3rem;
+    margin-right: 0.4rem;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        top: 0.3em;
+        right: -0.7em;
+        background: #aaa; //#D557DD;
+        color: white;
+        font-size: 0.6rem;
+        line-height: 1.1em;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 0.1em 0.3em;
+        border-radius: 4px;}
+}
+p::after {  content: "p";}
+h1::after { content: "h1";}
+h2::after { content: "h2";}
+h3::after { content: "h3";}
+h4::after { content: "h4";}
+h5::after { content: "h5";}
+h6::after { content: "h6";}
+blockquote::after {content: "bq";}
+div::after {content: "dv";}
+ul::after {content: "ul";}
+ol::after {content: "ol";}
+table::after {content: "t";}
+pre::after {content: "pr";}

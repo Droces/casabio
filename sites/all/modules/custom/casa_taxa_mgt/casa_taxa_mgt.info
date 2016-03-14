@@ -1,0 +1,12 @@
+name = 			Casa Taxa Management
+core = 			7.x
+package = 		Casabio
+
+description = 	Provides functions that manage taxa (‘taxons’ in the Taxonomy vocabulary) that are unique to CasaBio.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+scripts[] = scripts/casa_taxa_mgt.js

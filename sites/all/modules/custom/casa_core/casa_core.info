@@ -1,0 +1,13 @@
+name =          Casa Core
+core =          7.x
+package =       Casabio
+
+description =   Provides functions that CasaBio modules use.
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+scripts[] =     scripts/casa_core.js
+; scripts[] =     scripts/casa_dialogs.js

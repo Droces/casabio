@@ -1,0 +1,833 @@
+<?php
+/**
+ * @file
+ * Casa Node Management module, which provides functions that manage nodes that are unique to CasaBio.
+ */
+
+
+
+
+// =============================================================================
+/* CONTENTS
+
+  [NU] = Function is not currently used
+
+  includes
+  constants
+
+  // Generic module hook functions
+  [NU] casa_node_mgt_help()
+  casa_node_mgt_menu()
+
+  // Menu callbacks
+  create_blank_observations()
+  rotate_pictures()
+
+  // Block functions
+  casa_node_mgt_block_info()
+  casa_node_mgt_block_view()
+
+  // Alter functions
+  casa_node_mgt_form_node_form_alter()
+  identification_form_submit()
+  habitat_record_form_submit()
+  casa_node_mgt_inline_entity_form_table_fields_alter()
+  casa_node_mgt_inline_entity_form_entity_form_alter()
+
+  // Preprocess functions
+  casa_node_mgt_preprocess_page()
+  casa_node_mgt_preprocess_node()
+  casa_node_mgt_preprocess_field()
+
+  // Hook entity functions
+  casa_node_mgt_node_presave()
+  casa_node_mgt_node_insert()
+  casa_node_mgt_node_update()
+  update_community_identification()
+  calculate_identification_reliability()
+*/
+
+
+module_load_include('inc', 'casa_node_mgt', 'casa_habitat_mgt');
+module_load_include('inc', 'casa_node_mgt', 'node_forms');
+module_load_include('inc', 'casa_node_mgt', 'node_queries');
+
+define("ID_SOURCE_CASABIO_INDIVIDUAL", 1);
+define("ID_SOURCE_CASABIO_COMMUNITY", 2);
+define("ID_SOURCE_EXTERNAL", 3);
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_help(). Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+// function casa_node_mgt_help($path, $arg) {}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_menu().
+ */
+function casa_node_mgt_menu() {
+
+  $items['ajax/create-blank-observations'] = array(
+    // 'title'               => 'Casa Upload Summary',
+    'page callback'       => 'create_blank_observations',
+    // 'page arguments'      => array('2'),
+    'access callback'     => TRUE,
+    'type'                => MENU_CALLBACK,
+    'file'                => 'casa_node_mgt.module',
+    'delivery callback'   => 'ajax_deliver',
+  );
+
+  $items['casa-node-mgt/rotate'] = array(
+    // 'title'               => 'Casa Upload Summary',
+    'page callback'       => 'rotate_pictures',
+    // 'page arguments'      => array('2'),
+    'access callback'     => TRUE,
+    'type'                => MENU_CALLBACK,
+    // 'file'                => 'casa_node_mgt.module',
+    'delivery callback'   => 'ajax_deliver',
+  );
+
+  return $items;
+}
+
+
+
+
+
+// =============================================================================
+// /**
+//  * Callback function that creates observations for recording info without an associated picture.
+//  */
+function create_blank_observations() {
+  $post = $_POST;
+  // dpm($post, 'post');
+
+  global $user;
+
+  for ($i = 0; $i < $post['count']; $i++) {
+    // print($i);
+    $observation_raw = entity_create('node', array(
+      'type' =>     'observation',
+      'title' =>    '',
+      'uid' =>      $user->uid,
+      'status' =>   1,
+      'comment' =>  0,
+      'promote' =>  0,
+    ));
+
+    $observation = entity_metadata_wrapper('node', $observation_raw);
+
+    $observation -> field_count ->                set(1);
+    $observation -> field_collection ->           set($post['collection-id']);
+
+    $observation -> save();
+  }
+
+  $result = array('result' => 'success');
+  $response = array('#type' => 'ajax', '#commands' => $result);
+
+  return $response;
+}
+
+
+
+/**
+ * Menu callback that rotates an image.
+ * Requires the nid and degrees to be provided in the POST data.
+ */
+function rotate_pictures() {
+  $post = $_POST;
+  // dpm($post, 'post');
+
+  $result = array(
+    'result' => 'failure',
+    'reason' => '',
+  );
+  $response = array(
+    '#type' => 'ajax',
+    '#commands' => $result,
+  );
+
+  // Check that expected parameters were supplied
+
+  if (! isset($post['degrees'])) {
+    // throw new Exception("Degrees for rotation not provided", 1);
+    $result['reason'] = 'Degrees for rotation not provided.';
+    $response['#commands'] = $result;
+    return $response;
+  }
+  if (! isset($post['nids'])) {
+    $result['reason'] = 'Node IDs not provided.';
+    $response['#commands'] = $result;
+    return $response;
+  }
+
+  // Check that parameters supplied are valid
+
+  $degrees = intval($post['degrees']);
+
+  if($degrees == 0 || $degrees < -180 || $degrees > 360) {
+    $result['reason'] = 'Degrees for not valid.';
+    $response['#commands'] = $result;
+    return $response;
+  }
+
+  // $result['reason'] .= '; nids: ' . $post['nids'];
+  $nids = explode('|', $post['nids']);
+
+  // Perform the rotation for each image
+
+  foreach ($nids as $index => $nid) {
+
+    $node_raw =     node_load($nid);
+    $node =         entity_metadata_wrapper('node', $node_raw);
+    $image_info =   $node->field_image->value();
+    $uri =          $image_info['uri'];
+    $image =        image_load($uri, FALSE);
+    // dpm($image, 'image');
+
+    // $result['reason'] .= '; degrees: ' . $degrees;
+    $background = 0x000000; // Black; transparent gives errors…
+
+    $rotate_success = image_rotate($image, $degrees, $background);
+    // dpm($rotate_success, 'rotate_success');
+
+    $save_success = image_save($image, NULL);
+    // dpm($save_success, 'save_success');
+
+    // Clear cached versions of the image file (in all styles).
+    image_path_flush($uri);
+  }
+
+  $result['result'] = 'success';
+  $response['#commands'] = $result;
+  return $response;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_info().
+ */
+function casa_node_mgt_block_info() {
+  $blocks = array();
+
+  $blocks['habitat_form'] = array(
+    'info' => t('Contribute habitat record form'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function casa_node_mgt_block_view($delta = '') {
+  $block = array();
+
+  // set_error_handler("exception_error_handler");
+
+  switch ($delta) {
+    case 'habitat_form':
+      $block['subject'] = t('Contribute habitat record form');
+      $block['content'] = habitat_form_block_view();
+      break;
+  }
+
+  return $block;
+}
+
+
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter(), for 'node_form' forms.
+ */
+function casa_node_mgt_form_node_form_alter(&$form, &$form_state, $form_id) {
+  module_load_include('inc', 'casa_node_mgt', 'node_forms');
+  $form = form_node_form_alter($form, $form_state, $form_id);
+  return $form;
+}
+
+
+
+/**
+ * Custom form submit handler callback for identifications.
+ */
+function identification_form_submit($form, &$form_state) {
+  // dpm('Called: identification_form_submit');
+  // dpm ($form, "form");
+  // dpm ($form_state, "form_state");
+
+  // If the $form has been set to redirect, pass this to $form_state to ensure it happens.
+  if (isset($form['redirect'])) {
+    $form_state['redirect'] = $form['redirect']['#value'];
+  }
+}
+
+
+
+
+
+function habitat_record_form_submit($form, &$form_state) {
+  // dpm($form, "form");
+  // dpm($form_state, "form_state");
+
+  // Redirect back to the same page the user was on.
+  // $form_state['rebuild'] = TRUE; // Doesn't work.
+  $form_state['redirect'] = current_path();
+}
+
+
+
+
+
+
+// =============================================================================
+//                                                Inline Entity Forms
+/**
+ * Implements hook_entity_info_alter().
+ */
+// function casa_node_mgt_entity_info_alter(&$entity_info) {
+//   $entity_info['node']['inline entity form'][] = array(
+//     'controller' => 'IdentificationInlineEntityFormController',
+//   );
+// }
+
+function casa_node_mgt_inline_entity_form_table_fields_alter(&$fields, $context) {
+  // dpm($fields, 'fields');
+  // dpm($context, 'context');
+
+  if ($context['field_name'] == 'field_identifications') {
+    unset($fields['title']);
+    unset($fields['status']);
+
+    $fields['field_identified_species'] = array(
+      'type' => 'field',
+      'label' => t('Species'),
+      'weight' => 1,
+    );
+    $fields['field_certainty'] = array(
+      'type' => 'field',
+      'label' => t('Certainty'),
+      'weight' => 2,
+    );
+    // $fields['uid'] = array(
+    //   'type' => 'property',
+    //   'label' => t('User ID'),
+    //   'weight' => 3,
+    // );
+  }
+}
+
+
+
+/**
+ * Perform alterations before an entity form is included in the IEF widget.
+ *
+ * @param $entity_form
+ *   Nested array of form elements that comprise the entity form.
+ * @param $form_state
+ *   The form state of the parent form.
+ */
+function casa_node_mgt_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  // dpm($entity_form, 'entity_form');
+  // dpm($form_state, 'form_state');
+
+  if ($entity_form['#bundle'] == 'identification') {
+    $language = 'und';
+
+    unset($entity_form['title']);
+    unset($entity_form['status']);
+
+    $entity_form['field_identified_species'][$language]['add_more']['#value'] = 'Add species';
+  }
+}
+
+
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function casa_node_mgt_preprocess_page(&$variables) {
+  // dpm($variables, 'variables');
+  // dpm($variables['node'], 'node');
+
+  if(!isset($variables['node'])) {
+    return;
+  }
+
+  switch ($variables['node']->type) {
+    case 'observation':
+      // dpm('page is observation');
+      $variables['title'] = '';
+      break;
+  }
+  // $variables['site_name']
+  // dpm($variables, 'variables');
+}
+
+
+
+/**
+ * Implements hook_preprocess_node(). Overrides or inserts variables into the node templates.
+ */
+function casa_node_mgt_preprocess_node(&$variables, $hook) {
+  // dpm('Called: casa_node_mgt_preprocess_node()');
+  // dpm($variables, 'variables');
+
+  // --------------------------------------------------------------------------
+  //                                                  Teasers
+  if ($variables['view_mode'] == 'teaser') {
+
+    $types = array('collection', 'picture', 'observation');
+
+    if (in_array($variables['node'] -> type, $types)) {
+      // Don't display submission info ('Submitted by [user] on [date]')
+      // $variables['submitted'] = '';
+      $variables['display_submitted'] = FALSE;
+    }
+  }
+
+
+  // --------------------------------------------------------------------------
+  //                                                  Observations
+  if ($variables['type'] == 'observation'){
+
+    if ($variables['view_mode'] == 'teaser') {
+      // dpm($variables, 'variables');
+      $variables['display_submitted'] = FALSE;
+      // @todo Change this to 'by [username]'.
+
+      if (isset($variables['content']['links']['comment'])) {
+        unset($variables['content']['links']['comment']);
+      }
+    }
+
+    if ($variables['view_mode'] == 'full') {
+      // dpm($variables, 'variables');
+      global $user;
+
+
+      $identifications_view = views_embed_view('identifications_of_observation', 'default');
+      // dpm($identifications_view, 'identifications_view');
+      $variables['content']['identifications_view'] = array(
+        '#markup' => $identifications_view,
+        '#weight' => 9,
+      );
+
+
+      // If user is logged in, add a "Add identification" button link
+      if (in_array('authenticated user', $user->roles)) {
+        // $link_markup = l(
+        //   'Add identification',
+        //   'node/add/identification',
+        //   array(
+        //     'query' => array("field_observation" => $variables['nid']),
+        //     'attributes' => array('class' => array('button',),),
+        //   )
+        // );
+        // $variables['add_id_link'] = $link_markup;
+
+
+        // Embed an identification form styled as a simple "Agree?" with selection of certainty.
+
+        $values = array(
+          'type' =>     'identification',
+          'status' =>   1,
+          'comment' =>  0,
+          'promote' =>  0,
+        );
+        $new_identification = entity_create('node', $values);
+
+        module_load_include('inc', 'node', 'node.pages');
+        $new_identification_form = drupal_get_form('node_form', $new_identification, ['form_view_mode' => 'contribute_new']);
+        // dpm($new_identification_form, 'new_identification_form');
+
+        $variables['content']['new_identification_form'] = $new_identification_form;
+        $variables['content']['new_identification_form']['#weight'] = 10;
+        $variables['content']['new_identification_form']['title'] = array(
+          '#type' => 'markup',
+          '#markup' => '<h2>Add new species identification</h2>',
+        );
+      }
+    }
+  }
+
+
+  // --------------------------------------------------------------------------
+  //                                                  Identifications
+  if ($variables['type'] == 'identification'){
+    // dpm($variables, 'variables');
+
+    if ($variables['view_mode'] == 'text') {
+      $variables['title'] = '';
+
+      $variables['content']['user'] = array(
+        '#type' => 'markup',
+        '#markup' => $variables['name'],
+        '#weight' => -1,
+      );
+    }
+  }
+
+
+  // --------------------------------------------------------------------------
+  //                                                  Community identifications
+  if ($variables['type'] == 'identification_community'){
+    // dpm($variables, 'variables');
+
+    if ($variables['view_mode'] == 'teaser') {
+
+      if (user_has_role(2)) { // User is authenticated
+
+        $values = array(
+          'type' =>     'identification',
+          'status' =>   1,
+          'comment' =>  0,
+          'promote' =>  0,
+        );
+        $new_identification = entity_create('node', $values);
+
+        // Embed an identification form styled as a simple "Agree?" with selection of certainty.
+
+        module_load_include('inc', 'node', 'node.pages');
+        $agreement_form = drupal_get_form('node_form', $new_identification, ['form_view_mode' => 'agreement']);
+        // dpm($agreement_form, 'agreement_form');
+
+        $current_identification_species = $variables['field_identified_species'][0]['taxonomy_term']->name;
+        $agreement_form['field_identified_species']['und']['#default_value'] = $current_identification_species;
+        $agreement_form['field_identified_species']['und']['#value'] =         $current_identification_species;
+        // dpm($agreement_form, 'agreement_form');
+
+        $variables['content']['agreement_form'] = $agreement_form;
+        $variables['content']['agreement_form']['#weight'] = 10;
+      }
+
+
+      $variables['content']['field_identifications_trigger'] = array(
+        '#type' => 'markup',
+        '#markup' => '<button data-display="#identifications-' . $variables['nid'] . '" class="flat">'
+          . count($variables['field_identifications']) . ' users voted (show)</button>',
+      );
+      $variables['content']['field_identifications_dialog'] = array(
+        '#type' => 'markup',
+        '#title' => t('Identifications'),
+        '#prefix' => '<div id="identifications-' . $variables['nid'] . '" data-transform="to-dialog" style="display: none;" title="Identifications">',
+        'field_identifications' => $variables['content']['field_identifications'],
+        '#suffix' => '</div>',
+        '#tree' => TRUE,
+      );
+      // $variables['content']['field_identifications_wrapper']['field_identifications'] = $variables['content']['field_identifications'];
+      unset($variables['content']['field_identifications']);
+
+
+      // Override submission info ('Submitted by [user] on [date]')
+      // $variables['submitted'] = 'Submitted test by '
+      //   . $variables['name']
+      //   . ' on '
+      //   . $variables['date']
+      // ;
+    }
+  }
+
+
+  // --------------------------------------------------------------------------
+  //                                                  Pictures
+  if ($variables['type'] == 'picture'){
+    // Hide title and submission info of the following node types:
+    $view_modes_without_properties = array(
+      'inline',
+      'thumbnail',
+      'small',
+      'medium',
+    );
+    if (in_array($variables['view_mode'], $view_modes_without_properties)) {
+      $variables['title'] = '';
+      $variables['display_submitted'] = FALSE;
+    }
+  }
+
+
+  // --------------------------------------------------------------------------
+  //                                                  Habitat records
+  if ($variables['type'] == 'habitat_record'){
+    // Don't display 'submitted info' of the following node types
+    $view_modes_without_properties = array(
+      'teaser',
+      'thumbnail',
+      'small',
+      'medium',
+    );
+    if (in_array($variables['view_mode'], $view_modes_without_properties)) {
+      // $variables['title'] = '';
+      $variables['display_submitted'] = FALSE;
+    }
+  }
+
+  // dpm($variables, 'variables after preprocess');
+}
+
+
+
+
+
+/**
+ * Implements template_preprocess_field().
+ */
+function casa_node_mgt_preprocess_field(&$variables, $hook) {
+  // dpm($variables, $variables['element']['#field_name'] . ' variables');
+
+  switch ($variables['element']['#field_name']) {
+    case 'field_date_observed':
+      $variables['label'] = '<span class="icon-calendar"></span> ' . $variables['label'];
+      break;
+
+    case 'field_collection':
+      $variables['label'] = '<span class="icon-collections_bookmark"></span> ' . $variables['label'];
+      break;
+
+    case 'field_locality':
+      $variables['label'] = '<span class="icon-location"></span> ' . $variables['label'];
+      break;
+
+    case 'field_count':
+      $variables['label'] = '<span class="icon-clipboard"></span> ' . $variables['label'];
+      break;
+  }
+}
+
+
+
+// =============================================================================
+/**
+ * Implements hook_node_presave().
+ */
+function casa_node_mgt_node_presave($node_raw) {
+  // dpm($node_raw, 'node in presave');
+
+  $node = entity_metadata_wrapper('node', $node_raw);
+
+  if ($node->type == 'identification') {
+    // if (!$node->title) {
+    //   $node->title = 'Untitled';
+    // }
+  }
+}
+
+
+
+// =============================================================================
+/**
+ * Implements hook_node_insert(). Is called after a node has been saved.
+ */
+function casa_node_mgt_node_insert($node) {
+  // dpm($node, 'node in insert');
+
+  if ($node->type == 'identification') {
+    $identification = entity_metadata_wrapper('node', $node);
+
+    // ------------------------------------------------------------------------
+    // Create or update the matching community identification.
+
+    $observation = $identification->field_observation->value();
+    $identified_species = $identification->field_identified_species->value();
+    $community_identification;
+
+    if (!($observation && $identified_species)) {
+      // throw new Exception("Saved identification does not reference an observation and a taxon.", 1);
+      return NULL;
+    }
+
+    $community_identification = update_community_identification(
+      $observation, $identified_species, $node);
+
+    // update_users_reputations($community_identification); // @todo create this function
+  }
+
+  if ($node->type == 'identification_community') {
+    assess_new_taxon_pic($node); // @todo create this function
+  }
+}
+
+
+
+// =============================================================================
+/**
+ * Implements hook_node_insert(). Is called after a node has been saved.
+ */
+function casa_node_mgt_node_update($node) {
+  // dpm($node, 'node in update');
+
+  if ($node->type == 'identification_community') {
+    assess_new_taxon_pic($node); // @todo create this function
+  }
+}
+
+
+
+
+/**
+ * Updates the community identification of a given observation and species.
+ *
+ * Typically called when a new identification has been saved, thus requiring the
+ * community identification to be re-evaluated.
+ *
+ * @param $identification
+ *   The new identification that has just been saved (but is not yet in the database).
+ */
+function update_community_identification($observation, $identified_species, $identification) {
+  // dpm($observation, '$observation');
+  // dpm($identified_species, '$identified_species');
+
+  $commun_identification_raw;
+
+  // Load all (individual) identifications
+
+  $observation_nid = $observation->nid;
+  // dpm($observation_nid, '$observation_nid');
+  $identified_species_tid = $identified_species->tid;
+  // dpm($identified_species_tid, '$identified_species_tid');
+
+  $referencing_nodes = get_identifications_refing_observation(
+    'identification', $observation_nid, $identified_species_tid);
+
+  // Add the new identification to the results (it won't be in the results).
+  $referencing_nodes[$identification->nid] = $identification;
+  // dpm($referencing_nodes, 'referencing_nodes');
+
+  if (!$referencing_nodes) {
+    throw new Exception("No existing identifications found", 1);
+  }
+
+  // Get the identifications' nids
+  $referencing_nids = array_keys($referencing_nodes);
+  // dpm($referencing_nids, 'referencing_nids');
+
+
+
+
+  // Get existing community identification if it exists
+
+  $existing_comm_id = get_identifications_refing_observation(
+    'identification_community', $observation_nid, $identified_species_tid);
+  // dpm($existing_comm_id, 'existing_comm_id');
+
+  // Load existing node or create a new one
+
+  $species_name = $identified_species->name;
+
+  if ($existing_comm_id) {
+    $nid = array_keys($existing_comm_id)[0];
+    $commun_identification_raw = node_load($nid);
+  }
+  else {
+    $commun_identification_raw = entity_create('node', array(
+      'type' =>     'identification_community',
+      'title' =>    $species_name,
+      'uid' =>      1, // Dane
+      'status' =>   1, // Published
+      'comment' =>  0, // No comments
+      'promote' =>  0, // Not promoted
+    ));
+  }
+  // dpm($commun_identification_raw, 'commun_identification_raw');
+
+
+
+
+  // Update node values
+
+  $commun_identification = entity_metadata_wrapper('node', $commun_identification_raw);
+
+  if ($commun_identification -> title -> value() == 'Untitled') {
+    $commun_identification -> title -> set($species_name);
+  }
+
+  $commun_identification -> field_identification_source ->  set(ID_SOURCE_CASABIO_COMMUNITY); // CasaBio community
+  $commun_identification -> field_observation ->            set($observation);
+  $commun_identification -> field_identified_species ->     set($identified_species);
+
+  $commun_identification -> field_identifications ->        set($referencing_nids);
+
+  $commun_identification -> field_reliability ->            set(calculate_identification_reliability($referencing_nids)); // @todo the function needs to be re-written
+
+  $commun_identification -> save();
+
+  return $commun_identification;
+}
+
+
+
+
+
+function calculate_identification_reliability($referencing_nids) {
+  // $identification = entity_metadata_wrapper('node', $identification_raw);
+
+  $reliability = 0;
+  $values = 0; // Numerator: Where each certainty is multiplied by that user's reliability, then added
+  $num_values = 0; // Denominator: Where the highest reliability adds 1, and all others add proportionally less
+  $highest_reliability = 0;
+
+  foreach ($referencing_nids as $nid) {
+    // $node_raw = node_load($nid);
+    // dpm($node_raw, 'node_raw');
+    $node = entity_metadata_wrapper('node', node_load($nid));
+    // dpm($node->getPropertyInfo(), 'node');
+
+    $certainty = $node -> field_certainty -> value() / 10; // / 10 because it is saved as a number between 0 and 10, not as a fraction.
+    // dpm($certainty, 'certainty');
+
+    global $user;
+    // If the $identification_raw has an owner (if it's not new), use it, otherwise use global $user.
+    $uid = $node->author->value()->uid ? $node->author->value()->uid : $user->uid;
+    $owner_user = entity_metadata_wrapper('user', user_load($uid));
+    // dpm($owner_user, 'owner_user');
+
+    $owner_reliability = $owner_user -> field_reliability -> value() / 100;
+    // dpm($owner_reliability, 'owner_reliability');
+
+    $values += $certainty * $owner_reliability;
+
+    $highest_reliability = $owner_reliability > $highest_reliability ? $owner_reliability : $highest_reliability;
+  }
+  // dpm($values, 'values');
+  // dpm($highest_reliability, 'highest_reliability');
+
+  foreach ($referencing_nids as $nid) {
+    $num_values += $owner_reliability / $highest_reliability;
+  }
+  // dpm($num_values, 'num_values');
+
+  $reliability = $values / $num_values * 100; // * 100 because it is saved as a number between 0 and 100, not as a fraction.
+  // dpm($reliability, 'reliability');
+  return $reliability;
+}
+
+
+
+

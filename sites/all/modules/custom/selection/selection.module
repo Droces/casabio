@@ -1,0 +1,65 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_help().
+ *Inline Entity Form
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+// function selection_help($path, $arg) {}
+
+
+
+
+
+// // =======================================================================================
+// /**
+//  * Implements hook_block_info().
+//  */
+// function selection_block_info() {
+//   $blocks = array();
+
+//   $blocks['selected_buttons'] = array(
+//     'info' => t('Selection actions'),
+//     'cache' => DRUPAL_CACHE_GLOBAL,
+//     // 'cache' => DRUPAL_NO_CACHE,
+//   );
+  
+//   return $blocks;
+// }
+
+
+
+
+
+// // =======================================================================================
+// /**
+//  * Implements hook_block_view().
+//  */
+// function selection_block_view($delta = '') {
+//   $block = array();
+  
+//   switch ($delta) {
+//     // For the Selected Buttons block
+//     case 'selected_buttons':
+//       $block['subject'] = t('Group Selected Buttons');
+//       $block['content'] = '';
+//       // Implementing modules should add content to this block.
+//       break;
+//   }
+  
+//   return $block;
+// }

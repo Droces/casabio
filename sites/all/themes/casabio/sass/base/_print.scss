@@ -1,0 +1,168 @@
+/**
+ * @file
+ * Print styling
+ *
+ */
+
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request:
+   http://www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */
+
+/**
+ * From HTML5Boilterplate
+ */
+@media print,
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 1.25dppx),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+@media print {
+    *,
+    *:before,
+    *:after {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster:
+                                   http://www.sanbeiji.com/archives/953 */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links that are fragment identifiers,
+     * or use the `javascript:` pseudo protocol
+     */
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    /*
+     * Printing Tables:
+     * http://css-discuss.incutio.com/wiki/Printing_Tables
+     */
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+
+/**
+ * From Zen
+ * We provide some sane print styling for Drupal using Zen's layout method.
+ */
+@media print {
+
+  /* Underline all links. */
+  a:link,
+  a:visited {
+    text-decoration: underline !important;
+
+    /* Don't underline header. */
+    &.header__site-link {
+      text-decoration: none !important;
+    }
+  }
+
+  #content {
+    /* Add visible URL after links. */
+    a[href]:after {
+      content: " (" attr(href) ")";
+      font-weight: normal;
+      font-size: $base-font-size;
+    }
+
+    /* Only display useful links. */
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+      content: "";
+    }
+
+    /* Add visible title after abbreviations. */
+    abbr[title]:after {
+      content: " (" attr(title) ")";
+    }
+  }
+
+  /* Un-float the content. */
+  #content {
+    float: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Turn off any background colors or images. */
+  body,
+  #page,
+  #main,
+  #content {
+    color: #000;
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  /* Hide sidebars and nav elements. */
+  #skip-link,
+  #toolbar,
+  #navigation,
+  .region-sidebar-first,
+  .region-sidebar-second,
+  #footer,
+  .breadcrumb,
+  .tabs,
+  .action-links,
+  .links,
+  .book-navigation,
+  .forum-topic-navigation,
+  .pager,
+  .feed-icons {
+    visibility: hidden;
+    display: none;
+  }
+}

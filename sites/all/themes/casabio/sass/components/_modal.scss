@@ -1,0 +1,170 @@
+/**
+ * @file
+ * Styling for the CTools module's dialog feature
+ */
+
+#modalContent {
+  top: $dialog-top !important;
+}
+#modalBackdrop {
+  background: $dialog-backdrop-bg !important;
+}
+
+div.ctools-modal-content {
+  // background: #fff;
+  // color: #000;
+  // padding: 0;
+  // margin: 2px;
+  // border: 1px solid #000;
+  // width: 600px;
+  // text-align: left;
+  height: auto !important;
+  z-index: $z-dialogs + 5 !important;
+
+  .modal-header {
+    background-color: $dialog-header-bg;
+    padding: $dialog-header-padding;
+
+    &,
+    a {
+      color: $dialog-header-color;
+    }
+  }
+
+  .modal-title {
+    font-size: $h2-font-size;
+    line-height: $h2-line-height;
+    // font-weight: bold;
+    color: $dialog-header-color;
+    // overflow: hidden;
+    // white-space: nowrap;
+    font-size: $dialog-header-font-size;
+  }
+
+  .modal-content {
+    // padding: 1em 1em 0 1em;
+    // overflow: auto;
+    // position: relative; /* Keeps IE7 from flowing outside the modal. */
+    padding: $dialog-padding;
+    height: auto !important;
+  }
+
+  .modal-form {
+  }
+
+  $icon-size: 1 * $line-height + 0.2em;
+  a.close {
+    // color: white;
+    // float: right;
+    width: $icon-size;
+    height: $icon-size;
+    overflow: hidden;
+    padding: 0.2em;
+    @include box-sizing( border-box );
+
+    &:before {
+      @extend %font-icon; /* using an icon-font for these icon-styled links */
+      @extend .icon-close:before;
+    }
+
+    &:hover {
+      // text-decoration: none;
+    }
+
+    img {
+      // position: relative;
+      // top: 1px;
+      display: none;
+    }
+  }
+
+  .modal-content .modal-throbber-wrapper {
+    // text-align: center;
+
+    img {
+      // margin-top: 160px;
+    }
+  }
+
+
+  /** modal forms CSS **/
+  .form-item {
+    label {
+      // width: 15em;
+      // float: left;
+    }
+
+    label.option {
+      // width: auto;
+      // float: none;
+    }
+
+    .description {
+      // clear: left;
+    }
+
+    .description .tips {
+      // margin-left: 2em;
+    }
+  }
+
+
+  .no-float .form-item * {
+    // float: none;
+  }
+
+  .modal-form .no-float label  {
+    // width: auto;
+  }
+
+  fieldset,
+  .form-radios,
+  .form-checkboxes {
+    // clear: left;
+  }
+
+  .vertical-tabs-panes > fieldset {
+    // clear: none;
+  }
+
+  .resizable-textarea {
+    // width: auto;
+    // margin-left: 15em;
+    // margin-right: 5em;
+  }
+
+  .container-inline .form-item {
+    // margin-right: 2em;
+  }
+
+  // #views-exposed-pane-wrapper .form-item {
+  //   margin-top: 0;
+  //   margin-bottom: 0;
+  // }
+
+  label {
+    &.hidden-options {
+      // background: transparent url(../images/arrow-active.png) no-repeat right;
+      // height: 12px;
+      // padding-right: 12px;
+    }
+
+    &.expanded-options {
+      // background: transparent url(../images/expanded-options.png) no-repeat right;
+      // height: 12px;
+      // padding-right: 16px;
+    }
+  }
+
+
+  .option-text-aligner label {
+    &.expanded-options,
+    &.hidden-options {
+      // background: none;
+    }
+  }
+
+  .dependent-options {
+    // padding-left: 30px;
+  }
+}

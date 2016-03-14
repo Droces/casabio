@@ -1,0 +1,13 @@
+name =        Maintain
+core =        7.x
+package =     Casabio
+
+description = General functionality for CasaBio maintainers.
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] =     scripts/maintain.js
+

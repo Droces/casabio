@@ -1,0 +1,89 @@
+/* 
+ * JCarousel
+*/
+
+/* -----------------------------------------------------------------------------
+                                                                Setup
+*/
+/*
+This is the visible area of you carousel.
+Set a width here to define how much items are visible.
+The width can be either fixed in px or flexible in %.
+Position must be relative!
+*/
+.jcarousel {
+    position: relative;
+    overflow: hidden;
+
+
+    /*
+    This is the container of the carousel items.
+    You must ensure that the position is relative or absolute and
+    that the width is big enough to contain all items.
+    */
+    ul {
+        width: 20000em;
+        position: relative;
+
+        /* Optional, required in this case since it's a <ul> element */
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /*
+    These are the item elements. jCarousel works best, if the items
+    have a fixed width and height (but it's not required).
+    */
+    li {
+        /* Required only for block elements like <li>'s */
+        float: left;
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
+.carousel {
+    position: relative;
+
+    .view-footer {
+        position: absolute;
+        top: 12em;
+        color: white;
+        width: 100%;
+
+        p {
+            margin-left: auto;
+            margin-right: auto;
+
+            &:first-child {
+                font-size: 1.4em;
+            }
+        }
+    }
+}
+
+/* -----------------------------------------------------------------------------
+                                                                Controls
+*/
+.jcarousel-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    left: 0;
+    z-index: 10;
+
+    display: none; // Only here while there isn't more than 1 slide
+
+    .jcarousel-prev,
+    .jcarousel-next {
+        padding: $data-field-padding;
+        color: white;
+    }
+    .jcarousel-prev {
+        float: left;
+    }
+    .jcarousel-next {
+        float: right;
+    }
+}

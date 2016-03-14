@@ -1,0 +1,292 @@
+// @import "compass/reset";
+@import "init";
+
+
+/**
+* @file
+* Toolbar style for Administration menu.
+*
+* Important: We cannot re-use toolbar.png from Toolbar module, since we cannot
+* reliably determine the path to it.
+*
+* @todo Separate shortcut functionality into own module/widget.
+*/
+
+/* Adjust margin/height */
+html {
+    body.admin-menu {
+        margin-top: $height !important;
+    }
+
+    body.admin-menu-with-shortcuts {
+        margin-top: 65px !important;
+    }
+}
+/* Displace the core Toolbar, if concurrently output. */
+body div#toolbar.toolbar {
+  top: 30px;
+}
+
+/**
+ * Base styles.
+ *
+ * We use a keyword for the toolbar font size to make it display consistently
+ * across different themes, while still allowing browsers to resize the text.
+ */
+#admin-menu {
+  font: normal $font-size "Lucida Grande", Verdana, sans-serif;
+  line-height: $line-height;
+  // @include box-shadow( 0 -10px 20px 13px #000 );
+  @include box-shadow( 0 0 9px rgba( black, 0.6 ) );
+  right: 0;
+  width: auto;
+  background: $colour-background;
+
+  // background-image: url('images/touchdreams_logo.png');
+  // background-repeat: no-repeat;
+  // background-size: 80px;
+  // background-position: 6px center;
+
+  #admin-menu-wrapper {
+    // font-size: .846em;
+    padding: 0 10px 0;
+
+    // padding-right: 90px;
+  }
+
+  .active {
+    background: rgba( $colour-tdreams_cyan, 0.5 );
+  }
+
+  a,
+  span {
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+
+  li {
+    & > span {
+      cursor: default;
+    }
+
+    ul {
+      line-height: inherit;
+    }
+  }
+
+  .dropdown {
+    line-height: inherit;
+
+    a, span {
+      color: #fafafa;
+    }
+
+    /* Remove border from all lists and actions */
+    .admin-menu-action a {
+      border-left: 0;
+    }
+    .admin-menu-icon > a {
+      padding: $padding-menu_links;
+    }
+  }
+
+
+
+
+  /**
+   * Administration menu.
+   */
+
+  // the first level of menu (horizontal)
+  > div > .dropdown > li {
+    padding-top: $padding-first_level;
+    padding-bottom: $padding-first_level;
+
+    & > ul {
+      margin-top: $padding-first_level;
+    }
+    & > a {
+      border-right: 0;
+      margin-bottom: 0;
+      padding: $padding-menu_links;
+    }
+  }
+
+  .dropdown {
+    a, 
+    span {
+      padding: $padding-submenu_links;
+    }
+
+    a {
+      @include transition( background-color 0.3s ease );
+      &:hover {
+        background-color: rgba( $colour-tdreams_cyan, 0.35 );
+      }
+    }
+
+    .admin-menu-icon ul {
+      a, span {
+        padding: $padding-submenu_links;
+      }
+    }
+    .admin-menu-icon > a {
+
+      span { //the home icon
+        vertical-align: text-bottom;
+        width: 11px;
+        height: $line-height;
+        display: block;
+        background: url(toolbar.png) no-repeat 0 -45px;
+        text-indent: -9999px;
+        padding: 0;
+      }
+    }
+
+    .admin-menu-toolbar-category > a,
+    .admin-menu-action > a {
+      @include border-radius( $border-radius );
+    }
+    .admin-menu-toolbar-category > a.active-trail {
+      text-shadow: #333 0 1px 0;
+      background: $colour-active_trail; //url(toolbar.png) 0 0 repeat-x;
+    }
+    .admin-menu-search input {
+      font-size: 12px;
+      background-color: rgba( white, 0.2 );
+      color: white;
+      line-height: $line-height;
+      padding: 4px 8px;
+      margin: 3px;
+    }
+    // .admin-menu-toolbar-category > a:hover {
+    //     background: rgba( $colour-tdreams_cyan, 0.2 );
+    // }
+    .admin-menu-tab a {
+      border-right: 0;
+    }
+
+    li ul {
+      width: $width;
+      background-color: $colour-background;
+    }
+    li li {
+      width: $width;
+      min-width: 160px;
+      opacity: $sub-menu_opacity;
+      background-color: transparent; //$colour-sub-menu;
+      border-top: solid 1px $colour-separator;
+    
+      a {
+        border: none;
+      }
+      &:hover {
+        background-color: none;
+      }
+      &.expandable {
+        position: relative;
+        background-color: transparent;
+        // background-position: 96% 9px;
+        background-image: none;
+
+        ul {
+          margin: ( -$height + 1px ) 0 0 $width;
+          left: 100% !important;
+        }
+        & > a, 
+        & > span {
+          padding-right: 22px;
+
+          &, 
+          &:hover {
+            border-top: none;
+          }
+
+          &::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            right: 4px;
+            top: 0;
+            width: 9px;
+            height: $line-height + ( 2 * $padding-link_v );
+            background-image: url("images/arrow.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+          }
+        }
+      }
+      a, span {
+        border-right: none;
+
+        &, &:hover {
+          border-color: $colour-separator;
+        }
+      }
+    }
+    li.admin-menu-account > a {
+      background: $colour-active_trail;
+    }
+  }
+
+
+
+
+  /**
+   * Shortcuts toggle.
+   */
+  .shortcut-toggle {
+    cursor: pointer;
+    background: url(toolbar.png) 0 -20px no-repeat #666;
+    @include border-radius( $border-radius $border-radius 0 0 );
+    display: block;
+    float: right;
+    margin: 5px 0 0 0;
+    text-indent: -9999px;
+    overflow: hidden;
+    width: 25px;
+    height: 25px;
+  
+    &:focus,
+    &:hover {
+      background-position: -50px -20px;
+    }
+    &.active {
+      background-position: -25px -20px;
+      
+      &:focus,
+      &:hover {
+        background-position: -75px -20px;
+      }
+    }
+  }
+
+  /**
+   * Shortcuts widget.
+   */
+  .shortcut-toolbar {
+    background-color: #666;
+    clear: both;
+    display: none;
+    margin: 0 -10px;
+    overflow: hidden;
+    /* Align with icon; @see shortcut.css */
+    padding-left: 5px;
+  }
+  .shortcut-toolbar.active {
+    display: block;
+  }
+  /* Override theme list style; @see shortcut.css */
+  .shortcut-toolbar ul {
+    margin: 0;
+  }
+  /* @see toolbar.css */
+  .shortcut-toolbar li {
+    float: left;
+    list-style-image: none;
+    list-style-type: none;
+  }
+  .shortcut-toolbar a {
+    display: block;
+  }
+}

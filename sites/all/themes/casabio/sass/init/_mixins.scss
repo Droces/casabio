@@ -1,0 +1,134 @@
+// @file
+// Custom sass mixins
+//
+// Define the custom mixins for your project here.
+// http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#defining_a_mixin
+
+// Makes an element visually hidden, but accessible.
+// @see http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+@mixin element-invisible {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+// Turns off the element-invisible effect.
+@mixin element-invisible-off {
+  position: static !important;
+  clip: auto;
+  height: auto;
+  width: auto;
+  overflow: auto;
+}
+
+// Makes an element visually hidden by default, but visible when focused.
+@mixin element-focusable {
+  @include element-invisible;
+
+  &:active,
+  &:focus {
+    @include element-invisible-off;
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//                                                  Custom
+
+@mixin group {
+  // This is a modern replacement for 'clearfix'
+  &:after {
+    content: "";
+    display: table;
+    clear: both;}
+}
+// @mixin clearfix {
+//   @include group;
+// }
+@mixin ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// Column
+// An element that is in a row with other elements, with a gap between the elements.
+@mixin column ($cols: 2, $gutter-width: $gutter-wide, $float-dir: left) {
+    $col-width: (100% - ($cols - 1) * $gutter-width) / $cols;
+
+    $last-col: $cols + "n";
+    $first-col: $last-col + " - " + ($cols - 1);
+
+    float: $float-dir;
+    width: $col-width;
+    margin-left: $gutter-width / 2;
+    margin-right: $gutter-width / 2;
+
+    display: inline-block;
+
+    &:nth-child(n + #{$cols + 1}) {
+      margin-top: $gutter-width;
+    }
+
+    &:nth-child(#{$first-col}) {
+        margin-left: 0;
+        clear: $float-dir;
+    }
+    &:nth-child(#{$last-col}) {
+        margin-right: 0;
+    }
+}
+
+
+// Flexbox
+
+@mixin display-flex() {
+  display:  -webkit-box;
+  display:     -moz-box;
+  display:  -ms-flexbox;
+  display: -webkit-flex;
+  display:         flex;
+}
+
+@mixin flex($values) {
+  -webkit-box-flex: $values;
+     -moz-box-flex: $values;
+      -webkit-flex: $values;
+          -ms-flex: $values;
+              flex: $values;
+}
+
+@mixin align-items($value) {
+    -webkit-box-align: $value;
+   -webkit-flex-align: $value;
+       -ms-flex-align: $value;
+  -webkit-align-items: $value;
+          align-items: $value;
+}
+
+@mixin justify-content($value) {
+  @if $value == 'justify' {
+           -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+              -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  @if $value == 'center' {
+           -webkit-box-pack: center;
+    -webkit-justify-content: center;
+              -ms-flex-pack: center;
+            justify-content: center;
+  }
+}
+
+@mixin order($val) {
+  -webkit-box-ordinal-group: $val;
+  -moz-box-ordinal-group: $val;
+  -ms-flex-order: $val;
+  -webkit-order: $val;
+  order: $val;
+}

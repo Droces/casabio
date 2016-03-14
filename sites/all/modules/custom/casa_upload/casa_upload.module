@@ -1,0 +1,412 @@
+<?php
+/**
+ * @file
+ * Bulk Media Upload Module
+ */
+
+
+
+
+
+/**
+ * Help page for bulk media upload
+ */
+// function casa_upload_help($path, $arg) {
+//   if ($path == 'admin/help#casa_upload') {
+//     return '';
+//   }
+//   return '';
+// }
+
+
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function casa_upload_menu() {
+
+  $items['contribute/upload'] = array(
+    'title'             => 'Contribute Multiple Observations', // Because this is the first step, this needs to be clear. The steps block shows it's the upload page.
+    'page callback'     => 'get_upload_form_content',
+    // 'page arguments'    => array('casa_upload_upload_form'),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  // $items['contribute/upload/summary'] = array(
+  //   'title' => 'Casa Upload Summary',
+  //   'page callback' => 'drupal_get_form',
+  //   'page arguments' => array('casa_upload_summary'),
+  //   'access arguments' => array('bulk upload media'),
+  //   'type' => MENU_LOCAL_ACTION,
+  //   'file' => 'casa_upload.summary.inc',
+  // );
+
+  // dpm($items);
+  return $items;
+}
+
+
+
+
+
+/**
+ * Implements hook_permission().
+ */
+// function casa_upload_permission() {
+//   return array(
+//     'administer bulk media upload' => array(
+//       'title' => t('Administer bulk media upload'),
+//       'description' => t('Allows users to access the admin pages for casa_upload.'),
+//     ),
+//     'bulk upload media' => array(
+//       'title' => t('Bulk upload media'),
+//       'description' => t('Allows users to bulk upload media files.'),
+//     ),
+//   );
+// }
+
+
+
+
+
+/**
+ * Form for bulk media upload
+ */
+function get_upload_form_content() {
+  // global $language;
+
+  set_error_handler("exception_error_handler");
+
+  // Create the collection node
+    $values = array(
+      'type' =>     'collection',
+      'status' =>   1,
+      'comment' =>  0,
+      'promote' =>  0,
+    );
+    $collection = entity_create('node', $values);
+
+  module_load_include('inc', 'node', 'node.pages');
+  $form = drupal_get_form('node_form', $collection, ['form_view_mode' => 'contribute']);
+
+
+  $file_url = drupal_get_path('module', 'casa_upload') . '/intro.html';
+  $intro_markup = file_get_contents($file_url);
+
+  $content = array(
+    'intro' => array(
+      '#type' => "markup",
+      '#markup' => $intro_markup,
+    ),
+    'form' => $form,
+  );
+
+  return /*$form*/ $content;
+}
+
+
+
+
+
+/**
+ * A replacement for the default form submission handler for node_form(). Saves a collection.
+ */
+function casa_upload_node_form_submit($form, &$form_state) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+  save_uploaded_files($form, $form_state, $form_state['nid']);
+}
+
+
+
+
+// function casa_upload_preprocess(&$variables, $hook) {
+//   // dpm($variables, 'variables');
+//   // switch ($hook) {
+//   //   case 'form_id': ...; break;
+//   // }
+// }
+
+
+
+
+
+/**
+ * Saves file entities and picture nodes from uploaded files.
+ * This function is called after the form's node (a collection) is saved.
+ *
+ * @param $collection
+ *   The node ID of the collection that the pictures should reference.
+ */
+function save_uploaded_files($form, &$form_state, $collection) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+  // dpm($collection, 'collection');
+
+  $entity_type =  'node'; // variable_get('casa_upload_entity_type');
+  $entity_info =  entity_get_info($entity_type);
+
+
+  // Prepare the batch process.
+  $placeholders = array('@entity_type' => $entity_info['label']);
+  $batch = array(
+    'title' =>          t('Turning files into pictures…', $placeholders),
+    'error_message' =>  t('@entity_type generation has encountered an error.', $placeholders),
+    'finished' =>       '_casa_upload_batch_finished',
+    // 'file' =>           drupal_get_path('module', 'casa_upload') . '/casa_upload.upload.inc',
+  );
+
+  foreach ($form_state['values']['upload'] as $tmpfile) {
+    // dpm($tmpfile, 'tmpfile');
+    $batch['operations'][] = array('_casa_upload_generate_entity', array(
+      $tmpfile,
+      $form,
+      $form_state,
+      $collection,
+    ));
+  }
+
+  // dpm($batch);
+  batch_set($batch);
+}
+
+
+
+
+
+/**
+ * Internal function for entity generation. Gets called for each file that is uploaded: creates a node for it.
+ *
+ * @param $tmpfile
+ * @param $form
+ * @param $form_state
+ * @param $collection
+ *   The node ID of the collection that the picture should reference.
+ * @param $context
+ *
+ * @return boolean
+ *   Returns true if entity is successfully created, or null otherwise.
+ */
+function _casa_upload_generate_entity($tmpfile, $form, $form_state, $collection, &$context) {
+  // dpm('Reached: _casa_upload_generate_entity');
+
+  // Most of this function's code was copied from the bulk_media_upload module
+
+  global $user;
+  $entity_type =      'node'/*variable_get('casa_upload_entity_type')*/;
+  $entity_info =      entity_get_info($entity_type);
+  $mediafield_name =  'field_image'/*variable_get('casa_upload_mediafield')*/;
+  $bundle =           'picture'/*variable_get('casa_upload_bundle')*/;
+  $mediafield_info =  field_info_instance($entity_type, $mediafield_name, $bundle);
+
+  // Save media file.
+  $save_media_file_result = save_media_file($tmpfile, $mediafield_info);
+  $file = $save_media_file_result[0];
+  $uri = $save_media_file_result[1];
+
+  // Create the entity representing the file
+  $entity = create_entity($entity_info, $entity_type, $bundle, $file);
+
+  // Add reference to the file to the node, and account for default values submitted.
+
+    add_file_reference($entity, $mediafield_name, $file);
+
+    // Default values.
+    if (isset($form['default_values'])) {
+      field_attach_submit($entity_type, $entity, $form['default_values'], $form_state);
+    }
+
+    entity_save($entity_type, $entity);
+
+
+
+  // Use exif information to set node's date and location fields
+
+    // $test_node_raw = node_load(107);
+    $picture = entity_metadata_wrapper('node', $entity);
+
+    // dpm($picture -> nid -> value(), 'nid');
+
+    $file_instance = file_stream_wrapper_get_instance_by_uri($uri);
+    $exif = exif_read_data($file_instance -> realpath());
+    // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+
+    // dpm($cause_error);
+
+
+    $date_time;
+    if (function_exists('get_date_time')) {
+      $date_time = get_date_time($exif);
+    }
+    if (isset($date_time)) {
+      // dpm($date_time -> getTimestamp(), 'date taken');
+      $picture -> field_date_taken -> set($date_time -> getTimestamp());
+    }
+
+    $new_location = geofield_compute_values(array(
+      'lat' => get_latitude($exif),
+      'lon' => get_longitude($exif),
+    ), 'latlon');
+    // dpm($new_location, 'new_location');
+
+    $picture -> field_location -> set($new_location);
+
+    $picture -> field_collection -> set($collection);
+
+    $picture -> save();
+
+    entity_save($entity_type, $entity);
+  //
+
+  $context['message'] = t('Importing: @filename', array('@filename' => $file->filename));
+  $context['results']['ids'][] = $entity->$entity_info['entity keys']['id'];
+
+  $context['results']['collection'] = $collection;
+
+  return TRUE;
+}
+
+
+
+
+
+function save_media_file($tmpfile, $mediafield_info) {
+  global $user;
+  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  $source = $tmpfile['tmppath'];
+
+  $directory = '';
+  if(isset($mediafield_info['settings']['file_directory'])){
+    $directory .= token_replace($mediafield_info['settings']['file_directory']) . '/';
+
+    // If the directory isn't writable, or doesn't exist and can't be created, the upload will fail.
+    $prepare_directory = file_stream_wrapper_uri_normalize($scheme . $directory);
+    if (!file_prepare_directory($prepare_directory, FILE_CREATE_DIRECTORY)) {
+      drupal_set_message(t('The file directory @dir does not exist or is not writable. Please contact an administrator.', array('@dir' => $prepare_directory)), 'error');
+      return;
+    }
+  }
+
+  $destination = file_stream_wrapper_uri_normalize($scheme . $directory . $tmpfile['name']);
+  // dpm($destination, 'destination');
+  $destination = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
+
+  // Create the file object.
+  $uri = file_stream_wrapper_uri_normalize($destination);
+
+  $file = create_new_file($uri, $user);
+  // dpm($file, 'file');
+
+  return [$file, $uri];
+}
+
+
+
+
+/**
+ * Creates an entity representing the file that has been saved in Drupal.
+ */
+function create_entity($entity_info, $entity_type, $bundle, $file) {
+  global $user;
+
+  $label_field = isset($entity_info['entity keys']['label']) ?
+    $entity_info['entity keys']['label'] : 'name'; // Default label field to 'name'.
+
+  // Create the new entity.
+  $entity = entity_create($entity_type, array(
+    $entity_info['entity keys']['bundle'] => $bundle,
+    $label_field => $file -> filename,
+  ));
+
+  // If the entity has a property tied to UID, set it so that, e.g., nodes will be assigned an author.
+  $info = entity_get_property_info($entity_type);
+  foreach ($info['properties'] as $property) {
+    if (isset($property['schema field']) && $property['schema field'] == 'uid') {
+      $entity -> uid = $user -> uid;
+      break;
+    }
+  }
+  entity_save($entity_type, $entity);
+
+  return $entity;
+}
+
+
+
+
+
+/**
+ * Creates a new Drupal file entity from a URI.
+ */
+function create_new_file($uri, $user) {
+  $file = new StdClass;
+  $file -> uid = $user->uid;
+  $file -> filename = basename($uri); // @decide Should this be made 'safer'?
+  $file -> uri = $uri;
+  $file -> filemime = file_get_mimetype($uri);
+  $file -> filesize = @filesize($uri);
+  $file -> timestamp = REQUEST_TIME;
+  // dpm($file -> timestamp, 'timestamp');
+  // $file -> field_time_taken = REQUEST_TIME;
+  $file -> status = FILE_STATUS_PERMANENT;
+  $file -> is_new = TRUE;
+  $file -> status = FILE_STATUS_PERMANENT; // @decide Duplicate, mistake?
+  file_save($file);
+  return $file;
+}
+
+
+
+
+
+/**
+ * Adds a reference to a file to the node's media field.
+ */
+function add_file_reference($entity, $mediafield_name, $file, $lang = LANGUAGE_NONE) {
+  $fieldinfo = field_info_field($mediafield_name);
+  $filefields = array('image', 'file');
+
+  $settings = array();
+  $settings['fid'] = $file -> fid;
+
+  // Additional values for filefield (and imagefield).
+  if(in_array($fieldinfo['module'], $filefields)){
+    $settings['display'] = 1;
+    $settings['description'] = '';
+  };
+
+  $entity -> $mediafield_name = array($lang => array(0 => $settings));
+}
+
+
+
+
+
+/**
+ * Finished function for batch.
+ */
+function _casa_upload_batch_finished($success, $results, $operations) {
+  // dpm($results, 'results');
+
+  $pictures_count = count($results['ids']);
+
+  drupal_set_message(t('@count @entity_types have been uploaded.',
+    array(
+      '@count' => $pictures_count,
+      '@entity_type' => 'Picture',
+  )));
+  $_SESSION['casa_upload_batch_result'] = $results;
+
+  // Auto-group pictures
+
+  if (function_exists('auto_group_pictures')) {
+    auto_group_pictures($results['collection'], 30);
+  }
+
+  drupal_goto('contribute/multiple-observations/group/' . $results['collection']);
+}

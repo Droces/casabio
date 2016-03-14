@@ -1,0 +1,256 @@
+<?php
+/**
+ * @file
+ * Functionality allowing the browsing content contributed to CasaBio in various ways.
+ */
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_help().
+ *Inline Entity Form
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function browse_help($path, $arg) {}
+
+
+
+
+
+/**
+ * Implements hook_init().
+ */
+// function browse_init() {
+//   // The paths for which the files should be included
+//   $active_paths = array(
+//     'browse*',
+//   );
+
+//   foreach ($active_paths as $active_path) {
+//     if (drupal_match_path(current_path(), $active_path)) {
+//       $file = drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js';
+//       drupal_add_js($file);
+      
+//       drupal_add_library('system', 'drupal.collapse');
+
+//       // $file = drupal_get_path('module', 'edit_selected') . '/stylesheets/edit_selected.css';
+//       // drupal_add_css($file);
+//     }
+//   }
+// }
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_block_info().
+ */
+function browse_block_info() {
+  $blocks = array();
+
+  $blocks['browse_chooser_form'] = array(
+    'info' => t('Browse chooser form'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+  
+  return $blocks;
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_block_configure().
+ */
+// function browse_block_configure($delta='') {}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_block_save().
+ */
+// function browse_block_save($delta = '', $edit = array()) {}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_block_view().
+ */
+function browse_block_view($delta = '') {
+  $block = array();
+  
+  switch ($delta) {
+    // For the Selected Buttons block
+    case 'browse_chooser_form':
+      $block['subject'] = t('Choose Your Browse');
+      $block['content'] = drupal_get_form('browse_chooser_form');
+      break;
+  }
+  
+  return $block;
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Defines the Browse chooser form.
+ */
+function browse_chooser_form() {
+  $options_entity = array(
+    'observations' => t('Observations'), 
+    'collections' => t('Collections'),
+  );
+
+  $form['entity'] = array(
+    '#type' => 'radios',
+    '#title' => t('What would you like to see?'),
+    // '#default_value' => isset($node->active) ? $node->active : 1,
+    '#options' => $options_entity,
+    // '#description' => t('When a poll is closed, visitors can no longer vote for it.'),
+  );
+
+  $options_status = array(
+    'new' => t('New'), 
+    'unidentified' => t('Unidentified'),
+    'all' => t('All'),
+  );
+
+  $form['status'] = array(
+    '#type' => 'radios',
+    '#title' => t('Which ones?'),
+    // '#default_value' => isset($node->active) ? $node->active : 1,
+    '#options' => $options_status,
+    // '#description' => t('When a poll is closed, visitors can no longer vote for it.'),
+  );
+
+  $options_format = array(
+    'map' => t('Map'), 
+    'table' => t('Table'),
+    'list' => t('List'),
+  );
+
+  $form['format'] = array(
+    '#type' => 'radios',
+    '#title' => t('Format?'),
+    // '#default_value' => isset($node->active) ? $node->active : 1,
+    '#options' => $options_format,
+    // '#description' => t('When a poll is closed, visitors can no longer vote for it.'),
+  );
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Browse it'),
+    // '#disabled' => TRUE,
+    '#submit' => array('browse_chooser_submit'),
+  );
+
+  $form['#attributes'] = array('class' => array('inline-selectables'));
+
+  return $form;
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * 
+ */
+function browse_chooser_submit($form, &$form_state) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+
+  $url = ''/*current_path()*/;
+  // dpm($url, 'url');
+  
+  $options = array(
+    // 'query' => array(''),
+    // 'fragment' => '',
+    // 'absolute' => FALSE,
+    // 'alias' => FALSE,
+    // 'prefix' => ''
+  );
+
+  switch ($form_state['values']['entity']) {
+    case 'observations':
+      $url .= 'browse/observations';
+      break;
+
+    case 'collections':
+      $url .= 'browse/collections';
+      break;
+    
+    default:
+      return; // Don't redirect.
+      break;
+  }
+
+  switch ($form_state['values']['format']) {
+    case 'map':
+      $url .= '/map';
+      break;
+
+    case 'table':
+      $url .= '/table';
+      break;
+
+    case 'list':
+      $url .= '/list';
+      break;
+
+    case '':
+      // Add nothing.
+      break;
+    
+    default:
+      return; // Don't redirect.
+      break;
+  }
+  
+  switch ($form_state['values']['status']) {
+    case 'new':
+      $options['query'] = array('created' => '2');
+      break;
+
+    case 'unidentified':
+      $options['query'] = array('has_identifications' => '2');
+      break;
+
+    case 'all':
+      # code...
+      break;
+
+    case '':
+      // Add nothing.
+      break;
+    
+    default:
+      return; // Don't redirect.
+      break;
+  }
+
+  drupal_goto($url, $options, 302);
+}

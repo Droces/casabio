@@ -1,0 +1,12 @@
+name = 			Auto-group nodes
+core = 			7.x
+package = 		Casabio
+
+description = 	Groups pictures into observations based on their date and time taken.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+;scripts[] = scripts/casa_taxa_mgt.js

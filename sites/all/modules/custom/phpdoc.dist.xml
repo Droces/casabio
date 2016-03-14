@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- /home/dane/pear/bin/phpdoc -d . -t ./docs -->
+<phpdoc>
+  <title>CasaBio Custom Modules</title>
+  <parser>
+    <target>data/output</target>
+    <extensions>
+        <extension>module</extension>
+        <extension>inc</extension>
+        <extension>install</extension>
+        <extension>php</extension>
+        <extension>php3</extension>
+        <extension>phtml</extension>
+    </extensions>
+  </parser>
+  <transformer>
+    <target>data/output</target>
+  </transformer>
+  <files>
+    <directory>.</directory>
+  </files>
+</phpdoc>

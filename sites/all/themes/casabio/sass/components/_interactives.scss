@@ -1,0 +1,245 @@
+/**
+ * @file
+ * 
+ * File name       Components
+ * For site     Devoted
+ * Created by       Touchdreams
+ */
+
+/*
+ * Contents
+
+    Message popups
+    Toggle
+    Groupables
+    Selectables
+*/
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Message popups
+*/
+// Small text-based popups that indicate when an action has been performed.
+// These have an optional actions such as 'undo'.
+.message_popup {
+    position: fixed;
+    bottom: 2em;
+    left: 5%;
+    background: tint( black, 8% );
+    color: white;
+    padding: $pointer_target-padding;
+    padding-right: 0.8em;
+    @include border-radius( $corner_radius-small );
+    @include transition(all 0.3s ease-in);
+  
+    &.hidden {
+        display: block !important;
+        bottom: -3em; // Just enough to hide it
+        @include transition(all 0.3s ease-out);
+    }
+
+  button {
+    position: static;
+    // padding: 0;
+    background: none;
+    margin: 0;
+    color: $colour-buttons;
+  }
+  button:first-of-type {
+    margin-left: 2em;
+  }
+  button.close {
+    float: right;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Toggle
+*/
+
+.toggleable {
+  cursor: pointer;
+}
+.toggle {
+    background: url('../images/menu.png');
+    width: 2.5em;
+    height: 2.5em;
+    overflow: hidden;
+    color: transparent;
+    float: right;
+    margin-top: 1.2em;
+    z-index: 100;
+    display: none;
+    
+  @media all and (max-width: $w-narrow) {
+        display: block;
+    }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Selectables
+*/
+$img-max-width: 140px;
+$border-width: 2px;
+$selectable-padding: 0;
+$selectable-margin: 6px 2px 2px;
+.selectables {
+
+    #edit-select,
+    .vbo-select-all-markup {
+        display: none !important;
+    }
+
+    .selectable {
+        position: relative;
+        background-clip: padding-box;
+        padding: $selectable-padding;
+        // margin: $border-width / 2;
+        margin: $selectable-margin;
+        // float: left;
+        display: inline-block;
+        vertical-align: top;
+
+        border-radius: 0.4em;
+        // border: solid $border-width transparent;
+        border: none;
+
+        [type="checkbox"],
+        .views-field-views-bulk-operations {
+            display: none;
+        }
+
+        img {
+            @include box-sizing( border-box );
+            // border: 1px solid transparent;
+            // width: $img-max-width;
+            box-sizing: border-box;
+            // border: 1px solid rgba(white, 0.9);
+            border-radius: 3px;
+        }
+        &[data-is-match="true"] {
+            &::before {
+                @extend %font-icon;
+                @extend .icon-check:before;
+                position: absolute;
+                top: 0.5em;
+                left: 0.6em;
+                color: black;
+                font-size: 1.6em;
+            }
+            .views-field-field-image,
+            [class*='views-field-field-pictures'] {
+                img {
+                    opacity: 0.4;
+                }
+            }
+        }
+        $highlight-padding: 0;
+        &::after {
+            content: "";
+            position: absolute;
+            width: 100% + 2 * $highlight-padding;
+            height: 100% + 2 * $highlight-padding;
+            top: -$border-width;
+            left: -$border-width;
+            border-radius: $border-width + 6px;
+            // box-sizing: border-box;
+
+            display: none;
+        }
+        &.selected {
+            // border-color: $colour-orange;
+            // background-color: rgba( $colour-orange, 0.15 );
+            // box-shadow: 1px 1px 4px rgba( black, 0.5 );
+            // border-color: $colour-orange;
+
+            &::after {
+                display: block;
+                background: rgba( $colour-highlight, 0.4 );
+                border: solid $border-width $colour-highlight;
+            }
+            img {
+                border-color: rgba( black, 0.7 );
+            }
+        }
+
+        &.focussed {
+            &::after {
+                display: block;
+                border: solid $border-width $colour-links;
+            }
+        }
+    }
+
+    .group .selectable {
+        margin-top: 2px;
+    }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Groupables
+*/
+.groupables {
+  $groupables-bg-colour: grey;
+  $groupables-border-colour: shade($groupables-bg-colour, 12%);
+
+    ul.content {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        background-color: $groupables-bg-colour;
+        border: 1px solid $groupables-border-colour;
+        border-radius: 0.4em;
+        padding: 0.5em;
+        @include group;
+    }
+
+    .view-content {
+        @include group;
+    }
+    .groupable {}
+    .group {
+        list-style: none;
+        background-color: rgba( white, 0.9 );
+        // border: 1px solid $groupables-border-colour;
+        @include border-radius( $corner_radius-large );
+        padding: 0.2em;
+        @include box-sizing( border-box );
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
+        margin-right: 16px;
+
+        h3 {
+            margin-top: 0;
+        }
+        li {
+            float: left;
+            vertical-align: top;
+        }
+
+        &,
+        ul {
+            width: auto;
+        }
+    }
+
+    .selectable {
+        &.selected {
+            &::after {
+                border-color: scale-lightness($colour-highlight, 40%);
+            }
+        }
+        &.focussed {
+            &::after {
+                border-color: scale-saturation( scale-lightness($colour-links, 40%), 50%);
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+name = 			Casa File Management
+core = 			7.x
+package = 		Casabio
+
+description = 	Provides functions that alter and manage files.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+;scripts[] = scripts/casa_taxa_mgt.js

@@ -1,0 +1,95 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+// =============================================================================
+// Error reporting displayed on the screen
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 'On');
+
+
+
+/**
+ * Implements hook_init().
+ */
+function casa_core_init() {
+  // dpm('Call: casa_core_init');
+
+  libraries_load('toastr');
+  // Try to load the library and check if that worked.
+  if (!(($library = libraries_load('toastr')) && !empty($library['loaded']))) {
+    drupal_set_message(t('Library ‘Toastr’ not loaded.'), 'error', FALSE);
+  }
+
+  drupal_add_library('system', 'ui.dialog', TRUE);
+  // Check that the library has been loaded…
+}
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function casa_core_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+  $form['field_reliability']['#access'] = FALSE;
+}
+
+
+
+/**
+ * Implements hook_admin_paths_alter().
+ */
+function casa_core_admin_paths_alter(&$paths) {
+  //return FALSE to the path where you don't want to show in OVERLAY
+  $paths['node/add/identification'] = FALSE;
+}
+
+
+
+function casa_core_js_alter(&$javascript) {
+  // dpm($javascript, 'javascript');
+
+  // Move all custom module JS files between 'JS_DEFAULT' and 'JS_THEME' groups.
+  foreach ($javascript as $file => $parameters) {
+    // dpm(substr($file, 0, 24), 'substr');
+    if(substr($file, 0, 24) == 'sites/all/modules/custom') {
+      $javascript[$file]['group'] = 50;
+    }
+  }
+  // dpm($javascript, 'javascript');
+}
+
+
+
+
+
+/**
+ * Packages and sends the result of a page callback to the browser as HTML.
+ *
+ * This is a Custom implimentation of drupal_deliver_html_page(), but specifically for AJAX use.
+ */
+function ajax_deliver_html($page_callback_result) {
+  // Emit the correct charset HTTP header, but not if the page callback
+  // result is NULL, since that likely indicates that it printed something
+  // in which case, no further headers may be sent, and not if code running
+  // for this page request has already set the content type header.
+  if (isset($page_callback_result) && is_null(drupal_get_http_header('Content-Type'))) {
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  }
+
+  // Send appropriate HTTP-Header for browsers and search engines.
+  global $language;
+  drupal_add_http_header('Content-Language', $language->language);
+
+  if (isset($page_callback_result)) {
+    print render($page_callback_result);
+  }
+  else {
+    watchdog('Error in ajax_deliver_html()', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+    throw new Exception("Something went wrong retriving the markup", 1);
+  }
+}

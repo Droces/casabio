@@ -1,0 +1,104 @@
+<?php
+/**
+ * @file
+ * Bulk Media Upload Module
+ */
+
+// ini_set('display_errors',1);
+// ini_set('display_startup_errors',1);
+// error_reporting(-1);
+
+
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function crew_observations_menu() {
+
+  $items['contribute/crew_species_observation'] = array(
+    'title'             => 'Add CREW Observation',
+    'page callback'     => 'get_crew_form_content',
+    // 'page arguments'    => array('crew_observations_upload_form'),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'crew_observations.upload.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+
+
+
+
+/**
+ * Form for bulk media upload
+ */
+function get_crew_form_content() {
+  // dpm('Reached: ' . get_upload_form_content);
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+  // global $language;
+  
+  set_error_handler("exception_error_handler");
+
+  // Create the collection node
+    $values = array(
+      'type' =>     'crew_species_observation',
+      'status' =>   1,
+      'comment' =>  0,
+      'promote' =>  0,
+    );
+    $collection = entity_create('node', $values);
+
+  module_load_include('inc', 'node', 'node.pages');
+  $form = drupal_get_form('node_form', $collection, 'crew_observations');
+
+  $form['#after_build'][] = 'crew_observations_after_build';
+
+  // dpm($form, 'form @ end of menu callback');
+  // dpm($cause_error);
+  return $form;
+}
+
+
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function crew_observations_form_node_form_alter(&$form, &$form_state, $form_id) {
+  // dpm('reached: crew_observations_form_node_form_alter');
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+
+  $bundle = $form['#bundle'];
+
+  if ($bundle == 'crew_species_observation') {
+
+    $arg1;
+    if(isset($form_state['build_info']['args'][1])) {
+      $arg1 = $form_state['build_info']['args'][1];
+      // dpm($arg1, 'arg1');
+    }
+    else {
+      return $form;
+    }
+
+    if ($arg1 == 'crew_observations') {
+      // Remove unwanted fields
+
+      $form['additional_settings']['#access'] = FALSE;
+      $form['actions']['preview']['#access'] = FALSE;
+
+      // unset($form['field_date_collected']);
+
+      $form['actions']['submit']['#value'] = 'Save CREW observation';
+
+      // dpm($form, 'form @ end of alter');
+    }
+  }
+}

@@ -1,0 +1,466 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+
+
+// =============================================================================
+/* CONTENTS
+
+  [NU] = Function is not currently used
+
+  // Exception definitions
+  ParameterNotValidException
+
+  // Generic module hook functions
+  [NU] edit_selected_help()
+  edit_selected_menu()
+  edit_selected_init()
+
+  number_specimens_page()
+
+  // Block functions
+  edit_selected_block_info()
+  edit_selected_block_view()
+
+  edit_selected_buttons_block_content()
+  get_block_info()
+  exception_error_handler()
+  array_replace_recursive_search()
+  is_page()
+*/
+
+
+
+
+
+// =============================================================================
+class ParameterNotValidException extends Exception {}
+
+// $block_info = [];
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_help().
+ * Inline Entity Form
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+// function edit_selected_help($path, $arg) {}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_menu().
+ */
+function edit_selected_menu() {
+  $items['ajax/number_specimens'] = array(
+    'title'             => 'Number Specimens',
+    'page callback'     => 'number_specimens_page',
+    // 'page arguments'    => array('casa_upload_upload_form'),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'type'              => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
+
+
+
+/**
+ * Implements hook_init(). Primarily includes needed libraries and files.
+ */
+function edit_selected_init() {
+
+  if (is_page('picture-info') || is_page('observation-info')) {
+
+    // Include required JavaScript files and libraries
+    $js_files = array(
+      // libraries_get_path('openlayers3') . '/build/ol-debug.js',
+      libraries_get_path('jquery.hotkeys') . '/jquery.hotkeys.js',
+      drupal_get_path('module', 'selection') . '/scripts/selection.js',
+      drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js',
+    );
+
+    foreach ($js_files as $path) {
+      drupal_add_js($path);
+    }
+
+    // Add requirements for ctools’ modal (dialog).
+    ctools_include('modal');
+    ctools_modal_add_js();
+
+    drupal_add_library('system', 'drupal.collapse');
+
+
+    // If this is the '/picture-info' page
+    if (is_page('picture-info')) {
+      // Add a JS setting variable: current_page
+      drupal_add_js(array('edit_selected' =>
+        array('current_page' => 'picture-info')), 'setting');
+    }
+    // If this is the '/observation-info' page
+    elseif (is_page('observation-info')) {
+      // Add a JS setting variable: current_page
+      drupal_add_js(array('edit_selected' =>
+        array('current_page' => 'observation-info')), 'setting');
+    }
+
+  }
+}
+
+
+
+
+
+function number_specimens_page() {
+  $post = $_POST;
+  // dpm($post, 'post');
+
+  // @todo Validate form values
+
+  $nids = explode('|', $post['nids']);
+  $nodes;
+  foreach ($nids as $nid) {
+    $node_raw = node_load($nid);
+    $nodes[] = entity_metadata_wrapper('node', $node_raw);
+  }
+
+  $method = $post['method'];
+  $starting_sid = $post['starting-number'];
+
+  for ($i = 0; $i < count($nodes); $i++) {
+    $sid;
+
+    if($method == 'increment') {
+      $sid = $starting_sid + $i;
+    }
+    elseif ($method == 'append') {
+      $sid = $starting_sid . '-' . $i;
+    }
+
+    $nodes[$i]->field_specimen_id->set($sid);
+    $nodes[$i]->save();
+  }
+
+  // return "This is just a callback endpoint (URL)."; // Too slow
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_info().
+ */
+function edit_selected_block_info() {
+  $blocks = array();
+
+  $block_names = array(
+    'edit_selected_pictures' => 'Edit selected pictures form',
+    'edit_selected_observations' => 'Edit selected observations form',
+    'identify_selected_observations' => 'Identify selected observations form',
+  );
+
+  foreach ($block_names as $key => $name) {
+    $blocks[$key] = array(
+      'info' => t($name),
+      'cache' => DRUPAL_CACHE_GLOBAL,
+      // 'cache' => DRUPAL_NO_CACHE,
+    );
+  }
+
+  $blocks['edit_selected_buttons'] = array(
+    'info' => t('Edit selection actions'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  // dpm($blocks, 'blocks');
+  return $blocks;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function edit_selected_block_view($delta = '') {
+  // dpm($delta, 'delta');
+  $block = array();
+
+  set_error_handler("exception_error_handler");
+
+  switch ($delta) {
+    // For the Selected Buttons block
+    case 'edit_selected_buttons':
+      $block['subject'] = t('Group Selected Buttons');
+      $block['content'] = edit_selected_buttons_block_content();
+      break;
+
+    // For the Edit Selected blocks and Identify Selected block
+    case 'edit_selected_pictures':
+    case 'edit_selected_observations':
+    // default:
+      try {
+        $block['subject'] = t(get_block_info($delta)['title']);
+        $block['content'] = edit_selected_block_get_content($delta);
+      }
+      catch (Exception $e) {
+        drupal_set_message(get_class($e) .
+          ' caught: ' . $e -> getMessage() .
+          ' in ' . $e -> getFile() .
+          ' on line ' . $e -> getLine(), "error");
+      }
+      break;
+
+    case 'identify_selected_observations':
+      $block['subject'] = t(get_block_info($delta)['title']);
+      $block['content'] = identify_selected_block_get_content($delta);
+      break;
+  }
+
+  return $block;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function edit_selected_buttons_block_content() {
+  $content = '<form id="selected_buttons">'
+    // . '<button type="button" id="unselect" name="unselect" disabled>Unselect</button>'
+    . '<button data-display="#edit-selected-edit-form" id="edit"><span style="text-decoration: underline;">E</span>dit</button>';
+
+  // If this is the '/picture-info' page
+  if (is_page('picture-info')) {
+    $file_url = drupal_get_path('module', 'edit_selected') . '/pictures_toolbar_1.html';
+    $content .= file_get_contents($file_url);
+  }
+  // If this is the '/observation-info' page
+  elseif (is_page('observation-info')) {
+    $file_url = drupal_get_path('module', 'edit_selected') . '/observations_toolbar_1.html';
+    $content .= file_get_contents($file_url);
+  }
+
+  $content .= '</form>';
+
+  return $content;
+}
+
+
+
+/**
+ * Custom function.
+ *
+ * @return array
+ *   returns an array of info for the user-defined blocks
+ */
+function get_block_info($delta) {
+
+  $block_info = array(
+    'edit_selected_pictures' => array(
+      'title' => 'Edit pictures',
+      'bundle' => 'picture',
+      'use_blank_form' => FALSE,
+      'prefill' => TRUE, // For explanation of $prefill, see the selectable_form.class
+      'actions' => array(
+        'delete',
+        'cancel',
+        'submit',
+      ),
+      'fields' => array(
+        'title',
+        // 'field_image', // Shouldn't be editable
+
+        // 'field_collection', // Shouldn't be editable
+        'field_date_taken',
+
+        'body',
+
+        'field_subject',
+        'field_tags',
+        'field_beauty',
+        'field_usefulness',
+
+        // 'field_location', // Shouldn't be editable; this is merely used to provide the observation with a location
+
+        'field_interaction_subject',
+        'field_interaction_activity',
+      ),
+    ),
+
+    'edit_selected_observations' => array(
+      'title' => 'Edit observations',
+      'bundle' => 'observation',
+      'use_blank_form' => FALSE,
+      'prefill' => TRUE,
+      'actions' => array(
+        'delete',
+        'cancel',
+        'submit',
+      ),
+      'fields' => array(
+        'title',
+
+        // 'field_collection', // Shouldn't be editable
+        'field_count',
+        'field_observer_name',
+        'field_date_observed',
+
+        // 'field_pictures_observation', // Shouldn't be editable
+
+        'body',
+
+        'field_locality',
+        'field_location',
+
+        'field_habitat',
+
+        // 'field_identifications', // Editable through a different form
+
+        // 'field_most_likely_species', // Shouldn't be editable
+        // 'field_mls_probability', // Shouldn't be editable
+
+        // 'field_observation_id', // Shouldn't be editable
+        // 'field_source', // Shouldn't be editable
+        // 'field_external_id', // Shouldn't be editable
+      ),
+    ),
+    'identify_selected_observations' => array(
+      'title' => 'Identify observations',
+      'bundle' => 'identification',
+      'use_blank_form' => TRUE,
+      'prefill' => FALSE,
+      'actions' => array(
+        // 'delete',
+        'cancel',
+        'submit',
+      ),
+      'fields' => array(
+        // 'title', // Shouldn't be editable
+
+        'field_identified_species',
+        'field_certainty',
+
+        'field_observation', // Added in by Casa Node Management module's hook_form_alter()
+      ),
+    ),
+  );
+
+  return $block_info[$delta];
+}
+
+
+
+
+
+include_once 'edit_selected_block.inc';
+// require_once DRUPAL_ROOT . '/' .
+//   variable_get('group_selected_block.inc', 'includes/group_selected_block.inc');
+
+
+
+
+
+
+
+// =============================================================================
+function exception_error_handler($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        // This error code is not included in error_reporting
+        return;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+}
+
+
+
+
+
+/**
+ * Replaces the values of array1 with values having the same keys in the following array.
+ * Does this recursively, traversing into each array and doing the same replacement.
+ * Unlike array_replace(), this function does not add any new elements to array1.
+ */
+function array_replace_recursive_search(array $array1, array $array2) {
+  foreach ($array1 as $key => $value) {
+    // If $array1 has a key matching a key in $array2, replace its value with the corresping value from $array2
+    foreach ($array2 as $a2key => $a2value) {
+      if ($key === $a2key) {
+        // dpm($array1);
+        // dpm($value);
+        if (is_array($value)) {
+          $array1[$key] = [];
+          $value = [];
+        }
+        else {
+          $array1[$key] = $a2value;
+          $value = $a2value;
+        }
+      }
+    }
+    $ignored_keys = array('changed', 'form_token');
+
+    // For arrays, recurse
+    if (is_array($value) && !in_array($key, $ignored_keys, TRUE)) {
+      $array1[$key] = array_replace_recursive_search($value, $array2);
+    }
+  }
+  return $array1;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Determines if the current page is the specified page.
+ */
+function is_page($name) {
+  $casa_paths = array(
+    'contribute/multiple-observations/picture-info*',
+    'contribute/multiple-observations/observation-info*',
+  );
+
+  switch ($name) {
+    case 'picture-info':
+      return drupal_match_path(current_path(), $casa_paths[0]) ? true : false;
+      break;
+
+    case 'observation-info':
+      return drupal_match_path(current_path(), $casa_paths[1]) ? true : false;
+      break;
+
+    default:
+      return false;
+      break;
+  }
+}

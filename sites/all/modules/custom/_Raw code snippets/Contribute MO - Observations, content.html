@@ -1,0 +1,68 @@
+<!-- Generic toolbar -->
+<div role="toolbar" class="generic">
+
+  <button class="flat" data-display="#display-shortcuts">Keyboard shortcuts…</button>
+  <button class="flat" data-display="#create-blank-observations"><strong>+</strong> picture-less observations…</button>
+  <button class="flat" data-display="#number-specimens">Number specimens…</button>
+
+</div>
+
+<!-- Below are small forms that perform simple functions. -->
+
+<!-- Add picture-less observations form -->
+<div id="create-blank-observations" data-transform="to-dialog" style="display: none;" 
+  title="Create picture-less observations: ">
+  <form action="ajax/create-blank-observations" method="post">
+    <input id="count" type="text" name="count" value="1" size="2" />
+    <button type="submit">Create</button>
+    <input id="collection-id" name="collection-id" type="hidden" />
+  </form>
+</div>
+
+<!-- Numbering specimens form -->
+<div id="number-specimens" data-transform="to-dialog" style="display: none;"
+  title="Create picture-less observations: ">
+  <form action="ajax/number_specimens" method="post">
+
+    <select id="method" name="method">
+      <option value="increment">Increment</option>
+      <option value="append">Append</option>
+    </select>
+
+    <label for="starting-number">Starting from:<span class="indicator-required">*</span></label>
+    <input id="starting-number" name="starting-number" type="text" required>
+
+    <input id="nids" name="nids" type="hidden" />
+
+    <button type="submit">Apply</button>
+  </form>
+</div>
+
+<!-- Show fields radios form -->
+<div role="toolbar">
+  <h3 for="show-fields-radios" class="inline">Show: </h3>
+  <form>
+  <div id="show-fields-radios" class="radios inline">
+    <input type="radio" name="show-fields" id="show-no_fields" value="no_fields" checked>
+      <label for="show-no_fields">No fields</label>
+    <input type="radio" name="show-fields" id="show-title" value="title"/>
+      <label for="show-title">Title</label>
+    <input type="radio" name="show-fields" id="show-count" value="count"/>
+      <label for="show-count">Count</label>
+    <input type="radio" name="show-fields" id="show-observer_name" value="observer_name"/>
+      <label for="show-observer_name">Observer</label>
+    <input type="radio" name="show-fields" id="show-date_observed" value="date_observed"/>
+      <label for="show-date_observed">Date</label>
+    <input type="radio" name="show-fields" id="show-body" value="body"/>
+      <label for="show-body">Description</label>
+    <input type="radio" name="show-fields" id="show-location" value="location"/>
+      <label for="show-location">Location</label>
+    <input type="radio" name="show-fields" id="show-locality" value="locality"/>
+      <label for="show-locality">Locality</label>
+    <input type="radio" name="show-fields" id="show-specimen_id" value="specimen_id"/>
+      <label for="show-specimen_id">Specimen ID</label>
+    <input type="radio" name="show-fields" id="show-identification" value="identification"/>
+      <label for="show-identification">Identification</label>
+  </div>
+  </form>
+</div>

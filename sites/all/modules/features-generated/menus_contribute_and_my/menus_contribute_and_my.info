@@ -1,0 +1,17 @@
+name = Menus: Contribute and My
+description = The menus that logged-in users see relating to contributing
+core = 7.x
+package = Features: Structure
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = menu
+features[features_api][] = api:2
+features[menu_custom][] = menu-contribute
+features[menu_custom][] = menu-my
+features[menu_links][] = menu-contribute_span-class-icon-addcirclespan-other:node/62095
+features[menu_links][] = menu-contribute_span-class-icon-helpspan-request:node/14
+features[menu_links][] = menu-contribute_span-classicon-imagespan-an-observation:contribute/observation
+features[menu_links][] = menu-contribute_span-classicon-photolibraryspan-multiple-observations:contribute/upload
+features[menu_links][] = menu-my_span-classicon-accountboxspan-profile:user
+features[menu_links][] = menu-my_span-classicon-assessmentspan-contributions:node/7
+project path = sites/all/modules/features-generated

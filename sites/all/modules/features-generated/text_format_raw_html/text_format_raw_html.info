@@ -1,0 +1,11 @@
+name = Text format: Raw HTML
+description = HTML field formatter and settings that allows any HTML input by an admin
+core = 7.x
+package = Features: Configuration
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = media_wysiwyg
+dependencies[] = pathologic
+features[features_api][] = api:2
+features[filter][] = raw_html
+project path = sites/all/modules/features-generated

@@ -1,0 +1,19 @@
+DEBUG: Scanning for devices in "public" via "@LOCAL"...
+DEBUG: Sending get request to 192.168.0.255...
+DEBUG: OUT Hex Dump (43 bytes):
+DEBUG: OUT 0000: 30 29 02 01  00 04 06 70  75 62 6c 69  63 a0 1c 02    0).....public...
+DEBUG: OUT 0010: 01 01 02 01  00 02 01 00  30 11 30 0f  06 0b 2b 06    ........0.0...+.
+DEBUG: OUT 0020: 01 02 01 19  03 02 01 02  01 05 00                    ...........
+DEBUG: OUT Message:
+DEBUG: OUT SEQUENCE 41 bytes
+DEBUG: OUT     INTEGER 1 bytes 0
+DEBUG: OUT     OCTET STRING 6 bytes "public"
+DEBUG: OUT     Get-Request-PDU 28 bytes
+DEBUG: OUT         INTEGER 1 bytes 1
+DEBUG: OUT         INTEGER 1 bytes 0
+DEBUG: OUT         INTEGER 1 bytes 0
+DEBUG: OUT         SEQUENCE 17 bytes
+DEBUG: OUT             SEQUENCE 15 bytes
+DEBUG: OUT                 OID 11 bytes .1.3.6.1.2.1.25.3.2.1.2.1
+DEBUG: OUT                 NULL VALUE 0 bytes
+DEBUG: 2.003 Scan complete!

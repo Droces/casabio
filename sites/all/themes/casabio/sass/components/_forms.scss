@@ -1,0 +1,226 @@
+/**
+ * @file
+ * 
+ * File name       Components
+ * For site		Devoted
+ * Created by		Touchdreams
+ */
+
+/*
+ * Contents
+
+	Forms
+*/
+
+
+.fields-as-table-rows {
+	.form-item-title,
+	[class*="form-field-type-"] {
+
+		label {
+			float: left;
+			width: 10em;
+		}
+	}
+	.date-clear {
+	    clear: none;
+	    display: inline-block;
+	}
+}
+
+.form-item {
+  margin: 0; // overrides misc.scss
+}
+
+
+form {
+	&[role="toolbar"],
+	[role="toolbar"] & {
+		display: inline-block;
+	}
+
+	&.inline {
+		display: block;
+
+		label,
+		div {
+			display: inline;
+			vertical-align: baseline;
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+
+		input[type="submit"] {
+			padding: $data-field-padding;
+			font-size: 1em;
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+
+		* {
+			vertical-align: middle;
+		}
+	}
+	main &.inline {
+		width: 100%;
+	}
+
+	.inline label {
+		display: inline;
+	}
+	.radios.inline {
+		input {
+			display: none;
+		}
+		label {
+			border: solid 1px grey;
+			font-size: 0.9em;
+			display: table-cell;
+			padding: 0.3em 0.7em;
+			background-color: rgba(black, 0.06);
+
+			&:not(:first-of-type) {
+				border-left-width: 0;
+			}
+			&:first-of-type {
+				@include border-radius($corner_radius-regular 0 0 $corner_radius-regular);
+			}
+			&:last-of-type {
+				@include border-radius(0 $corner_radius-regular $corner_radius-regular 0);
+			}
+		}
+		:checked + label {
+			background: grey;
+			color: white;
+		}
+	}
+	[data-values-status="mixed"] {
+	    // background-image: url('../images/warning.svg');
+	    background-color: scale-lightness( $colour-warning, 92% );
+	    border-color: scale-lightness( $colour-warning, 0% );
+	    border-width: 1px;
+	    border-style: solid;
+	    background-repeat: no-repeat;
+		background-position: 0.5em 0.5em;
+		padding: 0.3em;
+
+		label::after {
+			content: " (mixed values)";
+			font-weight: normal;
+			color: scale-lightness( $colour-warning, -30% );
+		}
+	}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Forms
+*/
+form {
+	// @extend .block.green;
+
+	$form-item-spacing: 0.8em;
+
+	// .form-item {
+	// 	display: table-row;
+
+	// 	& > *:first-child {
+	// 		display: table-cell;
+	// 		vertical-align: top;
+
+	// 		@media all and (max-width: $w-narrow) {
+	// 			display: block;
+	// 		}
+	// 	}
+	// 	&.form-type-select {
+	// 		display: inline-block;
+	// 		margin: 0;
+	// 	}
+	// }
+	// .field-type-text-long .form-item {
+	// 	display: block;
+	// }
+
+	// input,
+	// textarea {
+	// 	max-width: 30em !important; // <============ warning: be careful of this
+
+	// 	@media all and (max-width: $w-narrow) {
+	// 		width: 100%;
+	// 	}
+	// }
+
+	.views-exposed-widget {
+		margin-bottom: $form-item-spacing;
+	}
+
+	.form-item {
+		margin-bottom: $form-item-spacing;
+	}
+
+	label {
+		font-weight: bold;
+		margin: 0 1.2em 0.4em 0; // @todo Should the first 2 values be reversed?
+	}
+
+	.description {
+		color: scale-lightness( $colour-text, 20% );
+		font-size: 0.85em;
+		margin-top: 0.4em;
+	}
+	&.node-form .tabledrag-toggle-weight-wrapper {
+		display: none;
+	}
+
+	// For forms with just radio buttons
+	&.inline-selectables {
+		text-align: center;
+
+		.form-radios {
+			display: inline-block;
+		}
+
+		.form-item.form-type-radio {
+			display: table-cell;
+
+			input {
+				@extend .hidden;
+			}
+
+			$colour-selectable-input: scale-saturation( $colour-orange, -50% );
+			label {
+				display: block;
+				font-size: 0.9em;
+				border: 1px solid $colour-selectable-input;
+				padding: $pointer_target-padding;
+				// @include border-radius( $corner_radius-small );
+				margin-right: 0;
+			}
+			input {
+				&:checked + label {
+					background: $colour-selectable-input;
+					color: white;
+				}
+				&:not(:checked) + label:hover,
+				&:not(:checked) + label:focus {
+					background: rgba( $colour-selectable-input, 0.2);
+					@include transition( 0.2s );
+				}
+				&[disabled] + label,
+				&[disabled] + label:hover,
+				&[disabled] + label:focus {
+					background: #E4E4E4;
+					color: grey;
+				}
+			}
+		}
+	}
+}
+
+
+form#views-form-species-reference-selector-widget-default {
+	.form-actions {
+		display: none;
+	}
+}

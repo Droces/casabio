@@ -1,0 +1,172 @@
+/**
+ * @file
+ * 
+ * File name    Components
+ * For site		  CasaBio
+ * Created by		Touchdreams
+ */
+
+/*
+ * Contents
+
+	Dialog
+
+*/
+
+// jQuery UI
+.ui-widget {
+  &,
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+    font-size: 1em;
+  }
+}
+.ui-widget-overlay {
+    opacity: 0.6;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Dialog
+*/
+// Designed to be modal (only the content in the dialog can be interacted with).
+
+[role="dialog"] {
+  // border-radius: $corner_radius-small;
+  // position: absolute;
+  // width: 100%;
+  z-index: $z-dialogs;
+  // left: 0px;
+  // background-color: white;
+  // padding: $dialog-padding;
+  // border: 1px solid #666;
+  // box-shadow: 0px 0px 10px rgba( black, 0.4 );
+  // display: block;
+  // overflow: auto;
+
+  // left: 0px;
+  // margin: 0px auto;
+  // max-width: 60em;
+  // right: 0px;
+  // width: 80%;
+  // top: $dialog-top;
+  // // max-height: 70%; // rather, it should be able to be scrolled.
+  // @include transition( opacity 0.4s ease 0 );
+
+  // opacity: 0;
+  // display: none;
+  // visibility: hidden;
+
+  // Created by jQuery UI
+  &.ui-dialog {
+    padding: 0;
+
+    //The title bar containing the dialog's title and close button.
+    .ui-dialog-titlebar {
+      border: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background: rgba(black, 0.1);
+      @include border-radius(0);
+    
+      //The container around the textual title of the dialog.
+      .ui-dialog-title {}
+      //The dialog's close button.
+      .ui-dialog-titlebar-close {
+        height: 100%;
+        top: 0px;
+        margin: 0px;
+        width: 2.5em;
+        right: 0px;
+        border: medium none;
+        @include border-radius(0);
+        border-left: 1px solid rgba(black, 0.14);
+        background: none;
+      }
+    }
+    // The container around the dialog's content. This is also the element the widget was instantiated with.
+    .ui-dialog-content {}
+    // The pane that contains the dialog's buttons. This will only be present if the buttons option is set.
+    .ui-dialog-buttonpane {
+      // The container around the buttons themselves.
+      .ui-dialog-buttonset {}
+    }
+
+    table {
+      width: 100%;
+      
+      & + table {
+        margin-top: 1em;
+      }
+    }
+  }
+
+  //   &[aria-hidden="false"] {
+  //   opacity: 1;
+  //   display: block;
+  //   visibility: visible;
+  // }
+
+  // [aria-label="Close"] {
+  //   color: #AAA;
+  //   cursor: pointer;
+  //   font-size: 2em;
+  //   font-weight: bold;
+  //   line-height: 1;
+  //   position: absolute;
+  //   top: 0.5em;
+  //   right: 1.2em;
+  // }
+
+  // form {
+  //   .form-actions {
+  //     text-align: right;
+  //     direction: rtl;
+  //   }
+  // }
+
+  // h2:first-child {
+  //   margin-top: 0;
+  // }
+
+  // table {
+  //   td:first-child {
+  //     text-align: right;
+  //     padding-right: 1em;
+  //   }
+  // }
+}
+
+.modal-default {
+  .modal-content {
+    width: auto !important;
+  }
+}
+
+.ui-widget-overlay,
+.cover {
+  z-index: $z-dialogs - 5;
+}
+.cover {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  @include transition( background 0.5s ease 0s, height 0s ease 0.5s );
+  height: 0 !important; /* makes the 'invisible' cover not always covering the content */
+  background: rgba(black, 0);
+
+  &.visible,
+  &[aria-hidden="false"] {
+    @include transition( background 0.5s ease 0s, height 0s ease 0s );
+    height: 100% !important;
+    background: $dialog-backdrop-bg;
+    // @include transition( background 0.5s ease 0s );
+  }
+}

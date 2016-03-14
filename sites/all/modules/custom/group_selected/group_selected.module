@@ -1,0 +1,435 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+
+
+// =============================================================================
+/* CONTENTS
+
+  [NU] = Function is not currently used
+
+  includes
+  constants
+
+  // Generic module hook functions
+  [NU] group_selected_observation_help()
+  group_selected_menu()
+  group_selected_init()
+
+  // Block functions
+  group_selected_block_info()
+  group_selected_block_view()
+
+  group_pictures_into_observations()
+  delete_referring_nodes()
+  selected_buttons_block_content()
+  set_observation_fields()
+  get_taxon_from_filename()
+*/
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_help().
+ *Inline Entity Form
+ * Displays help and module information.
+ *
+ * @param path
+ *   Which path of the site we're using to display help
+ * @param arg
+ *   Array that holds the current path as returned from arg() function
+ */
+// function group_selected_observation_help($path, $arg) {}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_menu().
+ */
+function group_selected_menu() {
+  $items['ajax/collections/%/group_pictures_into_observations'] = array(
+    'title' => 'Group Selected Processor Page',
+    'page callback' => 'group_pictures_into_observations',
+    'page arguments' => array(2),
+    'access callback' => TRUE,  // Create a permission for this? array('administer bulk media upload'),
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  return $items;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_init().
+ */
+function group_selected_init() {
+  // The path for which the files should be included
+  $active_path = 'contribute/multiple-observations/group*';
+
+  if(drupal_match_path(current_path(), $active_path)) {
+
+    $file = drupal_get_path('module', 'selection') . '/scripts/selection.js';
+    drupal_add_js($file);
+
+    $file = drupal_get_path('module', 'group_selected') . '/scripts/group_selected.js';
+    drupal_add_js($file);
+
+    // $file = drupal_get_path('module', 'group_selected') . '/stylesheets/group_selected.css';
+    // drupal_add_css($file);
+
+    $file = libraries_get_path('jquery.hotkeys') . '/jquery.hotkeys.js';
+    drupal_add_js($file);
+
+  }
+
+
+  // Auto-group this collection
+
+  // $collection = 806;
+
+  // $query = new EntityFieldQuery();
+
+  // $query->entityCondition('entity_type', 'node')
+  //   ->entityCondition('bundle', 'picture')
+  //   ->fieldCondition('field_collection', 'target_id', $collection, '=')
+  //   // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  // ;
+
+  // $result = $query->execute();
+  // // dpm($result, 'result');
+
+  // if (isset($result['node'])) {
+  //   $nids = array_keys($result['node']);
+  //   auto_group_pictures($collection);
+  // }
+}
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_info().
+ */
+function group_selected_block_info() {
+  $blocks = array();
+
+  $blocks['group_selected_buttons'] = array(
+    'info' => t('Group selection actions'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function group_selected_block_view($delta = '') {
+  $block = array();
+
+  set_error_handler("exception_error_handler");
+
+  switch ($delta) {
+    // For the Selected Buttons block
+    case 'group_selected_buttons':
+      $block['subject'] = t('Group Selected Buttons');
+      $block['content'] = selected_buttons_block_content();
+      break;
+  }
+
+  return $block;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * @param string[] $nids
+ *   the node ids that should be grouped by .
+ */
+function group_pictures_into_observations($collection) {
+  // dpm($_POST, '_POST');
+  // dpm($_SERVER, '_SERVER');
+
+  $result = array('result' => 'success');
+
+  global $user;
+  // $language = "und";
+
+  $values = array(
+    'type' =>     'observation',
+    // 'title' =>    '',
+    'uid' =>      $user->uid,
+    'status' =>   1,
+    'comment' =>  0,
+    'promote' =>  0,
+  );
+
+
+  // Create new groups
+
+  $nids = $_POST["groupings"];
+  // dpm ($nids, "nid groupings to save" );
+
+
+  // Delete all groups from this collection.
+  // Assumes that all desired groupings will be provided in $_POST.
+  // If $_POST is empty, it is assumed that no groups are desired.
+  delete_referring_nodes($values['type'], $collection);
+
+  foreach ($nids as $nid_group) {
+
+    // Get required values
+
+    $first_of_group = entity_metadata_wrapper('node', node_load($nid_group[0]));
+    // $location = $first_of_group -> field_location -> value();
+    // dpm($location, 'location');
+    // $date = $first_of_group ->  field_date_taken -> value();
+
+    // $collection = $_POST["collection"];
+
+    // Create the node
+
+    $entity_raw = entity_create('node', $values);
+    // Wrap the node to make dealing with the values of the entity's properties and fields easier
+    $observation = entity_metadata_wrapper('node', $entity_raw);
+
+    try {
+      // In auto_group_nodes.module
+      set_observation_fields($observation, $nid_group, $collection);
+    }
+    catch (Exception $e) {
+      $result = array(
+        'result' => 'failure',
+        'reason' => $e->getMessage()
+      );
+    }
+
+    $observation -> save();
+    // dpm($observation, 'observation');
+  }
+
+  // drupal_set_message(t("Pictures grouped successfully"), 'status');
+
+  // $commands[] = ajax_command_replace('#MYMODULE-wrapper', 'Hey ! Some AJAX content !');
+  $response = array('#type' => 'ajax', '#commands' => $result);
+
+  return $response;
+  // dpm($cause_error);
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Deletes all groups from this collection.
+ *
+ * @param $type
+ *   Type of nodes to look for and delete.
+ * @param $collection_nid
+ *   The nid of the collection that the nodes must reference to be deleted.
+ */
+function delete_referring_nodes($type, $collection_nid) {
+
+  $query = new EntityFieldQuery();
+
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', $type)
+    ->fieldCondition('field_collection', 'target_id', $collection_nid, '=')
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+
+  $result = $query->execute();
+  // dpm($result, 'result');
+
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    node_delete_multiple($nids);
+  }
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function selected_buttons_block_content() {
+  $content = '<form id="selected_buttons">';
+    // . '<button type="button" id="unselect" name="unselect" disabled>Unselect</button>'
+
+  $file_url = drupal_get_path('module', 'group_selected') . '/grouping_toolbar_1.html';
+  $content .= file_get_contents($file_url);
+
+  $content .= '</form>';
+
+  return $content;
+}
+
+
+
+/**
+ * Set's the observation's count, location, and pictures fields.
+ *
+ * @param $observation
+ *   The observation whose fields should be set. Within an entity_metadata_wrapper.
+ * @param $picture_nids
+ *   An array of nids of the pictures that this observation should include.
+ * @param $collection
+ *   The nid of the collection that this observation should be part of.
+ */
+function set_observation_fields(&$observation, $picture_nids, $collection) {
+
+  set_error_handler("exception_error_handler");
+
+  $first_of_group = entity_metadata_wrapper('node', node_load($picture_nids[0]));
+
+  $location = $first_of_group -> field_location ->  value();
+  // dpm($location, 'location');
+  $date = $first_of_group ->  field_date_taken ->   value();
+  // dpm($date, 'date');
+
+  $observation -> field_count ->                set(1);
+  $observation -> field_pictures_observation -> set($picture_nids);
+  $observation -> field_location ->             set($location);
+  $observation -> field_date_observed ->        set($date); // Taken from first picture
+  $observation -> field_collection ->           set($collection);
+  $observation -> save();
+
+  // Create idenfitication based on file name.
+
+  // $filename = 'IMG_1278 Acanthopsis disperma.jpg';
+  $filename = $first_of_group -> field_image -> value()['filename'];
+  // dpm($filename, '$filename');
+
+  $taxon = get_taxon_from_filename($filename); // From group_selected.module
+  // dpm($taxon, $filename);
+
+  if ($taxon) {
+    $taxon_loaded = taxonomy_term_load($taxon);
+    // dpm($taxon_loaded, '$taxon_loaded');
+    $taxon_name = $taxon_loaded -> name;
+    $observation -> title -> set($taxon_name);
+    $observation -> save();
+
+    global $user;
+
+    $values = array(
+      'type' =>     'identification',
+      'uid' =>      $user->uid,
+      'status' =>   1,
+      'comment' =>  0,
+      'promote' =>  0,
+    );
+
+    $identification_raw = entity_create('node', $values);
+    $identification = entity_metadata_wrapper('node', $identification_raw);
+
+    $identification -> title ->                     set($taxon_name);
+    $identification -> field_observation ->         set($observation -> getIdentifier());
+    $identification -> field_identified_species ->  set($taxon);
+    $identification -> field_certainty ->           set(8); // Highly likely
+    $identification -> save();
+    // dpm($identification -> field_observation -> value(), '$identification observation');
+    // dpm($identification, 'identification');
+  }
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Searches the database for a taxon with a name matching the given filename.
+ *
+ * Assumes taxon name is spelt correctly (does not fuzzy-match).
+ * If multiple matching taxa are found, only the first result will be returned.
+ * Can match species with 2-word names, or other taxa.
+ * Can split the filename by spaces, dashes or underscores.
+ */
+function get_taxon_from_filename($filename) {
+  $taxon = null;
+
+  // Trim off everything after the first period.
+  $name = substr($filename, 0, strpos($filename, '.'));
+  // dpm($name, 'name');
+
+  // ---------------------------------------------------------------------------
+  // Try with whole name (can match any taxon).
+
+  $possible_matches = taxonomy_get_term_by_name($name, 'taxa');
+  // dpm($possible_matches, 'possible_matches');
+
+  if (count($possible_matches) >= 1) {
+    $keys = array_keys($possible_matches);
+    $taxon = $keys[0]; // Just the first one.
+    return $taxon;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Split filename into words.
+
+  $regex = '/ +|-+|_+/'; // Can match spaces, dashes, or underscores
+  $words = preg_split($regex, $name);
+  // dpm($words, '$words');
+
+  // ---------------------------------------------------------------------------
+  // Try with 2 words at a time (can match species).
+
+  for ($i = 0; $i < count($words) - 1; $i++) {
+    $species_name = $words[$i] . ' ' . $words[$i + 1];
+    // dpm($species_name, 'species_name');
+    $possible_matches = taxonomy_get_term_by_name($species_name, 'taxa');
+    // dpm($possible_matches, 'possible_matches');
+
+    if (count($possible_matches) >= 1) {
+      $keys = array_keys($possible_matches);
+      $taxon = $keys[0]; // Just the first one.
+      return $taxon;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Try with each individual word at a time (can match any taxon).
+
+  foreach ($words as $word) {
+    $possible_matches = taxonomy_get_term_by_name($word, 'taxa');
+    // dpm($possible_matches, 'possible_matches');
+
+    if (count($possible_matches) >= 1) {
+      $keys = array_keys($possible_matches);
+      $taxon = $keys[0]; // Just the first one.
+      return $taxon;
+    }
+  }
+
+  return $taxon;
+}

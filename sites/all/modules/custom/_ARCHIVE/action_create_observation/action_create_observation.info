@@ -1,0 +1,36 @@
+; ==============================================================================
+; 													BASICS
+
+name = 			Action Create Observation
+description = 	Creates an observation that references the selected pictures
+core = 			7.x
+package = 		Casabio
+; configure = 	admin/config/content/example
+; php = 		5.3
+
+
+
+; ==============================================================================
+; 													DEPENDENCIES
+
+dependencies[] = views
+dependencies[] = entity
+
+
+
+; ==============================================================================
+; 													STYLESHEETS
+
+; stylesheets[all][] = node.css
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+
+
+; ==============================================================================
+; 													FILES
+
+; files[] = tests/example.test

@@ -1,0 +1,16 @@
+name = 			Casa Upload
+core = 			7.x
+package = 		Casabio
+
+description = 	Provides an interface for uploading several images files at a time. A picture node is then created for each of them, and they are then referenced by the pictures.
+
+; Note that because this module was created by altering the Bulk Media Upload module, a lot of the code in this module has not been altered by the author of this module.
+
+dependencies[] = entity
+dependencies[] = plupload
+dependencies[] = token
+
+; specific to CasaBio
+dependencies[] = casa_exif_mgt
+; dependencies[] = auto_group_nodes ; Helpful, but not necessary
+

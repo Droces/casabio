@@ -1,0 +1,111 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_help().
+ */
+// function casa_services_help($path, $arg) {}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_services_resources().
+ */
+function casa_services_services_resources() {
+
+  $resources = array(
+    // '#api_version' => 11,
+  );
+
+  $resources = array(
+    'user' => array(
+      'actions' => array(
+        'current_user' => array(
+          'help' => 'Get the current user; if logged in.',
+          'callback' => '_user_resource_current_user',
+          'file' => array('type' => 'module', 'module' => 'casa_services', 'name' => 'resources/casa_services'),
+          'access callback' => '_user_resource_access',
+          'access arguments' => array('view', $GLOBALS['user']->uid),
+          'access arguments append' => FALSE,
+          'args' => array(),
+        ),
+      ),
+    ),
+  );
+
+  module_load_include('inc', 'casa_services', 'resources/observations_resource');
+  module_load_include('inc', 'casa_services', 'resources/other_node_resources');
+  module_load_include('inc', 'casa_services', 'resources/taxa_resource');
+
+  $resources += _observations_resource_definition();
+  $resources += _other_node_resources_definition();
+  $resources += _taxa_resource_definition();
+
+  return $resources;
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_services_resources_alter().
+ */
+function casa_services_services_resources_alter(&$resources, &$endpoint) {
+  // dpm($resources, 'resources');
+  // dpm($endpoint, 'endpoint');
+}
+
+
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function casa_services_ctools_plugin_api($owner, $api) {
+  if ($owner == 'services' && $api == 'services') {
+    return array(
+      'version' => 3,
+      'file' => 'casa_services.module', // Optional parameter to indicate the file name to load.
+      'path' => drupal_get_path('module', 'casa_services'), // If specifying the file key, path is required.
+    );
+  }
+}
+
+
+
+/**
+ * Implements hook_default_services_endpoint().
+ */
+function casa_services_default_services_endpoint() {
+  $endpoints = array();
+
+  return $endpoints;
+}
+
+/**
+ * Get the current user details.
+ *
+ * @return
+ *   A user object.
+ */
+function _user_resource_current_user() {
+  $uid = $GLOBALS['user']->uid;
+  // dpm($uid, 'uid');
+
+  module_load_include('inc', 'services', 'resources/user_resource');
+  $user = _user_resource_retrieve($uid);
+
+  return $user;
+}

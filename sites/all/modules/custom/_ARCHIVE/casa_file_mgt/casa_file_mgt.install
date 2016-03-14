@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ *   Casa Map Management module
+ */
+
+
+
+/**
+ * Implements hook_install().
+ */
+function casa_file_mgt_install() {
+  // $field = array(
+  //   // It is strongly advised to prefix the field name with the name of the module 
+  //   // that defines it, to avoid name clashes. Fields created through Field UI are
+  //   // prefixed with 'field_'
+  //   'field_name' => 'field_time_taken',
+  //   'type' => 'text',
+  //   'cardinality' => 1, // Not required, as is default. Number of values field can hold. 
+  // );
+  // field_create_field($field);
+
+  // $instance = array(
+  //   'field_name' => 'field_time_taken',
+  //   'entity_type' => 'file',
+  //   'bundle' => 'image',
+  //   'label' => t('Time taken'),
+  //   'description' => t('Date and time the picture was taken.'),
+  //   'widget' => array(
+  //     'type' => 'text_textfield',
+  //     'weight' => 10,
+  //   ),
+  // );
+  // $instance = field_create_instance($instance);
+}
+
+
+
+/**
+ * Implements hook_install().
+ */
+function casa_file_mgt_uninstall() {  
+  // // Not needed: Deleting the field deltes the instances as well.
+  // // if ($instance = field_info_instance('file', 'field_time_taken', 'image')) {
+  // //   field_delete_instance($instance, TRUE);
+  // // }
+
+  // // $field = field_info_field('field_time_taken');
+  // field_delete_field('field_time_taken');
+}

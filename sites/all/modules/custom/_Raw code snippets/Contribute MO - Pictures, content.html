@@ -1,0 +1,50 @@
+<!-- <div class="masonry-column-sizer"></div> -->
+<!-- <div class="masonry-gutter-sizer"></div> -->
+
+<!-- Generic toolbar -->
+<div role="toolbar" class="generic">
+
+  <button data-display="#page-help">Help…</button>
+  <button data-display="#display-shortcuts">Keyboard shortcuts…</button>
+
+</div>
+
+
+<!-- Page help -->
+<div id="page-help" data-transform="to-dialog" style="display: none;" 
+  title="Add Picture Information Help">
+  <p>On this page, you can provide information about each specific picture.</p>
+  <p>At a later step, you'll be able to identify the species and add information 
+  about the identification.</p>
+</div>
+
+<!-- Show fields radios -->
+<div role="toolbar">
+  <h3 for="show-fields-radios" class="inline">Show: </h3>
+  <form>
+  <div id="show-fields-radios" class="radios inline">
+    <input type="radio" name="show-fields" id="show-no_fields" value="no_fields" checked>
+      <label for="show-no_fields">No fields</label>
+    <input type="radio" name="show-fields" id="show-title" value="title">
+      <label for="show-title">Title</label>
+    <input type="radio" name="show-fields" id="show-date_taken" value="date_taken">
+      <label for="show-date_taken">Date taken</label>
+    <input type="radio" name="show-fields" id="show-body" value="body">
+      <label for="show-body">Description</label>
+    <input type="radio" name="show-fields" id="show-subject" value="subject">
+      <label for="show-subject">Subject</label>
+    <input type="radio" name="show-fields" id="show-tags" value="tags">
+      <label for="show-tags">Tags</label>
+    <input type="radio" name="show-fields" id="show-beauty" value="beauty">
+      <label for="show-beauty">Beauty</label>
+    <input type="radio" name="show-fields" id="show-usefulness" value="usefulness">
+      <label for="show-usefulness">Usefulness</label>
+    <input type="radio" name="show-fields" id="show-location" value="location">
+      <label for="show-location">Location</label>
+    <input type="radio" name="show-fields" id="show-interaction_subject" value="interaction_subject">
+      <label for="show-interaction_subject">Interaction subject</label>
+    <input type="radio" name="show-fields" id="show-interaction_activity" value="interaction_activity">
+      <label for="show-interaction_activity">Interaction activity</label>
+  </div>
+  </form>
+</div>

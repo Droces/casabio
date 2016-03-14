@@ -1,0 +1,40 @@
+; ==============================================================================
+; 													BASICS
+
+name = 			Group Selected
+description = 	Groups selected pictures, then creates an observation for each group.
+
+core = 			7.x
+package = 		Casabio
+; configure = 	admin/config/content/example
+; php = 		5.3
+
+
+
+; ==============================================================================
+; 													DEPENDENCIES
+
+dependencies[] = views
+dependencies[] = entity
+
+
+
+; ==============================================================================
+; 													STYLESHEETS
+
+;stylesheets[all][] = stylesheets/group_selected.css
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+; This is added dynmically via hook_init() in group_selected.module .
+;scripts[] = scripts/group_selected.js
+
+
+
+; ==============================================================================
+; 													FILES
+
+; files[] = tests/example.test

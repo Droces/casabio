@@ -1,0 +1,104 @@
+<?php
+/**
+ * @file
+ *   Casa File Management module
+ */
+
+
+
+
+
+/**
+ * Creates a DateTime object from EXIF data.
+ */
+function get_date_time($exif) {
+  $date_time = NULL;
+  $date_time_string = '';
+
+  if (isset($exif['DateTime'])) {
+    // dpm($exif['DateTime'], 'DateTime');
+    $date_time_string = $exif['DateTime'];
+  }
+  elseif (isset($exif['GPSDateStamp']) && isset($exif['GPSTimeStamp'])) {
+    // dpm($exif['GPSDateStamp'], 'GPSDateStamp');
+    // dpm($exif['GPSTimeStamp'], 'GPSTimeStamp');
+    $time = array();
+    foreach ($exif['GPSTimeStamp'] as $part_fraction) {
+      $part = split('/', $part_fraction)[0];
+      $time[] = strlen($part) == 1 ? '0' . $part : $part;
+    }
+    // dpm($time, 'time');
+    $date_time_string = $exif['GPSDateStamp'] . ' ' . implode(':', $time);
+    // dpm($date_time_string, 'date_time_string');
+  }
+
+  if ($date_time_string) {
+    $date_time = date_create_from_format('Y:m:d G:i:s', $date_time_string);
+  }
+  return $date_time;
+}
+
+
+
+function get_latitude($exif) {
+  $latitude_array = array(
+    $exif['GPSLatitude'][0],
+    $exif['GPSLatitude'][1],
+    $exif['GPSLatitude'][2],
+  );
+  $latitude = toDegrees($latitude_array, $exif['GPSLatitudeRef']);
+  return $latitude;
+}
+
+function get_longitude($exif) {
+  $longitude_array = array(
+    $exif['GPSLongitude'][0],
+    $exif['GPSLongitude'][1],
+    $exif['GPSLongitude'][2],
+  );
+  $longitude = toDegrees($longitude_array, $exif['GPSLongitudeRef']);
+  // dpm ($longitude, "longitude" );
+  return $longitude;
+}
+
+
+
+
+/**
+ * Converts a GPS coordinate part (Latitude or Longitude) into a float degrees value
+ * 
+ * @param string[] $exifCoord
+ *   Coordinate part as a 3-item array of string fractions representing degrees, minutes, and seconds respectively
+ *   Eg. array( 46/1, 0/1, 5403/100 )
+ * @param string $hemi
+ *   One-character string representing the hemisphere the coordinate part is in
+ */
+function toDegrees($exifCoord, $hemi) {
+
+  $degrees = count($exifCoord) > 0 ? stringFractionToFloat($exifCoord[0]) : 0;
+  $minutes = count($exifCoord) > 1 ? stringFractionToFloat($exifCoord[1]) : 0;
+  $seconds = count($exifCoord) > 2 ? stringFractionToFloat($exifCoord[2]) : 0;
+
+  $flip = ($hemi == 'W' or $hemi == 'S') ? -1 : 1;
+
+  return $flip * ($degrees + $minutes / 60 + $seconds / 3600);
+}
+
+/**
+ * Converts a calculates the float value of a fraction in string format 
+ * 
+ * @param string $fraction
+ *   Fraction that should be evaluated
+ */
+function stringFractionToFloat($fraction) {
+
+  $parts = explode('/', $fraction);
+
+  if (count($parts) <= 0)
+    return 0;
+
+  if (count($parts) == 1)
+    return $parts[0];
+
+  return floatval($parts[0]) / floatval($parts[1]);
+}

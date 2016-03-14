@@ -1,0 +1,663 @@
+/**
+ * @file
+ * 
+ * File name   	Components
+ * For site		Devoted
+ * Created by	Touchdreams
+ */
+
+/*
+ * Contents
+
+	Nodes
+	Field widgets
+	Fields
+	Individual fields
+
+*/
+
+@mixin field-on-overlay {
+	// display: none;
+	font-size: 0.85em;
+	font-weight: 600;
+	
+	// @extend %field-as-abbr;
+	display: none;
+
+	// &[aria-hidden="true"] {
+	// 	display: none;
+	// }
+	&[aria-hidden="false"] {
+		display: block;
+		position: absolute;
+		top: 1em;
+		left: 3.3em;
+		width: 60%;
+		height: 76%;
+		overflow: hidden;
+		word-break: break-all;
+
+		// An invisible layer that covers the field so that the text can't be 
+		// selected, which messes with the 'selectable'.
+		&::after {
+			content: "";
+			position: absolute;;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
+
+@mixin data-on-overlay {
+	// display: none;
+	font-size: 0.85em;
+	font-weight: 600;
+	
+	// @extend %field-as-abbr;
+	display: none;
+
+	// &[aria-hidden="true"] {
+	// 	display: none;
+	// }
+	display: block;
+	position: absolute;
+	top: 1em;
+	left: 3.3em;
+	width: 60%;
+	height: 76%;
+	overflow: hidden;
+	word-break: break-all;
+
+	// An invisible layer that covers the field so that the text can't be 
+	// selected, which messes with the 'selectable'.
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+
+.field-none {
+	color: $colour-subtle;
+	font-style: italic;
+}
+
+main .node-form {
+	// Same styling as fieldset
+  padding: $data-field-padding /* !important */;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  @include border-radius ( $corner-radius-large );
+  background-color: rgba(black, 0.03);
+  border: solid 1px #c0c0c0;
+  position: relative;
+
+  width: 60em;
+
+
+  & > div > h2 {
+  	font-size: 1em;
+	background: #dadada;
+	padding: 0.3em 0.6em;
+	display: inline-block;
+	margin-top: 0px;
+	position: absolute;
+	top: -0.9em;
+	border: 1px solid #c0c0c0;
+	@include border-radius ( $corner-radius-regular );
+  }
+}
+
+main .node-teaser .node-form {
+  padding: 0 /* !important */;
+  margin-top: 0;
+  margin-bottom: 0;
+  background: none;
+  border: none;
+  position: static;
+
+  width: auto;
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Nodes
+*/
+.node {
+	.user-picture img {
+		max-width: 24px;
+		border: 1px solid rgba(black, 0.14);
+	}
+}
+.node-teaser {
+	@include group;
+
+	.view-mode-full & {
+		@extend .pane;
+	}
+	.pretitle,
+	section > p:first-child { // A sort of 'label' that displays the name of the content type
+		margin-top: 0px;
+		font-size: 0.8em;
+		font-weight: bold;
+		text-transform: uppercase;
+		// text-align: right;
+		float: right;
+		color: rgb(176, 176, 176);
+		margin-top: -0.8em;
+	}
+	// Block links cover the entire background of a block element such as these nodes.
+	& > a.block {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+	a {
+		position: relative;
+	}
+	.show {
+		.field-none {
+			margin: 0.5em 0px 0.5em 0.5em;
+			font-size: 0.9em;
+			font-weight: 600;
+		}
+	}
+}
+
+.page-node {}
+.view-mode-text {
+	.field {
+		display: inline-block;
+
+		&:not(:first-of-type) {
+			margin-top: 0.5em;
+		}
+	}
+}
+.node-habitat {
+	&.node-teaser {
+		.field {
+			@include column(2, $gutter-narrow);
+		}
+	}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Field widgets
+*/
+.plupload_wrapper {
+    font: inherit;
+}
+.plupload {
+	.plupload_content {
+		font-size: 0.8em;
+	}
+	li {
+		max-width: none;
+		margin: 0;
+	}
+	li.plupload_droptext 
+	.plupload_filelist {
+		height: 12em;
+	    overflow-y: auto;
+	}
+	.plupload_filelist .plupload_file_name {
+	    width: auto;
+	}
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Observations
+*/
+.observation {
+	&.displayed-as-group {
+		header {
+			display: none;
+		}
+	}
+}
+.node-observation {
+	&.displayed-as-node {
+		width: 160px;
+		vertical-align: top;
+		height: 160px + 2px + 79px;
+		margin-bottom: 3.3em;
+		@extend .pane;
+
+		border: none;
+		padding: 0;
+		// background: none;
+
+		.fields {
+			@extend .non-list;
+
+			li {
+				display: inline-block;
+				float: none;
+			}
+		}
+		.views-field {
+			@include field-on-overlay;
+		}
+		.field-data {
+			@include data-on-overlay;
+		}
+		.views-field-views-bulk-operations,
+		.views-field-nid {
+			display: none;
+		}
+		.views-field:first-child {
+			&,
+			img {
+				@include border-radius( $corner_radius-large $corner_radius-large 0 0 );
+			}
+		}
+		.views-field-field-pictures-observation-1,
+		.views-field-field-pictures-observation,
+		.views-field-field-image {
+			display: block;
+
+			.field-content {
+				display: inline;
+			}
+		}
+		.views-field-title {
+			// height: $line-height * 1em;
+			// @include ellipsis;
+		}
+		.views-field-field-pictures-observation-1,
+		.views-field-title {
+			margin-bottom: 2px;
+		}
+		.views-field-field-pictures-observation {
+			height: 85px;
+			overflow: hidden;
+			// background: rgba( black, 0.07);
+
+			header {
+				display: none;
+			}
+			// img {
+			// 	width: 70px;
+			// }
+			& > .field-content > article {
+				@include column (2, $gutter-narrow);
+			}
+			.node {
+				display: inline-block;
+			}
+			.field-name-body { // This shouldn't be displaying anyway!
+				display: none;
+			}
+			article {
+				&:first-child img {
+					@include border-radius( 0 0 0 $corner_radius-large );
+				}
+				&:last-child img {
+					@include border-radius( 0 0 $corner_radius-large 0 );
+				}
+			}
+		}
+		.views-field-field-image {
+			display: block;
+
+			img {
+				width: 70px;
+			}
+		}
+	}
+	&.node-teaser {
+		@extend .pane;
+		margin: 0 1em 1em 0;
+		display: inline-block;
+		vertical-align: top;
+		width: 32em;
+		padding: 0;
+
+		.show,
+		.tell {
+			display: table-cell;
+			vertical-align: top;
+		}
+
+		h2 {
+			font-size: 1.2em;
+		}
+
+		.show {
+			width: 140px;
+
+			.field-item {
+				margin-top: 0;
+			}
+			.others {
+				margin-top: 2px;
+			}
+		}
+		.tell {
+			padding: 0.3em 1.5em 1.2em 1.5em;
+
+			.field {
+				font-size: 0.85em;
+			}
+		}
+		.field-name-field-image {
+			img {
+				@include border-radius( $corner_radius-regular 0 0 $corner_radius-regular );
+			}
+		}
+	}
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Pictures
+*/
+.node-picture {
+	&.view-mode-full {
+		.field-label {
+			min-width: 8em;
+		}
+	}
+	&.node-teaser {
+		.node-title {
+			display: none; // @todo should be removed in template or preprocess fn
+		}
+	}
+	// Used in Contribute: Group
+	&.size-medium {
+		position: relative;
+		max-width: 140px;
+		height: 140px;
+
+		.views-field {
+			@include field-on-overlay;
+		}
+		.views-field-views-bulk-operations,
+		.views-field-nid {
+			display: none;
+		}
+		// .views-field-title,
+		.views-field-field-image {
+			display: block;
+
+			.field-content {
+				display: inline;
+			}
+		}
+		.views-field-field-identified-species {
+			// @extend %overlap-bottom;
+
+			a {
+				display: block;
+				background-color: rgba( black, 0.4 );
+				color: white;
+				padding: 0.1em 0.3em;
+				font-size: 0.9em;
+				// font-weight: normal;
+			}
+		}
+	}
+	&.view-mode-medium {
+		.field-name-field-image {
+			img {
+				@include border-radius($corner_radius-regular);
+			}
+		}
+	}
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Habitat record
+*/
+.node-habitat-record.node-teaser {
+	@extend .pane;
+	padding: 0.6em;
+	width: 15em;
+	display: inline-block;
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Taxonomy term
+*/
+.taxonomy-term {
+	.ol-map {
+		width: 300px;
+		height: 300px;
+	}
+
+	&.view-mode-field_guide {
+		@extend .pane;
+
+		.content {
+			@include group;
+		}
+		.ol-map {
+			@extend .left;
+			width: 200px;
+			height: 200px;
+		}
+	}
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Identifications
+*/
+.node-identification-community {
+	&.view-mode-text {
+		@extend .pane.small;
+
+		h2 {
+			font-size: 1em;
+		}
+	}
+	&.node-teaser {
+		@extend .pane;
+		display: table;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0;
+
+		.show,
+		.tell {
+			display: table-cell;
+			vertical-align: top;
+		}
+		.show {
+			width: 110px;
+			max-width: 110px; // Needed so that the cell doesn't grow unexpectedly.
+			background-color: #878a00;
+			color: white;
+			text-align: center;
+			font-size: 1.3em;
+			vertical-align: middle;
+			// border-radius: 0.25em 0px 0px 0.25em;
+			@include border-radius($corner_radius-regular 0 0 $corner_radius-regular);
+		}
+		.tell {
+			padding: 1em;
+		}
+
+		h2 {
+			margin-bottom: 0.2em;
+		}
+		.submitted {
+			margin-top: 0.3em;
+		}
+
+		.field-name-field-identified-species {}
+
+		form {
+			margin-top: 1em;
+			margin-bottom: 0px;
+		}
+	}
+}
+li.views-row-2 .node-identification {
+	&.node-teaser {
+		.show {
+			background-color: #aeaeae;
+		}
+	}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Taxa
+*/
+.taxa-tree {
+	ul {
+		margin: 0;
+		padding-left: 0.6em;
+
+		li {
+			list-style-type: disc;
+		}
+	}
+	& > ul {
+		margin-left: 1em;
+	}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Comment
+*/
+.comment {
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0;
+
+	.show,
+	.tell {
+		display: table-cell;
+		vertical-align: top;
+	}
+	.show {
+		width: 110px;
+		max-width: 110px; // Needed so that the cell doesn't grow unexpectedly.
+		text-align: center;
+	}
+	.tell {
+		padding: 0 0 0 2em;
+	}
+
+	.user-picture img {
+		max-width: 100%;
+	}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Fields in general
+*/
+.field {
+
+	& + .field {
+		margin-top: 0.3em;
+	}
+	.view-mode-full &:not(:first-of-type) {
+		margin-top: 1em;
+	}
+}
+.field-label-inline {
+	// .field-label,
+	// .field-items,
+	// div {
+	//     float: none;
+	//     display: inline;
+	// }
+
+	// & + .field-label-inline {
+ //    display: table-row;
+
+	// 	.field-label,
+	// 	.field-items {
+	// 	    display: table-cell;
+	// 	}
+	// }
+  display: table-row;
+
+	.field-label,
+	.field-items {
+    float: none;
+    display: table-cell;
+    padding-bottom: 0.3em;
+	}
+	.field-label {
+		padding-right: 0.8em;
+	}
+}
+.field-group > h2 {
+	font-size: 1em;
+	font-weight: bold;
+	border-bottom: solid 1px $colour-dividers;
+	margin-top: 3em;
+	margin-bottom: 1em;
+	color: #838383;
+	padding-bottom: 0.4em;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Individual fields
+*/
+.field-name-field-pictures-observation {
+	@include group;
+
+	.others & > .field-items > .field-item {
+		@include column(3, $gutter-narrow);
+		margin-top: 0.5em;
+	}
+}
+.node-teaser {
+	.field-name-field-identifications {
+		& > .field-items {
+			@include group;
+
+			& > .field-item {
+				// @include column(2);
+				display: inline-block;
+				width: 11em;
+			}
+		}
+	}
+}
+.node .views-field.progress-container {
+	display: flex;
+
+	& > .views-label {
+		display: none;
+	}
+}

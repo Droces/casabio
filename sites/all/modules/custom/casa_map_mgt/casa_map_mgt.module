@@ -1,0 +1,114 @@
+<?php
+/**
+ * @file
+ *   Casa Map Management module
+ */
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * 
+ * Problem: Using exposed filters in a block on a page that isn't the view's page results in a page of AJAX code. 
+ * Cause: the exposed filters form's #action was pointing to that feed's url, not the current page.
+ * This solution: Sets the exposed filters' form's action (url) to the current page.
+ */
+function casa_map_mgt_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+
+  // @todo Add checks before simply altering the form!
+  // The paths for which the files should be included
+  $feed_paths = array(
+    base_path() . 'browse/pictures/feed.geojson',
+    base_path() . 'browse/observations/feed.geojson',
+  );
+
+  foreach ($feed_paths as $feed_path) {
+    if (drupal_match_path($form['#action'], $feed_path)) {
+      // Make it post to the current url by replacing the #action URL
+      $form['#action'] = base_path() . 'browse/pictures/map';
+    }
+  }
+
+  // dpm($form, 'form, after alter');
+}
+
+
+
+/**
+ * Implements hook_openlayers_object_preprocess_alter(), which is an implementation of hook_TYPE_alter().
+ */
+function casa_map_mgt_openlayers_object_preprocess_alter(&$build, $context) {
+  // dpm('reaches casa_map_mgt_openlayers_object_preprocess_alter');
+  // dpm($build, 'build');
+  // dpm($context, 'context');
+
+  // Appends any current URL parameters to the OL source's URL
+  // These parameters can then be used, for example, by Views as contextual filters.
+
+  // Without this, OL maps using Views GeoJSON feeds as a source 
+  // don't respect exposed filters in a block (they don't affect the map)
+  // if ($context -> factory_service == 'openlayers.Source:GeoJSON') {
+  if (get_class($context) == 'Drupal\openlayers\Plugin\Source\Vector\Vector') {
+    // dpm($context, 'context');
+
+    if (!isset($context -> preprocess)) {
+      $query_params = drupal_get_query_parameters();
+      // dpm($query_params, 'query_params');
+
+      if ($query_params) {
+        $param_string = '?';
+        foreach ($query_params as $key => $param) {
+          // dpm($param);
+          if ((!empty($param)) && ($param != 'All')) {
+            $param_string .= urlencode($key) . '=' . urlencode($param) . "&";
+          }
+        }
+
+        $new_url = $context -> getOption('url') . $param_string;
+        // dpm($new_url, 'new_url');
+        // $context -> setOption('url', $new_url);
+      }
+    
+      $context -> preprocess = TRUE; // Only process this once
+    }
+    // dpm($context -> getOption('url'), 'url');
+    // dpm($context, 'context, after');
+  }
+}
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function casa_map_mgt_form_node_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+
+  $language = $form['language']['#value'];
+
+  if (isset($form['field_location'])) {
+    // Re-order the Openlayers map widget's elements
+    $form['field_location'][$language][0]['actionFeature']['#weight'] =   '1';
+    $form['field_location'][$language][0]['dataType']['#weight'] =        '2';
+    $form['field_location'][$language][0]['typeOfFeature']['#weight'] =   '3';
+    $form['field_location'][$language][0]['clearmap']['#weight'] =        '4';
+    $form['field_location'][$language][0]['map']['#weight'] =             '5'; // This was first
+
+    // Change title from 'Type of interaction' to 'Action'
+    $form['field_location'][$language][0]['actionFeature']['#title'] =    'Action';
+
+    // Change title from 'Geometry type' to 'Type'
+    $form['field_location'][$language][0]['typeOfFeature']['#title'] =    'Type';
+
+    // Rename Type options
+    // $form['field_location'][$language][0]['typeOfFeature']['#options']['Point'] =       'Point';
+    $form['field_location'][$language][0]['typeOfFeature']['#options']['LineString'] =  'Path';
+    $form['field_location'][$language][0]['typeOfFeature']['#options']['Polygon'] =     'Area';
+
+  }
+
+  // dpm($form, 'form');
+}

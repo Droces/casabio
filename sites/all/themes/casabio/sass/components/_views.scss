@@ -1,0 +1,137 @@
+/**
+ * @file Views
+ */
+
+/*
+ * Contents
+
+	Views
+*/
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Views
+*/
+$zen-column-count: 4; // views are within #content, which has 4 columns
+
+.view {
+	@include group;
+
+	.view-header {
+		div {
+			margin-top: 1em;
+			margin-bottom: 1em;
+		}
+	}
+
+	&.rows {
+		.views-row {
+			clear: both;
+		}
+	}
+	&.rows-inline {
+		.views-row {
+			display: inline;
+			vertical-align: top;
+		}
+	}
+	&.grid-2 {
+		.views-row {
+			width: 49%;
+			display: inline-block;
+			vertical-align: top;
+		}
+	}
+	&.teasers-with-images {
+		.views-field:first-child {
+			/* assuming they're using 100px * 100px thumbnail images... */
+			width: 100px;
+			text-align: right;
+		}
+	}
+	// displayed as an HTML list
+	ul.content {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		& > li {}
+	}
+	&.view-galleries {
+
+		img,
+		a {
+			display: block;
+		}
+
+		.view-content {
+			@include zen-grid-container();
+			@include group;
+		}
+		.views-row {
+			@include group;
+		}
+		.views-row:nth-child( n ) {
+			@include zen-grid-item(2, 1);
+		}
+		.views-row:nth-child( 2n ) {
+			@include zen-grid-item(2, 3);
+		}
+
+		.views-field-title {
+			margin-top: -3.4em;
+			background: rgba( black, 0.7 );
+			position: relative;
+			padding: 0.4em 0.6em;
+			@include box-sizing( border-box );
+			max-width: 300px; // to match the size of the pictures
+
+			h3 {
+				margin: 0;
+			}
+		}
+
+		&,
+		.view-content,
+		.views-row {
+			overflow: initial;
+		}
+	}
+	.views-field-title h3 {
+		margin-top: 0;
+	}
+	.views-view-grid {
+		// width: 100%;
+        // @extend .borderless;
+
+        td,
+        th {
+			vertical-align: top;
+			min-width: 6em;
+	    
+			@media all and (max-width: $w-narrow) {
+		        display: block;
+		        padding-left: 0;
+		        padding-right: 0;
+		    }
+		}
+	}
+}
+// The exposed form may be in a block and not inside the actual view
+.views-exposed-form {
+	.views-exposed-widget {
+	    // float: none;
+	    // padding: 0 /* 0.5em 1em 0px 0px */;
+	    // display: table-cell;
+	    // vertical-align: bottom;
+	}
+	main & {
+		label {
+		    margin-bottom: 0.2em;
+		}
+		input.form-autocomplete {
+			width: 22em;
+		}
+	}
+}

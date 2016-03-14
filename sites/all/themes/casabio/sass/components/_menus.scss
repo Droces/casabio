@@ -1,0 +1,205 @@
+/**
+ * @file
+ * 
+ * File name       Components
+ * For site		Devoted
+ * Created by		Touchdreams
+ */
+
+/*
+ * Contents
+
+	Menus
+*/
+
+
+/* -----------------------------------------------------------------------------
+                                                                Menus
+*/
+
+/* Shouldn't these simply be 'a's within 'li's of 'ul's within a [role='nav']? */
+/* Menus contain interaction elements (mostly buttons and links, but also fields) and labels */
+
+/* Main menu and secondary menu links and menu block links. */
+@mixin menu-vertical {
+	li {
+		float: none !important;
+		display: block !important;
+		text-align: left !important;
+
+		&::after {
+			display: none;
+		}
+
+		a {
+			display: block;
+			font-size: 1em;
+		}
+
+        ul { // second-level menu and below
+            position: static;
+            display: block;
+            overflow: auto;
+            width: auto;
+            padding-left: 1em;
+
+        	max-height: none !important;
+        }
+	}
+}
+@mixin menu-horizontal {
+		padding: 0;
+		display: table;
+		width: 100%;
+		@include box-sizing( border-box );
+
+		li {
+			display: table-cell;
+			text-align: center;
+
+			&::after {
+				// content: ">";
+				// position: absolute;
+				// right: -0.2em;
+				// top: 0.3em;
+			}
+			ul li::after { /* items in a submenu */
+					display: none;
+			}
+
+			&:last-child::after {
+				display: none;
+			}
+
+		    & > .menu { // second-level menu and below
+		        // background: ;
+				@include menu-vertical;
+		        position: absolute;
+		        display: block;
+		        overflow: hidden;
+		        width: 12em;
+		        @include transition (all 0.3s ease);
+
+		    	max-height: 0;
+		    }
+            &:hover > .menu {
+                	max-height: 20em;
+            }
+		}
+}
+@mixin menu-slide-in-left {
+    width: auto;
+    max-width: 85%;
+    padding: 0;
+    position: fixed;
+    top: inherit;
+    height: 100%;
+    z-index: 100;
+    @include transition( all 0.4s ease );
+    left: -100%;
+
+    &.toggled {
+        left: 0;
+    }
+}
+@mixin list-menu {
+	ul,
+	& {
+		@extend .menu
+	}
+}
+
+.block-menu {
+	@media all and (max-width: $w-menu-narrow) {
+	// 	border-radius: 0.8em;
+		overflow: hidden;
+	}
+
+	.block__title {
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: bold;
+		margin: 0.4em 0.9em 1em;
+		// text-align: center;
+		// border-bottom: solid 1px rgba(255, 255, 255, 0.4);
+		line-height: inherit;
+		@extend .toggleable;
+
+		@include element-invisible;
+		// @media all and (min-width: $w-menu-narrow) {
+		// 	@include element-invisible;
+		// }
+
+		&:before {
+			@extend %font-icon;
+			@extend .icon-menu:before;
+			margin-right: 0.5em;
+		}
+	}
+}
+
+.menu {
+	// @include group;
+
+	&,
+	ul {
+		list-style: none;
+		margin: 0; /* lists have have top and bottom margins by default */
+		padding-left: 0; /* lists have a left padding by default */
+	}
+
+	li {
+		margin: 0; /* list items have top and bottom margins by default */
+		position: relative; /* allows the characters between menu items to be positioned absolutely */
+
+		&.is-leaf,
+		&.is-expanded {
+			list-style: none;
+		}
+
+		&.is-expanded > .menu__link { /* menu item with a submenu */
+			padding-right: 1.5em;
+			position: relative;
+
+			&::after {
+				font-size: 0.8em !important;
+				height: 1em; 
+				width: 1em;
+				position: absolute;
+				right: 0.5em;
+				top: 0.9em;
+				// @extend %font-icon; /* using an icon-font for these icon-styled links */
+				// @extend .icon-menu:before;
+			}
+		}
+
+		a {
+			display: block;
+			text-decoration: none;
+			padding: $pointer_target-padding;
+			line-height: $pointer_target-line-height;
+			// font-size: 0.9em;
+			// font-weight: normal;
+
+	        @include transition (all 0.3s ease);
+
+	        &.nolink {
+	        	color: scale-saturation( $colour-orange, -50% );
+	        }
+			&:hover,
+			&:focus {
+				// background-color: rgba( black, 0.1 );
+			}
+			&:active {
+				// background-color: rgba( black, 0.2 );
+			}
+			&.active {
+				color: inherit;
+				font-weight: bold;
+			}
+		}
+	}
+}
+ul.action-links {
+	@include list-menu;
+}

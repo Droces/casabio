@@ -1,0 +1,6 @@
+name =        Contribute
+core =        7.x
+package =     Casabio
+
+description = General functionality for CasaBio user contributions.
+

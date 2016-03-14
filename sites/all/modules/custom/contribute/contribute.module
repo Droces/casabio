@@ -1,0 +1,409 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+
+
+// =============================================================================
+/* CONTENTS
+
+  [NU] = Function is not currently used
+
+  // Generic module hook functions
+  [NU] contribute_help()
+  contribute_menu()
+  contribute_init()
+
+  // Menu callbacks
+  contribute_observation_page()
+
+  pass_collection_info_to_js()
+
+  // Block functions
+  contribute_block_info()
+  contribute_block_view()
+  steps_block_view()
+
+  create_nav_button()
+  get_contribute_mo_finish_content()
+*/
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_help().
+ */
+// function contribute_help($path, $arg) {}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_menu().
+ */
+function contribute_menu() {
+  $items['contribute/observation'] = array(
+    'title'           => 'Contribute Observation',
+    'page callback'   => 'contribute_observation_page',
+    'access callback' => TRUE, //array('administer bulk media upload'),
+    'type'            => MENU_NORMAL_ITEM,
+  );
+  $items['contribute/finished/%'] = array(
+    'title'           => 'Contribution Complete',
+    'page callback'   => 'get_contribute_mo_finish_content',
+    'page arguments'  => array(2),
+    'access callback' => TRUE, //array('administer bulk media upload'),
+    'type'            => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+
+
+
+
+/**
+ * Implements hook_init().
+ */
+function contribute_init() {
+  // The paths for which the files should be included
+  $pages_with_maps_paths = array(
+    'contribute/multiple-observations/observation-info*',
+    'contribute/multiple-observations/habitats*',
+  );
+
+  // Add JS for maps
+  foreach ($pages_with_maps_paths as $active_path) {
+    if (drupal_match_path(current_path(), $active_path)) {
+
+      // dpm('Is Edit Observation Information page');
+
+      pass_collection_info_to_js();
+
+      // Add a JS setting variable: current_page
+      drupal_add_js(array('contribute' =>
+        array('current_path' => $active_path)), 'setting');
+
+      $js_files = array(
+        libraries_get_path('openlayers3') . '/build/ol.js',
+        drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
+      );
+      // dpm($js_files, 'js_files');
+
+      foreach ($js_files as $path) {
+        drupal_add_js($path);
+      }
+
+    }
+  }
+  if (drupal_match_path(current_path(), 'contribute/upload')) {
+    $js_files = array(
+      drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
+    );
+
+    foreach ($js_files as $path) {
+      drupal_add_js($path);
+    }
+  }
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Callback for contribute/observation page that displays its content.
+ */
+function contribute_observation_page() {
+
+  set_error_handler("exception_error_handler");
+  module_load_include('inc', 'node', 'node.pages');
+
+  $content = "";
+
+  $entity_type = 'node';
+  $entity_bundle_key =  'type';
+  $bundle = 'observation';
+
+  $node = entity_create($entity_type, array(
+    $entity_bundle_key => $bundle,
+  ));
+
+  $content = drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'contribute_new']);
+
+  return $content;
+}
+
+
+
+
+/*
+ * Adds the collection's location information to the JS settings.
+ */
+function pass_collection_info_to_js() {
+  // dpm('pass_collection_info_to_js');
+
+  // Gets the collection's nid from the current path.
+
+  $nid;
+
+  $paths = array(
+    'contribute/multiple-observations/picture-info*',
+    'contribute/multiple-observations/observation-info*',
+    'contribute/multiple-observations/habitats*',
+  );
+
+  $matching_path;
+
+  // Determine if the current path is one of the targeted paths.
+  for ($i = 0; $i < sizeof($paths); $i++) {
+    if (drupal_match_path(current_path(), $paths[$i])) {
+      $matching_path = $i;
+    }
+  }
+
+  // If no targeted path was matched
+  if (! isset($matching_path)) return;
+
+  $path_wild_pos = strpos($paths[$matching_path], '*');
+  $nid = substr(current_path(), $path_wild_pos + 1);
+  // dpm($nid, 'nid');
+
+  if(isset($nid)) {
+
+    // Loads the collection node and wraps it in a metadata wrapper.
+
+    $collection_raw = node_load($nid);
+    $collection = entity_metadata_wrapper('node', $collection_raw);
+    $location = $collection->field_location->value();
+
+    $collection_location = json_encode($location);
+    $module_js_settings = array(
+      'collection_location' => $collection_location,);
+    drupal_add_js(array('edit_selected' => $module_js_settings), 'setting');
+  }
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_info().
+ */
+function contribute_block_info() {
+  $blocks = array();
+
+  $blocks['steps'] = array(
+    'info' => t('Contribute stages'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function contribute_block_view($delta = '') {
+  $block = array();
+
+  // set_error_handler("exception_error_handler");
+
+  switch ($delta) {
+    case 'steps' :
+      $block['subject'] = t('Steps');
+      $block['content'] = steps_block_view();
+      break;
+  }
+
+  return $block;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function steps_block_view() {
+
+  // 'location_path' is the page that link is displayed on
+  // 'destination_path' is the link's href value
+  // 'content' is the text between the link's opening and closing tags
+  // 'suffix' of a path is the string of characters after a wildcard ‘*’
+
+  // Define the link info
+  $links = array(
+    // The Upload page is a form that has its own submit button
+    // array(
+    //   'location_path' => 'contribute/upload*',
+    //   'destination_path' => base_path() . 'contribute/multiple-observations/picture-info',
+    //   'content' => 'Save & Continue »',
+    //   'keep_suffix' => TRUE,
+    //   'classes' => ''),
+    array(
+      'location_path' => 'contribute/upload',
+      'link_content' => '<span class="icon-file_upload"></span> Upload',
+      'keep_suffix' => TRUE,
+      'step_classes' => '',),
+    array(
+      'location_path' => 'contribute/multiple-observations/group*',
+      'link_content' => 'Group',
+      'keep_suffix' => TRUE,
+      'step_classes' => '',),
+    array(
+      'location_path' => 'contribute/multiple-observations/observation-info*',
+      'link_content' => 'Observation info',
+      'keep_suffix' => TRUE,
+      'step_classes' => '',),
+    array(
+      'location_path' => 'contribute/multiple-observations/picture-info*',
+      'link_content' => 'Picture info',
+      'keep_suffix' => TRUE,
+      'step_classes' => '',),
+    // array(
+    //   'location_path' => 'contribute/multiple-observations/habitats*',
+    //   'link_content' => '<span class="icon-terrain"></span> Habitats',
+    //   'keep_suffix' => FALSE,
+    //   'step_classes' => '',),
+  );
+
+  $content = '';
+
+  $content .= create_nav_button($links, 'prev');
+
+  // Steps
+
+  // If the current path matches a step's active path, make that step active
+  foreach ($links as $key => $step_info) {
+    if (drupal_match_path(current_path(), $step_info['location_path'])) {
+      $links[$key]['step_classes'] = 'active';
+    }
+  }
+
+  $content .= '<ul class="steps not-links">';
+
+  // Add each step to the content as a list item
+  foreach ($links as $key => $step_info) {
+    $content .= '<li class="' . $step_info['step_classes'] . '">' . $step_info['link_content'] . '</li>';
+  }
+
+  $content .= '</ul>';
+
+  $content .= create_nav_button($links, 'next');
+
+  // dpm($content, 'content');
+  return $content;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Creates the markup for a button used beside the Contribute steps indicator.
+ * Can create Previous or Next buttons.
+ *
+ * @param $links
+ *   An array of link information arrays. Each item should be an array in the form:
+ *   array(location_path, link_content, keep_suffix, step_classes)
+ * @param $direction
+ *   'prev' or 'next'.
+ */
+function create_nav_button($links, $direction) {
+
+  $buttons;
+  $link_content = '';
+
+  if ($direction == 'prev') {
+    $increment = -1;
+    $link_content = '« Previous';
+  }
+  elseif ($direction == 'next') {
+    $increment = 1;
+    $link_content = 'Continue »';
+  }
+
+  for ($i = 0; $i < sizeof($links); $i++) {
+    if (drupal_match_path(current_path(), $links[$i]['location_path'])) {
+      // Suffix is the wildcard in the path, used as a contextual filter for views
+      $suffix = '';
+      $path = '';
+
+      $path_wild_pos = strpos($links[$i]['location_path'], '*');
+      $suffix = substr(current_path(), $path_wild_pos);
+
+      // If current step is the first step
+      if ($i == 0) {
+        return '';
+      }
+      // If current step is the second step and this is the previous button (Can't go to first)
+      if ($i == 1 && $direction == 'prev') {
+        return '<a class="button" disabled>' . $link_content . '</a>';
+      }
+      // If current step is the last step and this is the next button (Finish)
+      elseif ($i == sizeof($links) - 1 && $direction == 'next') {
+        $link_content = 'Finish »';
+
+        $path = 'contribute/finished' . $suffix;
+      }
+      else {
+        $path = str_replace("*", "", $links[$i + $increment]['location_path']) . $suffix;
+      }
+      // dpm($suffix, 'suffix');
+
+      // $buttons = '<a class="button" href="' . $url . '">' . $links[$i]['content'] . '</a>';
+      $buttons = l($link_content, $path, array('attributes' => array('class' => 'button')));
+      // @todo use Drupal's native l() instead.
+    }
+  }
+
+  return $buttons;
+}
+
+
+
+// =============================================================================
+/**
+ * Page callback that concludes the 'Contribute Multiple Observations' process.
+ */
+function get_contribute_mo_finish_content($collection_nid) {
+
+  drupal_set_title('Collection ' . drupal_get_title());
+
+  $content =
+    '<p>You uploaded <strong>#</strong> pictures.<br>'
+    . 'You grouped the pictures into <strong>#</strong> observations.<br>'
+
+    . '<p><em>Thank you for contributing to CasaBio! We appreciate it.</em></p>'
+
+    . '<h2>What next?</h2>'
+    . '<ul>'
+    . '<li>' . l("Contribute habitats", 'contribute/habitats/'
+      . $collection_nid) . '</li>'
+    . '<li>' . l("View the collection", 'node/' . $collection_nid) . '</li>'
+    . '<li>' . l("Browse others’ contributions", 'browse') . '</li>'
+    . '</ul>'
+  ;
+  return $content;
+}

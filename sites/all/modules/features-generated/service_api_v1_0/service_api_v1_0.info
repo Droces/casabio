@@ -1,0 +1,11 @@
+name = Service: API v1.0
+description = Version 1.0 of the public REST API
+core = 7.x
+package = Features: Structure
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = services
+features[ctools][] = services:services:3
+features[features_api][] = api:2
+features[services_endpoint][] = v1_0
+project path = sites/all/modules/features-generated

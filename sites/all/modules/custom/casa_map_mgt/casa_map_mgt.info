@@ -1,0 +1,12 @@
+name =        Casa Map Management
+core =        7.x
+package =     Casabio
+
+description = Provides functions that manage maps created through the OpenLayers module.
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+scripts[] =   scripts/casa_map_mgt.js

@@ -1,0 +1,12 @@
+name = 			Casa EXIF Management
+core = 			7.x
+package = 		Casabio
+
+description = 	Provides helper functions that work with files’ EXIF data.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+;scripts[] = scripts/casa_taxa_mgt.js

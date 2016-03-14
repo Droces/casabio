@@ -1,0 +1,13 @@
+name = Text format: Filtered HTML
+description = Rich text field formatters and settings that allow safe HTML and provide standard controls.
+core = 7.x
+package = Features: Configuration
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = filter
+dependencies[] = media_wysiwyg
+dependencies[] = wysiwyg
+features[features_api][] = api:2
+features[filter][] = filtered_html
+features[wysiwyg][] = filtered_html
+project path = sites/all/modules/features-generated

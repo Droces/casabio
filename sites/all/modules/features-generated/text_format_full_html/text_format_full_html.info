@@ -1,0 +1,13 @@
+name = Text format: Full HTML
+description = Rich text field formatters and settings that allow any HTML and provide advanced controls.
+core = 7.x
+package = Features: Configuration
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = media_wysiwyg
+dependencies[] = pathologic
+dependencies[] = wysiwyg
+features[features_api][] = api:2
+features[filter][] = full_html
+features[wysiwyg][] = full_html
+project path = sites/all/modules/features-generated

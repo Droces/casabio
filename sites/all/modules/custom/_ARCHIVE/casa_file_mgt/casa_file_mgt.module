@@ -1,0 +1,15 @@
+<?php
+/**
+ * @file
+ *   Casa Map Management module
+ */
+
+
+
+/**
+ * Implements hook_init().
+ */
+// function casa_file_mgt_init() {
+//   dpm(entity_get_info('file'), 'file entity info');
+//   dpm(field_info_bundles('file'), 'file bundle info');
+// }

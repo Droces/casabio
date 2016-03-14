@@ -1,0 +1,317 @@
+<?php
+/**
+ * @file
+ * Creates an observation that references the selected pictures
+ */
+
+
+
+
+
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function action_create_observation_help($path, $arg) {
+	switch ($path) {
+		case 'admin/help#action_create_observation':
+			return '<p>' . t("Creates an observation that references the selected pictures") . '</p>';
+			break;
+		
+		default:
+			# code...
+			break;
+	}
+}
+
+
+
+
+
+/**
+ * Implements hook_action_info()
+ *
+ * @return
+ * An associative array of action descriptions. The keys of the array 
+ * are the names of the action functions, and each corresponding value 
+ * is an associative array.
+ */
+function action_create_observation_action_info() {
+  return array(
+    'action_create_observation_the_action' => array(
+      'type' => 			'node',
+      'label' => 			t('Group into observation'),
+      'behavior' => 		array('changes_property'),
+      'configurable' => 	FALSE,
+      'vbo_configurable' => TRUE,
+      'triggers' => 		array('any'),
+    ),
+  );
+}
+
+
+
+
+
+/**
+ * Implements ...hook-the_action-VBO_form ?
+ *
+ * Adds extra settings to the VBO configuration form in the Views UI.
+ *
+ * @param 
+ */
+function action_create_observation_the_action_views_bulk_operations_form($options) {
+  // dpm($options, "options param");
+	$form = array();
+	// $form['hero'] = array(
+	// 	'#type' => 'select', 
+	// 	'#title' => t('Choose your super hero'),
+	// 	'#options' => array(
+	// 		'Iron Man' => t('Iron Man'),
+	// 		'Bat Man' => t('Bat Man'),
+	// 	),
+	// 	'#default_value' => !empty($options['hero']) ? $options['hero'] : '',
+	// );
+
+	// $form['title'] = array(
+	//     '#type' => 'textarea', 
+	//     '#title' => t('Observation title'),
+	// 	'#default_value' => '',
+	// );
+
+	$options = get_term_titles_as_options('taxonomy');
+
+	$form['species'] = array(
+		'#type' => 			'select', 
+		'#title' => 		t('Species'),
+		'#options' => 		$options,
+		'#required' => 		TRUE,
+		'#default_value' => isset($settings['settings']['species']) ? $settings['settings']['species'] : '',
+	);
+  
+  // dpm($form, "returned form");
+  return $form;
+}
+
+
+
+
+
+/**
+ * Implements ... hook-the_action-form ?
+ *
+ * Description ...
+ *
+ * @param 
+ */
+function action_create_observation_the_action_form($settings, &$form_state) {
+	// dpm($settings, 'Settings');
+	// dpm($form_state, 'Form state');
+
+	$form = array();
+	// $form['hero'] = array(
+	// 	'#type' => 			'select', 
+	// 	'#title' => 		t('Choose your super hero'),
+	// 	'#options' => 		array(
+	// 		'Iron Man' => 	t('Iron Man'),
+	// 		'Bat Man' => 	t('Bat Man'),
+	//     ),
+	// 	'#required' => 		TRUE,
+	// 	'#default_value' => isset($settings['settings']['hero']) ? $settings['settings']['hero'] : '',
+	// );
+
+	$options = get_term_titles_as_options('taxonomy');
+	// dpm($options, 'Options');
+
+	$form['species'] = array(
+		'#type' => 			'select', 
+		'#title' => 		t('Species'),
+		'#options' => 		$options,
+		'#required' => 		TRUE,
+		'#default_value' => isset($settings['settings']['species']) ? $settings['settings']['species'] : '',
+	);
+	// dpm($form, 'return form');
+
+
+	return $form;
+}
+
+
+
+
+
+/**
+ * Description ...
+ *
+ * @param taxonomy
+ * @return
+ * 	 an array
+ */
+function get_term_titles_as_options ($taxonomy) {
+
+	$query = new EntityFieldQuery();
+	$entity_type = 'taxonomy_term'; // hard-coded
+
+	$query->entityCondition('entity_type', $entity_type)
+		->entityCondition('bundle', $taxonomy);
+
+	$result = $query->execute();
+
+
+
+	$ids = array();
+	foreach($result[$entity_type] as $record) {
+		$ids[] = $record->tid;
+	}
+	// dpm($ids, 'ids');
+	
+	$terms = array();
+	if (isset($ids)) {
+		$terms = entity_load($entity_type, $ids);
+	}
+	// dpm($terms, 'terms');
+
+	$field_name = 'name';
+	$titles = array();
+	foreach ($terms as $term) {
+		if (isset($term->$field_name) && !empty($term->$field_name)) {
+			$titles[] = $term->$field_name;
+			// foreach (field_get_items($entity_type, $term, $field_name) as $i => $item) {
+			// 	$titles[] = $item;
+			// 	$keys = array_keys($item);
+			// }
+		}
+	}
+	// dpm($titles, 'titles');
+
+	$options = array();
+	foreach($titles as $title) {
+		$options[$title] = $title;
+	}
+	// dpm($options, 'options');
+
+	return $options;
+}
+
+
+
+
+
+/**
+ * Implements … hook-the_action-submit ?
+ *
+ * @param form
+ * @param form_state
+ * @return
+ * 	 an array with one element; an 'observation' entity that has been meta-wrapped
+ */
+function action_create_observation_the_action_submit($form, $form_state) {
+	// dpm($form, "form param");
+
+	$entity = array();
+	// $entity['hero'] = $form_state['values']['hero'];
+
+	global $user;
+
+	// entity_create replaces the procedural steps in the first example of
+	// creating a new object $node and setting its 'type' and uid property
+	$values = array(
+	  'type' => 	'observation',
+	  'uid' => 		$user->uid,
+	  'status' => 	1,
+	  'comment' => 	0,
+	  'promote' => 	0,
+	);
+	$entity_raw = entity_create('node', $values);
+
+	// The entity is now created, but we have not yet simplified use of it.
+	// Now create an entity_metadata_wrapper around the new node entity
+	// to make getting and setting values easier
+	$entity['observation'] = entity_metadata_wrapper('node', $entity_raw);
+
+	// Using the wrapper, we do not have to worry about telling Drupal
+	// what language we are using. The Entity API handles that for us.
+	$entity['observation']->title->set($form_state['values']['species']);
+
+	// Setting the body is a bit different from other properties or fields
+	// because the body can have both its complete value and its
+	// summary
+	$my_body_content = '';
+	$entity['observation']->body->set(array('value' => $my_body_content));
+	$entity['observation']->body->summary->set('');
+
+	// Entity API cannot set date field values so the 'old' method must
+	// be used
+	// $my_date = new DateTime('January 1, 2013');
+	// $entity_raw->field_my_date[LANGUAGE_NONE][0] = array(
+	//    'value' => date_format($my_date, 'Y-m-d'),
+	//    'timezone' => 'UTC',
+	//    'timezone_db' => 'UTC',
+	//  );
+
+	// Now just save the wrapper and the entity
+	// There is some suggestion that the 'true' argument is necessary to
+	// the entity save method to circumvent a bug in Entity API. If there is
+	// such a bug, it almost certainly will get fixed, so make sure to check.
+	$entity['observation']->save();
+
+
+	$message = t('New observation "%title" created.', array(
+		'%title' => $form_state['values']['species'],
+	));
+	drupal_set_message($message);
+
+	return $entity;
+}
+
+
+
+
+
+/**
+ * Implements … hook-the_action ?
+ *
+ * Description ...
+ *
+ * @param node
+ * @param context
+ */
+function action_create_observation_the_action(&$node, $context) {
+
+	// Setting the value of an entity reference field only requires passing
+	// the entity id (e.g., nid) of the entity to which you want to refer.
+	// Note that the entity id must be passed as an integer, not a string
+	$ref_nid = $node->nid;
+	$context['observation']->field_pictures_observation[] = intval($ref_nid);
+	$context['observation']->save();
+	// dpm($context['observation'], "observation");
+}
+
+
+
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function action_create_observation_form_alter(&$form, &$form_state, $form_id) {
+  if (strpos($form_id, 'views_form_') === 0) {
+    $vbo = _views_bulk_operations_get_field($form_state['build_info']['args'][0]);
+  }
+  // If not a VBO-enabled views form, quit
+  if (empty($vbo)) {
+    return;
+  }
+
+  $form['#submit'][] = 'my_submit';
+}
+
+function my_submit($form, &$form_state) { 
+	// dpm($form, "submitted form");
+}

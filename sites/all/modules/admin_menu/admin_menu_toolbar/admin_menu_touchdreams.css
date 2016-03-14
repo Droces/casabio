@@ -1,0 +1,296 @@
+/* ================================================================================
+												IMPORTS 
+*/
+/* ================================================================================
+												VARIABLES 
+*/
+/* ================================================================================
+												COLOURS 
+*/
+/* Touchdreams */
+/* ================================================================================
+												MIXINS 
+*/
+/**
+* @file
+* Toolbar style for Administration menu.
+*
+* Important: We cannot re-use toolbar.png from Toolbar module, since we cannot
+* reliably determine the path to it.
+*
+* @todo Separate shortcut functionality into own module/widget.
+*/
+/* Adjust margin/height */
+/* line 17, sass/admin_menu_touchdreams.scss */
+html body.admin-menu {
+  margin-top: 30px !important;
+}
+/* line 21, sass/admin_menu_touchdreams.scss */
+html body.admin-menu-with-shortcuts {
+  margin-top: 65px !important;
+}
+
+/* Displace the core Toolbar, if concurrently output. */
+/* line 26, sass/admin_menu_touchdreams.scss */
+body div#toolbar.toolbar {
+  top: 30px;
+}
+
+/**
+ * Base styles.
+ *
+ * We use a keyword for the toolbar font size to make it display consistently
+ * across different themes, while still allowing browsers to resize the text.
+ */
+/* line 36, sass/admin_menu_touchdreams.scss */
+#admin-menu {
+  font: normal 13px "Lucida Grande", Verdana, sans-serif;
+  line-height: 16px;
+  -moz-box-shadow: 0 0 9px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 0 9px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.6);
+  right: 0;
+  width: auto;
+  background: #2A2A2A;
+  /**
+   * Administration menu.
+   */
+  /**
+   * Shortcuts toggle.
+   */
+  /**
+   * Shortcuts widget.
+   */
+  /* Override theme list style; @see shortcut.css */
+  /* @see toolbar.css */
+}
+/* line 50, sass/admin_menu_touchdreams.scss */
+#admin-menu #admin-menu-wrapper {
+  padding: 0 10px 0;
+}
+/* line 57, sass/admin_menu_touchdreams.scss */
+#admin-menu .active {
+  background: rgba(0, 153, 203, 0.5);
+}
+/* line 61, sass/admin_menu_touchdreams.scss */
+#admin-menu a,
+#admin-menu span {
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+/* line 69, sass/admin_menu_touchdreams.scss */
+#admin-menu li > span {
+  cursor: default;
+}
+/* line 73, sass/admin_menu_touchdreams.scss */
+#admin-menu li ul {
+  line-height: inherit;
+}
+/* line 78, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown {
+  line-height: inherit;
+  /* Remove border from all lists and actions */
+}
+/* line 81, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown a, #admin-menu .dropdown span {
+  color: #fafafa;
+}
+/* line 86, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-action a {
+  border-left: 0;
+}
+/* line 89, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-icon > a {
+  padding: 7px 10px;
+}
+/* line 102, sass/admin_menu_touchdreams.scss */
+#admin-menu > div > .dropdown > li {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+/* line 106, sass/admin_menu_touchdreams.scss */
+#admin-menu > div > .dropdown > li > ul {
+  margin-top: 0;
+}
+/* line 109, sass/admin_menu_touchdreams.scss */
+#admin-menu > div > .dropdown > li > a {
+  border-right: 0;
+  margin-bottom: 0;
+  padding: 7px 10px;
+}
+/* line 117, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown a,
+#admin-menu .dropdown span {
+  padding: 0.5em 0.7em;
+}
+/* line 122, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown a {
+  -moz-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+}
+/* line 124, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown a:hover {
+  background-color: rgba(0, 153, 203, 0.35);
+}
+/* line 130, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-icon ul a, #admin-menu .dropdown .admin-menu-icon ul span {
+  padding: 0.5em 0.7em;
+}
+/* line 136, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-icon > a span {
+  vertical-align: text-bottom;
+  width: 11px;
+  height: 16px;
+  display: block;
+  background: url(toolbar.png) no-repeat 0 -45px;
+  text-indent: -9999px;
+  padding: 0;
+}
+/* line 147, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-toolbar-category > a,
+#admin-menu .dropdown .admin-menu-action > a {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+/* line 151, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-toolbar-category > a.active-trail {
+  text-shadow: #333 0 1px 0;
+  background: #6C6C6C;
+}
+/* line 155, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-search input {
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  line-height: 16px;
+  padding: 4px 8px;
+  margin: 3px;
+}
+/* line 166, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown .admin-menu-tab a {
+  border-right: 0;
+}
+/* line 170, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li ul {
+  width: auto;
+  background-color: #2A2A2A;
+}
+/* line 174, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li {
+  width: auto;
+  min-width: 160px;
+  opacity: 0.95;
+  background-color: transparent;
+  border-top: solid 1px #181818;
+}
+/* line 181, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li a {
+  border: none;
+}
+/* line 184, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li:hover {
+  background-color: none;
+}
+/* line 187, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li.expandable {
+  position: relative;
+  background-color: transparent;
+  background-image: none;
+}
+/* line 193, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li.expandable ul {
+  margin: -29px 0 0 auto;
+  left: 100% !important;
+}
+/* line 197, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li.expandable > a, #admin-menu .dropdown li li.expandable > span {
+  padding-right: 22px;
+}
+/* line 201, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li.expandable > a, #admin-menu .dropdown li li.expandable > a:hover, #admin-menu .dropdown li li.expandable > span, #admin-menu .dropdown li li.expandable > span:hover {
+  border-top: none;
+}
+/* line 206, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li.expandable > a::after, #admin-menu .dropdown li li.expandable > span::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  right: 4px;
+  top: 0;
+  width: 9px;
+  height: 30px;
+  background-image: url("images/arrow.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+/* line 220, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li a, #admin-menu .dropdown li li span {
+  border-right: none;
+}
+/* line 223, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li li a, #admin-menu .dropdown li li a:hover, #admin-menu .dropdown li li span, #admin-menu .dropdown li li span:hover {
+  border-color: #181818;
+}
+/* line 228, sass/admin_menu_touchdreams.scss */
+#admin-menu .dropdown li.admin-menu-account > a {
+  background: #6C6C6C;
+}
+/* line 239, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toggle {
+  cursor: pointer;
+  background: url(toolbar.png) 0 -20px no-repeat #666;
+  -moz-border-radius: 0 0 0 0;
+  -webkit-border-radius: 0;
+  border-radius: 0 0 0 0;
+  display: block;
+  float: right;
+  margin: 5px 0 0 0;
+  text-indent: -9999px;
+  overflow: hidden;
+  width: 25px;
+  height: 25px;
+}
+/* line 251, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toggle:focus, #admin-menu .shortcut-toggle:hover {
+  background-position: -50px -20px;
+}
+/* line 255, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toggle.active {
+  background-position: -25px -20px;
+}
+/* line 258, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toggle.active:focus, #admin-menu .shortcut-toggle.active:hover {
+  background-position: -75px -20px;
+}
+/* line 268, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toolbar {
+  background-color: #666;
+  clear: both;
+  display: none;
+  margin: 0 -10px;
+  overflow: hidden;
+  /* Align with icon; @see shortcut.css */
+  padding-left: 5px;
+}
+/* line 277, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toolbar.active {
+  display: block;
+}
+/* line 281, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toolbar ul {
+  margin: 0;
+}
+/* line 285, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toolbar li {
+  float: left;
+  list-style-image: none;
+  list-style-type: none;
+}
+/* line 290, sass/admin_menu_touchdreams.scss */
+#admin-menu .shortcut-toolbar a {
+  display: block;
+}

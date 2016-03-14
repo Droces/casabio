@@ -1,0 +1,52 @@
+/* ================================================================================
+												IMPORTS 
+*/
+// Use one CSS3 mixin instead of multiple vendor prefixes.
+@import "compass/css3";
+
+
+
+/* ================================================================================
+												VARIABLES 
+*/
+
+$height: 				30px;
+$font-size: 			13px;
+$line-height:			16px;
+$padding-first_level:	0; //4px;
+$padding-link_v:		7px;
+$padding-menu_links:	$padding-link_v 10px;
+$padding-submenu_links:	0.5em 0.7em;
+$width:					auto; //160px;
+
+$sub-menu_opacity:		0.95;
+$border-radius: 		0; //0.4em;
+
+
+
+/* ================================================================================
+												COLOURS 
+*/
+
+/* Touchdreams */
+$colour-tdreams_pink:	#CC0098;
+$colour-tdreams_cyan:	#0099CB;
+
+$colour-background:		#2A2A2A;
+$colour-active_trail:	#6C6C6C;
+$colour-sub-menu:		#202020;
+$colour-separator:		#181818;
+
+
+
+/* ================================================================================
+												MIXINS 
+*/
+ @mixin group {
+	// This is a modern replacement for 'clearfix'
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}

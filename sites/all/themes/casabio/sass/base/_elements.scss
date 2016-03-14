@@ -1,0 +1,489 @@
+/* ================================================================================
+                                                            FILE INFO
+
+File name       Components
+Description     
+
+   ================================================================================
+                                                            CONTENTS
+Common elements
+Titles
+Links
+Tables
+Forms
+
+*/ 
+
+
+
+/* ================================================================================ */
+
+html, body {
+  height: 100%;
+}
+body {
+    font-family: $font-body;
+    line-height: $line-height;
+    color: $colour-text;
+    background-color: #f8f8f8;
+    /* these styles allow floated (absolutely-positioned) images behind body content */
+    z-index: -10;
+    position: relative;
+    height: 100%;
+}
+
+acronym, abbr {
+    border-bottom: 1px dotted #222;
+    color: #222;
+    cursor: help;}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;}
+
+li {
+    margin: 0.5em 0;}
+
+
+p {
+    line-height: 1.4em;
+    margin: 0.8em 0;}
+p,
+li, 
+td, th {
+    max-width: 60em;
+    // text-align: justify;
+}
+li > p,
+td > p, th > p,
+blockquote > p {
+    margin: 0;}
+
+
+blockquote {}
+
+code {}
+pre {}
+
+img {
+    width: auto;
+    height: auto;
+    max-width: 100%;}
+
+fieldset {
+    padding: $data-field-padding !important;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    @include border-radius ( $corner-radius-large );
+    background-color: rgba(black, 0.03);
+
+    legend {
+        padding-left: 0.3em;
+        padding-right: 0.3em;
+        font-weight: 600;
+    }
+    form & .description {
+        color: scale-lightness( $colour-text, 20% );
+    }
+    html.js &.collapsed {
+        // border-bottom-width: 1px;
+        // border-bottom-color: white;
+        // border-left-width: 1px;
+        // border-right-width: 1px;
+        border-width: 1px;
+    }
+}
+
+iframe {
+    border: solid 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+img,
+iframe {
+    max-width: 100%;}
+
+.block[role="navigation"] {
+    margin-bottom: 0;
+}
+
+blockquote {
+    margin: 1.5em 4em;
+    position: relative;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.3em 0.5em;
+
+    p {
+        margin: 0;}
+    
+    /* the following rules insert large quotation marks */
+    &:before, &:after {
+        font-size: 2.5em;
+        position: absolute;}
+    &:before {
+        content: "\201C";
+        left: -0.5em;
+        top: 0.4em;}
+    &:after {
+        content: "\201D";
+        right: -0.5em;
+        bottom: 0;}
+}
+
+cite {
+    font-size: 0.85em;
+    color: scale-lightness( $colour-text, 30% );
+}
+.attribution,
+.submitted {
+    @extend cite;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Lists
+*/
+ul {
+    li {
+        span > a:first-child:last-child {
+            margin: 0;
+        }
+    }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Titles
+*/
+h1, h2, h3, h4, h5, h6 { // use of h5 and h6 are not recommended
+    font-family: $font-headings;
+    font-weight: 600;
+    color: $colour-headings;
+    margin-top: 1.8em;
+    margin-bottom: 0.7em;
+
+    &.inline {
+        display: inline;
+        font-size: 1em;
+
+        & + * {
+            margin-left: 1em;
+        }
+    }
+
+    a {
+        &,
+        &:link,
+        &:visited,
+        &:hover,
+        &:focus,
+        &:active {
+            color: inherit;
+        }
+
+        &,
+        &:hover,
+        &:focus {
+            text-decoration: none;}
+    }
+    p {
+        margin: 0;
+        line-height: inherit;
+    }
+}
+
+
+h1 {
+    line-height: $h1-line-height;
+}
+h2 {
+    line-height: $h2-line-height;
+}
+h3 {
+    line-height: $h3-line-height;
+    margin: 1.4em 0px 0.6em;
+}
+h4 {
+    line-height: $h4-line-height;
+}
+h5 {
+    line-height: $h5-line-height;
+}
+h6 {
+    line-height: $h6-line-height;
+}
+
+header h1 ~ p {
+    margin-top: -0.8em;
+    margin-bottom: 1.6em;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Links
+*/
+a {
+    color: $colour-links;
+    font-weight: 600;
+    text-decoration: none;
+}
+a:link {}
+a:visited {
+    color: $colour-links;}
+a:hover,
+a:focus {
+    color: shade( $colour-links, 50% );
+    text-decoration: underline;
+}
+a:active { /* a link when it is 'clicked' on */
+    color: shade( $colour-links, 30% );}
+a.active,
+a[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
+    font-weight: bold;}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Tables
+*/
+table {
+    border-collapse: collapse;
+    clear: left; /* fixes bug where table overlaps right-floated blocks */
+
+    thead {
+        tr {}
+        a {
+            display: block;}
+    }
+    tbody th {}
+
+    tr.even,
+    tr.odd {
+        background: none;
+    }
+    tr:hover td {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    td,
+    th {
+        border: solid 1px #ddd;
+        padding: $data-field-padding;
+    }
+    th {
+        text-align: left;
+        border-bottom: 1px solid #999;
+
+        &.active {
+            background-color: rgba(black, 0.03);
+            border-bottom-width: 3px;
+        }
+
+        & > a {
+            // background-image: URL('../images/menu-expanded.png');
+            // background-repeat: no-repeat;
+            // background-position: 100% center;
+            // padding-right: 0.8em;
+        }
+
+        img {
+            margin-left: 0.5em;
+            vertical-align: baseline;
+        }
+    }
+    td.active {
+        background-color: inherit;
+    }
+    form {
+        margin: 0;
+    }
+}
+
+.borderless {
+    td, 
+    th {
+        border: none;}
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Forms
+*/
+
+// @import "formalize";
+
+form {
+    @include group;
+    max-width: 100%;
+    @include box-sizing(border-box);
+}
+
+
+input[type] {
+    vertical-align: middle;
+    max-width: 100%;
+
+    &[type="text"] {
+        @media all and (max-width: 700px) {
+            width: 100%;
+        }
+    }
+
+    aside &[type="text"] {
+        width: 100%;
+    }
+}
+input[type="radio"],
+input[type="checkbox"] {
+    margin-top: 0.3em;
+
+    &:focus {
+        box-shadow: 0 0 0.3em rgba($colour-links, 0.75);
+    }
+}
+
+label {
+    display: block;
+    cursor: pointer;
+    margin: 0 0 0.3em;
+    font-weight: 600;
+    font-size: 1.1em;
+    // @include transition( font-size );
+
+    input[type="radio"] + &,
+    input[type="checkbox"] + & {
+        padding-left: 0.2em;
+    }
+}
+
+
+
+/* -----------------------------------------------
+                            Buttons */
+/* Buttons can either be flat, or raised */
+/* In a group of buttons, the most important action should have highlight colour */
+/* Buttons may contain text or an icon (for obvious actions) */
+/* Button text should always be in all-caps */
+/* Buttons should always have a minimum size for all pointers (including touch) */
+button,
+*[role="button"],
+a.button,
+.button > a,
+input[type="reset"],
+input[type="submit"],
+input[type="button"],
+.tabs li a {
+    @extend button;
+}
+
+$button-border-colour: #CFCFCF;
+$pointable-bg-colour:  #838383;
+$pointable-background:  linear-gradient(tint($pointable-bg-colour, 10%), shade($pointable-bg-colour, 10%));
+button {
+    margin: 0.4em;
+    vertical-align: baseline;
+    @include appearance(none);
+    color: white;
+    text-transform: capitalize;
+    // background-color: white;
+    @include background-image($pointable-background);
+    box-shadow: none /* 0px 0px 0.3em rgba(black, 0.1) */;
+    color: white;
+    font-weight: 600;
+    border: none /* solid 1px #CFCFCF */;
+    text-shadow: -0.03em -0.03em 0.04em rgba(black, 0.3);
+    padding: $pointer_target-padding;
+    
+    &:hover,
+    &:focus {
+        @include background-image($pointable-background);
+        // background: shade( white, 5% );
+        // border-color: shade( $button-border-colour, 10% );
+    }
+    &:focus {
+        box-shadow: 0 0 0.3em rgba(white, 0.75);
+    }
+    &:active {
+        @include background-image($pointable-background);
+        // background: shade( white, 8% );
+        // border-color: shade( $button-border-colour, 15% );
+    }
+    &.active {
+        // color: black;
+        @include background-image(linear-gradient($colour-links, shade($colour-links, 12%)));
+        // border-color: shade($colour-buttons, 5%);
+        color: white;
+        
+        &:hover,
+        &:focus {
+            background: shade( $colour-links, 15% );
+            // border-color: shade($colour-buttons, 10%);
+        }
+        &:active {
+            background: shade( $colour-links, 25% );
+            // border-color: shade($colour-buttons, 15%);
+        }
+    }
+    .floating & {
+        display: block;
+        box-shadow: 1px 1px 4px rgba(black, 0.46);
+    }
+    &[disabled] {
+        background: #ADADAD;
+        color: rgba(white, 0.6);
+        text-shadow: none;
+    }
+    
+    &.primary {
+        @include background-image(linear-gradient($colour-buttons, shade($colour-buttons, 12%)));
+        // border-color: shade($colour-buttons, 5%);
+        color: white;
+        
+        &:hover,
+        &:focus {
+            background: shade( $colour-buttons, 15% );
+            // border-color: shade($colour-buttons, 10%);
+        }
+        &:active {
+            background: shade( $colour-buttons, 25% );
+            // border-color: shade($colour-buttons, 15%);
+        }
+        &[disabled] {
+            @include background-image(linear-gradient(scale-saturation($colour-buttons, -50%), scale-saturation(shade($colour-buttons, 12%), -50%)));
+            color: rgba(white, 0.6);
+        }
+    }
+
+    &.flat {
+        background: none;
+        border: none;
+        color: $colour-links;
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+        text-shadow: none;
+    
+        &:hover,
+        &:focus {
+            // color: shade( $colour-text, 10% );
+            // background: shade( white, 10% );
+        }
+        &:active {
+            // color: shade( $colour-text, 20% );
+            // background: shade( white, 20% );
+        }
+        &.active {
+            // color: shade( $colour-text, 20% );
+            // background: shade( white, 20% );
+        }
+    }
+
+    &.no-text .text {
+        display: none;
+    }
+}
