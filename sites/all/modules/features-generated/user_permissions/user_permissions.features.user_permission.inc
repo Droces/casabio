@@ -799,24 +799,6 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'create slide content'.
-  $permissions['create slide content'] = array(
-    'name' => 'create slide content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'create slideshow_page content'.
-  $permissions['create slideshow_page content'] = array(
-    'name' => 'create slideshow_page content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'create source content'.
   $permissions['create source content'] = array(
     'name' => 'create source content',
@@ -1015,24 +997,6 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any slide content'.
-  $permissions['delete any slide content'] = array(
-    'name' => 'delete any slide content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete any slideshow_page content'.
-  $permissions['delete any slideshow_page content'] = array(
-    'name' => 'delete any slideshow_page content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete any source content'.
   $permissions['delete any source content'] = array(
     'name' => 'delete any source content',
@@ -1226,24 +1190,6 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own slide content'.
-  $permissions['delete own slide content'] = array(
-    'name' => 'delete own slide content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own slideshow_page content'.
-  $permissions['delete own slideshow_page content'] = array(
-    'name' => 'delete own slideshow_page content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
     ),
     'module' => 'node',
   );
@@ -1606,24 +1552,6 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any slide content'.
-  $permissions['edit any slide content'] = array(
-    'name' => 'edit any slide content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any slideshow_page content'.
-  $permissions['edit any slideshow_page content'] = array(
-    'name' => 'edit any slideshow_page content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit any source content'.
   $permissions['edit any source content'] = array(
     'name' => 'edit any source content',
@@ -1819,24 +1747,6 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
       'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own slide content'.
-  $permissions['edit own slide content'] = array(
-    'name' => 'edit own slide content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own slideshow_page content'.
-  $permissions['edit own slideshow_page content'] = array(
-    'name' => 'edit own slideshow_page content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
     ),
     'module' => 'node',
   );

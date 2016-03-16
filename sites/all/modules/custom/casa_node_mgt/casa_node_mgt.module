@@ -811,6 +811,9 @@ function calculate_identification_reliability($referencing_nids) {
     $owner_reliability = $owner_user -> field_reliability -> value() / 100;
     // dpm($owner_reliability, 'owner_reliability');
 
+    // If owner reliability isn't greater than 0, set it to 10%.
+    $owner_reliability = $owner_reliability > 0 ? $owner_reliability : 10;
+
     $values += $certainty * $owner_reliability;
 
     $highest_reliability = $owner_reliability > $highest_reliability ? $owner_reliability : $highest_reliability;

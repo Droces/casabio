@@ -29,13 +29,119 @@ function casa_core_init() {
 
 
 
+
+
+// =============================================================================
+/**
+ * Implements hook_block_info().
+ */
+function casa_core_block_info() {
+  $blocks = array();
+
+  $blocks['signup_login'] = array(
+    'info' => t('Sign up or log in'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * Implements hook_block_view().
+ */
+function casa_core_block_view($delta = '') {
+  $block = array();
+
+  // set_error_handler("exception_error_handler");
+
+  switch ($delta) {
+    case 'signup_login':
+      $block['subject'] = t('Sign up or log in');
+      $block['content'] = signup_login_block_content();
+      break;
+  }
+
+  return $block;
+}
+
+
+function signup_login_block_content() {
+  $content = array();
+  $content['cols-wrapper'] = array(
+    '#prefix' => '<div class="cols-2">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+  );
+  $content['cols-wrapper']['col-1'] = array(
+    '#prefix' => '<div class="col-1-2">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#weight' => "1",
+  );
+  $content['cols-wrapper']['col-2'] = array(
+    '#prefix' => '<div class="col-1-2">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+  );
+
+  if (!user_is_logged_in()) {
+    $content['cols-wrapper']['col-1']['heading'] = array(
+      '#markup' => '<h3>Sign up</h3>',
+      '#weight' => -1);
+    $content['cols-wrapper']['col-1']['login'] = drupal_get_form('user_login');
+    $content['cols-wrapper']['col-2']['heading'] = array(
+      '#markup' => '<h3>Log in</h3>',
+      '#weight' => -1);
+    $content['cols-wrapper']['col-2']['register'] = drupal_get_form('user_register_form');
+  }
+  else {
+    global $user;
+    // dpm($user, '$user');
+    $content['cols-wrapper']['col-1']['heading'] = array(
+      '#markup' => '<h3>Welcome back ' . $user->name . '</h3>',
+      '#weight' => 1);
+  }
+
+  // dpm($content, '$content');
+  return $content;
+}
+
+
+
 /**
  * Implements hook_form_FORM_ID_alter().
+ */
+function casa_core_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, 'form');
+  // dpm($form_state, 'form_state');
+
+  // Move the 'account' fields (username and email address) out of their fieldset.
+  unset($form['#group_children']['account']);
+}
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Form used to edit *existing* users, not create new users.
  */
 function casa_core_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // dpm($form, 'form');
   // dpm($form_state, 'form_state');
-  $form['field_reliability']['#access'] = FALSE;
+
+  global $user; // The current user, not the user being edited.
+  $is_admin = in_array('Administrator', $user->roles);
+  // dpm($is_admin, '$is_admin');
+
+  if(!$is_admin) {
+    $form['field_reliability']['#access'] = FALSE;
+  }
 }
 
 
@@ -62,6 +168,13 @@ function casa_core_js_alter(&$javascript) {
   }
   // dpm($javascript, 'javascript');
 }
+
+
+// function casa_core_user_insert(&$edit, $account, $category) {
+//   // dpm($edit, '$edit');
+//   // dpm($account, '$account');
+//   // dpm($category, '$category');
+// }
 
 
 

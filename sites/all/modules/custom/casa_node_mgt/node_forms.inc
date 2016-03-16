@@ -36,6 +36,8 @@
           $form['additional_settings']['#access'] = FALSE;
           $form['actions']['preview']['#access'] = FALSE;
 
+          $form['field_representative_picture']['#access'] = FALSE;
+
           $form['actions']['submit']['#value'] = 'Save collection and pictures';
           // $form['field_location']['#description'] = $form['field_location'][$language][0]['#description'];
           $form['#groups']['group_location']->format_settings['instance_settings']['description'] = $form['field_location'][$language][0]['#description'];
@@ -78,6 +80,18 @@
       case 'picture':
         $form['title']['#required'] = FALSE;
         $form['title']['#description'] = "The common name of the animal / plant / specimen, and perspective of the photograph. Eg. ‘Leaf and stem of berry bush’.";
+
+        if ($form_view_mode == 'contribute_new') {
+          // Basic info
+          $form['title']['#access'] = FALSE;
+          $form['field_image']['#access'] = FALSE;
+          $form['field_collection']['#access'] = FALSE;
+
+          $form['field_location']['#access'] = FALSE;
+
+          $form['additional_settings']['#access'] = FALSE;
+          $form['actions']['preview']['#access'] = FALSE;
+        }
         break;
 
 
@@ -85,17 +99,28 @@
       // ======================================================================
       //                                                   Observation
       case 'observation':
+        // dpm ($form, "form");
         $form['title']['#required'] = FALSE;
         $form['title']['#description'] = "The common name of the animal / plant / specimen, and it's place or position. Eg. ‘Berry bush on a rock’.";
 
         if ($form_view_mode == 'contribute_new') {
-          $form['additional_settings']['#access'] = FALSE;
-          $form['actions']['preview']['#access'] = FALSE;
-
+          // Basic info
+          $form['title']['#access'] = FALSE;
+          $form['field_collection']['#access'] = FALSE;
           $form['field_observation_id']['#access'] = FALSE;
           $form['field_source']['#access'] = FALSE;
+
+          $form['field_identifications']['#access'] = FALSE;
+          $form['field_most_likely_species']['#access'] = FALSE;
+          $form['field_mls_probability']['#access'] = FALSE;
+
           $form['field_external_id']['#access'] = FALSE;
           $form['field_specimen_id']['#access'] = FALSE;
+
+          $form['field_pictures_observation']['#access'] = FALSE;
+
+          $form['additional_settings']['#access'] = FALSE;
+          $form['actions']['preview']['#access'] = FALSE;
         }
 
         break;

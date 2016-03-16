@@ -9,8 +9,8 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-var edit_form_selector =      "#edit-selected-edit-form";
-var identify_form_selector =  ".node-identification-form";
+var edit_form_selector =      ".edit_form_wrapper";
+var identify_form_selector =  ".identify_form_wrapper";
 var fields_selector =         "[class*='form-field-']";
 var fields_altered =          [];
 var toolbar;
@@ -112,7 +112,8 @@ function set_up_page(context) {
   // console.log('call: edit_selected module: set_up_page()');
 
   // Transform the edit form and identify form into dialogs
-  $( '#edit-selected-edit-form', context ).dialog({
+  // $( '#edit-selected-edit-form', context ).dialog({
+  $( edit_form_selector, context ).dialog({
     modal: true,
     autoOpen: false,
     resizable: false,
@@ -122,7 +123,7 @@ function set_up_page(context) {
       $(document).trigger('edit-selected.edit-form_dialog-opened');
     }
   });
-  $( '#block-edit-selected-identify-selected-observations', context ).dialog({
+  $( identify_form_selector, context ).dialog({
     modal: true,
     autoOpen: false,
     resizable: false,
@@ -219,7 +220,7 @@ function add_listeners(context) {
   });
 
   // Saving changed observation information
-  $('#edit-selected-edit-form').submit(function( event ) {
+  $(edit_form_selector).submit(function( event ) {
     event.preventDefault();
 
     var observation = Drupal.casa_node_mgt.convert_form_to_node($( this ));
@@ -286,7 +287,7 @@ function get_selectables_data() {
     toastr_info.remove();
     // toastr.success('selectables_data loaded successfully.'); // Not needed.
     selectables_data = data;
-    console.log('selectables_data, on page load: ', selectables_data);
+    // console.log('selectables_data, on page load: ', selectables_data);
     $(document).trigger('selectables_data_fetched');
   });
 }
@@ -1192,11 +1193,11 @@ function set_up_keypress_mgmt(context) {
 }
 
 function handle_keypress_edit() {
-  $('#edit-selected-edit-form').dialog('open');
+  $(edit_form_selector).dialog('open');
 }
 
 function handle_keypress_identify() {
-  $('#block-edit-selected-identify-selected-observations').dialog('open');
+  $(identify_form_selector).dialog('open');
 }
 
 // Not needed; jQuery ui Dialogs close with 'esc' automatically.

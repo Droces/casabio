@@ -12,9 +12,6 @@
 
   [NU] = Function is not currently used
 
-  // Exception definitions
-  ParameterNotValidException
-
   // Generic module hook functions
   [NU] edit_selected_help()
   edit_selected_menu()
@@ -28,19 +25,9 @@
 
   edit_selected_buttons_block_content()
   get_block_info()
-  exception_error_handler()
   array_replace_recursive_search()
   is_page()
 */
-
-
-
-
-
-// =============================================================================
-class ParameterNotValidException extends Exception {}
-
-// $block_info = [];
 
 
 
@@ -76,6 +63,26 @@ function edit_selected_menu() {
     // 'access arguments'  => array('bulk upload media'),
     // 'file'              => 'casa_upload.upload.inc',
     'type'              => MENU_CALLBACK,
+  );
+
+  $items['contribute/multiple-observations/observation-info/%'] = array(
+    // 'title'             => 'Observation Information',
+    'page callback'     => 'contribute_mo_observation_page',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['contribute/multiple-observations/picture-info/%'] = array(
+    // 'title'             => 'Observation Information',
+    'page callback'     => 'contribute_mo_picture_page',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'type'              => MENU_NORMAL_ITEM,
   );
 
   return $items;
@@ -167,6 +174,93 @@ function number_specimens_page() {
 
 
 
+function contribute_mo_observation_page($collection_nid) {
+  // dpm($collection_nid, '$collection_nid');
+
+  $content = array();
+
+  // Add the secondary toolbar
+  $file_url = drupal_get_path('module', 'edit_selected') . '/markup/observations_toolbar_secondary.html';
+  $content['toolbar'] = array(
+    '#markup' => file_get_contents($file_url),
+  );
+
+  // Add the view
+  $name = 'tag'; // @todo rename this
+  $display_id = 'block_1';
+  $content['view'] = array(
+    '#markup' => views_embed_view($name, $display_id, $collection_nid)
+  );
+
+  // Add the edit form
+  $delta = 'edit_selected_observations';
+
+  $block_content = edit_selected_block_get_content($delta);
+  // dpm($block_content, '$block_content');
+  $content['edit_block'] = array(
+    '#type' => 'fieldset',
+    $block_content,
+    '#attributes' => array(
+      'class' => array('edit_form_wrapper'),
+    ),
+  );
+
+  // Add the identify forms
+  $delta = 'identify_selected_observations';
+  $block_content = identify_selected_block_get_content($delta);
+  $content['identify_block'] = array(
+    '#type' => 'fieldset',
+    $block_content,
+    '#attributes' => array(
+      'class' => array('identify_form_wrapper'),
+    ),
+  );
+
+  // dpm($content, '$content');
+  return $content;
+}
+
+
+
+
+function contribute_mo_picture_page($collection_nid) {
+  // dpm($collection_nid, '$collection_nid');
+
+  $content = array();
+
+  // Add the secondary toolbar
+  $file_url = drupal_get_path('module', 'edit_selected') . '/markup/pictures_toolbar_secondary.html';
+  $content['toolbar'] = array(
+    '#markup' => file_get_contents($file_url),
+  );
+
+  // Add the view
+  $name = 'observations'; // @todo rename this
+  $display_id = 'block_1';
+  $content['view'] = array(
+    '#markup' => views_embed_view($name, $display_id, $collection_nid)
+  );
+
+  // Add the edit form
+  $delta = 'edit_selected_pictures';
+
+  $block_content = edit_selected_block_get_content($delta);
+  // dpm($block_content, '$block_content');
+  $content['edit_block'] = array(
+    '#type' => 'fieldset',
+    $block_content,
+    '#attributes' => array(
+      'class' => array('edit_form_wrapper'),
+    ),
+  );
+
+  // dpm($content, '$content');
+  return $content;
+}
+
+
+
+
 
 // =============================================================================
 /**
@@ -184,15 +278,14 @@ function edit_selected_block_info() {
   foreach ($block_names as $key => $name) {
     $blocks[$key] = array(
       'info' => t($name),
-      'cache' => DRUPAL_CACHE_GLOBAL,
-      // 'cache' => DRUPAL_NO_CACHE,
+      // 'cache' => DRUPAL_CACHE_GLOBAL,
+      'cache' => DRUPAL_NO_CACHE, // Because the content depends on the page
     );
   }
 
   $blocks['edit_selected_buttons'] = array(
     'info' => t('Edit selection actions'),
-    'cache' => DRUPAL_CACHE_GLOBAL,
-    // 'cache' => DRUPAL_NO_CACHE,
+    'cache' => DRUPAL_NO_CACHE, // Because the content depends on the page
   );
 
   // dpm($blocks, 'blocks');
@@ -210,8 +303,6 @@ function edit_selected_block_info() {
 function edit_selected_block_view($delta = '') {
   // dpm($delta, 'delta');
   $block = array();
-
-  set_error_handler("exception_error_handler");
 
   switch ($delta) {
     // For the Selected Buttons block
@@ -256,16 +347,16 @@ function edit_selected_block_view($delta = '') {
 function edit_selected_buttons_block_content() {
   $content = '<form id="selected_buttons">'
     // . '<button type="button" id="unselect" name="unselect" disabled>Unselect</button>'
-    . '<button data-display="#edit-selected-edit-form" id="edit"><span style="text-decoration: underline;">E</span>dit</button>';
+    . '<button data-display=".edit_form_wrapper" id="edit"><span style="text-decoration: underline;">E</span>dit</button>';
 
   // If this is the '/picture-info' page
   if (is_page('picture-info')) {
-    $file_url = drupal_get_path('module', 'edit_selected') . '/pictures_toolbar_1.html';
+    $file_url = drupal_get_path('module', 'edit_selected') . '/markup/pictures_toolbar_primary.html';
     $content .= file_get_contents($file_url);
   }
   // If this is the '/observation-info' page
   elseif (is_page('observation-info')) {
-    $file_url = drupal_get_path('module', 'edit_selected') . '/observations_toolbar_1.html';
+    $file_url = drupal_get_path('module', 'edit_selected') . '/markup/observations_toolbar_primary.html';
     $content .= file_get_contents($file_url);
   }
 
@@ -288,89 +379,15 @@ function get_block_info($delta) {
     'edit_selected_pictures' => array(
       'title' => 'Edit pictures',
       'bundle' => 'picture',
-      'use_blank_form' => FALSE,
-      'prefill' => TRUE, // For explanation of $prefill, see the selectable_form.class
-      'actions' => array(
-        'delete',
-        'cancel',
-        'submit',
-      ),
-      'fields' => array(
-        'title',
-        // 'field_image', // Shouldn't be editable
-
-        // 'field_collection', // Shouldn't be editable
-        'field_date_taken',
-
-        'body',
-
-        'field_subject',
-        'field_tags',
-        'field_beauty',
-        'field_usefulness',
-
-        // 'field_location', // Shouldn't be editable; this is merely used to provide the observation with a location
-
-        'field_interaction_subject',
-        'field_interaction_activity',
-      ),
     ),
 
     'edit_selected_observations' => array(
       'title' => 'Edit observations',
       'bundle' => 'observation',
-      'use_blank_form' => FALSE,
-      'prefill' => TRUE,
-      'actions' => array(
-        'delete',
-        'cancel',
-        'submit',
-      ),
-      'fields' => array(
-        'title',
-
-        // 'field_collection', // Shouldn't be editable
-        'field_count',
-        'field_observer_name',
-        'field_date_observed',
-
-        // 'field_pictures_observation', // Shouldn't be editable
-
-        'body',
-
-        'field_locality',
-        'field_location',
-
-        'field_habitat',
-
-        // 'field_identifications', // Editable through a different form
-
-        // 'field_most_likely_species', // Shouldn't be editable
-        // 'field_mls_probability', // Shouldn't be editable
-
-        // 'field_observation_id', // Shouldn't be editable
-        // 'field_source', // Shouldn't be editable
-        // 'field_external_id', // Shouldn't be editable
-      ),
     ),
     'identify_selected_observations' => array(
       'title' => 'Identify observations',
       'bundle' => 'identification',
-      'use_blank_form' => TRUE,
-      'prefill' => FALSE,
-      'actions' => array(
-        // 'delete',
-        'cancel',
-        'submit',
-      ),
-      'fields' => array(
-        // 'title', // Shouldn't be editable
-
-        'field_identified_species',
-        'field_certainty',
-
-        'field_observation', // Added in by Casa Node Management module's hook_form_alter()
-      ),
     ),
   );
 
@@ -384,21 +401,6 @@ function get_block_info($delta) {
 include_once 'edit_selected_block.inc';
 // require_once DRUPAL_ROOT . '/' .
 //   variable_get('group_selected_block.inc', 'includes/group_selected_block.inc');
-
-
-
-
-
-
-
-// =============================================================================
-function exception_error_handler($severity, $message, $file, $line) {
-    if (!(error_reporting() & $severity)) {
-        // This error code is not included in error_reporting
-        return;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-}
 
 
 

@@ -80,6 +80,11 @@ function service_api_v1_0_default_services_endpoint() {
           'enabled' => '1',
         ),
       ),
+      'relationships' => array(
+        'community_identifications' => array(
+          'enabled' => '1',
+        ),
+      ),
     ),
     'taxa' => array(
       'operations' => array(
@@ -117,9 +122,6 @@ function service_api_v1_0_default_services_endpoint() {
         ),
       ),
       'actions' => array(
-        'current_user' => array(
-          'enabled' => '1',
-        ),
         'login' => array(
           'enabled' => '1',
           'settings' => array(
@@ -140,6 +142,9 @@ function service_api_v1_0_default_services_endpoint() {
           'enabled' => '1',
         ),
         'request_new_password' => array(
+          'enabled' => '1',
+        ),
+        'current_user' => array(
           'enabled' => '1',
         ),
       ),
