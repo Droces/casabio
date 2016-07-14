@@ -27,6 +27,12 @@ function content_type_habitat_record_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 2,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'medium' => array(
         'label' => 'above',
         'settings' => array(),
@@ -94,6 +100,12 @@ function content_type_habitat_record_field_default_field_instances() {
         ),
         'type' => 'entityreference_label',
         'weight' => 1,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'medium' => array(
         'label' => 'above',
@@ -186,6 +198,12 @@ function content_type_habitat_record_field_default_field_instances() {
         'type' => 'openlayers_geofield',
         'weight' => 4,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'medium' => array(
         'label' => 'above',
         'settings' => array(),
@@ -259,6 +277,12 @@ function content_type_habitat_record_field_default_field_instances() {
         ),
         'type' => 'list_default',
         'weight' => 3,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'medium' => array(
         'label' => 'above',

@@ -7,8 +7,13 @@
 // =============================================================================
 // Global variables
 
-$w-max-page-width:      1400px;
-$w-menu-narrow:         800px;
+// DEPRECATED
+$page-max-width:        1300px;
+$menu-w-narrow:         800px;
+
+$page_width-narrow:     60em; // For pages with primarily static content
+$page_width-regular:    80em; // For most pages
+$page_width-full:       100%; // For pages with large views that needs as much space as possible
 
 /* Microsoft research says 40px is ideal size for a touch target */
 $pointer_target-size:   2.5rem; /* height or width */
@@ -25,11 +30,11 @@ $corner_radius-small:   0.13em;
 $h-spacing:             2em;
 
 /* used in width functions */
-$w-narrow:              30em; /* 480px @ 16px font size */
-$w-average:             60em; /* 960px @ 16px font size */
-$w-wide:                80em; /* 1280px @ 16px font size */
+$w-narrow:              30em;  /* 480px @ 16px font size */
+$w-average:             60em;  /* 960px @ 16px font size */
+$w-wide:                80em;  /* 1280px @ 16px font size */
 
-$w-sidebar-narrow:      100%; /* 480px @ 16px font size */
+$w-sidebar-narrow:      100%;  /* 480px @ 16px font size */
 $w-sidebar-average:     300px; /* 960px @ 16px font size */
 $w-sidebar-wide:        450px; /* 1280px @ 16px font size */
 
@@ -39,7 +44,7 @@ $gutter-wide:           5%;
 
 $footer_height:         120px;
 
-$main-padding-top:      2em;
+$main-padding-top:      3.2em;
 $main-padding-bottom:   3em;
 
 
@@ -59,7 +64,7 @@ $z-sidebars:            30;
 $z-header-footer:       40;
 
 $z-sticky-elements:     50;
-$z-floating-elements:   60;  //like hover-popups  
+$z-floating-elements:   60;  //like hover-popups
 
 
 // -----------------------------------------------------------------------------
@@ -71,7 +76,7 @@ $dialog-header-font-size: 1.1em;
 $dialog-header-color:   inherit;
 $dialog-padding:        2.2em 1.8em 1.8em;
 $dialog-top:            2em;
-$dialog-backdrop-bg:    rgba(black, 0.7);   
+$dialog-backdrop-bg:    rgba(black, 0.7);
 
 
 
@@ -138,6 +143,7 @@ $colour-links:          $colour-green;
 $colour-buttons:        $colour-orange;
 $colour-headings:       #212121;
 $colour-subtle:         rgba(black, 0.42);
+$colour-page-bg:        #f8f8f8;
 
 $tabs-container-bg:     white;
 $tabs-border:           $colour-pale-grey;

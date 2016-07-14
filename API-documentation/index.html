@@ -36,7 +36,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "../API.yaml";
+        url = "../API-rest.yaml"; // API-rest
       }
 
       // Pre load translate...
@@ -53,7 +53,7 @@
               clientId: "your-client-id",
               clientSecret: "your-client-secret-if-required",
               realm: "your-realms",
-              appName: "your-app-name", 
+              appName: "your-app-name",
               scopeSeparator: ",",
               additionalQueryStringParams: {}
             });

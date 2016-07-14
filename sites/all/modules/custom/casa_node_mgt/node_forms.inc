@@ -20,6 +20,8 @@
     }
     // dpm($form_view_mode, 'form_view_mode');
 
+    $form['#attributes']['data-view-mode'] = $form_view_mode;
+
     // Alter fields depending on the form node's content type
     switch ($bundle) {
 
@@ -83,14 +85,14 @@
 
         if ($form_view_mode == 'contribute_new') {
           // Basic info
-          $form['title']['#access'] = FALSE;
-          $form['field_image']['#access'] = FALSE;
-          $form['field_collection']['#access'] = FALSE;
+          $form['title']['#access'] =               FALSE;
+          $form['field_image']['#access'] =         FALSE;
+          $form['field_collection']['#access'] =    FALSE;
 
-          $form['field_location']['#access'] = FALSE;
+          $form['field_location']['#access'] =      FALSE;
 
           $form['additional_settings']['#access'] = FALSE;
-          $form['actions']['preview']['#access'] = FALSE;
+          $form['actions']['preview']['#access'] =  FALSE;
         }
         break;
 
@@ -105,24 +107,38 @@
 
         if ($form_view_mode == 'contribute_new') {
           // Basic info
-          $form['title']['#access'] = FALSE;
-          $form['field_collection']['#access'] = FALSE;
-          $form['field_observation_id']['#access'] = FALSE;
-          $form['field_source']['#access'] = FALSE;
+          $form['title']['#access'] =                   FALSE;
+          $form['field_collection']['#access'] =        FALSE;
+          $form['field_observation_id']['#access'] =    FALSE;
+          $form['field_source']['#access'] =            FALSE;
 
-          $form['field_identifications']['#access'] = FALSE;
+          $form['field_count']['#access'] =             FALSE;
+          $form['field_identifications']['#access'] =   FALSE;
           $form['field_most_likely_species']['#access'] = FALSE;
-          $form['field_mls_probability']['#access'] = FALSE;
+          $form['field_mls_probability']['#access'] =   FALSE;
 
-          $form['field_external_id']['#access'] = FALSE;
-          $form['field_specimen_id']['#access'] = FALSE;
+          $form['field_external_id']['#access'] =       FALSE;
+          $form['field_specimen_id']['#access'] =       FALSE;
 
           $form['field_pictures_observation']['#access'] = FALSE;
 
-          $form['additional_settings']['#access'] = FALSE;
-          $form['actions']['preview']['#access'] = FALSE;
+          $form['additional_settings']['#access'] =     FALSE;
+          $form['actions']['preview']['#access'] =      FALSE;
+
+          $form['field_location']['und'][0]['geom']['#attributes'] = array(
+            'class' => array('hidden'),
+          );
+          $form['field_location']['#attached'] = array(
+            'js' => array(
+              libraries_get_path('openlayers3') . '/build/ol.js',
+            ),
+            'css' => array(
+              libraries_get_path('openlayers3') . '/css/ol.css',
+            ),
+          );
         }
 
+        // dpm ($form, "form");
         break;
 
 
@@ -135,13 +151,11 @@
         $form['title']['#access'] = FALSE;
         $form['field_reliability']['#access'] = FALSE;
 
-        // If this form is for creating a new node, needs the appropriate id.
-        // @todo Figure out why this was a problem
-        if ($form['#form_id'] == 'node_form') {
-          // $form['#form_id'] = 'identification_' . $form['#form_id'];
-          // $form['form_id']['#value'] = 'identification_' . $form['form_id']['#value'];
-          // $form['form_id']['#id'] = 'edit-' . 'identification-' . 'node-form';
-        }
+        // Ensure an node.pages.inc file is loaded whenever the form is processed.
+        // Needed for the entity reference widget to work
+        form_load_include($form_state, 'inc', 'node', 'node.pages');
+
+
 
         // VM: Agreement or Contribute new
 
@@ -178,6 +192,10 @@
         if ($form_view_mode == 'contribute_new') {
           // dpm($form, 'form');
 
+          $form['field_identified_species']['#attributes']['class'][] = 'hidden';
+
+          $form['field_certainty']['#attributes']['class'][] = 'inline';
+
           // $view_name = 'species_reference_selector_widget';
           // $display_id = 'entityreference_view_widget_1';
           // $form['field_identified_species']['und'] = array(
@@ -199,37 +217,58 @@
           $form['#attributes']['class'][] = 'inline';
         }
 
-        /**
-         * Checks URL for queries that should be used to auto-fill the form.
-         * For example, “?field_observation=624" in the URL means that the
-         * 'field_observation' form field should be set to '624'.
-         *
-         * This is used for a 'new identification' form (not for identification agreements).
-         */
-        $query_fragments = drupal_get_query_array($_SERVER['QUERY_STRING']);
-        // dpm($query_fragments, 'query_fragments');
 
-        foreach ($query_fragments as $key => $value) {
-          if (in_array($key, $form)) {
-            $field = $form[$key][$language][0];
 
-            // Standard Drupal field
-            if (isset($field['value'])) {
-              $form[$key][$language][0]['value']['#default_value'] = $value;
-            }
-            // Entity reference field
-            elseif (isset($field['target_id'])) {
-              // Needs to be formatted as: "node_title (nid)".
-              $node = node_load($value);
-              // dpm($node);
-              $form[$key][$language][0]['target_id']['#default_value'] =
-                $node->title . ' (' . $value . ')';
-            }
-          }
-        }
+        // /**
+        //  * Checks URL for queries that should be used to auto-fill the form.
+        //  * For example, “?field_observation=624" in the URL means that the
+        //  * 'field_observation' form field should be set to '624'.
+        //  *
+        //  * This is used for a 'new identification' form (not for identification agreements).
+        //  */
+        // $query_fragments = drupal_get_query_array($_SERVER['QUERY_STRING']);
+        // // dpm($query_fragments, 'query_fragments');
+
+        // foreach ($query_fragments as $key => $value) {
+        //   if (in_array($key, array_keys($form))) {
+        //     $field = $form[$key][$language][0];
+
+        //     // Standard Drupal field
+        //     if (isset($field['value'])) {
+        //       $form[$key][$language][0]['value']['#default_value'] = $value;
+        //     }
+        //     // Entity reference field
+        //     elseif (isset($field['target_id'])) {
+        //       // Needs to be formatted as: "node_title (nid)".
+        //       $node = node_load($value);
+        //       // dpm($node);
+        //       $form[$key][$language][0]['target_id']['#default_value'] =
+        //         $node->title . ' (' . $value . ')';
+        //     }
+        //   }
+        // }
 
         // Add a custom form submit handler.
         $form['actions']['submit']['#submit'][] = 'identification_form_submit';
+        break;
+
+
+
+      // ======================================================================
+      //                                                   Interaction
+      case 'interaction':
+        // dpm($form, "form");
+
+        if ($form_view_mode == 'add_to_observation') {
+          // Basic info
+          $form['title']['#access'] = FALSE;
+
+          $form['field_observation']['#access'] = FALSE;
+          $form['field_observation_object']['#access'] = FALSE;
+
+          $form['additional_settings']['#access'] = FALSE;
+        }
+
         break;
 
 
@@ -319,11 +358,21 @@ function casa_node_mgt_form_submit($form, &$form_state) {
   // @needed_because Altering to #access to additional_settings means these fields aren't set correctly.
   if (isset($form['additional_settings']['#access'])) {
     if ($form['additional_settings']['#access'] == FALSE) {
-      $node = $form_state['node'];
-      $node->status = 1; // Published
-      global $user;
-      $node->uid = $user->uid;
-      node_save($node);
+      // $node = $form_state['node'];
+      // $node->status = 1; // Published
+      // global $user;
+      // $node->uid = $user->uid;
+      // node_save($node);
+
+      // Get the default values for the hidden fields and save them to the node.
+      // Is needed because hiding (denying access) fields makes them saved as '0'.
+
+      $additional_settings = array('promote', 'status', 'sticky');
+
+      foreach ($additional_settings as $setting) {
+        $value = $form['options'][$setting]['#default_value'];
+        $form_state['values'][$setting] = $value;
+      }
     }
   }
 }

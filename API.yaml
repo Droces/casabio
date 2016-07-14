@@ -47,6 +47,20 @@ schemes:
 
 
 
+# ---------------------------------------------
+# Non-CRUD Services, examples
+
+# Actions
+#   POST api/comments/refresh
+
+# Targeted actions
+#   POST api/comments/13/publish
+
+# Relationships
+#   GET  api/comments/13/responses
+
+
+
 ###############################################################################
 #                                   Parameters                                #
 ###############################################################################
@@ -64,7 +78,14 @@ parameters:
     description: The complete observation.
     required: true
     schema:
-      $ref: "#/definitions/Observation"
+      $ref: "#/definitions/Observation-for-submission"
+  picture:
+    name: Picture
+    in: body
+    description: The complete picture.
+    required: true
+    schema:
+      $ref: "#/definitions/Picture-for-submission"
   identification:
     name: Identification
     in: body
@@ -72,6 +93,21 @@ parameters:
     required: true
     schema:
       $ref: "#/definitions/Identification-for-submission"
+  interaction:
+    name: Interaction
+    in: body
+    description: The complete interaction.
+    required: true
+    schema:
+      $ref: "#/definitions/Interaction"
+  # ---------------- Files
+  file:
+    name: File
+    in: body
+    description: An array representing a file.
+    required: true
+    schema:
+      $ref: "#/definitions/File-for-submission"
   # ---------------- Users
   uid:
     name: uid
@@ -171,7 +207,7 @@ paths:
         - $ref: '#/parameters/options'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Observation"
           headers:
@@ -190,7 +226,7 @@ paths:
         - $ref: '#/parameters/observation'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Node_response"
         401:
@@ -207,7 +243,7 @@ paths:
       description: ""
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Observation"
         406:
@@ -224,7 +260,7 @@ paths:
         - $ref: '#/parameters/observation'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         406:
@@ -240,7 +276,7 @@ paths:
         - $ref: '#/parameters/nid'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         406:
@@ -256,13 +292,153 @@ paths:
         - $ref: '#/parameters/nid'
       responses:
         200:
-          description: OK
+          description: "Okay"
           # schema:
           #   $ref: "#/definitions/Community identification"
           headers:
             results-count:
               description: The number of results returned.
               type: integer
+
+  # --------------------------------------------------------------------------#
+  /observations/{nid}/add_interaction:
+    post:
+      tags:
+        - Observations
+      summary: Add an interaction of an observation
+      description: "Creates an interaction for an observation. In the process,
+        creates a new observation, identification, and interaction."
+      parameters:
+        - $ref: '#/parameters/nid'
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - name: Parameters
+          in: body
+          description: Necessary field data to create the nodes.
+          required: true
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              body:
+                type: string
+                description: Notes.
+                example: {"und": [{
+                  "value": "Text...",
+                  "format": "filtered_html"}]}
+              field_interaction_activity:
+                type: string
+                example: {"und": [{
+                  "value": "inhabiting"}]}
+              field_identified_species:
+                type: string
+                example: {"und": [{
+                  "tid": "102260"}]}
+              field_certainty:
+                type: string
+                example: {"und": [{
+                  "value": "8"}]}
+
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/Interaction"
+        401:
+          description: "CSRF validation failed"
+
+  # ==========================================================================#
+  #                                                   Pictures                #
+  # --------------------------------------------------------------------------#
+  /pictures:
+    get:
+      tags:
+        - Pictures
+      summary: View a list of pictures
+      description: ""
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/Picture"
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+
+    post:
+      tags:
+        - Pictures
+      summary: Add a picture
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/picture'
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/Node_response"
+        401:
+          description: "CSRF validation failed"
+
+  # --------------------------------------------------------------------------#
+  /pictures/{nid}:
+    get:
+      tags:
+        - Pictures
+      summary: View a picture
+      parameters:
+        - $ref: '#/parameters/nid'
+      description: ""
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/Picture"
+        406:
+          description: Node {nid} is not a picture
+
+    put:
+      tags:
+        - Pictures
+      summary: Edit a picture
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/nid'
+        - $ref: '#/parameters/picture'
+      responses:
+        200:
+          description: "Okay"
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: "Can only update observations."
+
+    delete:
+      tags:
+        - Pictures
+      summary: Delete a picture
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: "Okay"
+        401:
+          description: "CSRF validation failed"
+        406:
+          description: "Can only update observations."
 
   # ==========================================================================#
   #                                                   Taxa                    #
@@ -281,7 +457,7 @@ paths:
         - $ref: '#/parameters/options'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Taxon"
           headers:
@@ -300,7 +476,7 @@ paths:
         - $ref: '#/parameters/taxon'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Term_reponse"
         401:
@@ -316,7 +492,7 @@ paths:
         - $ref: '#/parameters/tid'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Taxon"
     put:
@@ -332,11 +508,31 @@ paths:
         - token: []
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         406:
           description: Can only update taxa.
+
+  # ==========================================================================#
+  #                                                   Interactions            #
+  # --------------------------------------------------------------------------#
+  # /interactions:
+
+  /interactions/{nid}:
+    get:
+      tags:
+        - Interactions
+      summary: View an interaction
+      parameters:
+        - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: '#/definitions/Interaction'
+        406:
+          description: "Node {nid} is not an interaction"
 
   # ==========================================================================#
   #                                                   Identifications         #
@@ -352,7 +548,7 @@ paths:
         - $ref: '#/parameters/identification'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Node_response"
         401:
@@ -367,7 +563,7 @@ paths:
         - $ref: '#/parameters/nid'
       responses:
         200:
-          description: OK
+          description: "Okay"
         406:
           description: "Node {nid} is not an identification"
 
@@ -388,7 +584,7 @@ paths:
         - $ref: '#/parameters/options'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Collection" # @todo This definition must be fleshed out
           headers:
@@ -407,7 +603,7 @@ paths:
       description: ""
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Collection"
         406:
@@ -424,7 +620,7 @@ paths:
       description: ""
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: "#/definitions/Observation"
           headers:
@@ -433,6 +629,68 @@ paths:
               type: integer
         406:
           description: "Node {nid} is not a collection"
+
+  /collections/{nid}/pictures:
+    get:
+      tags:
+        - Collections
+      summary: View a list of a collection's pictures
+      parameters:
+        - $ref: '#/parameters/nid'
+      description: ""
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/Picture"
+          headers:
+            results-count:
+              description: The number of results returned.
+              type: integer
+        406:
+          description: "Node {nid} is not a collection"
+
+  # ==========================================================================#
+  #                                                   Files                   #
+  # --------------------------------------------------------------------------#
+  /file:
+    get:
+      tags:
+        - Files
+      summary: View a list of files.
+      description: "View a list of files such as images, vides, etc. Limited to 5000 results."
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/parameters'
+        - $ref: '#/parameters/pagesize'
+        - $ref: '#/parameters/options'
+      responses:
+        200:
+          description: "Okay"
+          schema:
+            $ref: "#/definitions/File"
+          # headers:
+          #   results-count:
+          #     description: The number of results returned.
+          #     type: integer
+
+    post:
+      tags:
+        - Files
+      summary: Add a file. __ DEV __
+      description: "Add a file from a URI. The parameters within the file parameter below are wrong..."
+      parameters:
+        - $ref: '#/parameters/Session-id'
+        - $ref: '#/parameters/X-CSRF-Token'
+        - $ref: '#/parameters/file'
+      responses:
+        200:
+          description: "Okay"
+          # schema:
+          #   $ref: "#/definitions/Term_reponse"
+        401:
+          description: "CSRF validation failed"
 
   # ==========================================================================#
   #                                                   Users                   #
@@ -451,7 +709,7 @@ paths:
         - $ref: '#/parameters/options'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: '#/definitions/User'
     post:
@@ -465,7 +723,7 @@ paths:
         - $ref: '#/parameters/user'
       responses:
         200:
-          description: OK
+          description: "Okay"
           schema:
             $ref: '#/definitions/User'
         401:
@@ -481,7 +739,7 @@ paths:
         - $ref: '#/parameters/uid'
       responses:
         200:
-          description: OK
+          description: "Okay"
         406:
           description: There is no user with ID {uid}.
     put:
@@ -497,7 +755,7 @@ paths:
         - token: []
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         406:
@@ -513,7 +771,7 @@ paths:
         - $ref: '#/parameters/uid'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         403:
@@ -533,7 +791,7 @@ paths:
         - $ref: '#/parameters/uid'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
         403:
@@ -551,7 +809,7 @@ paths:
         - $ref: '#/parameters/uid'
       responses:
         200:
-          description: OK
+          description: "Okay"
 
   # --------------------------------------------------------------------------#
   /users/{uid}/observations:
@@ -563,7 +821,7 @@ paths:
         - $ref: '#/parameters/uid'
       responses:
         200:
-          description: OK
+          description: "Okay"
 
   # --------------------------------------------------------------------------#
   /users/login:
@@ -580,7 +838,7 @@ paths:
             $ref: "#/definitions/Credentials"
       responses:
         200:
-          description: OK
+          description: "Okay"
 
   # --------------------------------------------------------------------------#
   /users/current_user:
@@ -593,7 +851,7 @@ paths:
         - $ref: '#/parameters/X-CSRF-Token'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
 
@@ -608,7 +866,7 @@ paths:
         - $ref: '#/parameters/X-CSRF-Token'
       responses:
         200:
-          description: OK
+          description: "Okay"
         401:
           description: "CSRF validation failed"
 
@@ -620,7 +878,7 @@ paths:
       summary: Get the CSRF token.
       responses:
         200:
-          description: OK
+          description: "Okay"
 
   # --------------------------------------------------------------------------#
   /users/request_new_password:
@@ -700,60 +958,75 @@ definitions:
       status:
         type: boolean
         description: Whether the observation is published or not.
-      vid: 
+      vid:
         type: integer
         format: int64
-      uid: 
+      uid:
         type: integer
+        description: The uid of the creator or owner.
         format: int64
-      log: 
+      log:
         type: string
-      comment: 
+      comment:
         type: integer
         format: int32
         description: Whether commenting is open, closed, or hidden.
-      promote: 
+      promote:
         type: boolean
         description: Whether the observation is promoted to the front page or not.
-      sticky: 
+      sticky:
         type: boolean
         description: Whether the observation is displayed at the top of lists or not.
-      type: 
+      type:
         type: string
         description: The content type.
         example: observation
-      language: 
+      language:
         type: string
         description: und
-      created: 
+      created:
         type: string
         description: A date and time in the UNIX timestamp format.
-      changed: 
+      changed:
         type: string
         description: When the observation was last updated. A date and time in the UNIX timestamp format.
-      tnid: 
+      tnid:
         type: integer
         format: int64
         description: The translation node id.
-      translate: 
+      translate:
         type: boolean
         description: "?"
-      revision_timestamp: 
+      revision_timestamp:
         type: string
         description: A date and time in the UNIX timestamp format.
-      revision_uid: 
+      revision_uid:
         type: integer
         format: int64
         description: "?"
-      body: 
+      body:
         type: string
-        example: {"und": [{"value": "Description","summary": "","format": "null","safe_value": "Description","safe_summary": ""}]}
+        example: {"und": [{
+          "value": "Description",
+          "summary": "",
+          "format": "null",
+          "safe_value": "Description",
+          "safe_summary": ""}]}
       field_pictures_observation:
         type: string
         example: {"und": [{"target_id": "0"}]}
       field_location:
         type: string
-        example: {"und": [{"geom": "POINT (0.0 0.0)", "geo_type": "point", "lat": "0.0", "lon": "0.0", "left": "0.0", "top": "0.0", "right": "0.0", "bottom": "0.0", "geohash": "hash_string"}]}
+        example: {"und": [{
+          "geom": "POINT (0.0 0.0)",
+          "geo_type": "point",
+          "lat": "0.0",
+          "lon": "0.0",
+          "left": "0.0",
+          "top": "0.0",
+          "right": "0.0",
+          "bottom": "0.0",
+          "geohash": "hash_string"}]}
       field_locality:
         type: string
         example: {"und": [{"tid": "0"}]}
@@ -767,16 +1040,29 @@ definitions:
       #   type: array
       field_external_id:
         type: string
-        example: {"und": [{"value": "some_id", "format": "null", "safe_value": "some_id"}]}
+        example: {"und": [{
+          "value": "some_id",
+          "format": "null",
+          "safe_value": "some_id"}]}
       field_observer_name:
         type: string
-        example: {"und": [{"value": "Name", "format": "null", "safe_value": "Name"}]}
+        example: {"und": [{
+          "value": "Name",
+          "format": "null",
+          "safe_value": "Name"}]}
       field_observation_id:
         type: string
-        example: {"und": [{"value": "some_id", "format": "null", "safe_value": "some_id"}]}
+        example: {"und": [{
+          "value": "some_id",
+          "format": "null",
+          "safe_value": "some_id"}]}
       field_date_observed:
         type: string
-        example: {"und": [{"value": "2015-07-03 00:00:00", "timezone": "Africa/Johannesburg", "timezone_db": "Africa/Johannesburg", "date_type": "datetime"}]}
+        example: {"und": [{
+          "value": "2015-07-03 00:00:00",
+          "timezone": "Africa/Johannesburg",
+          "timezone_db": "Africa/Johannesburg",
+          "date_type": "datetime"}]}
       field_most_likely_species:
         type: string
       #   type: array
@@ -785,13 +1071,18 @@ definitions:
       #   type: array
       field_count:
         type: string
-        example: {"und": [{"value": "1"}]}
+        example: {"und": [{
+          "value": "1"}]}
       field_collection:
         type: string
-        example: {"und": [{"target_id": "0"}]}
+        example: {"und": [{
+          "target_id": "0"}]}
       field_specimen_id:
         type: string
-        example: {"und": [{"value": "some_id", "format": "null", "safe_value": "some_id"}]}
+        example: {"und": [{
+          "value": "some_id",
+          "format": "null",
+          "safe_value": "some_id"}]}
       rdf_mapping:
         type: string
         description: "???"
@@ -801,26 +1092,215 @@ definitions:
       cid:
         type: string
         description: "?"
-      last_comment_timestamp: 
+      last_comment_timestamp:
         type: string
         description: A date and time in the UNIX timestamp format.
-      last_comment_name: 
+      last_comment_name:
         type: string
-      last_comment_uid: 
+      last_comment_uid:
         type: integer
         format: int64
-      comment_count: 
+      comment_count:
         type: integer
         format: int32
-      name: 
+      name:
         type: string
         description: "The user's username?"
-      picture: 
+      picture:
         type: string
         description: "The user's picture?"
       data:
         type: string
         description: "Serialised?"
+
+  Observation-for-submission:
+    type: object
+    properties:
+      title:
+        type: string
+      status:
+        type: boolean
+        description: Whether the observation is published or not.
+      uid:
+        type: string
+        description: The uid of the creator or owner.
+      type:
+        type: string
+        description: The content type.
+        example: observation
+
+      field_location:
+        type: string
+        example: {"und": [{
+          "geom": "POINT (0.0 0.0)"}]}
+        description: The assumed type is 'WKT' (Well-Known Text) # Assumed based on form's widget type
+      # field_count:
+      #   type: string
+      #   example: {"und": [{"value": "1"}]}
+      field_collection:
+        type: string
+        example: {"und": [{
+          "target_id": "Name (nid)"}]}
+
+      # Without unnecessarily-complex drupal field structure.
+
+      # field_location:
+      #   type: array
+      #   example: [0.0, 0.0]
+      #   items:
+      #     type: double
+      # # field_count:
+      # #   type: string
+      # #   example: {"und": [{"value": "1"}]}
+      # field_collection:
+      #   type: integer
+      #   format: int64
+      #   example: 62625
+
+  Picture:
+    type: object
+    properties:
+      nid:
+        type: integer
+        format: int64
+      title:
+        type: string
+      status:
+        type: boolean
+        description: Whether the picture is published or not.
+      vid:
+        type: integer
+        format: int64
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+      log:
+        type: string
+      comment:
+        type: integer
+        format: int32
+        description: Whether commenting is open, closed, or hidden.
+      promote:
+        type: boolean
+        description: Whether the picture is promoted to the front page or not.
+      sticky:
+        type: boolean
+        description: Whether the picture is displayed at the top of lists or not.
+      type:
+        type: string
+        description: The content type.
+        example: picture
+      language:
+        type: string
+        description: und
+      created:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      changed:
+        type: string
+        description: When the picture was last updated. A date and time in the UNIX timestamp format.
+      tnid:
+        type: integer
+        format: int64
+        description: The translation node id.
+      translate:
+        type: boolean
+        description: "?"
+      revision_timestamp:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid:
+        type: integer
+        format: int64
+        description: "?"
+      body:
+        type: string
+        example: {"und": [{
+          "value": "Description",
+          "summary": "",
+          "format": "null",
+          "safe_value": "Description",
+          "safe_summary": ""}]}
+      field_image:
+        type: string
+        example: {"und": [{
+          "fid": "667",
+          "uid": "1",
+          "filename": "IMG_1215 Aloe pillansii_2.JPG",
+          "uri": "public://IMG_1215 Aloe pillansii_2.JPG",
+          "filemime": "image/jpeg",
+          "filesize": "98994",
+          "status": "1",
+          "timestamp": "1455639861",
+          "type": "image",
+          "field_time_taken": [],
+          "rdf_mapping": [],
+          "metadata": {
+            "height": 800,
+            "width": 533},
+          "alt": "null",
+          "title": "null",
+          "height": "800",
+          "width": "533"}]}
+
+  Picture-for-submission:
+    type: object
+    properties:
+      title:
+        type: string
+      status:
+        type: boolean
+        description: Whether the picture is published or not.
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+      log:
+        type: string
+      comment:
+        type: integer
+        format: int32
+        description: Whether commenting is open, closed, or hidden.
+      promote:
+        type: boolean
+        description: Whether the picture is promoted to the front page or not.
+      sticky:
+        type: boolean
+        description: Whether the picture is displayed at the top of lists or not.
+      type:
+        type: string
+        description: The content type.
+        example: picture
+      body:
+        type: string
+        example: {"und": [{
+          "value": "Description",
+          "summary": "",
+          "format": "null",
+          "safe_value": "Description",
+          "safe_summary": ""}]}
+      field_image:
+        type: string
+        example: {"und": [{
+          "fid": "667",
+          "uid": "1",
+          "filename": "IMG_1215 Aloe pillansii_2.JPG",
+          "uri": "public://IMG_1215 Aloe pillansii_2.JPG",
+          "filemime": "image/jpeg",
+          "filesize": "98994",
+          "status": "1",
+          "timestamp": "1455639861",
+          "type": "image",
+          "field_time_taken": [],
+          "rdf_mapping": [],
+          "metadata": {
+            "height": 800,
+            "width": 533},
+          "alt": "null",
+          "title": "null",
+          "height": "800",
+          "width": "533"}]}
 
   Identification:
     type: object
@@ -833,42 +1313,66 @@ definitions:
       status:
         type: boolean
         description: Whether the identification is published or not.
-      vid: 
+      vid:
         type: string
-      uid: 
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+      log:
         type: string
-      log: 
-        type: string
-      comment: 
+      comment:
         type: integer
         format: int32
-      promote: 
+      promote:
         type: string
-      sticky: 
+      sticky:
         type: boolean
-      type: 
+      type:
         type: string
         description: The content type.
         example: identification
-      language: 
+      language:
         type: string
-      created: 
-        type: string
-        description: A date and time in the UNIX timestamp format.
-      changed: 
+      created:
         type: string
         description: A date and time in the UNIX timestamp format.
-      tnid: 
-        type: string
-      translate: 
-        type: string
-      revision_timestamp: 
+      changed:
         type: string
         description: A date and time in the UNIX timestamp format.
-      revision_uid: 
+      tnid:
         type: string
-      body: 
+      translate:
         type: string
+      revision_timestamp:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid:
+        type: string
+      body:
+        type: string
+      field_identified_species:
+        type: array
+        example: {"und": [{
+          "target_id": "Name (nid)"}]}
+        items:
+          key: und
+          type: array
+          items:
+            type: integer
+            format: int64
+      field_certainty:
+        type: string
+        example: {"und": [{
+          "value": "8"}]}
+      field_observation:
+        type: string
+        example: {"und": [{
+          "target_id": "63663"}]}
+      field_identification_source:
+        type: string
+        example: {"und": [{
+          "value": "1"}]}
 
   Identification-for-submission:
     type: object
@@ -878,9 +1382,11 @@ definitions:
       status:
         type: boolean
         description: Whether the identification is published or not.
-      uid: 
-        type: string
-      type: 
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+      type:
         type: string
         description: The content type.
         example: identification
@@ -889,13 +1395,48 @@ definitions:
         format: int64
       field_identified_species:
         type: array
-        example: {"und": [{"target_id": "Name (nid)"}]}
+        example: {"und": [{
+          "target_id": "Name (nid)"}]}
         items:
           key: und
           type: array
           items:
             type: integer
             format: int64
+      field_certainty:
+        type: string
+        example: {"und": [{
+          "value": "8"}]}
+      field_observation:
+        type: string
+        example: {"und": [{
+          "target_id": "63663"}]}
+
+  Interaction:
+    type: object
+    properties:
+      nid:
+        type: integer
+        format: int64
+      title:
+        type: string
+      body:
+        type: string
+        example: {"und": [{
+          "value": "Text...",
+          "format": "filtered_html"}]}
+      field_observation:
+        type: string
+        example: {"und": [{
+          "target_id": "Name (nid)"}]}
+      field_interaction_activity:
+        type: string
+        example: {"und": [{
+          "value": "inhabiting"}]}
+      field_observation_object:
+        type: string
+        example: {"und": [{
+          "target_id": "Name (nid)"}]}
 
   User:
     type: object
@@ -947,7 +1488,7 @@ definitions:
         type: string
       # notify:
       #   type: boolean
-      #   description: For 
+      #   description: For
 
   Term_reponse:
     type: object
@@ -962,21 +1503,21 @@ definitions:
     type: object
     properties:
       tid:
-          type: integer
-          format: int64
+        type: integer
+        format: int64
       vid:
-          type: integer
-          format: int32
+        type: integer
+        format: int32
       name:
         type: string
       description:
         type: string
       format:
-          type: string
-          example: basic_html
+        type: string
+        example: basic_html
       weight:
-          type: integer
-          format: int32
+        type: integer
+        format: int32
       vocabulary_machine_name:
         type: string
         example: taxa
@@ -1002,4 +1543,74 @@ definitions:
       password:
         type: string
         format: password
-        example: w3bd3sign
+        example: password
+
+  File:
+    type: object
+    properties:
+      fid:
+        type: integer
+        format: int64
+        example: 772
+      filemime:
+        type: string
+        example: "image/jpeg"
+      type:
+        type: string
+        example: "image"
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+        example: 1
+      filename:
+        type: string
+        example: "IMG_1239 Lachenalia buchubergensis.JPG"
+      uri:
+        type: string
+        description: The current online location of the file.
+        example: "http://localhost/Current/CasaBio/api/v1.0/file/772"
+      filesize:
+        format: int32
+        example: 64689
+      status:
+        type: boolean
+        description: Whether the identification is published or not.
+        # example: 1
+      timestamp:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+        example: 1457946265
+
+  File-for-submission:
+    type: object
+    properties:
+      filemime:
+        type: string
+        example: "image/jpeg"
+      type:
+        type: string
+        example: "image"
+      uid:
+        type: integer
+        description: The uid of the creator or owner.
+        format: int64
+        example: 1
+      filename:
+        type: string
+        example: "IMG_1239 Lachenalia buchubergensis.JPG"
+      uri:
+        type: string
+        description: The current online location of the file.
+        example: "http://localhost/Current/CasaBio/api/v1.0/file/772"
+      filesize:
+        format: int32
+        example: 64689
+      status:
+        type: boolean
+        description: Whether the identification is published or not.
+        example: 1
+      # timestamp:
+      #   type: string
+      #   description: A date and time in the UNIX timestamp format.
+      #   example: 1457946265

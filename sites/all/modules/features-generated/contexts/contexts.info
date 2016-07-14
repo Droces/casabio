@@ -1,0 +1,12 @@
+name = Contexts
+description = All contexts
+core = 7.x
+package = Features: Structure
+version = 7.x-1.0
+dependencies[] = context
+dependencies[] = ctools
+features[context][] = section_browse
+features[context][] = section_contribute_mo
+features[ctools][] = context:context:3
+features[features_api][] = api:2
+project path = sites/all/modules/features-generated

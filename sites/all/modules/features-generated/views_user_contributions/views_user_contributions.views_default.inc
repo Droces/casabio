@@ -33,7 +33,7 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'grid';
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['style_options']['columns'] = '8';
+  $handler->display->display_options['style_options']['columns'] = '12';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -85,6 +85,171 @@ function views_user_contributions_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $export['summary_of_user_s_content'] = $view;
+
+  $view = new view();
+  $view->name = 'user_content_summary';
+  $view->description = 'Find and manage content.';
+  $view->tag = 'admin';
+  $view->base_table = 'node';
+  $view->human_name = 'User’s content summary';
+  $view->core = 0;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Defaults */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->display->display_options['title'] = 'Your latest content';
+  $handler->display->display_options['css_class'] = 'admin-views-view';
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'menu';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'views_bulk_operations' => 'views_bulk_operations',
+    'title' => 'title',
+    'timestamp' => 'title',
+    'type' => 'type',
+    'name' => 'name',
+    'status' => 'status',
+    'changed' => 'changed',
+    'edit_node' => 'edit_node',
+    'delete_node' => 'edit_node',
+  );
+  $handler->display->display_options['style_options']['default'] = 'changed';
+  $handler->display->display_options['style_options']['info'] = array(
+    'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '&nbsp;',
+      'empty_column' => 0,
+    ),
+    'timestamp' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'type' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'status' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '&emsp;',
+      'empty_column' => 0,
+    ),
+    'delete_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['sticky'] = TRUE;
+  $handler->display->display_options['style_options']['empty_table'] = TRUE;
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result']['id'] = 'result';
+  $handler->display->display_options['footer']['result']['table'] = 'views';
+  $handler->display->display_options['footer']['result']['field'] = 'result';
+  $handler->display->display_options['footer']['result']['content'] = 'Displaying @current_record_count. See <strong>My Contributions</strong> for more.';
+  /* No results behavior: Global: Unfiltered text */
+  $handler->display->display_options['empty']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['empty']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['empty']['area_text_custom']['label'] = 'No content';
+  $handler->display->display_options['empty']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area_text_custom']['content'] = 'No content available.';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Content: Taxonomy terms on node */
+  $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
+  $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['vocabularies'] = array(
+    'forums' => 0,
+    'tags' => 0,
+  );
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'time ago';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'long';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  /* Field: Content: Has new content */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'history';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['label'] = '';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Contextual filter: Content: Author uid */
+  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['table'] = 'node';
+  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'user';
+  $handler->display->display_options['arguments']['uid']['default_argument_options']['user'] = FALSE;
+  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+  /* Filter criterion: Content: Post date */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'node';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['operator'] = '>';
+  $handler->display->display_options['filters']['created']['value']['value'] = '-1 week';
+  $handler->display->display_options['filters']['created']['value']['type'] = 'offset';
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block_1');
+  $export['user_content_summary'] = $view;
 
   $view = new view();
   $view->name = 'user_observations';
@@ -203,6 +368,8 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
   $handler->display->display_options['fields']['field_collection']['settings'] = array(
     'link' => 1,
+    'empty_fields_handler' => 'EmptyFieldText',
+    'empty_fields_emptyfieldtext_empty_text' => '<em class="subtle">no collection</em>',
   );
   /* Field: Content: Date observed */
   $handler->display->display_options['fields']['field_date_observed']['id'] = 'field_date_observed';
@@ -220,24 +387,18 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['fields']['field_location']['id'] = 'field_location';
   $handler->display->display_options['fields']['field_location']['table'] = 'field_data_field_location';
   $handler->display->display_options['fields']['field_location']['field'] = 'field_location';
+  $handler->display->display_options['fields']['field_location']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_location']['alter']['text'] = 'E: [field_location-lon],<br>
+N: [field_location-lat]';
   $handler->display->display_options['fields']['field_location']['click_sort_column'] = 'geom';
   $handler->display->display_options['fields']['field_location']['type'] = 'geofield_latlon';
   $handler->display->display_options['fields']['field_location']['settings'] = array(
     'data' => 'full',
     'format' => 'degrees_minutes_seconds',
     'labels' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
-  /* Field: Content: Identifications */
-  $handler->display->display_options['fields']['field_identifications']['id'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['field'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_identifications']['settings'] = array(
-    'view_mode' => 'text',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_identifications']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_identifications']['separator'] = '';
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
@@ -467,21 +628,16 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'field_main_image' => 'field_main_image',
     'title' => 'title',
     'field_date_collected' => 'field_date_collected',
     'edit_node' => 'edit_node',
-    'nid' => 'edit_node',
+    'nid' => 'nid',
+    'nothing' => 'edit_node',
+    'nothing_1' => 'edit_node',
+    'nothing_2' => 'edit_node',
   );
   $handler->display->display_options['style_options']['default'] = 'field_date_collected';
   $handler->display->display_options['style_options']['info'] = array(
-    'field_main_image' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
     'title' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
@@ -508,6 +664,21 @@ function views_user_contributions_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_2' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -517,15 +688,6 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '<p>You have no collections.</p>';
   $handler->display->display_options['empty']['area']['format'] = 'raw_html';
-  /* Field: Content: Preview image */
-  $handler->display->display_options['fields']['field_main_image']['id'] = 'field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['table'] = 'field_data_field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['field'] = 'field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['label'] = 'Preview';
-  $handler->display->display_options['fields']['field_main_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_main_image']['settings'] = array(
-    'link' => 0,
-  );
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -554,11 +716,31 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['label'] = 'View report';
-  $handler->display->display_options['fields']['nid']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['nid']['alter']['text'] = 'View report';
-  $handler->display->display_options['fields']['nid']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['nid']['alter']['path'] = 'collection-report/[nid]';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Edit pictures link';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'Edit pictures';
+  $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing']['alter']['path'] = 'contribute/multiple-observations/picture-info/[nid]';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_2']['id'] = 'nothing_2';
+  $handler->display->display_options['fields']['nothing_2']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_2']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_2']['label'] = 'Edit observations link';
+  $handler->display->display_options['fields']['nothing_2']['alter']['text'] = 'Edit observations';
+  $handler->display->display_options['fields']['nothing_2']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'contribute/multiple-observations/observations-info/[nid]';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'View report link';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'View report';
+  $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'collection-report/[nid]';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';

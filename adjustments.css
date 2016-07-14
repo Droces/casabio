@@ -1,0 +1,6 @@
+#resource-form-table tr.resource-operation-class td.resource-operation-class {
+  padding-left: 2.8em;
+}
+#resource-form-table tr.resource-method td.resource-method-description {
+  padding-left: 5em;
+}

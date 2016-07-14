@@ -14,3 +14,10 @@ dependencies[] = token
 dependencies[] = casa_exif_mgt
 ; dependencies[] = auto_group_nodes ; Helpful, but not necessary
 
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] =     scripts/casa_upload.js // Loaded dynamically by casa_upload_init().
+

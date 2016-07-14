@@ -28,6 +28,12 @@ function content_type_community_identification_field_default_field_instances() {
         'type' => 'list_default',
         'weight' => 4,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'medium' => array(
         'label' => 'above',
         'settings' => array(),
@@ -93,6 +99,12 @@ function content_type_community_identification_field_default_field_instances() {
         ),
         'type' => 'entityreference_label',
         'weight' => 3,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'medium' => array(
         'label' => 'above',
@@ -176,6 +188,12 @@ function content_type_community_identification_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 1,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'medium' => array(
         'label' => 'above',
         'settings' => array(),
@@ -246,6 +264,12 @@ function content_type_community_identification_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
+        'weight' => 0,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'medium' => array(
@@ -319,6 +343,12 @@ function content_type_community_identification_field_default_field_instances() {
         ),
         'type' => 'number_decimal',
         'weight' => 2,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'medium' => array(
         'label' => 'above',

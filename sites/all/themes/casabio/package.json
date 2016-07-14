@@ -1,0 +1,23 @@
+{
+  "name": "touchdreams_drupal_theme",
+  "version": "1.0.0",
+  "description": "The build tool by Touchdreams (South Africa) used to develop themes for Drupal",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.9.1",
+    "gulp-sass": "~2.3.2",
+    "gulp-sourcemaps": "~1.6.0",
+    "gulp-compass": "~2.1.0",
+    "zen-grids": "~2.0.3",
+    "bourbon": "~4.2.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sass"
+  ],
+  "author": "Touchdreams <touchdreams.co.za>",
+  "license": ""
+}

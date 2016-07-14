@@ -1,0 +1,38 @@
+; ==============================================================================
+;                           BASICS
+
+name =          Remote Status
+description =   Provides information to a website for a remote dashboard.
+
+core =          7.x
+package =       Administration
+; configure =   admin/config/content/example
+; php =         5.3
+
+
+
+; ==============================================================================
+;                           DEPENDENCIES
+
+; dependencies[] = views
+
+
+
+; ==============================================================================
+;                           STYLESHEETS
+
+;stylesheets[all][] = stylesheets/group_selected.css
+
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] = scripts/selection.js
+
+
+
+; ==============================================================================
+;                           FILES
+
+; files[] = tests/example.test

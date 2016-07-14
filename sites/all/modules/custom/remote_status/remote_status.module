@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function remote_status_menu() {
+  $items = array();
+
+  $items['ajax/remote_status'] = array(
+    'page callback'     => 'remote_status_page',
+    'access callback'   => TRUE,
+    // 'access callback'   => 'user_access',
+    // 'access arguments'  => array('can contribute content'),
+    'type'              => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  return $items;
+}
+
+
+function remote_status_page() {
+
+  $request_body = file_get_contents("php://input");
+  // $request_body = file_get_contents("drupal://input"); // Use inputstream module.
+  $post = json_decode($request_body, TRUE);
+  // dpm($post, '$post');
+
+  $result = array(
+    'result' => 'success',
+    'version' => VERSION,
+    'modules' => array(),
+  );
+  // dpm($result, '$result');
+
+  foreach ($post['modules'] as $key => $module_name) {
+    $result['modules'][$module_name] = module_exists($module_name);
+  }
+  // dpm($result, '$result');
+
+  $response = array('#type' => 'ajax', '#commands' => $result);
+
+  return $response;
+}

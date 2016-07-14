@@ -6,13 +6,56 @@
 
 
 
+
+// =============================================================================
+/* CONTENTS
+
+  [NU] = Function is not currently used
+
+  // Generic module hook functions()
+  casa_taxa_mgt_menu()
+  casa_taxa_mgt_block_info()
+
+  casa_taxa_mgt_block_view()
+  taxa_browser_block_content()
+  render_taxa_children()
+  provide_taxa_children_callback()
+  casa_taxa_mgt_preprocess_page()
+  casa_taxa_mgt_preprocess_taxonomy_term()
+  get_taxa_tree_as_markup()
+
+  convert_points_to_qdss()
+  convert_qdss_to_polygons()
+  get_taxon_locations()
+  determine_QDS()
+  determine_points_from_QDS()
+
+  taxa_lookup_page_callback()
+  taxa_lookup_form()
+  taxa_lookup_form_validate()
+  taxa_lookup_form_submit()
+
+  create_taxon()
+  contribute_habitat_page_callback()
+  casa_taxa_mgt_form_taxonomy_form_term_alter()
+  taxa_assess_community_identification()
+
+ */
+
+
+module_load_include('inc', 'casa_taxa_mgt', 'term_queries');
+
+// define("ID_SOURCE_CASABIO_INDIVIDUAL", 1);
+
+
+
 /**
  * Implements hook_menu().
  */
 function casa_taxa_mgt_menu() {
   $items['ajax/taxa/get-children/%'] = array(
     'title'             => 'Taxa Children',
-    'page callback'     => 'provide_taxa_children',
+    'page callback'     => 'provide_taxa_children_callback',
     'page arguments'    => array(3),
     'delivery callback' => 'ajax_deliver', // Instantiated in Casa Core module
     'access callback'   => TRUE,
@@ -21,7 +64,14 @@ function casa_taxa_mgt_menu() {
 
   $items['taxa/lookup'] = array(
     'title'             => 'Lookup Taxa',
-    'page callback'     => 'taxa_lookup_view',
+    'page callback'     => 'taxa_lookup_page_callback',
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['taxa/lookup-multiple'] = array(
+    'title'             => 'Lookup Taxa Multiple',
+    'page callback'     => 'taxa_lookup_multiple_page_callback',
     'access callback'   => TRUE,
     'type'              => MENU_NORMAL_ITEM,
   );
@@ -29,7 +79,7 @@ function casa_taxa_mgt_menu() {
 
   $items['contribute/habitat'] = array(
     'title'           => 'Contribute Habitat',
-    'page callback'   => 'contribute_habitat_page',
+    'page callback'   => 'contribute_habitat_page_callback',
     'access callback' => TRUE,
     'type'            => MENU_NORMAL_ITEM,
   );
@@ -185,7 +235,7 @@ function taxa_browser_block_content() {
     ),
   );
 
-  $content = '<div class="tree expandable">'
+  $content = '<div class="tree expandable" role="tree">'
     . render_taxa_children($vid, $tree, 1)
     . '</div>';
   // dpm($content, 'content');
@@ -217,11 +267,11 @@ function render_taxa_children($vid, $tree, $depth) {
 
   $content;
 
-  $content = '<ul>';
+  $content = '<ul role="group">';
   foreach ($tree as $branch) {
 
     /* Eg.
-      <li>
+      <li [role="treeitem"]>
         <span class="action"><button class="expand" data-ajax="$ajax_url">+</button></span>
         <span class="name"><a href="$term_url"></a></span>
         <span class="count">(1)</span>
@@ -237,7 +287,7 @@ function render_taxa_children($vid, $tree, $depth) {
       $leaves = taxonomy_get_tree($vid, $parent, $max_depth, $load_entities);
     }
 
-    $content .= '<li>';
+    $content .= '<li role="treeitem" aria-level="?" aria-expanded="?">';
 
     // Button
     if ($leaves) {
@@ -300,7 +350,7 @@ function render_taxa_children($vid, $tree, $depth) {
  * An AJAX function. Provides rendered HTML of the taxa children of an taxonomy
  * term, in the format provided by render_taxa_children().
  */
-function provide_taxa_children($tid) {
+function provide_taxa_children_callback($tid) {
   // dpm('param: ' . $tid . ' is of type: ' . gettype($tid));
 
   $vid = 2;
@@ -333,7 +383,7 @@ function provide_taxa_children($tid) {
 /**
  * Implements hook_preprocess_taxonomy_term(). Alternatively try hook_taxonomy_term_view_alter()?
  */
-function casa_taxa_mgt_preprocess_page (&$variables, $hook){
+function casa_taxa_mgt_preprocess_page(&$variables, $hook){
   // dpm($variables, 'preprocess_page variables');
 
   $is_term_page = isset($variables['page']['content']['system_main']['term_heading']);
@@ -358,62 +408,51 @@ function casa_taxa_mgt_preprocess_page (&$variables, $hook){
 /**
  * Implements hook_preprocess_taxonomy_term(). Alternatively try hook_taxonomy_term_view_alter()?
  */
-function casa_taxa_mgt_preprocess_taxonomy_term (&$variables, $hook){
+function casa_taxa_mgt_preprocess_taxonomy_term(&$variables, $hook){
   // dpm(func_get_args(), 'func_get_args');
   // dpm($variables, 'preprocess_taxonomy_term variables');
 
   $tid = $variables['tid'];
   // The locations of all identifications of this term.
-  $locations_data = get_taxon_locations($tid, 5000);
+  $locations_data = get_taxon_locations($tid, 5); // 5000
   // $locations_data['features'] = array_slice($locations_data['features'], 0, 5); // For testing only.
   // dpm($locations_data,'$locations_data');
 
-  if ($variables['vocabulary_machine_name'] == 'taxa') {
+  switch ($variables['vocabulary_machine_name']) {
+    case 'taxa':
 
-    if ($variables['view_mode'] == 'full') {
-      $taxa_tree_markup = get_taxa_tree_as_markup($variables['term'], '');
-      $variables['content']['taxa_tree'] = array(
-        '#type' => 'markup',
-        '#markup' =>
-          '<div class="taxa-tree">'
-          . '<h2>Taxonomy</h2>'
-          . $taxa_tree_markup
-          . '</div>',
-        '#weight' => '9',
-      );
-    }
+      switch ($variables['view_mode']) {
+        case 'full':
+          $taxa_tree_markup = get_taxa_tree_as_markup($variables['term'], '');
+          $variables['content']['taxa_tree'] = array(
+            '#type' => 'markup',
+            '#markup' =>
+              '<div class="taxa-tree">'
+              . '<h2>Taxonomy</h2>'
+              . $taxa_tree_markup
+              . '</div>',
+            '#weight' => '9',
+          );
+          break;
 
-    // For terms that have at least one location.
-    if (isset($locations_data['features'][0]) && $locations_data['features'][0] !== []) {
+        case 'field_guide':
+          // dpm($variables, '$variables');
+          break;
 
-      // Convert points to QDS's, for all points
-      $QDSs = convert_points_to_qdss($locations_data);
+        default:
+          # code...
+          break;
+      }
 
-      // Create a (rectangle) polygon feature for each QDS
-      $locations = convert_qdss_to_polygons($QDSs);
+      // For terms that have at least one location.
+      if (isset($locations_data['features'][0]) && $locations_data['features'][0] !== []) {
+        taxon_setup_map($variables, $locations_data, $tid);
+      }
+      break;
 
-
-      $locations_JSON = json_encode($locations);
-      // dpm($locations_JSON,'$locations_JSON');
-
-      // Insert the location data into the term's content as hidden markup
-      $variables['content']['locations'] = array(
-        '#type' => 'markup',
-        '#markup' => '<p id="ol-map-' . $tid . '" class="hidden ol-map" data-transform="to-map">' . $locations_JSON . '</p>',
-        '#weight' => '10',
-      );
-      // dpm($variables['content'], 'variables["content"]');
-
-      // Include the Openlayers JavaScript to render a map.
-      // @todo Shouldn't the entire library be loaded, not just the JS?
-      $openlayers_js_path = libraries_get_path('openlayers3') . '/build/ol.js';
-      drupal_add_js($openlayers_js_path, 'file');
-
-      // Include the JavaScript that renders the features on the map.
-      $module_js_path = drupal_get_path('module', 'casa_taxa_mgt') . '/scripts/taxon_identifications_map.js';
-      drupal_add_js($module_js_path, 'file');
-    }
-
+    default:
+      # code...
+      break;
   }
 }
 
@@ -466,6 +505,37 @@ function get_taxa_tree_as_markup($term, $branches) {
   }
 
   return $markup;
+}
+
+
+function taxon_setup_map(&$variables, $locations_data, $tid) {
+    // Convert points to QDS's, for all points
+    $QDSs = convert_points_to_qdss($locations_data);
+
+    // Create a (rectangle) polygon feature for each QDS
+    $locations = convert_qdss_to_polygons($QDSs);
+
+
+    $locations_JSON = json_encode($locations);
+    // dpm($locations_JSON,'$locations_JSON');
+
+    // Insert the location data into the term's content as hidden markup
+    $variables['content']['locations'] = array(
+      '#type' => 'markup',
+      '#markup' => '<p id="ol-map-' . $tid . '" class="hidden ol-map field" data-transform="to-map">' . $locations_JSON . '</p>',
+      '#weight' => '10',
+    );
+    // dpm($variables['content'], 'variables["content"]');
+
+
+    // Include the Openlayers JavaScript to render a map.
+    // @todo Shouldn't the entire library be loaded, not just the JS?
+    $openlayers_js_path = libraries_get_path('openlayers3') . '/build/ol.js';
+    drupal_add_js($openlayers_js_path, 'file');
+
+    // Include the JavaScript that renders the features on the map.
+    $module_js_path = drupal_get_path('module', 'casa_taxa_mgt') . '/scripts/taxon_identifications_map.js';
+    drupal_add_js($module_js_path, 'file');
 }
 
 
@@ -543,97 +613,6 @@ function convert_qdss_to_polygons($QDSs) {
     ];
   }
   // dpm($locations, 'locations');
-  return $locations;
-}
-
-
-
-/**
- * Gets the locations of all identifications of a taxon.
- *
- * @param $results_limit
- *   The maximum number of results to fetch
- *
- * @return
- *   An array of longitudes and latitudes.
- */
-function get_taxon_locations($tid, $results_limit) {
-
-  // Create an object of type SelectQuery
-  $query = db_select('node', 'node');
-  $query->addTag('node_access');
-
-  // Link to the field_identifications table
-  $query->leftJoin('field_data_field_identifications', 'field_data_field_identifications',
-    "node.nid = field_data_field_identifications.entity_id "
-    . "AND (field_data_field_identifications.entity_type = 'node' "
-    . "AND field_data_field_identifications.deleted = '0')");
-
-  // Get the referenced identification
-  $query->leftJoin('node', 'node_field_data_field_identifications',
-    'field_data_field_identifications.field_identifications_target_id = node_field_data_field_identifications.nid');
-
-  // Link to the field_identified_species table
-  $query->leftJoin('field_data_field_identified_species', 'node_field_data_field_identifications__field_data_field_identified_species',
-    "node_field_data_field_identifications.nid = node_field_data_field_identifications__field_data_field_identified_species.entity_id "
-      . "AND (node_field_data_field_identifications__field_data_field_identified_species.entity_type = 'node' "
-      . "AND node_field_data_field_identifications__field_data_field_identified_species.deleted = '0')");
-
-  // Get the referenced species
-  $query->leftJoin('taxonomy_term_data', 'taxonomy_term_data_field_data_field_identified_species',
-    "node_field_data_field_identifications__field_data_field_identified_species.field_identified_species_tid = taxonomy_term_data_field_data_field_identified_species.tid");
-
-  // Link to the field_location table
-  $query->leftJoin('field_data_field_location', 'field_data_field_location',
-      "node.nid = field_data_field_location.entity_id "
-      . "AND (field_data_field_location.entity_type = 'node' "
-      . "AND field_data_field_location.deleted = '0')");
-
-  // Add fields to the query
-  $query->addField('node', 'nid', 'nid');
-  $query->addField('node', 'created', 'node_created');
-  // $query->addField('node', 'node', 'field_data_field_location_node_entity_type');
-  // $query->addField('field_data_field_location', 'field_location_geom', 'field_location_geom');
-  $query->addField('field_data_field_location', 'field_location_lon', 'field_location_lon');
-  $query->addField('field_data_field_location', 'field_location_lat', 'field_location_lat');
-
-  // Add extra detail to the query object: conditions, orders and a range
-  $query
-    // Only published nodes
-    ->condition('node.status', 1, '=')
-    // That are observations
-    ->condition('node.type', array('observation',), 'IN')
-    // Where the observation’s identified species’ term id = $tid
-    ->condition('taxonomy_term_data_field_data_field_identified_species.tid', $tid, '=')
-
-    // Where the location field has a value
-    ->isNotNull('field_data_field_location.field_location_geom')
-
-    ->orderBy('node_created', 'DESC')
-
-    ->range(0, $results_limit)
-  ;
-  $results = $query->execute();
-  // dpm($results, 'results of dynamic query');
-  $locations = array(
-    'type' => 'FeatureCollection',
-    'features' => [],
-  );
-  foreach ($results as $result) {
-    // dpm($result, 'result');
-
-    $locations['features'][] = [
-      "type" => "Feature",
-      "geometry" =>[
-        "type" => "Point",
-        "coordinates" => [
-          $result->field_location_lon,
-          $result->field_location_lat,
-        ],
-      ],
-      "properties" => [],
-    ];
-  }
   return $locations;
 }
 
@@ -752,31 +731,70 @@ function determine_points_from_QDS($qds) {
 }
 
 
-function taxa_lookup_view() {
-  // $title = 'Hermannia';
-  // $rank = 'Genus';
-
+/**
+ * Callback.
+ */
+function taxa_lookup_page_callback() {
   return drupal_get_form('taxa_lookup_form');
 }
 
 
+/**
+ * Callback.
+ */
+function taxa_lookup_multiple_page_callback() {
+  return drupal_get_form('taxa_lookup_multiple_form');
+}
 
+
+/**
+ * Implements hook_form(). Creates a small form for adding a taxon that CasaBio does not yet have.
+ *
+ * If CasaBio does not have the taxon, it will be created.
+ */
 function taxa_lookup_form() {
-
-
   $form['description'] = array(
     '#markup' => 'Use this to search for a species (or other taxon) that CasaBio doesn’t currently have. If the species is not found, it will be added to CasaBio.',
-
   );
-
   $form['scientific_name'] = array(
     '#title' => t('Scientific name'),
     '#type' => 'textfield',
     '#required' => TRUE,
   );
   $form['submit'] = array(
-    '#value' => 'Search Catalogue of Life',
+    '#value' => 'Lookup using Catalogue of Life',
     '#type' => 'submit',
+    '#name' => 'col',
+    // 'text' => array(
+    //   '#markup' => 'Search Catalogue of Life',
+    // ), // Irrelevant, since D7 FAPI doesn't support <button> elements
+  );
+  return $form;
+}
+
+
+/**
+ * Implements hook_form(). Creates a small form for adding a taxon that CasaBio does not yet have.
+ *
+ * If CasaBio does not have the taxon, it will be created.
+ */
+function taxa_lookup_multiple_form() {
+  $form['description'] = array(
+    '#markup' => '<p>Use this to add multiple (or a whole lot) of taxa to CasaBio at once. Each taxon will be checked if it exists in CasaBio, and if not, it will be checked if it exists in the service you select when you submit them. If it exists in that service, it will be added to CasaBio.</p>'
+      . '<p>Add each scientific name on a new line.</p>',
+  );
+  $form['scientific_names'] = array(
+    '#title' => t('Scientific names'),
+    '#type' => 'textarea',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#value' => 'Lookup using Catalogue of Life',
+    '#type' => 'submit',
+    '#name' => 'col',
+    // 'text' => array(
+    //   '#markup' => 'Search Catalogue of Life',
+    // ), // Irrelevant, since D7 FAPI doesn't support <button> elements
   );
   return $form;
 }
@@ -793,62 +811,122 @@ function taxa_lookup_form_submit($form_id, &$form_state) {
 
   $sc_name = $form_state['values']['scientific_name'];
   // dpm($sc_name, 'sc_name');
+  $taxa_service = $form_state['triggering_element']['#name'];
 
-
-  // Check if it exists.
-  $query = new EntityFieldQuery();
-
-  $query->entityCondition('entity_type', 'taxonomy_term')
-    ->entityCondition('bundle', 'taxa')
-    // ->propertyCondition('status', NODE_PUBLISHED)
-    ->propertyCondition('name', $sc_name . '%', 'like')
-    ->range(0, 1);
-
-  $result = $query->execute();
-
-  if (false/*isset($result['taxonomy_term'])*/) {
-    drupal_set_message(t('@taxon already exists in CasaBio.', array('@taxon' => $sc_name)), 'error', FALSE);
-  }
-  else {
-
-    $year = 2015;
-    $service_name = 'Catalogue of Life';
-    $lookup_url_base = "http://www.catalogueoflife.org/annual-checklist/" . $year . "/webservice?name=";
-    $lookup_url = $lookup_url_base . str_replace(' ', '+', $sc_name);
-    // dpm($lookup_url, 'lookup_url');
-
-    $response = drupal_http_request($lookup_url, $options = array());
-    // dpm($response, 'response');
-
-    if (!isset($response->data)) {
-      drupal_set_message(t('Lookup failed.'), 'error', FALSE);
-    }
-    else {
-      $xml = simplexml_load_string($response->data);
-      // dpm($xml, 'xml');
-
-      if(!isset($xml->result[0])) {
-        $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
-        drupal_set_message(t('@taxon was not found on @service.', $message_params), 'warning', FALSE);
-      }
-      else {
-        $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
-        drupal_set_message(t('@taxon was found on @service.', $message_params), 'status', FALSE);
-        $name = $xml->result[0]->name->__toString();
-        // dpm($name, 'result name');
-        $rank = $xml->result[0]->rank->__toString();
-
-        create_taxon($name, $rank);
-      }
-    }
-  }
+  taxa_lookup($sc_name, $taxa_service);
 }
 
 
-function create_taxon($title, $rank) {
+
+function taxa_lookup_multiple_form_submit($form_id, &$form_state) {
+  // dpm($form_id, 'form_id');
+  // dpm($form_state, 'form_state');
+
+  // Panthera pardus
+  // Acinonyx jubatus
+  // Hermannia
+
+  // $sc_names = $form_state['values']['scientific_names'];
+  $sc_names_string = trim($form_state['values']['scientific_names']);
+  $sc_names_untrimmed = explode(PHP_EOL, $sc_names_string); // split on lines
+  $sc_names = array_map('trim', $sc_names_untrimmed);
+  // dpm($sc_names, '$sc_names');
+
+  $taxa_service = $form_state['triggering_element']['#name'];
+
+  taxa_lookup_multiple($sc_names, $taxa_service);
+}
+
+
+
+function taxa_lookup($sc_name, $taxa_service) {
+
+  // Check if it exists.
+  $is_taxon_in_casabio = is_taxon_in_casabio($sc_name);
+
+  if ($is_taxon_in_casabio) {
+    drupal_set_message(t('<em>@taxon</em> already exists in CasaBio.', array('@taxon' => $sc_name)), 'warning', FALSE);
+    return NULL;
+  }
+
+  $taxon_info;
+
+  switch ($taxa_service) {
+    case 'col':
+      $taxon_info = lookup_catalogueoflife($sc_name);
+      $service_name = 'Catalogue of Life';
+      break;
+
+    default:
+      $taxon_info = lookup_catalogueoflife($sc_name);
+      $service_name = 'Catalogue of Life';
+      break;
+  }
+
+  if(!$taxon_info) {
+    $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
+    drupal_set_message(t('<em>@taxon</em> was not found on @service.', $message_params), 'warning', FALSE);
+    return NULL;
+  }
+
+  $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
+  drupal_set_message(t('<em>@taxon</em> was found on @service.', $message_params), 'status', FALSE);
+
+  create_taxon($taxon_info);
+}
+
+
+
+/**
+ * @param $sc_name
+ *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
+ */
+function lookup_catalogueoflife($sc_name) {
+  // Settings
+  $year = 2015;
+  $service_name = 'Catalogue of Life';
+  $lookup_url = "http://www.catalogueoflife.org"
+    . "/annual-checklist/" . $year . "/webservice?"
+    . "name=" . str_replace(' ', '+', $sc_name);
+  // dpm($lookup_url, 'lookup_url');
+
+  $response = drupal_http_request($lookup_url, array());
+  // dpm($response, 'response');
+
+  if (!isset($response->data)) {
+    drupal_set_message(t('Lookup failed.'), 'error', FALSE);
+    // dpm($response, '$response');
+    return NULL;
+  }
+
+
+  $xml = simplexml_load_string($response->data);
+  // dpm($xml, 'xml');
+
+  $taxon_info = array();
+  $is_found = isset($xml->result[0]);
+  // $is_found = TRUE; // For testing only.
+  if($is_found) {
+    $taxon_info = array(
+      'name' => $xml->result[0]->name->__toString(), // $name = 'test'; // testing
+      // dpm($name, 'result name');
+      'rank' => $xml->result[0]->rank->__toString(), // $rank = 'specum'; // testing
+    );
+  }
+  return $taxon_info;
+}
+
+
+/**
+ * @param $taxon_info
+ *   An associative array of taxon info. Eg. $taxon_info = array('name', 'rank')
+ * @param $show_message
+ *   A boolean indicating if a message should be shown.
+ */
+function create_taxon($taxon_info, $show_message = TRUE) {
   $term_data = array(
     'type' => 'taxon',
-    'name' => $title,
+    'name' => $taxon_info['name'],
     'vocabulary_machine_name' => 'taxa',
     'vid' => 2, // vocabulary: Taxa
   );
@@ -856,12 +934,18 @@ function create_taxon($title, $rank) {
   $term_raw = entity_create('taxonomy_term', $term_data);
   $term = entity_metadata_wrapper('taxonomy_term', $term_raw);
 
-  $term->field_taxon_rank->set($rank);
+  $term->field_taxon_rank->set($taxon_info['rank']);
 
   $term->save();
+  // dpm($term->raw(), '$term');
 
-  $message_params = array('@rank' => $rank, '@taxon' => $title);
-  drupal_set_message(t('@rank ‘@taxon’ was successfully added to CasaBio.', $message_params), 'status', FALSE);
+  if ($show_message) {
+    $message_params = array(
+      '@rank' => $taxon_info['rank'],
+      '@taxon' => $taxon_info['name'],
+      '@url' => base_path() . 'taxonomy/term/' . $term -> getIdentifier(),);
+    drupal_set_message(t('@rank <a href="@url">‘@taxon’</a> was successfully added to CasaBio.', $message_params), 'status', FALSE);
+  }
 }
 
 
@@ -872,9 +956,7 @@ function create_taxon($title, $rank) {
 /**
  * Description
  */
-function contribute_habitat_page() {
-
-  set_error_handler("exception_error_handler");
+function contribute_habitat_page_callback() {
 
   $content = "";
 
@@ -941,40 +1023,24 @@ function casa_taxa_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form
 
 
 
-
 /**
- *
- */
-// function ctb_habitat_after_build($form, &$form_state) {
-//   return $form;
-// }
-
-
-
-/**
- * Determines if a new picture should replace a taxon's existing representative picture.
+ * For a given community identification, calls a function that assesses whether
+ * to replace the picture of the referenced taxon with the new picture.
  *
  * The taxon is referenced by the community identification provided.
- * This compares the reliabilities of the community identifications of the
- * observations referencing the (new and existing) pictures. If the 'new
- * reliability' is greater than the old, will replace the existing picture with
- * the new one.
- * See https://docs.google.com/drawings/d/13dJgc1QnqIg4WIHkGFYt66IKmEVeP87zuwEJF2uRVXw
- * for a diagram of the entities and fields used here/
  *
  * @param $new_comm_id_raw
  *   A new community identification node. It should reference a taxon, and an
  *   observation with at least one picture.
  */
-function assess_new_taxon_pic($new_comm_id_raw) {
+function taxa_assess_community_identification($new_comm_id_raw) {
   // dpm($new_comm_id_raw, '$new_comm_id_raw');
+
+  // ---------------------------------------------------------------------------
+  // Get the taxon
 
   if (!$new_comm_id_raw)
     throw new InvalidArgumentException("Param $new_comm_id_raw needed.", 1);
-
-
-  // ---------------------------------------------------------------------------
-  // Get the existing picture's reliability
 
   $new_comm_id = entity_metadata_wrapper('node', $new_comm_id_raw);
 
@@ -986,45 +1052,70 @@ function assess_new_taxon_pic($new_comm_id_raw) {
 
   $taxon = entity_metadata_wrapper('taxonomy_term', $taxon_raw);
 
-
-  $exis_pic_raw = $taxon -> field_representative_picture -> value();
-  // dpm($exis_pic_raw, '$exis_pic_raw');
-
-  if (!$exis_pic_raw)
-    return NULL;
-
-  $observation = get_observation_referencing_pic($exis_pic_raw -> nid);
-  // dpm($observation, '$observation');
-
-  if (!$exis_pic_raw)
-    return NULL;
-
-  $comm_ids = get_identifications_refing_observation(
-    'identification_community', $observation -> nid, $taxon_raw -> tid);
-  // dpm($comm_ids, '$comm_ids');
-
-  if (!$comm_ids || $comm_ids == [])
-    return NULL;
-
-  // Just take the first one; they're already ordered by reliability.
-  $comm_id_raw = node_load(reset($comm_ids) -> nid);
-  // dpm($comm_id_raw, '$comm_id_raw');
-
-  $comm_id = entity_metadata_wrapper('node', $comm_id_raw);
-  $exis_reliability = $comm_id -> field_reliability -> value();
-  // dpm($exis_reliability, '$exis_reliability');
-
-  if (!$exis_reliability)
-    return NULL;
-
   // ---------------------------------------------------------------------------
-  // Compare the new and existing pictures' reliabilities
+  // Get the new picture and its reliability
 
   $new_reliability = $new_comm_id -> field_reliability -> value();
   // dpm($new_reliability, '$new_reliability');
 
   if (!$new_reliability)
     return NULL;
+
+  // Get the community identification's picture
+
+  $observation_raw = $new_comm_id -> field_observation -> value();
+  // dpm($observation_raw, '$observation_raw');
+
+  if (!$observation_raw)
+    throw new Exception("Community identifications must reference an observation.", 1);
+
+  $new_picture_nid = get_observation_primary_picture_nid($observation_raw);
+  // dpm($new_picture_nid, '$new_picture_nid');
+
+  // ---------------------------------------------------------------------------
+  // Call the assess function for the taxon
+
+  assess_new_pic_for_taxon($taxon, $new_reliability, $new_picture_nid);
+}
+
+
+/**
+ * Determines if a new picture should replace a taxon's existing representative picture.
+ *
+ * This compares the reliabilities of the community identifications of the
+ * observations referencing the (new and existing) pictures. If the 'new
+ * reliability' is greater than the old, will replace the existing picture with
+ * the new one.
+ * See https://docs.google.com/drawings/d/13dJgc1QnqIg4WIHkGFYt66IKmEVeP87zuwEJF2uRVXw
+ * for a diagram of the entities and fields used here/
+ *
+ * @return
+ *   TRUE if the picture was replaced, false otherwise
+ */
+function assess_new_pic_for_taxon($taxon, $new_reliability, $new_picture_nid) {
+  // dpm($taxon, '$taxon');
+  // dpm($new_reliability, '$new_reliability');
+  // dpm($new_picture_nid, '$new_picture_nid');
+
+  $picture_is_replaced = FALSE;
+
+  // ---------------------------------------------------------------------------
+  // Get the existing picture's reliability
+
+  $exis_pic_raw = $taxon -> field_representative_picture -> value();
+  // dpm($exis_pic_raw, '$exis_pic_raw');
+
+  $exis_reliability;
+  if (!$exis_pic_raw) {
+    $exis_reliability = 0;
+  }
+  else {
+    $exis_reliability = get_picture_reliability($exis_pic_raw, $taxon -> getIdentifier());
+    // dpm($exis_reliability, '$exis_reliability');
+  }
+
+  // ---------------------------------------------------------------------------
+  // Compare the new and existing pictures' reliabilities
 
   $is_new_picture_better = $new_reliability > $exis_reliability;
   // dpm($is_new_picture_better, '$is_new_picture_better');
@@ -1035,16 +1126,70 @@ function assess_new_taxon_pic($new_comm_id_raw) {
   // the old picture with the new one.
 
   if (!$is_new_picture_better) {
-    return NULL;
+    return $picture_is_replaced;
   }
 
-  // Get the community identification's picture
+  // Replace the current picture with the new picture
 
-  $observation_raw = $new_comm_id -> field_observation -> value();
-  // dpm($observation_raw, '$observation_raw');
+  $taxon -> field_representative_picture -> set($new_picture_nid);
+  $taxon -> save();
+  $picture_is_replaced = TRUE;
+  // dpm($picture_is_replaced, '$picture_is_replaced');
 
-  if (!$observation_raw)
+  // If this taxon has a parent
+  // assess_new_pic_for_taxon() for parent
+
+  return $picture_is_replaced;
+}
+
+
+/**
+ * Determines the reliability of a picture.
+ *
+ * Gets the observation referencing the pic (there should be only 1),
+ * then gets the observation's community identifications (sorted by reliability),
+ * then gets the first comm identification's reliability.
+ *
+ * @param $tid
+ *   The tid of the species taxon that the picture should be of.
+ *
+ * @return int
+ *   An integer between 0 and 100.
+ */
+function get_picture_reliability($picture, $tid) {
+
+  $observation = get_observation_referencing_pic($picture -> nid);
+  // dpm($observation, '$observation');
+
+  if (!$observation)
     return NULL;
+
+  $comm_ids = get_identifications_refing_observation(
+    'identification_community', $observation -> nid, $tid);
+  // dpm($comm_ids, '$comm_ids');
+
+  if (!$comm_ids || $comm_ids == [])
+    return NULL;
+
+  // Just take the first one; they're already ordered by reliability.
+  $comm_id_raw = node_load(reset($comm_ids) -> nid);
+  // dpm($comm_id_raw, '$comm_id_raw');
+
+  $comm_id = entity_metadata_wrapper('node', $comm_id_raw);
+  $reliability = $comm_id -> field_reliability -> value();
+  // dpm($reliability, '$reliability');
+
+  // If there is no existing reliability, set it to 0.
+  if ($reliability) {
+    return $reliability;
+  }
+  else {
+    return NULL;
+  }
+}
+
+
+function get_observation_primary_picture_nid($observation_raw) {
 
   $observation = entity_metadata_wrapper('node', $observation_raw);
   $pictures = $observation -> field_pictures_observation -> value();
@@ -1056,8 +1201,95 @@ function assess_new_taxon_pic($new_comm_id_raw) {
   $new_picture_nid = $pictures[0] -> nid; // Use the first, which should be the primary pic.
   // dpm($new_picture_nid, '$new_picture_nid');
 
-  // Replace the current picture with the new picture
+  return $new_picture_nid;
+}
 
-  $taxon -> field_representative_picture -> set($new_picture_nid);
-  $taxon -> save();
+
+
+/**
+ * Implements hook_menu().
+ */
+function casa_taxa_mgt_init() {
+  // bulk_taxa_upload();
+}
+
+// module_load_include('inc', 'casa_taxa_mgt', 'taxa_upload_data');
+function bulk_taxa_upload() {
+  $file_url = drupal_get_path('module', 'casa_taxa_mgt') . '/taxa_upload_data.json';
+  $taxa = json_decode(file_get_contents($file_url));
+  // dpm($taxa, '$taxa');
+  // $taxa = [];
+
+  $taxa_service = 'col';
+
+  taxa_lookup_multiple($taxa, $taxa_service);
+}
+
+
+
+function taxa_lookup_multiple($taxa, $taxa_service) {
+  // dpm($taxa, '$taxa');
+
+  $lookup_existings = [];
+  $lookup_successes = [];
+  $lookup_failures =  [];
+
+  if (!$taxa) {
+    return NULL;
+  }
+
+  foreach ($taxa as $sc_name) {
+
+    // Check if it exists.
+    $is_taxon_in_casabio = is_taxon_in_casabio($sc_name);
+
+    if ($is_taxon_in_casabio) {
+      $lookup_existings[] = $sc_name;
+    }
+    else {
+
+      $taxon_info;
+
+      switch ($taxa_service) {
+        case 'col':
+          $taxon_info = lookup_catalogueoflife($sc_name);
+          break;
+
+        default:
+          $taxon_info = lookup_catalogueoflife($sc_name);
+          break;
+      }
+
+      if(!$taxon_info) {
+        $lookup_failures[] = $sc_name;
+      }
+      else {
+        create_taxon($taxon_info, FALSE);
+        $lookup_successes[] = $sc_name;
+      }
+    }
+  }
+
+  if ($lookup_existings) {
+    $list_existings = '<ol><li>' . implode('</li><li>', $lookup_existings) . '</li></ol>';
+    drupal_set_message('The following taxa already exists in CasaBio:'
+      . '<br>' . $list_existings, 'warning', FALSE);
+  }
+
+  $service_name = 'Catalogue of Life';
+
+  if ($lookup_failures) {
+    $message_params = array('@service' => $service_name);
+    $list_failures = '<ol><li>' . implode('</li><li>', $lookup_failures) . '</li></ol>';
+    drupal_set_message(t('The following taxa were not found on @service:', $message_params)
+      . '<br>' . $list_failures, 'warning', FALSE);
+  }
+
+  if ($lookup_successes) {
+    $message_params = array('@service' => $service_name);
+    $list_successes = '<ol><li>' . implode('</li><li>', $lookup_successes) . '</li></ol>';
+    drupal_set_message(t('The following taxa were found on @service '
+      . 'and successfully added to CasaBio:', $message_params)
+      . '<br>' . $list_successes, 'status', FALSE);
+  }
 }

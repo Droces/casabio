@@ -1,8 +1,33 @@
 <?php
 /**
  * @file
- * Description…
+ * Functions that other custom CasaBio modules depend on.
  */
+
+/**
+ * CONTENTS
+ *
+ * casa_core_init()
+ * casa_core_menu()
+ *
+ * home_page_callback()
+ * signup_login_section()
+ * latest_section()
+ * my_home_page_callback()
+ *
+ * casa_core_user_login()
+ * casa_core_form_user_register_form_alter()
+ * casa_core_form_user_profile_form_alter()
+ * casa_core_admin_paths_alter()
+ * casa_core_js_alter()
+ * ajax_deliver_html()
+ *
+ * // casa_core_preprocess_views_view()
+ * // casa_core_field_views_data_alter()
+ * // casa_core_field_display_alter()
+ */
+
+
 
 // =============================================================================
 // Error reporting displayed on the screen
@@ -25,6 +50,10 @@ function casa_core_init() {
 
   drupal_add_library('system', 'ui.dialog', TRUE);
   // Check that the library has been loaded…
+
+  drupal_add_js(array('API_path' => 'services'), 'setting');
+
+  // calculate_user_reliability();
 }
 
 
@@ -33,18 +62,31 @@ function casa_core_init() {
 
 // =============================================================================
 /**
- * Implements hook_block_info().
+ * Implements hook_menu().
  */
-function casa_core_block_info() {
-  $blocks = array();
-
-  $blocks['signup_login'] = array(
-    'info' => t('Sign up or log in'),
-    'cache' => DRUPAL_CACHE_GLOBAL,
-    // 'cache' => DRUPAL_NO_CACHE,
+function casa_core_menu() {
+  $items['home'] = array(
+    // 'title' => 'Home', // This page shouldn't display a title.
+    'page callback' => 'home_page_callback',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
   );
 
-  return $blocks;
+  $items['my-home'] = array(
+    'title' => 'My CasaBio Home',
+    'page callback' => 'my_home_page_callback',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['dev/teasers'] = array(
+    'title' => 'Entity Teasers',
+    'page callback' => 'teasers_callback',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
 }
 
 
@@ -53,69 +95,213 @@ function casa_core_block_info() {
 
 // =============================================================================
 /**
- * Implements hook_block_view().
+ *
  */
-function casa_core_block_view($delta = '') {
-  $block = array();
+function home_page_callback() {
+  $content = array();
 
-  // set_error_handler("exception_error_handler");
+  $content['signup_login_section'] = signup_login_section();
 
-  switch ($delta) {
-    case 'signup_login':
-      $block['subject'] = t('Sign up or log in');
-      $block['content'] = signup_login_block_content();
-      break;
-  }
+  $file_url = drupal_get_path('module', 'casa_core') . '/markup/home-how.html';
+  $content['how'] = array(
+    '#markup' => file_get_contents($file_url),
+  );
 
-  return $block;
+  $content['latest'] = latest_section();
+
+  $file_url = drupal_get_path('module', 'casa_core') . '/markup/home-support.html';
+  $content['support'] = array(
+    '#markup' => file_get_contents($file_url),
+  );
+
+  return $content;
 }
 
 
-function signup_login_block_content() {
-  $content = array();
-  $content['cols-wrapper'] = array(
-    '#prefix' => '<div class="cols-2">',
+function signup_login_section() {
+
+  $tabs = array(
+    '#prefix' => '<div class="tabs">',
     '#suffix' => '</div>',
     '#tree' => TRUE,
   );
-  $content['cols-wrapper']['col-1'] = array(
-    '#prefix' => '<div class="col-1-2">',
+
+  $tabs['tablist'] = array(
+    '#markup' => '<div role="tablist">'
+      . '<button role="tab" data-name="login" aria-selected>Log in</button>'
+      . '<button role="tab" data-name="signup">Sign up</button>'
+      . '</div>',
+  );
+
+  $tabs['tabpanel-1'] = array(
+    '#prefix' => '<div role="tabpanel" data-name="login" aria-selected>',
     '#suffix' => '</div>',
     '#tree' => TRUE,
     '#weight' => "1",
   );
-  $content['cols-wrapper']['col-2'] = array(
-    '#prefix' => '<div class="col-1-2">',
+  $tabs['tabpanel-2'] = array(
+    '#prefix' => '<div role="tabpanel" data-name="signup">',
     '#suffix' => '</div>',
     '#tree' => TRUE,
   );
 
   if (!user_is_logged_in()) {
-    $content['cols-wrapper']['col-1']['heading'] = array(
-      '#markup' => '<h3>Sign up</h3>',
-      '#weight' => -1);
-    $content['cols-wrapper']['col-1']['login'] = drupal_get_form('user_login');
-    $content['cols-wrapper']['col-2']['heading'] = array(
-      '#markup' => '<h3>Log in</h3>',
-      '#weight' => -1);
-    $content['cols-wrapper']['col-2']['register'] = drupal_get_form('user_register_form');
+    $tabs['tabpanel-1']['login'] = drupal_get_form('user_login');
+    $tabs['tabpanel-2']['register'] = drupal_get_form('user_register_form');
   }
   else {
     global $user;
     // dpm($user, '$user');
-    $content['cols-wrapper']['col-1']['heading'] = array(
+    $tabs['tabpanel-1']['heading'] = array(
       '#markup' => '<h3>Welcome back ' . $user->name . '</h3>',
       '#weight' => 1);
   }
+
+
+  $image_url = drupal_get_path('module', 'casa_core')
+    . '/images/bird-by-vincent-van-zalinge-scaled.jpeg';
+
+  $content = array();
+  $content['signup_login'] = array(
+    '#prefix' => '<section id="signup_login" '
+      . 'style="background-image: url(' . $image_url . ')">',
+    '#suffix' => '</section>',
+    '#tree' => TRUE,
+  );
+  $content['signup_login']['tabs'] = $tabs;
 
   // dpm($content, '$content');
   return $content;
 }
 
 
+function latest_section() {
+  $content = array();
+
+  $file_url = drupal_get_path('module', 'casa_core') . '/markup/home-latest.html';
+  $content['latest'] = array(
+    '#markup' => file_get_contents($file_url),
+  );
+
+  return $content;
+}
+
+
+
+function my_home_page_callback() {
+  $content = array(
+    'comm_contribs' => array(
+      'title' => 'Latest Community Contributions',
+      '#markup' => '<h2>Latest Community Contributions</h2>'
+        . views_embed_view(
+          'browse_example_latest_unidentified_observations',
+          'default'),
+    ),
+    'new_contrib_ways' => array(
+      '#markup' => '<h2>Ways To Contribute</h2>',
+    ),
+  );
+
+  return $content;
+}
+
+
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * A page showing one of each type of node and taxonomy term
+ */
+function teasers_callback() {
+
+  $content = array(
+    'teasers' => array(/*'#markup' => array()*/),
+  );
+
+  $entities_info = entity_get_info();
+  // dpm($entities_info, '$entities_info');
+
+  // Or hard-code the ones we want to show
+  $entities_info = array(
+    'node' => array(
+      'bundles' => array(
+        'collection' => [],
+        'identification_community' => [],
+        'habitat_record' => [],
+        'interaction' => [],
+        'observation' => [],
+        'picture' => [],
+      ),
+    ),
+    'taxonomy_term' => array(
+      'bundles' => array(
+        'taxa' => [],
+        'habitats' => [],
+      ),
+    ),
+  );
+
+  foreach ($entities_info as $entity_type => $entity_type_info) {
+
+    if ($entity_type === 'node' || $entity_type === 'taxonomy_term') {
+
+      foreach ($entity_type_info['bundles'] as $bundle => $bundle_info) {
+
+        $type_name = $entity_type . '-' . $bundle;
+
+        $content['teasers'][$type_name] = array(
+          array('#markup' => '<div class="heading">' . $bundle . '</div>'),
+        );
+
+        // Get one node / entity using EntityFieldQuery
+
+        $query = new EntityFieldQuery();
+        $query
+          -> entityCondition('entity_type', $entity_type)
+          -> entityCondition('bundle', $bundle)
+          -> range(0, 1) // Fetch just one
+          -> addMetaData('account', user_load(1)); // Run the query as user 1.
+
+        $result = $query -> execute();
+
+        // If one was found
+        if (isset($result[$entity_type])) {
+          $eid = array_keys($result[$entity_type])[0];
+
+          // Add the rendered node / entity to the output
+          if ($entity_type === 'node') {
+            $content['teasers'][$type_name][] = node_view((node_load($eid)), 'teaser');
+          }
+          elseif ($entity_type === 'taxonomy_term') {
+            $content['teasers'][$type_name][] = taxonomy_term_view((taxonomy_term_load($eid)), 'teaser');
+          }
+        }
+
+      }
+    }
+  }
+
+  return $content;
+}
+
+
+
+/**
+ * Implements hook_user_login().
+ */
+function casa_core_user_login(&$edit, $account) {
+  $is_first_login = $account->access == 0;
+  if ($is_first_login) {
+    drupal_set_message(t("Welcome to CasaBio! This is your personal home page."), 'status', FALSE);
+  }
+  else {
+    drupal_set_message(t("Welcome back."), 'status', FALSE);
+  }
+  drupal_goto('my-home');
+}
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_register_form.
  */
 function casa_core_form_user_register_form_alter(&$form, &$form_state, $form_id) {
   // dpm($form, 'form');
@@ -128,7 +314,7 @@ function casa_core_form_user_register_form_alter(&$form, &$form_state, $form_id)
 
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for user_profile_form.
  * Form used to edit *existing* users, not create new users.
  */
 function casa_core_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
@@ -156,6 +342,9 @@ function casa_core_admin_paths_alter(&$paths) {
 
 
 
+/**
+ * Implements hook_js_alter().
+ */
 function casa_core_js_alter(&$javascript) {
   // dpm($javascript, 'javascript');
 
@@ -168,13 +357,6 @@ function casa_core_js_alter(&$javascript) {
   }
   // dpm($javascript, 'javascript');
 }
-
-
-// function casa_core_user_insert(&$edit, $account, $category) {
-//   // dpm($edit, '$edit');
-//   // dpm($account, '$account');
-//   // dpm($category, '$category');
-// }
 
 
 
@@ -204,5 +386,97 @@ function ajax_deliver_html($page_callback_result) {
   else {
     watchdog('Error in ajax_deliver_html()', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
     throw new Exception("Something went wrong retriving the markup", 1);
+  }
+}
+
+
+
+// function casa_core_theme($existing, $type, $theme, $path) {
+//   return array(
+//     'selectable' => array(
+//       // 'variables' => array(),
+//     ),
+//   );
+// }
+
+
+
+
+function calculate_user_reliability() {
+  global $user;
+  // dpm($user, '$user');
+
+  // Get identifications and community identifications
+
+  $identifications_basic = get_identifications_by_user($user -> uid, 100);
+  // dpm($identifications_basic, '$identifications_basic');
+
+  // return null;
+  if (! $identifications_basic) {
+    return null;
+  }
+
+  $identifications_nids = array_keys($identifications_basic);
+  // dpm($identifications_nids, '$identifications_nids');
+
+  $comm_ids_nids = [];
+  foreach ($identifications_nids as $nid) {
+    $comm_id_basic = get_comm_id_refing_identification($nid);
+    // dpm($comm_id_basic, '$comm_id_basic');
+    $comm_ids_nids[] = $comm_id_basic -> nid;
+  }
+  // dpm($comm_ids_nids, '$comm_ids_nids');
+
+
+  // Calculate difference score for each identification
+
+  $scores = [];
+  foreach ($identifications_nids as $key => $identifications_nid) {
+    $identification = entity_metadata_wrapper('node', $identifications_nid);
+    $comm_id = entity_metadata_wrapper('node', $comm_ids_nids[$key]);
+
+    // dpm($identification -> field_certainty -> value(), 'certainty');
+    // dpm($comm_id -> field_reliability -> value(), 'reliability');
+
+    $certainty = $identification -> field_certainty -> value()/* * 10*/; // User
+    // dpm($certainty, '$certainty');
+    $reliability = $comm_id -> field_reliability -> value(); // Community
+    // dpm($reliability, '$reliability');
+
+    $scores[$key] = ($certainty - $reliability);
+    $scores[$key] = $scores[$key] < 0 ? -1 * $scores[$key] : $scores[$key]; // Make it positive
+  }
+  // dpm($scores, '$scores');
+
+  // 100- because the scores indicate how far off each certainty is on average
+  $user_reliability = 100 - (array_sum($scores) / count($scores));
+  dpm($user_reliability, '$user_reliability');
+
+  $user_loaded = entity_metadata_wrapper('user', $user -> uid);
+  // dpm($user_loaded->raw(), '$user_loaded');
+  // $user_loaded -> field_reliability -> set($user_reliability);
+  // $user_loaded -> save();
+}
+
+
+/**
+ * Implements hook_views_ajax_data_alter().
+ * Allows altering of commands sent in reponse to a views ajax request.
+ */
+function casa_core_views_ajax_data_alter(&$commands, $view) {
+  // dpm($commands, '$commands');
+  // dpm($view, '$view');
+  if ($view -> name == 'species_reference_selector_widget') {
+
+    // View used to by 'Identify observation'
+    // Remove the view's actions (like the Save button)
+    // Because JavaScript takes care of saving separately from the view.
+
+    foreach ($commands as $index => $command) {
+      if ($command['command'] === 'insert') {
+        $commands[$index]['data'] = str_replace(
+          'form-actions', 'form-actions hidden', $commands[$index]['data']);
+      }
+    }
   }
 }

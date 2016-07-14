@@ -23,9 +23,6 @@ $zen-auto-include-item-base: false;
 
 $zen-reverse-all-floats: false;
 
-// Suppress this section of CSS for RTL layouts since it contains no LTR-specific styles.
-@if $zen-reverse-all-floats == false {
-
 /** ==================================================================================
  * Center the page.
  *
@@ -39,18 +36,28 @@ $zen-reverse-all-floats: false;
   // max-width: 1200px;
 }
 
+@mixin page-max-width {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $page-max-width;
+  padding-left: $zen-gutter-width;
+  padding-right: $zen-gutter-width;
+  box-sizing: border-box;
+}
+
+
+main {
+  padding-top: $main-padding-top;
+  padding-bottom: $main-padding-bottom;
+}
+
 #header,
 #navigation,
 #main,
 #footer,
 .region-bottom {
     & > .content {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: $w-max-page-width;
-        padding-left: $zen-gutter-width;
-        padding-right: $zen-gutter-width;
-        @include box-sizing( border-box );
+      @include page-max-width;
     }
 }
 
@@ -72,6 +79,26 @@ $zen-reverse-all-floats: false;
   @include zen-grid-container();
 }
 
+
+
+
+/* -------------------------------------------------------------------------------------------
+                                                                Overrides
+*/
+#page {
+  height: 100%;
+  display: table; /* gives the contained main full-height, pushing the contained footer to the bottom */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#main {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+
+
 /* Navigation bar */
 @media all and (min-width: 480px) {
   /* #main {
@@ -87,8 +114,6 @@ $zen-reverse-all-floats: false;
     width: $zen-grid-width;
   } */
 }
-
-} // End of @if $zen-reverse-all-floats == true
 
 /** ==================================================================================
  * Use 3 grid columns for smaller screens.
@@ -181,15 +206,15 @@ $zen-column-count: 4;
 
   // $zen-column-count: 5;
 
-  #main > .content {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-  main,
-  aside {
-    display: table-cell;
-  }
+  // #main > .content {
+  //   display: table;
+  //   width: 100%;
+  //   table-layout: fixed;
+  // }
+  // main,
+  // aside {
+  //   display: table-cell;
+  // }
 
   /** ----------------------------------------------------------------------------------
    * The layout when there is only one sidebar, the left one.

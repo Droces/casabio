@@ -17,10 +17,10 @@
  */
 function auto_group_nodes_menu() {
 
-  $items['auto_group_pictures/%/%'] = array(
+  $items['ajax/pictures/auto_group/%/%'] = array(
     'title'             => 'Upload Pictures',
-    'page callback'     => 'auto_group_pictures',
-    'page arguments'    => array(1, 2),
+    'page callback'     => 'auto_group_pictures_callback',
+    'page arguments'    => array(3, 4),
     'access callback'   => TRUE,
     // 'access arguments'  => array('bulk upload media'),
     // 'file'              => 'casa_upload.upload.inc',
@@ -30,6 +30,26 @@ function auto_group_nodes_menu() {
 
   // dpm($items);
   return $items;
+}
+
+
+/**
+ * Groups pictures into observations based on their date and time taken.
+ *
+ * This function can be modified to group the nodes based on other field data such as location…
+ *
+ * @param $collection
+ *   The node id of the collection that the new observations should reference.
+ */
+function auto_group_pictures_callback($collection, $max_time_gap) {
+
+  $response = auto_group_pictures($collection, $max_time_gap);
+
+  $result = array('result' => 'success');
+  $response = array('#type' => 'ajax', '#commands' => $result);
+  // dpm($response, 'response');
+
+  return $response;
 }
 
 
@@ -53,7 +73,7 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
   delete_referring_nodes($grouping_type, $collection);
 
   $nodes = create_pictures_array($collection);
-  // dpm($nodes, 'nodes in created pictures array');
+  // dpm($nodes, '$nodes in created pictures array');
 
   // if (!$nodes) {
   //   throw new Exception("There are no nodes to group", 1);
@@ -97,7 +117,7 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
 
         $observation_raw = entity_create('node', array(
           'type' =>     'observation',
-          'title' =>    'Untitled',
+          'title' =>    '',
           'uid' =>      $user->uid,
           'status' =>   1,
         ));
@@ -127,13 +147,9 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
   // dpm($observations, 'observations');
 
   // $commands[] = ajax_command_replace('#MYMODULE-wrapper', 'Hey ! Some AJAX content !');
-  drupal_set_message(count($nodes) . ' pictures where auto-grouped for you.', 'status');
-  $result = array('result' => 'success');
-  $response = array('#type' => 'ajax', '#commands' => $result);
-  // dpm($response, 'response');
+  drupal_set_message(count($nodes) . ' pictures were auto-grouped for you.', 'status');
 
   return $response;
-  // dpm($cause_error);
 }
 
 
@@ -142,6 +158,7 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
  * Create an array of wrapped picture nodes keyed by their timestamps (date taken field).
  */
 function create_pictures_array($collection_nid) {
+  // dpm($collection_nid, '$collection_nid');
 
   $nids = array();
 
@@ -153,6 +170,7 @@ function create_pictures_array($collection_nid) {
     ->fieldOrderBy('field_date_taken', 'value', 'ASC')
     // ->addMetaData('account', user_load(1)) // Run the query as user 1.
   ;
+  // dpm($query, '$query');
 
   $result = $query->execute();
   // dpm($nids, 'nids queried');

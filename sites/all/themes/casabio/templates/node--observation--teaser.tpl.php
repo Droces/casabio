@@ -9,12 +9,13 @@
 
   // dpm($content, 'content');
   // throw new Exception("Error Processing Request", 1);
-  
-  
-?>
-<article class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <a href="<?php print $node_url; ?>" class="block"></a>
+
+?>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+
+  <!-- <a href="<?php print $node_url; ?>" class="block"></a> -->
+  <?php print render($content['node_block_link']); ?>
 
   <?php
     // We hide the comments and links now so that we can render them later.
@@ -42,11 +43,11 @@
       <?php
 
         // Title isn't useful
-        /*if ($title_prefix || $title_suffix || $display_submitted || $unpublished || !$page && $title): ?>
+        if ($title_prefix || $title_suffix || $display_submitted || $unpublished || !$page && $title): ?>
           <header>
             <?php print render($title_prefix); ?>
             <?php if (!$page && $title): ?>
-              <h2<?php print $title_attributes; ?>><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
+              <h3<?php print $title_attributes; ?>><?php print $title; ?></h3>
             <?php endif; ?>
             <?php print render($title_suffix); ?>
 
@@ -55,7 +56,7 @@
               <mark class="unpublished"><?php print t('Unpublished'); ?></mark>
             <?php endif; ?>
           </header>
-        <?php endif;*/
+        <?php endif;
 
         // Submitted info isn't as useful as custom author fields…
         /*if ($display_submitted): ?>

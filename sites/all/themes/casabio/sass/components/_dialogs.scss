@@ -1,6 +1,6 @@
 /**
  * @file
- * 
+ *
  * File name    Components
  * For site		  CasaBio
  * Created by		Touchdreams
@@ -72,7 +72,7 @@
       border-bottom-right-radius: 0;
       background: rgba(black, 0.1);
       @include border-radius(0);
-    
+
       //The container around the textual title of the dialog.
       .ui-dialog-title {}
       //The dialog's close button.
@@ -89,56 +89,43 @@
       }
     }
     // The container around the dialog's content. This is also the element the widget was instantiated with.
-    .ui-dialog-content {}
+    .ui-dialog-content {
+      margin-top: 0;
+      padding: 1.2em;
+    }
     // The pane that contains the dialog's buttons. This will only be present if the buttons option is set.
     .ui-dialog-buttonpane {
       // The container around the buttons themselves.
       .ui-dialog-buttonset {}
     }
+  }
+
+  .view {
+    font-size: 0.9em;
 
     table {
       width: 100%;
-      
+
       & + table {
         margin-top: 1em;
       }
     }
+
+    .views-exposed-widgets {
+      margin: 0.8em 0; // a bit less spacing
+    }
+    .item-list,
+    .view-footer {
+      display: inline-block;
+    }
+    .item-list + .view-footer {
+      float: right;
+    }
+    .pager,
+    .view-footer {
+      margin: 1em 0px;
+    }
   }
-
-  //   &[aria-hidden="false"] {
-  //   opacity: 1;
-  //   display: block;
-  //   visibility: visible;
-  // }
-
-  // [aria-label="Close"] {
-  //   color: #AAA;
-  //   cursor: pointer;
-  //   font-size: 2em;
-  //   font-weight: bold;
-  //   line-height: 1;
-  //   position: absolute;
-  //   top: 0.5em;
-  //   right: 1.2em;
-  // }
-
-  // form {
-  //   .form-actions {
-  //     text-align: right;
-  //     direction: rtl;
-  //   }
-  // }
-
-  // h2:first-child {
-  //   margin-top: 0;
-  // }
-
-  // table {
-  //   td:first-child {
-  //     text-align: right;
-  //     padding-right: 1em;
-  //   }
-  // }
 }
 
 .modal-default {

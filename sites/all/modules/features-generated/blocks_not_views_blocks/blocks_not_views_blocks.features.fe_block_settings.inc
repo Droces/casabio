@@ -12,6 +12,33 @@ function blocks_not_views_blocks_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['browse-browse_choice'] = array(
+    'cache' => 8,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => 'browse_choice',
+    'module' => 'browse',
+    'node_types' => array(),
+    'pages' => 'browse',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'casabio',
+        'weight' => -18,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
   $export['browse-browse_chooser_form'] = array(
     'cache' => 8,
     'css_class' => '',
@@ -23,8 +50,8 @@ function blocks_not_views_blocks_default_fe_block_settings() {
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'casabio',
         'weight' => -22,
       ),
@@ -46,14 +73,14 @@ function blocks_not_views_blocks_default_fe_block_settings() {
     'delta' => 'habitat_form',
     'module' => 'casa_node_mgt',
     'node_types' => array(),
-    'pages' => 'contribute/multiple-observations/habitats*',
+    'pages' => 'contribute/habitats*',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -11,
+        'weight' => -19,
       ),
       'petal' => array(
         'region' => '',
@@ -80,7 +107,7 @@ function blocks_not_views_blocks_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -20,
+        'weight' => -27,
       ),
       'petal' => array(
         'region' => '',
@@ -120,6 +147,60 @@ function blocks_not_views_blocks_default_fe_block_settings() {
     'visibility' => 0,
   );
 
+  $export['context_ui-devel'] = array(
+    'cache' => 1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => 'devel',
+    'module' => 'context_ui',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
+  $export['context_ui-editor'] = array(
+    'cache' => 1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => 'editor',
+    'module' => 'context_ui',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
   $export['contribute-steps'] = array(
     'cache' => 8,
     'css_class' => '',
@@ -128,7 +209,8 @@ function blocks_not_views_blocks_default_fe_block_settings() {
     'module' => 'contribute',
     'node_types' => array(),
     'pages' => 'contribute/upload
-contribute/multiple-observations/*',
+contribute/multiple-observations/group/*
+contribute/multiple-observations/observation-info/*',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
@@ -203,13 +285,14 @@ contribute/multiple-observations/*',
   );
 
   $export['edit_selected-edit_selected_buttons'] = array(
-    'cache' => 8,
+    'cache' => -1,
     'css_class' => '',
     'custom' => 0,
     'delta' => 'edit_selected_buttons',
     'module' => 'edit_selected',
     'node_types' => array(),
-    'pages' => 'contribute/multiple-observations/picture-info*
+    'pages' => 'contribute/upload
+contribute/multiple-observations/picture-info*
 contribute/multiple-observations/observation-info*',
     'roles' => array(),
     'themes' => array(
@@ -218,89 +301,6 @@ contribute/multiple-observations/observation-info*',
         'status' => 1,
         'theme' => 'casabio',
         'weight' => -19,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '<none>',
-    'visibility' => 1,
-  );
-
-  $export['edit_selected-edit_selected_observations'] = array(
-    'cache' => 8,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'edit_selected_observations',
-    'module' => 'edit_selected',
-    'node_types' => array(),
-    'pages' => 'contribute/multiple-observations/observation-info
-contribute/multiple-observations/observation-info/*',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -26,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => -12,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 1,
-  );
-
-  $export['edit_selected-edit_selected_pictures'] = array(
-    'cache' => 8,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'edit_selected_pictures',
-    'module' => 'edit_selected',
-    'node_types' => array(),
-    'pages' => 'contribute/multiple-observations/picture-info
-contribute/multiple-observations/picture-info/*',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -25,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => -11,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 1,
-  );
-
-  $export['edit_selected-identify_selected_observations'] = array(
-    'cache' => 8,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'identify_selected_observations',
-    'module' => 'edit_selected',
-    'node_types' => array(),
-    'pages' => 'contribute/multiple-observations/observation-info*',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -21,
       ),
       'petal' => array(
         'region' => '',
@@ -737,7 +737,7 @@ contribute/multiple-observations/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -23,
+        'weight' => -28,
       ),
       'petal' => array(
         'region' => '',
@@ -872,7 +872,7 @@ contribute/multiple-observations/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -29,
+        'weight' => -32,
       ),
       'petal' => array(
         'region' => 'content',
@@ -1031,8 +1031,8 @@ contribute/multiple-observations/*',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'casabio',
         'weight' => -10,
       ),
@@ -1115,7 +1115,7 @@ contribute/multiple-observations/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -27,
+        'weight' => -30,
       ),
       'petal' => array(
         'region' => '',

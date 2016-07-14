@@ -16,7 +16,7 @@ function text_format_raw_html_filter_default_formats() {
     'name' => 'Raw HTML',
     'cache' => 1,
     'status' => 1,
-    'weight' => -10,
+    'weight' => -8,
     'filters' => array(
       'media_filter' => array(
         'weight' => 2,

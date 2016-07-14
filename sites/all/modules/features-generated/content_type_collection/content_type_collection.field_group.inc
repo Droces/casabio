@@ -54,6 +54,7 @@ function content_type_collection_field_group_info() {
       0 => 'body',
       1 => 'field_date_collected',
       2 => 'field_collector',
+      3 => 'field_representative_picture',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -111,7 +112,6 @@ function content_type_collection_field_group_info() {
     'children' => array(
       0 => 'group_location',
       1 => 'group_info',
-      2 => 'group_description',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(

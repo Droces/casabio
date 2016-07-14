@@ -45,14 +45,73 @@ function casa_services_services_resources() {
   );
 
   module_load_include('inc', 'casa_services', 'resources/observations_resource');
+  module_load_include('inc', 'casa_services', 'resources/pictures_resource');
   module_load_include('inc', 'casa_services', 'resources/other_node_resources');
   module_load_include('inc', 'casa_services', 'resources/taxa_resource');
 
   $resources += _observations_resource_definition();
+  $resources += _pictures_resource_definition();
   $resources += _other_node_resources_definition();
   $resources += _taxa_resource_definition();
 
   return $resources;
+}
+
+
+
+/**
+ * @return boolean
+ *   TRUE if the user is permitted access, FALSE otherwise.
+ */
+function _casa_node_resource_access($op = 'view', $args = array()) {
+  // dpm($op, 'op');
+  // dpm($args, 'args');
+
+  if ($op == 'update') {
+    $nids = explode('|', $args[0]);
+    // dpm($nids, 'nids');
+    if (count($nids) == 1) {
+      return _node_resource_access($op, $args);
+    }
+    else {
+      // // Adds backwards compatability with regression fixed in #1083242
+      // if (isset($args[0])) {
+      //   $args[0] = _services_access_value($args[0], 'node');
+      // }
+
+      // // Make sure we have an object or this all fails, some servers can
+      // // mess up the types.
+      // if (is_array($args[0])) {
+      //   $args[0] = (object) $args[0];
+      // }
+      // elseif (!is_array($args[0]) && !is_object($args[0])) { //This is to determine if it is just a string happens on node/%NID
+      //   $args[0] = (object) array('nid' => $args[0]);
+      // }
+
+      // if ($op != 'create' && !empty($args)) {
+      //   $node = node_load($args[0]->nid);
+      // }
+      // elseif ($op == 'create') {
+      //   if (isset($args[0]->type)) {
+      //     $node = $args[0]->type;
+      //     return node_access($op, $node);
+      //   }
+      //   else {
+      //     return services_error(t('Node type is required'), 406);
+      //   }
+      // }
+      // if (isset($node->nid) && $node->nid) {
+      //   return node_access($op, $node);
+      // }
+      // else {
+      //   return services_error(t('Node @nid could not be found', array('@nid' => $args[0]->nid)), 404);
+      // }
+      return TRUE;
+    }
+  }
+  else {
+    return _node_resource_access($op, $args);
+  }
 }
 
 
@@ -66,6 +125,18 @@ function casa_services_services_resources() {
 function casa_services_services_resources_alter(&$resources, &$endpoint) {
   // dpm($resources, 'resources');
   // dpm($endpoint, 'endpoint');
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_menu_alter().
+ */
+function casa_services_menu_alter(&$items) {
+  // dpm($items, '$items');
 }
 
 
@@ -109,3 +180,20 @@ function _user_resource_current_user() {
 
   return $user;
 }
+
+
+
+// /**
+//  * Implements hook_rest_server_request_parsers_alter().
+//  */
+// function casa_services_rest_server_request_parsers_alter(&$parsers) {
+//   dpm($parsers, '$parsers');
+// }
+
+// /**
+//  * Implements hook_rest_server_request_parsed_alter().
+//  */
+// function casa_services_rest_server_request_parsed_alter(&$data, $controller) {
+//   dpm($data, '$data');
+//   dpm($controller, '$controller');
+// }

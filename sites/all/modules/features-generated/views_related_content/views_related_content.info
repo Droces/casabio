@@ -1,0 +1,15 @@
+name = Views: Related content
+description = Views on node pages showing referenced or referencing content
+core = 7.x
+package = Features: Views
+version = 7.x-1.0
+dependencies[] = entityreference
+dependencies[] = entityreference_view_widget
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = identifications_of_observation
+features[views_view][] = image_of_taxon_reference_widget
+features[views_view][] = interactions_of_observation
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features-generated

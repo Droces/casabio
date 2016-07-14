@@ -696,41 +696,41 @@ definitions:
       status:
         type: boolean
         description: Whether the observation is published or not.
-      vid: 
+      vid:
         type: string
-      uid: 
+      uid:
         type: string
-      log: 
+      log:
         type: string
-      comment: 
+      comment:
         type: integer
         format: int32
-      promote: 
+      promote:
         type: string
-      sticky: 
+      sticky:
         type: boolean
-      type: 
+      type:
         type: string
         description: The content type.
         example: observation
-      language: 
+      language:
         type: string
-      created: 
-        type: string
-        description: A date and time in the UNIX timestamp format.
-      changed: 
+      created:
         type: string
         description: A date and time in the UNIX timestamp format.
-      tnid: 
-        type: string
-      translate: 
-        type: string
-      revision_timestamp: 
+      changed:
         type: string
         description: A date and time in the UNIX timestamp format.
-      revision_uid: 
+      tnid:
         type: string
-      body: 
+      translate:
+        type: string
+      revision_timestamp:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid:
+        type: string
+      body:
         type: string
 
   Identification:
@@ -744,41 +744,41 @@ definitions:
       status:
         type: boolean
         description: Whether the identification is published or not.
-      vid: 
+      vid:
         type: string
-      uid: 
+      uid:
         type: string
-      log: 
+      log:
         type: string
-      comment: 
+      comment:
         type: integer
         format: int32
-      promote: 
+      promote:
         type: string
-      sticky: 
+      sticky:
         type: boolean
-      type: 
+      type:
         type: string
         description: The content type.
         example: identification
-      language: 
+      language:
         type: string
-      created: 
-        type: string
-        description: A date and time in the UNIX timestamp format.
-      changed: 
+      created:
         type: string
         description: A date and time in the UNIX timestamp format.
-      tnid: 
-        type: string
-      translate: 
-        type: string
-      revision_timestamp: 
+      changed:
         type: string
         description: A date and time in the UNIX timestamp format.
-      revision_uid: 
+      tnid:
         type: string
-      body: 
+      translate:
+        type: string
+      revision_timestamp:
+        type: string
+        description: A date and time in the UNIX timestamp format.
+      revision_uid:
+        type: string
+      body:
         type: string
 
   User:
@@ -831,7 +831,7 @@ definitions:
         type: string
       # notify:
       #   type: boolean
-      #   description: For 
+      #   description: For
 
   Term_reponse:
     type: object

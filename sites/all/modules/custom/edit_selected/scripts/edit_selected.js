@@ -9,141 +9,380 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-var edit_form_selector =      ".edit_form_wrapper";
-var identify_form_selector =  ".identify_form_wrapper";
-var fields_selector =         "[class*='form-field-']";
-var fields_altered =          [];
+
+
+/**
+ * CONTENTS
+ *
+ * - variable declarations -
+ *
+ * Drupal.behaviors.edit_selected.attach()
+ *
+ * Drupal.edit_selected
+ *  .is_page()
+ *  .set_selectables_data()
+ *  .set_selectable()
+ *  .get_selectables_data()
+ *  .get_selectable_data()
+ *  .get_selectables_map()
+ *  .get_selectable_from_nid()
+ *  .refresh_current_field_indicator()
+ *  // .get_selectable_field_value()
+ *
+ * misc_page_set_up()
+ * add_listeners()
+ *
+ * set_up_dialogs()
+ * dialog_close_handler()
+ * expand_empty_reference_fields()  // @deprecated
+ * adjust_buttons()
+ * manage_field_change()
+ * remove_unaltered_node_fields()
+ * parse_location()
+ * create_layer()
+ * rotate_selected()
+ * manage_form_number_specimens()
+ * manage_form_add_blank_obs()
+ * set_up_field_progress()
+ * show_field_indicators()
+ *
+ * set_up_keypress_mgmt()
+ * handle_keypress_edit()
+ * handle_keypress_identify()
+ */
+
+
+var page_is_setup = false;
+var settings_of_setup;
+
+var edit_form;
+var identify_form;
+var interaction_form;
 var toolbar;
 
-var api_url =                 'http://localhost/Current/CasaBio/api/v1.0';
-// var api_url =                 'http://stage.touchdreams.co.za/CsB/api/v1.0';
+var current_page;
+var page_has_map;
 
-var focus_field_value;
-var focus_field_value_new;
+var map_layer_all_locations;
+var standard_feature_style;
+var selected_feature_style;
 
-// Maps the selectable (as a jQ object) to the selectable's nid
-var selectables_map = {};
-var selectables_data = {};
-var security_token = '';
+var fields_altered_names = [];
 
+var selectables = {}; // jQuery objects
 
-$(document).ready(function() {
-  // console.log( "ready!" );
-  get_selectables_data();
-  get_token();
-});
+var selectables_data = []; // Data returned from API requests
+var selectables_map = {}; // Maps selectable's nid: its position in the selectables_data array
+
+var identifications_data = [];
+var identifications_map = {}; // Maps selectable's nid: list of positions of identifications of it
+
+var interactions_data = [];
+var interactions_map = {}; // Maps selectable's nid: list of positions of identifications of it
 
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.edit_selected = {
   attach: function(context, settings) {
+    // console.log('settings: ', settings);
 
-    toolbar = $('[role="toolbar"][aria-label*="primary"]', context);
+    if (! page_is_setup) {
+      settings_of_setup = settings;
 
-    set_up_page(context);
+      current_page = settings.edit_selected.current_page;
+      // console.log('current_page: ', current_page);
 
-    adjust_buttons(context);
+      edit_form =         $('.edit_form_wrapper', context);
+      identify_form =     $('.identify_form_wrapper', context);
+      interaction_form =  $('.interaction_form_wrapper', context);
+      toolbar =           $('[role="toolbar"][aria-label*="primary"]', context);
 
-    // set_up_field_progress(context);
+      selectables =       $('.selectable', context);
+      // console.log('selectables: ', selectables);
 
-    set_up_keypress_mgmt(context);
+      if (Drupal.edit_selected.is_page('observation_info')) {
+        page_has_map = true;
+      }
+      else {
+        page_has_map = false;
+      }
 
-    add_listeners(context);
+
+      if (page_has_map) {
+        var colour_semi_red = [255, 0, 0, 0.4];
+        standard_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_red, 'red');
+        var colour_semi_blue = [0, 0, 255, 0.4];
+        selected_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_blue, 'blue');
+      }
+
+      // fetch_selectables_data
+      if (Drupal.edit_selected.is_page('observation_info') || Drupal.edit_selected.is_page('picture_info')) {
+        // console.log('Calling fetch_selectables_data()');
+        Drupal.es_api_interactions.fetch_selectables_data();
+      }
+      if (Drupal.edit_selected.is_page('observation_info')) {
+        Drupal.es_api_interactions.fetch_identifications_data();
+        Drupal.es_api_interactions.fetch_interactions_data();
+      }
+
+      // fetch_token
+      Drupal.es_api_interactions.fetch_token();
+
+
+
+      // Page setup
+
+      set_up_dialogs(context);
+
+      misc_page_set_up(context, settings);
+
+      adjust_buttons(context);
+
+      // set_up_field_progress(context);
+
+      set_up_keypress_mgmt(context);
+
+      add_listeners(context, settings);
+
+      page_is_setup = true;
+    }
 
   },
   weight: 6
 };
 
 
+Drupal.edit_selected = {
+
+  is_page: function(page) {
+    return current_page == page;
+  },
 
 
-/**
- * Local functions
- *
- * onlyUnique()
- * set_up_page()
- * add_listeners()
+  selectables_append: function(selectable) {
+    selectables = selectables.add(selectable);
+  },
 
- * get_selectables_data()           // Called on page load
- * get_collection_nid()
- * get_token()                      // Called on page load
- * save_identification()
- * create_identification()
- * create_identification_obj()
+  // ===========================================================================
+  //                                      selectables_data
 
- * expand_empty_reference_fields()  // @deprecated
- * adjust_buttons()
- * manage_field_change()
- * edit_selected_nid_prefiller()
- * edit_selected_form_prefiller()
- * get_field_values()
- * set_field_value()
- * parse_location()
- * create_layer()
- * clear_field_value()
- * get_field_property()
- * get_selected_nids()
- * rotate_selected()
- * manage_form_number_specimens()
- * manage_form_add_blank_obs()
- * set_up_field_progress()
- * show_field_indicators()
+  set_selectables_data: function(selectables_data_in) {
+    selectables_data = selectables_data_in;
+  },
 
- * set_up_keypress_mgmt()
- * handle_keypress_edit()
- * handle_keypress_identify()
- * handle_keypress_close_dialog()
- */
+  set_selectable: function(nid, selectable) {
+    // If nid not provided, just append selectable to the end of the array
+    if (nid == null) {
+      var index = selectables_data.push(selectable);
+      populate_selectables_map();
+      // selectables_map[nid] = index;
+    }
+    else {
+      var index = Drupal.edit_selected.get_selectables_map()[nid];
+      selectables_data[index] = selectable;
+    }
+  },
+
+  selectables_data_append: function(selectable) {
+    selectables_data.push(selectable);
+  },
+
+  get_selectables_data: function() {
+    return selectables_data;
+  },
+
+  get_selectable_data: function(nid) {
+    return selectables_data[selectables_map[nid]];
+  },
+
+  populate_selectables_map: function() {
+    // Populate selectables_map
+    $.each(selectables_data, function( index, node ) {
+      var nid = node.id;
+      // console.log('nid: ', nid);
+      selectables_map[nid] = index;
+    });
+    // console.log('selectables_map: ', selectables_map);
+  },
+
+  get_selectables_map: function() {
+    return selectables_map;
+  },
 
 
-/**
- * Used by array.filter().
- * Checks if the given value is the first occurring.
- * If not, it must be a duplicate, and function will return false.
- */
-function onlyUnique(value, index, self) {
-  return self.indexOf(value) === index;
-}
+  get_selectable_from_nid: function(nid) {
+    var selectable = selectables.find('.property-nid:contains("' + nid + '")')
+      .parents('.selectable');
+    return selectable;
+  },
+
+  // ===========================================================================
+  //                                      identifications_data
+
+  set_identifications_data: function(identifications_data_in) {
+    identifications_data = identifications_data_in;
+  },
+
+  identifications_data_append: function(identification_in) {
+    identifications_data.push(identification_in);
+  },
+
+  populate_identifications_map: function() {
+    // Populate selectables_map
+    $.each(identifications_data, function( index, node ) {
+      var nid = node.attributes.observation;
+      // console.log('nid: ', nid);
+
+      if (typeof identifications_map[nid] == 'undefined') {
+        identifications_map[nid] = [];
+      }
+
+      identifications_map[nid].push(index);
+    });
+    // console.log('identifications_map: ', identifications_map);
+  },
+
+  // ===========================================================================
+  //                                      interactions_data
+
+  set_interactions_data: function(interactions_data_in) {
+    interactions_data = interactions_data_in;
+  },
+
+  interactions_data_append: function(interaction_in) {
+    interactions_data.push(interaction_in);
+  },
+
+  populate_interactions_map: function() {
+    // Populate selectables_map
+    $.each(interactions_data, function( index, node ) {
+      var nid = node.attributes.observation;
+      // console.log('nid: ', nid);
+
+      if (typeof interactions_map[nid] == 'undefined') {
+        interactions_map[nid] = [];
+      }
+
+      interactions_map[nid].push(index);
+    });
+    // console.log('interactions_map: ', interactions_map);
+  },
+
+
+
+  refresh_current_field_indicator: function(context) {
+    var field_shown = null;
+    var radio_selected = $('#show-fields-radios input[type="radio"]:checked', context);
+    field_shown = show_field_indicators(context, field_shown, radio_selected);
+  },
+
+
+
+  add_selection_listeners: function(selectable, settings) {
+    // console.log("Called add_selection_listeners(), settings: ", settings);
+    // When a selectable is selected, manage it.
+    selectable.on('selection:select', function(event) {
+      adjust_buttons();
+
+      Drupal.form_prefiller.clear_form(edit_form);
+      if (page_has_map) {
+        Drupal.edit_selected.reset_features_style();
+      }
+
+      // Set 'Number Specimens' form's 'nids' (hidden) field
+      $('form[action="ajax/number_specimens"] input[name="nids"]')
+        .val(Drupal.selection.get_selected_nids().join(','));
+
+      Drupal.form_prefiller.prefill_form(edit_form, selectables_data, settings);
+    });
+  },
+
+
+  trigger_manage_field_change: function(target) {
+    manage_field_change(target);
+  },
+
+
+
+  // Map features
+
+  set_selectable_feature_as_selected: function() {
+    // console.log('Called: Drupal.edit_selected.set_selectable_feature_as_selected()');
+    var nid = Drupal.selection.get_selected_nids()[0]; // Will only be one when called.
+    var features = map_layer_all_locations.getSource().getFeatures();
+    $.each(features, function(index, feature) {
+      if (feature.nid == nid) {
+        // console.log('nid: ', nid);
+        feature.setStyle(selected_feature_style);
+      }
+    });
+  },
+
+
+  reset_features_style: function(form) {
+    var features = map_layer_all_locations.getSource().getFeatures();
+    $.each(features, function(index, feature) {
+      feature.setStyle(standard_feature_style);
+    });
+  },
+
+
+  update_feature: function(nid) {
+    // console.log('nid: ', nid);
+    if (! page_has_map) {
+      return null;
+    }
+
+    var features = map_layer_all_locations.getSource().getFeatures();
+    var feature;
+    $.each(features, function(index, feature_index) {
+      // console.log('feature_index: ', feature_index);
+      if (feature_index.nid == nid) {
+        feature = feature_index;
+      }
+    });
+
+    // If this nid doesn't yet have a feature on the map
+    if (typeof feature == 'undefined') {
+      var selectable = Drupal.edit_selected.get_selectable_data(nid);
+      add_observation_to_map(selectable, selected_feature_style);
+    }
+
+    else {
+      var location = selectables_data[selectables_map[nid]].attributes.location;
+      // console.log('location: ', location);
+      feature.getGeometry().setCoordinates([
+        parseFloat(location.longitude),
+        parseFloat(location.latitude)
+      ]);
+      // console.log('coords after: ', feature.getGeometry().getCoordinates());
+      Drupal.casa_map_mgt.transform_geometry_from_4326(feature);
+    }
+  }
+
+
+};
 
 
 
 
-function set_up_page(context) {
+function misc_page_set_up(context, settings) {
   // console.log('call: edit_selected module: set_up_page()');
 
-  // Transform the edit form and identify form into dialogs
-  // $( '#edit-selected-edit-form', context ).dialog({
-  $( edit_form_selector, context ).dialog({
-    modal: true,
-    autoOpen: false,
-    resizable: false,
-    width: 800,
-    title: 'Edit observations',
-    open: function( event, ui ) {
-      $(document).trigger('edit-selected.edit-form_dialog-opened');
-    }
-  });
-  $( identify_form_selector, context ).dialog({
-    modal: true,
-    autoOpen: false,
-    resizable: false,
-    width: 800,
-    title: 'Identify observations'
-  });
-
   // Add a message areas to form fields; used to notify about mixed values.
-  $( edit_form_selector + ' ' + fields_selector + ' .form-item > label:first-child'
-    + ', ' + edit_form_selector + ' .form-item-title label:first-child', context)
+  edit_form.find("[class*='form-field-'] .form-item > label:first-child"
+    + ', .form-item-title label:first-child', context)
     .after('<div class="messages hidden"></div>');
 
   // Add a 'show' area to the edit form, which will display the image
-  // $('.block-edit-selected > .content > h2').after('<div class="show"></div>');
+  // edit_form.find('.content > h2').after('<div class="show"></div>');
   // $('li.focussed').find('.views-field-field-image')
   //   .clone()
   //   .appendTo('.block-edit-selected .show');
 
   // Element to contain the value of the selected field when one of the 'show field' radio buttons is clicked
-  $('.selectable', context).append('<span class="field-data"></span>');
+  selectables.append('<span class="field-data"></span>');
+
 
 }
 
@@ -152,7 +391,7 @@ function set_up_page(context) {
 /**
  * Adds event listeners to page elements.
  */
-function add_listeners(context) {
+function add_listeners(context, settings) {
 
 
   // Disable firefox's 'image drag' feature, which messes with our ‘drag-select’
@@ -163,24 +402,33 @@ function add_listeners(context) {
   });
 
   // When a selectable is selected, manage it.
-  $('.selectable').on('selection:select', function(event) {
-    adjust_buttons();
-    edit_selected_form_prefiller();
-    edit_selected_nid_prefiller();
+  selectables.each(function(index, selectable) {
+    Drupal.edit_selected.add_selection_listeners($(selectable), settings);
   });
+  // selectables.on('selection:select', function(event) {
+  //   adjust_buttons();
+
+  //   Drupal.form_prefiller.clear_form(edit_form);
+  //   if (page_has_map) {
+  //     Drupal.edit_selected.reset_features_style();
+  //   }
+
+  //   Drupal.form_prefiller.prefill_form(edit_form, selectables_data, settings);
+  // });
 
   $('button.rotate', context).on( 'click', function(event) {
     event.preventDefault();
     rotate_selected($(this));
   });
 
-  $( 'input, textarea, select' ).on( 'change', function() {
+  $('input, textarea, select', context ).on( 'change', function() {
+    // console.log('changed');
     // Add the changed field's name to the list in the hidden edit_selected_altered_fields field.
     manage_field_change( $( this ) );
   });
 
   // When a dialog's cancel button is clicked, close the dialog.
-  $( 'input[value="Cancel"]', context ).on( 'click', function(event) {
+  $('input[value="Cancel"]', context ).on( 'click', function(event) {
   // $( '#cancel', context ).on( 'click', function(event) { // Doesn't work because id finds just one.
     event.preventDefault();
     var dialog = $(this).parents('.ui-dialog-content');
@@ -195,49 +443,115 @@ function add_listeners(context) {
   });
 
 
+
+
+  // Maps
+
   // Populate selectables_map
   $(document, context).on('selectables_data_fetched', function() {
     // console.log('On: selectables_data_fetched');
     // console.log('selectables_data: ', selectables_data);
 
-    // Populate selectables_map
-    $.each(selectables_data, function( nid, node ) {
-      // console.log('nid: ', nid);
-      var selectable = $('.selectable .views-field-nid .field-content:contains("' + nid + '")')
-        .parents('.selectable');
-      selectables_map[nid] = selectable;
-    });
-    // console.log('selectables_map: ', selectables_map);
+    Drupal.edit_selected.populate_selectables_map(); // re-populates the selectables_map array
+
+    if (page_has_map) {
+      add_observations_to_map();
+    }
+  });
+
+  $('.horizontal-tab-button a').on('click', function( event, ui ) {
+    // console.log('map: ', map);
+    if (page_has_map) {
+      var map = Drupal.casa_map_mgt.get_map();
+      map.updateSize();
+    }
   });
 
 
-  // Saving a new identification
-  $('.node-identification-form .form-actions input[type="submit"][value="Save"]').on('click', function(event){
+
+
+
+  // Save changed node information
+  edit_form.find('form').submit(function( event ) {
+    event.preventDefault();
+    // console.log('edit form submitted.');
+
+    var node_serialized_raw = $( this ).serializeArray();
+    console.log('node_serialized_raw: ', node_serialized_raw);
+    var fields_raw = Drupal.casa_node_mgt.convert_form_to_node(node_serialized_raw);
+    console.log('fields_raw: ', fields_raw);
+    var fields_altered = remove_unaltered_node_fields(fields_raw);
+    console.log('fields_altered: ', fields_altered);
+
+    if ($.isEmptyObject(fields_altered)) {
+      toastr.warning('Nothing to save'); // @todo add an 'undo' button
+      return false;
+    }
+
+    // var node = Drupal.casa_node_mgt.normalise_node(fields_altered);
+    var fields = Drupal.casa_node_mgt.simplify_node_fields(fields_altered, settings);
+    // console.log('fields: ', fields);
+
+    var node = fields;
+
+    // Manage fields that need special formatting for the API
+    node = reformat_fields_for_API(node);
+
+    // console.log('node: ', node);
+
+    var nids = Drupal.selection.get_selected_nids();
+
+    if (Drupal.edit_selected.is_page('observation_info')) {
+      // node['type'] = "observation";
+      var type = "observation";
+      Drupal.es_api_interactions.update_nodes(node, type, nids, context);
+    }
+    else if (Drupal.edit_selected.is_page('picture_info')
+      || Drupal.edit_selected.is_page('upload')) {
+      var type = "picture";
+      Drupal.es_api_interactions.update_nodes(node, type, nids, context);
+    }
+  });
+
+
+
+  // Save a new identification
+
+  var save_id_btn = identify_form.find('input[type="submit"][value="Save"]', context);
+  save_id_btn.on('click', function(event){
     event.preventDefault();
 
-    var identification = create_identification();
-    var identification_nid = save_identification(identification, context); // Uses AJAX
+    // Re-fetch the form (might have been changed by AJAX)
+    identify_form = $('.identify_form_wrapper'); // Does NOT use context
+    // console.log('identify_form: ', identify_form);
+
+    var identification_nid = Drupal.es_api_interactions
+      .save_identification_from_form(identify_form, context); // Uses AJAX
   });
 
-  // Saving changed observation information
-  $(edit_form_selector).submit(function( event ) {
+
+
+  // Save a new interaction
+  var save_intrn_btn = interaction_form.find('.form-actions input[type="submit"][value="Save"]', context);
+  save_intrn_btn.on('click', function(event){
     event.preventDefault();
 
-    var observation = Drupal.casa_node_mgt.convert_form_to_node($( this ));
-    console.log("observation: ", observation);
+    // Re-fetch the form (might have been changed by AJAX)
+    interaction_form =  $('.interaction_form_wrapper'); // Does NOT use context
+    // console.log('identify_form: ', identify_form);
 
-    observation['type'] = "observation";
-
-    var nids = get_selected_nids();
-
-    var is_success = update_observations(observation, nids, context);
+    var interaction = Drupal.es_api_interactions
+      .save_interaction_from_form(interaction_form, context);
   });
+
+
+
 
 
   // Forms
 
   // Manage 'Number specimens' form submission using AJAX
-  $('#number-specimens form').submit(function() {
+  $('#number-specimens form', context).submit(function() {
     var form = $(this);
     manage_form_number_specimens(form);
 
@@ -246,7 +560,7 @@ function add_listeners(context) {
   });
 
   // Manage 'Add blank observations' form submission using AJAX
-  $('#create-blank-observations form').submit(function() {
+  $('#create-blank-observations form', context).submit(function() {
     var form = $(this);
     manage_form_add_blank_obs(form);
 
@@ -257,227 +571,99 @@ function add_listeners(context) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-// AJAX functions
-
-
-function get_selectables_data() {
-  var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
-  var collection_nid = get_collection_nid();
-  var url = api_url + '/collections/' + collection_nid + '/observations';
-  var jqxhr = $.get(url);
-
-  jqxhr.fail(function( data ) {
-    toastr_info.remove();
-    toastr.error('Sorry, there was a problem loading the observations.');
-    console.log('In jqxhr.fail(), data: ', data );
-  });
-
-  jqxhr.done(function( data ) {
-    // console.log( "In jqxhr.done(), data: ", data );
-    toastr_info.remove();
-    // toastr.success('selectables_data loaded successfully.'); // Not needed.
-    selectables_data = data;
-    // console.log('selectables_data, on page load: ', selectables_data);
-    $(document).trigger('selectables_data_fetched');
-  });
-}
-
-// @todo delete this in favour of the version in contribute.js
-function get_collection_nid() {
-  var path = window.location.pathname;
-  var path_parts = path.split('/');
-  var nid = path_parts[path_parts.length - 1];
-  // console.log( "collection: ", collection );
-  return nid;
-}
-
-
-
-function get_token() {
-  var ajax_settings = {
-    type: "POST",
-    contentType: "application/json",
-    url: api_url + '/users/token'
+function reformat_fields_for_API(node) {
+  if (node['description']) {
+    node['description'] = {value: node['description']};
   }
-  var jqxhr = $.ajax(ajax_settings);
 
-  jqxhr.fail(function( data ) {
-    toastr.error('Sorry, there was a problem security token the observations.');
-    console.log( "In jqxhr.fail(), data: ", data );
-  });
-
-  jqxhr.done(function( data ) {
-    // console.log( "In jqxhr.done(), data: ", data );
-    security_token = data['token'];
-    // console.log('security_token: ', security_token);
-  });
-}
-
-
-function save_identification(identification, context) {
-  console.log('identification: ', identification);
-
-  var observation_nid = get_selected_nids()[0]; // Used below when save is successful.
-  var identification_nid = null;
-
-  var settings = {
-    type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(identification, null, 2),
-    headers: {
-      "X-CSRF-Token": security_token
-      // Session id header is not specified, because it's automatically added by browser (it's a cookie).
-    },
-    url: api_url + '/identifications'
-  }
-  var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
-  var jqxhr = $.ajax(settings);
-
-  jqxhr.fail(function( data ) {
-    toastr_info.remove();
-    toastr.error('Sorry, there was a problem saving the identification.');
-    console.log( "In jqxhr.fail(), data: ", data );
-  });
-
-  jqxhr.done(function( data ) {
-    // console.log( "In jqxhr.done(), data: ", data );
-    toastr_info.remove();
-    toastr.success('identification saved successfully.');
-
-    // Update selectables_data with new identification
-    identification_nid = data['nid'];
-    var identification_vid = identification_nid;
-
-    selectables_data[observation_nid]['identifications'][identification_nid] = {
-      nid: identification_nid,
-      type: 'identification',
-      vid: identification_vid
+  if (node['location']) {
+    var coords = node['location'].split(', ');
+    node['location'] = {
+      longitude: coords[0],
+      latitude:coords[1]
     };
+  }
 
-    refresh_current_field_indicator(context);
-  });
+  if (node['dateTaken']) {
+    // Convert from 'dd/mm/yyyy' format to unix timestamp format
+    var date_parts = node['dateTaken'].split('/');
+    var dateString = [date_parts[2], date_parts[1], date_parts[0]].join('-');
+    // console.log('dateString: ', dateString);
+    node['dateTaken'] = Date.parse(dateString) / 1000;
+  }
 
-  return identification_nid;
+  if (node['dateObserved']) {
+    // Convert from 'dd/mm/yyyy' format to unix timestamp format
+    var date_parts = node['dateObserved'].split('/');
+    var dateString = [date_parts[2], date_parts[1], date_parts[0]].join('-');
+    // console.log('dateString: ', dateString);
+    node['dateObserved'] = Date.parse(dateString) / 1000;
+  }
+  return node;
 }
 
 
-/**
- * Creates an identifiation object for sending as JSON to the API.
- */
-function create_identification() {
-  var form = $('.node-identification-form');
-  var species_selection_form = $('#views-form-species-reference-selector-widget-default');
 
-  // var taxon = form.find('input#edit-field-identified-species-und').val();
-  var taxon_tid = species_selection_form.find('input[type="radio"]:checked').val();
-  var taxon_name = species_selection_form.find('input[type="radio"]:checked')
-    .parents('tr').find('.views-field-name a').html();
-  // console.log('taxon_tid: ', taxon_tid);
+function add_observations_to_map() {
+  // console.log("Called: add_observations_to_map()");
 
-  if (!taxon_tid) {
-    toastr.warning('You need to select a taxon before saving.');
+  // Map; add all observation's data
+
+  if (! page_has_map) {
     return null;
   }
 
-  var observation_nid = get_selected_nids()[0]; // Will always be only one when submitting.
-  var observation_name = selectables_data[observation_nid]['title'];
-  var observation_reference = observation_name + " (" + observation_nid + ")";
-  // console.log('observation_reference: ', observation_reference);
+  map_layer_all_locations = Drupal.casa_map_mgt.create_vector_layer();
+  // console.log('map_layer_all_locations: ', map_layer_all_locations.getSource().getFeatures());
 
-  var language = 'und';
+  Drupal.casa_map_mgt.add_layer(map_layer_all_locations);
 
-  var title = taxon_name;
-  var certainty = $(identify_form_selector + " #edit-field-certainty-und").val();
+  // console.log('selectables_data: ', selectables_data);
+  $.each(selectables_data, function( index, selectable ) {
+    add_observation_to_map(selectable, standard_feature_style);
+  });
+  // console.log('map_layer_all_locations features: ', map_layer_all_locations.getSource().getFeatures());
 
-  var identification = create_identification_obj(title, observation_reference, taxon_tid, certainty);
-  // console.log('identification: ', identification);
-  return identification;
-}
-
-
-function create_identification_obj(title, observation, taxon_tid, certainty) {
-  return {
-    "title": title,
-    "status": true,
-    "type": "identification",
-    "field_certainty": {
-      "und": certainty
-    },
-    "field_observation": {
-      "und": [
-        {"target_id": observation}
-      ]
-    },
-    "field_identified_species": {
-      "und": [
-        {"tid": taxon_tid}
-      ]
-    }
-  };
-}
-
-
-/**
- * @returns true if successful, false otherwise.
- */
-function update_observations(observation_data, nids, context) {
-  var is_success = false;
-
-  var settings = {
-    type: "PUT",
-    contentType: "application/json",
-    data: JSON.stringify(observation_data, null, 2),
-    headers: {
-      "X-CSRF-Token": security_token
-      // Session id header is not specified, because it's automatically added by browser (it's a cookie).
-    },
-    url: api_url + '/observations/' + nids.join( "|" )
+  if (map_layer_all_locations.getSource().getFeatures().length == 0) {
+    // console.log('Are no features.');
+    return null;
   }
-  var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
-  var jqxhr = $.ajax(settings);
 
-  jqxhr.fail(function( data ) {
-    toastr_info.remove();
-    toastr.error('Sorry, there was a problem updating the observations.');
-    console.log( "In jqxhr.fail(), data: ", data );
-  });
+  Drupal.casa_map_mgt.center_map(map_layer_all_locations);
 
-  jqxhr.done(function( data ) {
-    // console.log( "In jqxhr.done(), data: ", data );
-    toastr_info.remove();
-    is_success = true;
-    toastr.success('Observations updated successfully.');
+  // console.log("End: add_observations_to_map()");
+}
 
-    // Update selectables_data
-    // @todo complete this.
 
-    // Update selectables_data with saved observation info
-    $.each(nids, function(index, observation_nid) {
-        // console.log('observation_nid: ', observation_nid);
 
-      $.each(observation_data, function(field_name, field_value) {
-        // console.log('field_name: ', field_name);
-        // console.log('field_value: ', field_value);
+function add_observation_to_map(selectable_data, style) {
+  // console.log('selectable_data: ', selectable_data);
 
-        selectables_data[observation_nid][field_name] = field_value;
+  var field_name = 'location';
 
-      });
-    });
+  var selectable_prop_has_val = selectable_data.attributes[field_name] != null
+    && selectable_data.attributes[field_name] != '';
 
-    refresh_current_field_indicator(context);
-  });
+  if (! selectable_prop_has_val) {
+    return null;
+  }
 
-  return is_success;
+  var coordinates = selectable_data.attributes[field_name];
+  // console.log('coordinates: ', coordinates);
+
+  // feature = Drupal.casa_map_mgt.create_feature_from_JSON(feature_data);
+  feature = Drupal.casa_map_mgt.create_point_feature_from_lon_lat(
+    parseFloat(coordinates.longitude),
+    parseFloat(coordinates.latitude));
+  // console.log('feature coords: ', feature.getGeometry().getCoordinates());
+
+  feature.setStyle(style);
+
+  // Give it a nid property
+  feature['nid'] = selectable_data.id;
+
+  // Add the collection location as a layer to the map
+  map_layer_all_locations.getSource().addFeature(feature);
 }
 
 
@@ -492,6 +678,48 @@ function update_observations(observation_data, nids, context) {
 
 
 
+
+function set_up_dialogs(context) {
+  // console.log('Called: set_up_dialogs()');
+
+  // Transform the edit form into a dialog
+  edit_form.dialog({
+    modal: true,
+    autoOpen: false,
+    resizable: false,
+    width: 800,
+    title: 'Edit observations',
+    open: function( event, ui ) {
+      $(document).trigger('edit_form_dialog-created');
+    },
+    close: dialog_close_handler
+  });
+
+  // Transform the identify form into a dialog
+  identify_form.dialog({
+    modal: true,
+    autoOpen: false,
+    resizable: false,
+    width: 800,
+    title: 'Identify observations',
+    close: dialog_close_handler
+  });
+
+  // Transform the interaction form into a dialog
+  interaction_form.dialog({
+    modal: true,
+    autoOpen: false,
+    resizable: false,
+    width: 800,
+    title: 'Add interaction',
+    close: dialog_close_handler
+  });
+}
+
+
+function dialog_close_handler() {
+  fields_altered_names = [];
+}
 
 
 /**
@@ -522,7 +750,7 @@ function expand_empty_reference_fields(block) {
 function adjust_buttons(context) {
   // console.log("Called: adjust_buttons()");
 
-  var num_selected = Drupal.selection.get_selecteds_indexes().length;
+  var num_selected = Drupal.selection.get_selected_nids().length;
   // console.log('num_selected: ', num_selected);
 
   // Disable buttons if there are no selections
@@ -543,289 +771,35 @@ function adjust_buttons(context) {
  * Adds the changed field's name to the list in the hidden edit_selected_altered_fields field
  */
 function manage_field_change(target) {
-  var field = target.parents( fields_selector + ', .form-item-title' );
-  var field_name = get_field_property( field, "field_name" );
-  // console.log("field changed: ", field_name );
-
-  if ( typeof field_name != 'undefined' ) {
-    fields_altered.push( field_name );
-    // console.log("fields_altered: ", fields_altered);
-
-    $( '[name="edit_selected_altered_fields"]' ).val( fields_altered.join( "|" ));
-  }
+  fields_altered_names.push(target.attr('name'));
+  // console.log('fields_altered_names: ', fields_altered_names);
 }
 
 
 
-/**
- * Inserts the selected elements' node IDs into the hidden nids field.
- */
-function edit_selected_nid_prefiller() {
-  // console.log('called: edit_selected_nid_prefiller()');
+function remove_unaltered_node_fields(node) {
+  // console.log('node: ', node);
+  // console.log('fields_altered_names: ', fields_altered_names);
 
-  var nids_field = $( "form input[name*='nids']" );
-  // console.log('nids_field: ', nids_field);
+  $.each( node, function( key, field ) {
+    // console.log('key: ', key);
 
-  var selecteds_nids = get_selected_nids();
-  // console.log('selecteds_nids: ', selecteds_nids);
+    var is_altered = $.inArray(key, fields_altered_names) != -1;
+    // console.log('is_altered: ', is_altered);
 
-  nids_field.val( selecteds_nids.join( "|" ) );
-  // alert("nids_field.val: " + nids_field.val() );
-}
+    var is_checkboxes = key.split('[')[0] === 'field_tags';
+    // console.log(key + ' is_checkboxes: ', is_checkboxes);
 
+    // If is description field and only one selected, don't delete
+    // if (key == 'body[und][0][value]' && Drupal.selection.get_selected_selectables().length == 1) {}
 
-
-/**
- * For all selected nodes, fill their aggregated values into the edit form.
- *
- * If their values differ, sets the associated field's message to indicate mixed values.
- */
-function edit_selected_form_prefiller() {
-  // console.log("Reached: edit_selected_form_prefiller");
-
-  // var supported_field_types = [
-  //  'form-type-textfield', // Incl. Autocomplete entity reference widget
-  //  'form-type-textarea', // Incl. Long text, with or without summary
-  //  'form-type-select',
-  //  'form-type-radios',
-  //  'form-type-checkboxes'
-  // ];
-
-  // var supported_field_types = [
-  //  // From core's File API (https://www.drupal.org/node/1879542)
-  //  'file',
-  //  'image',
-  //  'taxonomy-term-reference',
-  //  'list-boolean',
-  //  'list-float',
-  //  'list-integer',
-  //  'list-text',
-  //  'number-decimal',
-  //  'number-float',
-  //  'number-integer',
-  //  'text',
-  //  'text-long',
-  //  'text-with-summary' // Long Text with Summary
-  // ];
-
-
-  var supported_field_widgets = [
-    'number',
-    'options-select',
-    'options-buttons', // Checkboxes and radio buttons
-    'text-textfield',
-    'text-textarea-with-summary',
-    'openlayers-geofield',
-    'entityreference-autocomplete'
-  ];
-
-  var supported_special_fields = [
-    'form-item-title'
-  ];
-
-  // ??
-  var form_fields =
-       $( edit_form_selector + " " + fields_selector )
-    .add( edit_form_selector + ' .form-item-title' )
-    .add( identify_form_selector + " " + fields_selector );
-  // alert( form_fields.length );
-
-  // For each field in the block, find matching view result field, and use it's value
-  form_fields.each( function( index ) {
-
-    var form_field = $( this );
-    var field_name;
-    var field_type;
-    var field_widget = get_field_property(form_field, "field_widget");
-    var special_field = false;
-
-    var field_values = [];
-    var field_values_mixed = false;
-
-    // If this field has a class in the supported_special_fields array, flag it as special
-    $.each( supported_special_fields, function( key, value ) {
-      form_field.hasClass(value) ? special_field = true : false;
-    });
-
-    // Get field's values (from selected nodes).
-    // If this field uses a supported widget, it can be pre-filled
-    if ($.inArray(field_widget, supported_field_widgets) >= 0 || special_field) {
-      // alert(field_type + " is supported");
-      var field_value = '';
-
-      field_name = get_field_property(form_field, "field_name");
-      // console.log('field_name: ', field_name);
-
-      // field_type = get_field_property(form_field, "field_type");
-
-      // Fields whose 'form name' doesn't match its 'node name'
-      // (such as entity reference fields) need to be handled uniquely.
-      if (field_widget == 'entityreference-autocomplete') {
-        if (field_name == 'field-observation') {
-          field_name = 'nid';
-        }
-      }
-
-      // For all selected nodes, find their values for the field.
-      field_values = get_field_values(field_name);
-      // console.log( 'field_values: ', field_values);
-
-      // Set the field value (according to valued found).
-      // If the selected nodes have at least one value for this field
-      if ( field_values.length > 0 ) {
-
-        field_values_mixed = field_values.filter( onlyUnique ).length > 1  ? true : false; //selecteds_indexes.length
-        // console.log('field_values_mixed: ', field_values_mixed);
-
-        // For mixed-values fields, display a message to notify the user
-        if( field_values_mixed ) {
-          field_values_mixed = true;
-          // form_field.find( ".messages" ).html( "mixed values" );
-          // form_field.find( ".messages" ).addClass( "warning" );
-          // form_field.find( ".messages" ).removeClass( "hidden" );
-          form_field.attr( 'data-values-status', "mixed" );
-
-          // Unset field value
-          clear_field_value(form_field);
-        }
-
-        // For non-mixed fields, set the form item's value to the field value
-        else {
-          field_values_mixed = false;
-          // form_field.find( ".messages" ).html( "" );
-          // form_field.find( ".messages" ).removeClass( "warning" );
-          // form_field.find( ".messages" ).addClass( "hidden" );
-          form_field.attr( 'data-values-status', "" );
-
-          // Fields whose 'form name' doesn't match its 'node name'
-          // (such as entity reference fields) need to be handled uniquely.
-          if (field_widget == 'entityreference-autocomplete') {
-            field_values = [' (' + field_values + ')'];
-          }
-
-          // console.log( 'form_field: ', form_field);
-          // console.log( 'field_values: ', field_values);
-          // console.log( 'field_widget: ', field_widget);
-          set_field_value(form_field, field_values, field_widget);
-        }
-      }
-      // If the selected nodes have no values for this field
-      else {
-        clear_field_value(form_field);
-      }
+    if ((! is_altered) && (! is_checkboxes)) {
+      delete node[key];
     }
+
   });
-}
-
-
-/**
- * Creates and array of field values from all selected nodes.
- */
-function get_field_values(field_name) {
-  var field_values = [];
-
-  $.each( Drupal.selection.get_selecteds_indexes(), function( key, index ) {
-    // console.log('index: ', index);
-    var element = $( '.selectable.views-row-' + index );
-    // console.log("element found: ", element.length);
-    field_value = element.find( ".views-field-" + field_name + " .field-content" ).html();
-    // console.log(field_name + " field_value: ", field_value);
-
-    // If this field has a valid value
-    if (field_value != '' && field_value != null) {
-      // alert("field_value: " + field_value );
-      field_values.push( field_value ); // even if blank (== "")
-    }
-    else {
-      field_values.push( '' );
-    }
-  });
-  return field_values;
-}
-
-
-/**
- * Set's the value of one field.
- *
- * @param field
- *   jQuery element of the .field
- *
- * @param values
- *   array of field values to set. More than 1 value for selects & checkboxes.
- *
- * @param field_widget
- *   string representing the type of widget (eg. '.field-widget-[type]').
- */
-function set_field_value(field, values, field_widget) {
-  // console.log('field:', field);
-  // console.log('values:', values);
-  // console.log('field_widget: ', field_widget);
-
-  field.find( "input:not([type='checkbox'])" ).val(values[0]);
-  field.find( "textarea" ).val(values[0]);
-  $.each(values, function(index, value) {
-    var radio = "select option[value='" + value + "']";
-    field.find( radio ).prop('selected', true);
-
-    var checkbox = "input[type='checkbox'][name*='" + value + "']";
-    field.find( checkbox ).prop('checked', true);
-  });
-
-
-  // For the Geofield map widget
-
-  if (field_widget == 'openlayers-geofield') {
-
-    var map_instances = Drupal.openlayers.instances;
-
-    $.each(map_instances, function(map_id, map_instance) {
-      var map = map_instance.map;
-      // console.log('map:', map);
-
-      var layers = map.getLayers();
-      // console.log('layers:', layers);
-      var observation_location_layer = null;
-      var location = parse_location(values);
-
-      // Manage the layers
-
-      layers.forEach(function(layer, index, array) {
-        // console.log('layer:', layer);
-
-        // layer.mn is the layer’s ID
-        if (layer.mn == 'geofield_field_formatter_layer' || layer.mn == 'openlayers_geofield_layer_widget') {
-          // Hide these layers because of a bug preventing altering the point features.
-          layer.setVisible(false);
-          // This is ideal; shows bug in console.
-          // var point = layer.getSource().getFeatures()[0].getGeometry();
-          // point.setCoordinates(location);
-        }
-        if (layer.mn == 'observation_location') {
-          observation_location_layer = layer;
-        }
-      });
-
-      var point;
-
-      // If the layer hasn't yet been created, create it.
-      if (observation_location_layer == null) {
-        point = new ol.geom.Point(location);
-        map.addLayer(create_layer(point));
-      }
-      else {
-        point = observation_location_layer.getSource().getFeatures()[0].getGeometry();
-        // console.log('point:', point);
-        point.setCoordinates(location);
-      }
-
-      // Transform the point (from WGS84 geographic coordinates to Spherical Mercator).
-      var current_projection = new ol.proj.Projection({code: "EPSG:4326"});
-      var new_projection = new ol.proj.Projection({code: "EPSG:3857"});
-      point.transform(current_projection, new_projection);
-
-    });
-
-  }
+  // console.log("node: ", node);
+  return node;
 }
 
 
@@ -834,7 +808,7 @@ function set_field_value(field, values, field_widget) {
  * Eg. ["13, 17"] returns [17, 13].
  */
 function parse_location(raw_field_value) {
-  if (typeof(raw_field_value) == 'undefined' || ! raw_field_value instanceof Array) {
+  if (typeof raw_field_value == 'undefined' || ! raw_field_value instanceof Array) {
     return null;
   }
   var location = [];
@@ -852,7 +826,7 @@ function parse_location(raw_field_value) {
  * Creates a layer with a point feature.
  */
 function create_layer(point) {
-  if (typeof(point) == 'undefined' || ! point instanceof ol.geom.Point) {
+  if (typeof point == 'undefined' || ! point instanceof ol.geom.Point) {
     return null;
   }
   var feature = new ol.Feature({geometry: point});
@@ -863,96 +837,20 @@ function create_layer(point) {
 }
 
 
-/**
- * Clears one field, so that it has no value.
- */
-function clear_field_value(field) {
-  // console.log('field: ', field);
-  // field.find( "input" ).val('');
-  field.find( "input:not([type='checkbox'])" ).val('');
-  field.find( 'input[type="checkbox"]' ).prop('checked', false);
-  // field.find( "input[type='checkbox'], input[type='radio']" ).prop('checked', false);
-  field.find( "textarea" ).val('');
-  field.find( 'select option' ).prop('selected', false);
-}
-
-
-
-/**
- * Provides the field's name, type or widget according to its class
- */
-function get_field_property(field, property) {
-  var classes = field.attr( "class" );
-  if ( typeof classes == 'undefined') {
-    return;
-  }
-  var classes = field.attr( "class" ).split( " " );
-  var field_value;
-
-  // Get the form item's type and field name
-  $.each( classes, function( key, value ) {
-    // alert( value );
-    // alert((property == "field_name"));
-
-    if ( (property == "field_name") && (value.substr( 0, 16 ) == "form-field-name-") ) {
-      field_value = value.substr( 16 );
-    }
-    else if ( (property == "field_name") && (value.substr( 0, 10 ) == "form-item-") ) {
-      // alert( value.substr( 10 ) );
-      field_value = value.substr( 10 );
-    }
-
-    if ( (property == "field_type") && (value.substr( 0, 16 ) == "form-field-type-") ) {
-      field_value = value.substr( 16 );
-      // alert( field_type );
-    }
-
-    if ( (property == "field_widget") && (value.substr( 0, 13 ) == "field-widget-") ) {
-      field_value = value.substr( 13 );
-      // alert( field_widget );
-    }
-  });
-  return field_value;
-}
-
-
-
-/**
- * Gets the array of selectable indexes, and creates an array of the nids from it.
- */
-function get_selected_nids() {
-  var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
-
-  selecteds_nids = [];
-
-  // console.log('selecteds_indexes received: ', selecteds_indexes);
-
-  $.each( selecteds_indexes, function( key, index ) {
-    var element = $( '.selectable.views-row-' + index );
-    // console.log('elements: ', element.length);
-    var nid = element.find( ".views-field-nid .field-content" ).html();
-    // alert(nid);
-    selecteds_nids.push( nid );
-  });
-  // alert("selecteds_nids: " + selecteds_nids);
-
-  return selecteds_nids;
-}
-
-
 
 
 function rotate_selected(button) {
     // console.log('called: rotate_selected()');
     var toastr_info = toastr.info('Rotating pictures…'); // @todo add an 'undo' button
 
-    var url = Drupal.settings.basePath + 'casa-node-mgt/rotate';
-    var selecteds_nids = get_selected_nids().join( "|" );
+    var url = Drupal.settings.basePath + 'ajax/images/rotate';
+    var selecteds_nids = Drupal.selection.get_selected_nids();
     var rotation_params = {
-      'nids': selecteds_nids,
+      'nids': selecteds_nids.join( "|" ),
       'degrees': '90'
     };
 
+    // If counter-clockwise
     if (button.attr('id') == 'rotate-ccw') rotation_params['degrees'] = '-90';
 
     var rotate_result = $.post(url, rotation_params, function(data, textStatus, xhr) {
@@ -973,11 +871,15 @@ function rotate_selected(button) {
       if (result == "success") {
         toastr.success('Pictures rotated successfully. Reloading the page…');
         // console.log( "Reason: ", data['reason'] );
+
         // Refresh the page to show updated (rotated) pictures.
-        document.location.reload();
+        // document.location.reload();
+
+        rotate_picture_elements(selecteds_nids, rotation_params['degrees']);
+
       } else {
         toastr.error('Sorry; there was a problem rotating the pictures.');
-        console.log( "In rotate_result.done(), data: ", data );
+        // console.log( "In rotate_result.done(), data: ", data );
       }
       // console.log('data: ', data);
     });
@@ -985,11 +887,28 @@ function rotate_selected(button) {
 
 
 
+function rotate_picture_elements(nids, degrees) {
+  // console.log('nids: ', nids);
+  // console.log('degrees: ', degrees);
+  $.each(nids, function(index, nid) {
+    var selectable = Drupal.edit_selected.get_selectable_from_nid(nid);
+    var image = selectable.find('[class*="field"] img');
+    var current_rotation = image.attr('data-rotated');
+    current_rotation = typeof current_rotation == 'undefined'
+      ? current_rotation = 0
+      : current_rotation.replace('deg', '');
+    var new_rotation = parseInt(current_rotation) + parseInt(degrees);
+    image.attr('data-rotated', new_rotation + 'deg');
+  });
+}
+
+
+
 
 function manage_form_number_specimens(form) {
+  // console.log('form.serialize(): ', form.serialize());
   // var are_selecteds = Drupal.selection.are_selecteds();
   // console.log('are_selecteds: ', are_selecteds);
-  var toastr_info = toastr.info('Numbering observations…'); // @todo add an 'undo' button
 
   // Disable buttons if there are no selections
   if (! Drupal.selection.are_selecteds()) {
@@ -997,23 +916,32 @@ function manage_form_number_specimens(form) {
     return false;
   }
 
-  // Send xhr request.
-  $.ajax({
-    url: form.attr('action'),
+  var request_params = {
+    // url: form.attr('action'),
+    url: Drupal.casa_core.get_site_url() + 'ajax/number_specimens',
     type: form.attr('method'),
-    data: form.serialize(),
-    error: function(data) {
-      toastr_info.remove();
-      toastr.error('Sorry; there was a problem numbering the observations.');
-      console.log( "In ajax.error(), data: ", data );
-    },
-    success: function(data) {
-      toastr_info.remove();
-      toastr.success('Observations have been numbered successfully. Reloading in 3 seconds…');
-      var reload_timeout = window.setTimeout(function(){
-        document.location.reload();
-      }, 3000);
-    }
+    data: form.serialize()
+  };
+
+  var toastr_info = toastr.info('Numbering observations…'); // @todo add an 'undo' button
+
+  // Send jq xhr request.
+  var jqxhr = $.ajax(request_params);
+
+  jqxhr.error(function(data) {
+    toastr.error('Sorry; there was a problem numbering the observations.');
+    console.log( "In ajax.error(), data: ", data );
+  });
+
+  jqxhr.success(function(data) {
+    toastr.success('Observations have been numbered successfully. Reloading in 3 seconds…');
+    var reload_timeout = window.setTimeout(function(){
+      document.location.reload();
+    }, 3000);
+  });
+
+  jqxhr.always(function( data ) {
+    toastr_info.remove();
   });
 }
 
@@ -1021,43 +949,56 @@ function manage_form_number_specimens(form) {
 
 
 function manage_form_add_blank_obs(form) {
+  // console.log('form.serialize(): ', form.serialize());
+
   form.find('#collection-id').val(Drupal.casa_core.get_collection_nid());
   // console.log('form.serialize: ', form.serialize());
 
-  // Send xhr request.
-  $.ajax({
-    url: form.attr('action'),
+  var toastr_info = toastr.info('Adding picture-less observations…'); // @todo add an 'undo' button
+
+  var request_params = {
+    // url: form.attr('action'),
+    url: Drupal.casa_core.get_site_url() + 'ajax/observations/create-blank',
     type: form.attr('method'),
     data: form.serialize(),
-    error: function(data) {
-      toastr.error('Sorry; there was a problem adding picture-less observations.');
-    },
-    success: function(data) {
-      toastr.success('Picture-less observations have been created successfully. Reloading in 3 seconds…');
-      var reload_timeout = window.setTimeout(function(){
-        document.location.reload();
-      }, 3000);
-    }
+  };
+
+  // Send jq xhr request.
+  var jqxhr = $.ajax(request_params);
+
+  jqxhr.error(function(data) {
+    toastr.error('Sorry; there was a problem adding picture-less observations.');
+  });
+
+  jqxhr.success(function(data) {
+    toastr.success('Picture-less observations have been created successfully. Reloading in 3 seconds…');
+    var reload_timeout = window.setTimeout(function(){
+      document.location.reload();
+    }, 3000);
+  });
+
+  jqxhr.always(function( data ) {
+    toastr_info.remove();
   });
 }
 
 
 
 
-function set_up_field_progress(context) {
-  // console.log('Called: set_up_field_progress()');
-  var fields_count = 10;
+// function set_up_field_progress(context) {
+//   // console.log('Called: set_up_field_progress()');
+//   var fields_count = 10;
 
-  for (var i = 0; i < fields_count; i++) {
-    $('.progress-container', context).append('<div></div>');
-  };
+//   for (var i = 0; i < fields_count; i++) {
+//     $('.progress-container', context).append('<div></div>');
+//   };
 
-  var fields_active = 3;
+//   var fields_active = 3;
 
-  for (var i = 0; i < fields_active; i++) {
-    $('.progress-container > div:nth-of-type(' + (i + 1) + ')', context).addClass('active');
-  };
-}
+//   for (var i = 0; i < fields_active; i++) {
+//     $('.progress-container > div:nth-of-type(' + (i + 1) + ')', context).addClass('active');
+//   };
+// }
 
 
 
@@ -1073,6 +1014,7 @@ function set_up_field_progress(context) {
 function show_field_indicators(context, field_shown, button) {
   // console.log('field_shown: ', field_shown);
   // console.log('button: ', button);
+  // console.log('identifications_data: ', identifications_data);
 
   var field_name = button.attr('value');
   // console.log('field_name: ', field_name);
@@ -1080,8 +1022,10 @@ function show_field_indicators(context, field_shown, button) {
   // @todo Validate: Check that selectables data has been fetched (using AJAX).
 
   // Make sure .field-data elements are empty, and no .selectables are 'matched'.
-  $('.selectable').find('.field-data').html('');
-  $('.selectable').attr('data-is-match', 'false');
+  selectables.find('.field-data').html('');
+  selectables.attr('data-is-match', 'false');
+
+  var fields_with_data_count = 0; // How many selectables have data for this field.
 
   // console.log('field_name: ', field_name);
   if (field_name == 'no_fields') {
@@ -1091,83 +1035,166 @@ function show_field_indicators(context, field_shown, button) {
   else {
     // console.log('selectables_data: ', selectables_data);
 
-    // Correct field names; Convert button values to field names
-    switch (field_name) {
-      case 'identification':
-        field_name = 'identifications';
-        break;
-      case 'title':
-        field_name = 'title';
-        break;
-      default:
-        field_name = 'field_' + field_name;
-    }
+    // For each selectable
+    // console.log('selectables_map: ', selectables_map);
+    $.each(selectables_data, function( index, selectable_data ) {
+      // console.log( index, ": ", selectable_data );
 
-    $.each(selectables_map, function( nid, selectable ) {
-      // console.log( nid, ": ", selectable );
+      // console.log('selectable_data.attributes[field_name]: ',
+      //   selectable_data.attributes[field_name]);
 
-      var has_data = false;
-      if (selectables_data[nid].hasOwnProperty(field_name) && selectables_data[nid][field_name] != null && selectables_data[nid][field_name] != '') {
-        has_data = true;
+      var nid = selectable_data.id;
+
+      var selectable_prop_has_val =
+        selectable_data.attributes[field_name] != null
+        && selectable_data.attributes[field_name] != '';
+
+      var field_data = '';
+
+
+
+      // 'List' fields
+      var list_fields = {
+        beauty: 'field_beauty',
+        usefulness: 'field_usefulness'
+      };
+
+      var is_list_field = Object.keys(list_fields).indexOf(field_name) > -1;
+      if (is_list_field) {
+        // console.log('selectable_data: ', selectable_data);
+
+        var codes = selectable_data.attributes[field_name];
+        // console.log('codes: ', codes);
+
+        if (codes) {
+          $.each(codes, function(index, code) {
+            field_data += settings_of_setup['node_info']['fields_info']
+              [list_fields[field_name]]['allowed_values'][code];
+          });
+        }
+        // console.log('field_data: ', field_data);
       }
 
-      var language = 'und';
 
-      if (has_data) {
-        var field_data = '';
-        switch (field_name) {
 
-          case 'identifications':
-            var field_data = selectables_data[nid][field_name];
-            // Will be like: {nid: "Species (certainty)", ...}
+      // 'Taxonomy term reference' fields
+      var t_ref_fields = {
+        subject: 'field_subject',
+        tags: 'field_tags',
+        locality: 'field_locality'
+      };
 
-            var ids = [];
-            $.each(field_data, function (nid, value) {
-              var identification = value['species'] + '<br>(' + value['certainty'] + ')';
-              ids.push(identification);
-            });
-            field_data = ids.join(',<br>');
-            break;
+      var is_t_ref_field = Object.keys(t_ref_fields).indexOf(field_name) > -1;
+      if (is_t_ref_field) {
+        // console.log('selectable_data: ', selectable_data);
 
-          case 'title':
-            // console.log('data: ', selectables_data[nid][field_name]);
-            field_data = selectables_data[nid][field_name];
-            break;
-          default:
-            // console.log('data: ', selectables_data[nid][field_name]);
-            field_data = selectables_data[nid][field_name][language][0]['value'];
+        var tids = selectable_data.attributes[field_name];
+        // console.log('tids: ', tids);
+
+        if (tids) {
+          $.each(tids, function(index, tid) {
+            field_data += settings_of_setup['node_info']['fields_info']
+              [t_ref_fields[field_name]]['terms'][tid];
+          });
         }
+        // console.log('field_data: ', field_data);
+      }
 
+
+
+      else if (field_name == 'identifications') {
+        // console.log('identifications_data: ', identifications_data);
+        var identifications_indexes = identifications_map[parseInt(nid)];
+
+        if (typeof identifications_indexes != 'undefined') {
+
+          identifications_indexes.forEach(function(identifications_index, index) {
+            if (index != 0) {
+              field_data += ', ';
+            }
+            var identification = identifications_data[identifications_index];
+            var certainty_label = settings_of_setup['node_info']['fields_info']
+              ['field_certainty']['allowed_values']
+              [identification.attributes.certainty];
+
+            field_data
+              += identification.attributes.label
+              + " (" + certainty_label + ')';
+          });
+        }
+      }
+
+
+
+      else if (field_name == 'interactions') {
+        // console.log('interactions_data: ', interactions_data);
+        var interactions_indexes = interactions_map[parseInt(nid)];
+
+        if (typeof interactions_indexes != 'undefined') {
+
+          interactions_indexes.forEach(function(interaction_index, index) {
+            if (index != 0) {
+              field_data += ', ';
+            }
+            var interaction = interactions_data[interaction_index];
+            field_data
+              += interaction.attributes.label;
+          });
+        }
+      }
+
+
+
+      // Most ordinary fields
+      else if (selectable_prop_has_val) {
+        // console.log('selectable_data: ', selectable_data);
+
+        field_data = selectable_data.attributes[field_name];
+        // console.log('field_data: ', field_data);
+
+        // If it's not a string, turn it into a string
+        if (typeof field_data != 'string') {
+          field_data = JSON.stringify(field_data);
+        }
+        // console.log('field_data: ', field_data);
+      }
+
+
+
+      // If there is a value
+      if (field_data && field_data != '') {
+        // console.log('field_data: ', field_data);
+
+        fields_with_data_count++;
+
+        var selectable = Drupal.edit_selected.get_selectable_from_nid(nid);
         selectable.attr('data-is-match', 'true');
         selectable.find('.field-data').append(field_data);
       }
+
     });
 
-    // $('.selectable .field-data').append('data');
+    // selectables.find('.field-data').append('data');
 
     field_shown = field_name;
+  }
+
+  if (fields_with_data_count == 0 && field_name != 'no_fields') {
+    toastr.info('None of the selectables have a value for this field.');
   }
 
   // console.log('field_shown: ' + field_shown);
   return field_shown;
 }
 
-function refresh_current_field_indicator(context) {
-  var field_shown = null;
-  var radio_selected = $('#show-fields-radios input[type="radio"]:checked', context);
-  field_shown = show_field_indicators(context, field_shown, radio_selected);
-}
-
 
 
 function set_up_keypress_mgmt(context) {
 
-  var current_page = Drupal.settings.edit_selected.current_page;
-  // console.log('current_page: ', current_page);
-
   $(document, context).bind('keydown', 'e',         handle_keypress_edit);
 
-  if (current_page == 'picture-info') {
+  if (Drupal.edit_selected.is_page('picture_info')
+    || Drupal.edit_selected.is_page('upload')) {
     Drupal.casabio.add_keypress_info(
       "<tr><td><strong>left</strong> : </td><td>Previous picture</td></tr>"
       + "<tr><td><strong>right</strong> : </td><td>Next picture</td></tr>"
@@ -1177,7 +1204,7 @@ function set_up_keypress_mgmt(context) {
     );
   }
 
-  if (current_page == 'observation-info') {
+  if (Drupal.edit_selected.is_page('observation_info')) {
     Drupal.casabio.add_keypress_info(
       "<tr><td><strong>left</strong> : </td><td>Previous observation</td></tr>"
       + "<tr><td><strong>right</strong> : </td><td>Next observation</td></tr>"
@@ -1193,11 +1220,11 @@ function set_up_keypress_mgmt(context) {
 }
 
 function handle_keypress_edit() {
-  $(edit_form_selector).dialog('open');
+  edit_form.dialog('open');
 }
 
 function handle_keypress_identify() {
-  $(identify_form_selector).dialog('open');
+  identify_form.dialog('open');
 }
 
 // Not needed; jQuery ui Dialogs close with 'esc' automatically.

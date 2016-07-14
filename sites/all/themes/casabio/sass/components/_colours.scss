@@ -32,18 +32,23 @@ $colour-region-dark-links: tint( $colour-links, 80% );
 		&.active,
 		&[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
 			font-weight: bold;
+			color: white;
 		}
 	}
 
 	// Menu
 	.menu {
-		a{
+		a {
 			&:hover,
 			&:focus {
 				background-color: rgba( black, 0.1 );
 			}
 			&:active { /* a link when it is 'clicked' on */
 				background-color: rgba( black, 0.2 );
+			}
+			&.active,
+			&[aria-selected="true"] {
+				// background-color: rgba( black, 0.1 );
 			}
 		}
 	}

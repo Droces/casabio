@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Content type: CREW species observation feature.
+ */
+
+include_once 'content_type_crew_species_observation.features.inc';

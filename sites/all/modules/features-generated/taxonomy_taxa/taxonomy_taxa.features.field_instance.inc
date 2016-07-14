@@ -68,7 +68,61 @@ function taxonomy_taxa_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 31,
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-taxa-field_etymology'.
+  $field_instances['taxonomy_term-taxa-field_etymology'] = array(
+    'bundle' => 'taxa',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Eg. From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 9,
+      ),
+      'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'small' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_etymology',
+    'label' => 'Etymology',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 34,
     ),
   );
 
@@ -122,7 +176,56 @@ function taxonomy_taxa_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 37,
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-taxa-field_localities'.
+  $field_instances['taxonomy_term-taxa-field_localities'] = array(
+    'bundle' => 'taxa',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The areas in which this taxon occurs.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'small' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_localities',
+    'label' => 'Localities',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 41,
     ),
   );
 
@@ -185,6 +288,57 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-taxa-field_pictures'.
+  $field_instances['taxonomy_term-taxa-field_pictures'] = array(
+    'bundle' => 'taxa',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 8,
+      ),
+      'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'small' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_pictures',
+    'label' => 'Pictures',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 40,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-taxa-field_range'.
   $field_instances['taxonomy_term-taxa-field_range'] = array(
     'bundle' => 'taxa',
@@ -208,7 +362,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
           'empty_fields_handler' => '',
         ),
         'type' => 'geofield_wkt',
-        'weight' => 7,
+        'weight' => 6,
       ),
       'field_guide' => array(
         'label' => 'above',
@@ -245,7 +399,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'showInputField' => 0,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 38,
+      'weight' => 6,
     ),
   );
 
@@ -257,15 +411,16 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
-          'link' => FALSE,
+          'links' => 0,
+          'view_mode' => 'small',
         ),
-        'type' => 'entityreference_label',
-        'weight' => 8,
+        'type' => 'entityreference_entity_view',
+        'weight' => 3,
       ),
       'field_guide' => array(
         'label' => 'above',
@@ -289,12 +444,23 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'inline_entity_form',
+      'module' => 'entityreference',
       'settings' => array(
         'fields' => array(),
-        'type_settings' => array(),
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+        'type_settings' => array(
+          'allow_existing' => FALSE,
+          'allow_new' => 0,
+          'delete_references' => 0,
+          'label_plural' => 'nodes',
+          'label_singular' => 'node',
+          'match_operator' => 'CONTAINS',
+          'override_labels' => 0,
+        ),
       ),
-      'type' => 'inline_entity_form_single',
+      'type' => 'entityreference_autocomplete',
       'weight' => 39,
     ),
   );
@@ -310,7 +476,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'field_guide' => array(
         'label' => 'inline',
@@ -353,7 +519,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 34,
+      'weight' => 4,
     ),
   );
 
@@ -403,7 +569,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 32,
+      'weight' => 3,
     ),
   );
 
@@ -414,12 +580,17 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
   t('A Life Science IDentifier (LSID) is the globally-unique code that is a reference to an authoritative source of information on this taxon. 
 It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[version].');
   t('Common names');
+  t('Eg. From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’.');
+  t('Etymology');
   t('LSID');
+  t('Localities');
   t('Number of identifications');
+  t('Pictures');
   t('Range');
   t('Rank');
   t('Representative picture');
   t('Scientific name');
+  t('The areas in which this taxon occurs.');
   t('The non-scientific names that people typically call this species / taxon. There may be several names in different languages.');
   t('The number of observations that have been identified as being this species.');
 

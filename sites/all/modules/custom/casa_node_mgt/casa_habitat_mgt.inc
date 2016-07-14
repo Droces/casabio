@@ -19,9 +19,7 @@
  */
 function habitat_form_block_view() {
 
-  // set_error_handler("exception_error_handler");
-
-  module_load_include('inc', 'node', 'node.pages');  
+  module_load_include('inc', 'node', 'node.pages');
 
   $content = "";
 

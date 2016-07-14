@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+
+/**
+ * hook_entity_property_info_alter().
+ */
+// function casa_rest_entity_property_info_alter(&$info) {
+//   dpm($info, '$info');
+//   dpm(field_info_fields(), 'field_info_fields()');
+// }
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_menu_alter().
+ */
+// function casa_rest_menu_alter(&$items) {
+//   dpm($items, '$items');
+// }
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_init().
+ */
+function casa_rest_init() {
+  // dpm('Called: casa_rest_init()');
+
+  $observations_field_names_map
+    = Drupal\casa_rest\Plugin\resource\observations\Observations__0_1::$field_names_map;
+  $pictures_field_names_map
+    = Drupal\casa_rest\Plugin\resource\pictures\Pictures__0_1::$field_names_map;
+
+  // Pass this array to the JS
+  drupal_add_js(array('API' => array(
+    'path' => 'services',
+    'observations_field_names_map' => $observations_field_names_map,
+    'pictures_field_names_map' => $pictures_field_names_map,
+  ),), 'setting');
+}

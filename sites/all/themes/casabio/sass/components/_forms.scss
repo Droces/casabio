@@ -1,6 +1,6 @@
 /**
  * @file
- * 
+ *
  * File name       Components
  * For site		Devoted
  * Created by		Touchdreams
@@ -188,7 +188,8 @@ form {
 				@extend .hidden;
 			}
 
-			$colour-selectable-input: scale-saturation( $colour-orange, -50% );
+			// $colour-selectable-input: scale-saturation( $colour-orange, -50% );
+			$colour-selectable-input: $colour-orange;
 			label {
 				display: block;
 				font-size: 0.9em;
@@ -204,7 +205,7 @@ form {
 				}
 				&:not(:checked) + label:hover,
 				&:not(:checked) + label:focus {
-					background: rgba( $colour-selectable-input, 0.2);
+					background: rgba($colour-selectable-input, 0.2);
 					@include transition( 0.2s );
 				}
 				&[disabled] + label,
@@ -222,5 +223,20 @@ form {
 form#views-form-species-reference-selector-widget-default {
 	.form-actions {
 		display: none;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+.node-observation-form {
+	.map {
+		height: 400px;
 	}
 }

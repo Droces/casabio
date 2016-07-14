@@ -1,0 +1,14 @@
+name = Views: Entity reference widgets
+description = Views powering field widgets for entity reference fields
+core = 7.x
+package = Features: Views
+version = 7.x-1.0
+dependencies[] = entityreference
+dependencies[] = entityreference_view_widget
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = habitat_reference_selector
+features[views_view][] = species_reference_selector_widget
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features-generated

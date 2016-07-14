@@ -26,7 +26,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -24,
+        'weight' => -29,
       ),
       'petal' => array(
         'region' => '',
@@ -37,6 +37,33 @@ function blocks_views_default_fe_block_settings() {
     ),
     'title' => '',
     'visibility' => 1,
+  );
+
+  $export['views-1098a3e77f89ec86c72349ecded49ae1'] = array(
+    'cache' => -1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => '1098a3e77f89ec86c72349ecded49ae1',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
   );
 
   $export['views-2588ed9bc64b6686115eba5460025e79'] = array(
@@ -104,8 +131,8 @@ function blocks_views_default_fe_block_settings() {
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'casabio',
         'weight' => -14,
       ),
@@ -120,6 +147,60 @@ function blocks_views_default_fe_block_settings() {
     'visibility' => 1,
   );
 
+  $export['views-73a7e487b9876f5e0e74dfcec31c936b'] = array(
+    'cache' => -1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => '73a7e487b9876f5e0e74dfcec31c936b',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
+  $export['views-890d731c11f548f12a8b03e269efe7b9'] = array(
+    'cache' => -1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => '890d731c11f548f12a8b03e269efe7b9',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
   $export['views-900575682474a0a9e2a34f4c80141f56'] = array(
     'cache' => -1,
     'css_class' => '',
@@ -131,8 +212,8 @@ function blocks_views_default_fe_block_settings() {
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'casabio',
         'weight' => -13,
       ),
@@ -188,7 +269,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -18,
+        'weight' => -24,
       ),
       'petal' => array(
         'region' => '',
@@ -282,33 +363,6 @@ function blocks_views_default_fe_block_settings() {
     'visibility' => 0,
   );
 
-  $export['views-observations-block_1'] = array(
-    'cache' => -1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'observations-block_1',
-    'module' => 'views',
-    'node_types' => array(),
-    'pages' => '',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'casabio',
-        'weight' => 0,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 6,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 0,
-  );
-
   $export['views-observations_of_taxon-block'] = array(
     'cache' => -1,
     'css_class' => '',
@@ -323,7 +377,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -12,
+        'weight' => -20,
       ),
       'petal' => array(
         'region' => '',
@@ -350,7 +404,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -19,
+        'weight' => -26,
       ),
       'petal' => array(
         'region' => '',
@@ -377,7 +431,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -28,
+        'weight' => -31,
       ),
       'petal' => array(
         'region' => '',
@@ -417,6 +471,33 @@ function blocks_views_default_fe_block_settings() {
     'visibility' => 1,
   );
 
+  $export['views-user_content_summary-block_1'] = array(
+    'cache' => -1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => 'user_content_summary-block_1',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => 'users*',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
   $export['views-user_observations-block_1'] = array(
     'cache' => -1,
     'css_class' => '',
@@ -431,7 +512,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -16,
+        'weight' => -22,
       ),
       'petal' => array(
         'region' => '',
@@ -458,7 +539,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -15,
+        'weight' => -21,
       ),
       'petal' => array(
         'region' => '',
@@ -485,7 +566,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -17,
+        'weight' => -23,
       ),
       'petal' => array(
         'region' => '',

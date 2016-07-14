@@ -43,9 +43,9 @@
 ?>
 <div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>">
 
-  <?php /*if (isset($content['locations'])): ?>
-    <p><?php print render($content['locations']); ?></p>
-  <?php endif;*/ ?>
+  <?php if (isset($content['term_block_link'])): ?>
+    <?php print render($content['term_block_link']); ?>
+  <?php endif; ?>
 
   <?php if (!$page): ?>
     <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a></h2>

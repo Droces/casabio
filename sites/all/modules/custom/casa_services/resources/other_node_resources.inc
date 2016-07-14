@@ -139,6 +139,23 @@ function _other_node_resources_definition() {
             ),
           ),
         ),
+        'pictures' => array(
+          'help' => "View a list of a collection's pictures",
+          'file' => $other_node_resources_file,
+          'callback' => '_collections_resource_pictures',
+          'access callback' => '_node_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+          'args' => array(
+            array(
+              'name' => 'nid',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => "The nid of the collection whose pictures you'd like a list of",
+            ),
+          ),
+        ),
       ),
     ),
 
@@ -174,6 +191,27 @@ function _other_node_resources_definition() {
 
       ),
     ),
+
+
+    // ========================================================================
+    //                                                   Interactions
+    'interactions' => array(
+      'operations' => array(
+
+        // --------------------------------------------- GET
+        'retrieve' => array(
+          'file' => $other_node_resources_file,
+          'callback' => '_interactions_resource_retrieve',
+          'args' => array(
+            $node_operation_args['nid'],
+          ),
+          'access callback' => '_node_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+        ),
+      ),
+    ),
+
   );
 
   return $other_node_resources;
@@ -249,6 +287,8 @@ function _collections_resource_observations($nid) {
   }
   // dpm($observations, 'observations');
 
+
+
   // Include referencing entities
   foreach ($observations as $key => $observation) {
 
@@ -268,7 +308,21 @@ function _collections_resource_observations($nid) {
     foreach ($comm_ids as $nid => $comm_id_summary) {
       $observations[$key] -> community_identifications[$nid] = create_comm_id_representation($nid);
     }
+
+    // Interactions
+
+    $interactions = get_referencing_nodes(
+      'interaction',
+      'field_observation',
+      'target_id',
+      $key);
+    // $observations[$key]->interactions = $interactions;
+
+    foreach ($interactions as $nid => $interaction_summary) {
+      $observations[$key] -> interactions[$nid] = $interaction_summary;
+    }
   }
+
 
 
   foreach ($observations as $nid => $observation) {
@@ -292,6 +346,76 @@ function _collections_resource_observations($nid) {
   return $observations;
 }
 
+
+
+/**
+ * Sets param $parameters['type'] = 'collection'; then calls _node_resource_index().
+ *
+ * @see _node_resource_index()
+ */
+function _collections_resource_pictures($nid) {
+  // dpm("Called: _collections_resource_pictures");
+  $type = 'picture';
+  $field1 = 'field_collection';
+  $column1 = 'target_id';
+  $nid1 = $nid;
+
+  $output = array();
+
+  $pictures = get_referencing_nodes($type, $field1, $column1, $nid1);
+  // dpm($pictures, 'pictures');
+
+  // Replace each observation 'representation' with the real observation object
+  foreach ($pictures as $key => $picture) {
+    $pictures[$key] = node_load($key);
+  }
+  // dpm($pictures, 'pictures');
+
+  // // Include referencing entities
+  // foreach ($pictures as $key => $picture) {
+
+  //   // Identifications
+
+  //   $ids = get_identifications_refing_observation('identification', $key);
+  //   foreach ($ids as $nid => $identification_summary) {
+  //     $pictures[$key] -> identifications[$nid] = create_id_representation($nid);
+  //   }
+  //   // $pictures[$key]->identifications = $ids;
+
+  //   // Community identifications
+
+  //   $comm_ids = get_identifications_refing_observation('identification_community', $key);
+  //   // $pictures[$key]->community_identifications = $comm_ids;
+
+  //   foreach ($comm_ids as $nid => $comm_id_summary) {
+  //     $pictures[$key] -> community_identifications[$nid] = create_comm_id_representation($nid);
+  //   }
+  // }
+
+
+  foreach ($pictures as $nid => $picture) {
+    // ---------------------------------- Copied from Services' _node_resource_retrieve()
+    if ($picture) {
+      $uri = entity_uri('node', $picture);
+      $pictures[$nid]->path = url($uri['path'], array('absolute' => TRUE));
+      // Unset uri as it has complete entity and this
+      // cause never ending recursion in rendering.
+      unset($pictures[$nid]->uri);
+    }
+    //Lets check field_permissions
+    $pictures[$nid] = services_field_permissions_clean('view', 'node', $pictures[$nid]);
+    // return $picture;
+    // ----------------------------------
+  }
+
+  drupal_add_http_header('results-count', count($pictures));
+
+  // dpm($pictures, 'pictures');
+  return $pictures;
+}
+
+
+
 /**
  * Format an identification as {'species': $species, 'certainty': $certainty}
  */
@@ -314,6 +438,8 @@ function create_id_representation($nid) {
     'certainty' => $certainty
   );
 }
+
+
 
 /**
  * Format a community identification as {'species': $species, 'reliability': $reliability}
@@ -378,6 +504,31 @@ function _identifications_resource_create($node) {
 
   module_load_include('inc', 'services', 'resources/node_resource');
   $node = _node_resource_create($node);
+
+  return $node;
+}
+
+
+
+
+
+/**
+ * Checks that param $nid is the nid of a collection; if it is, then calls _node_resource_retrieve().
+ *
+ * @see _node_resource_retrieve()
+ */
+function _interactions_resource_retrieve($nid) {
+
+  $node = node_load($nid);
+
+  // If the node isn't an observation
+  if($node->type != 'interaction') {
+    services_error("Node " . $nid . " is not an interaction.", 406); // 406: Not Acceptable
+    return FALSE;
+  }
+
+  module_load_include('inc', 'services', 'resources/node_resource');
+  $node = _node_resource_retrieve($nid);
 
   return $node;
 }

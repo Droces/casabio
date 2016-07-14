@@ -37,8 +37,8 @@
 // -----------------------------------------------------------------------------
 //                                                  Custom
 
+// This is a modern replacement for 'clearfix'
 @mixin group {
-  // This is a modern replacement for 'clearfix'
   &:after {
     content: "";
     display: table;
@@ -47,6 +47,12 @@
 // @mixin clearfix {
 //   @include group;
 // }
+
+@mixin border-radius($radius) {
+  @include border-top-radius($radius);
+  @include border-bottom-radius($radius);
+}
+
 @mixin ellipsis {
   text-overflow: ellipsis;
 

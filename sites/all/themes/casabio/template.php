@@ -59,12 +59,24 @@ function casabio_preprocess_page(&$variables, $hook) {
 }
 // */
 
+function casabio_process_page(&$variables, $hook) {
+  // dpm($variables, 'variables');
+
+  // If this is a user profile page, and there is a title variable
+  if (in_array('page__user', $variables['theme_hook_suggestions'])
+    && array_key_exists('title', $variables))  {
+
+    // Unset title; it is provided directly to the user-profile template
+    $variables['title'] = '';
+  }
+}
+
 /**
  * Implements hook_preprocess_node(). Overrides or inserts variables into the node templates.
  */
 function casabio_preprocess_node(&$variables, $hook) {
   // dpm($variables, 'variables');
-  
+
   // // Optionally, run node-type-specific preprocess functions, like
   // // casabio_preprocess_node_page() or casabio_preprocess_node_story().
   // $function = __FUNCTION__ . '_' . $variables['node']->type;
@@ -96,10 +108,11 @@ function casabio_preprocess_node(&$variables, $hook) {
 
     $variables['submitted'] = "by " . $variables['name'] . ", " . ago($variables['created']);
 
-    // Don't display 'submitted info' of the following node types
+    // Display a 'content type' label inside these node teasers
     $node_types_with_pretitle = array(
       'observation',
       'identification',
+      'interaction',
     );
     if (in_array($variables['type'], $node_types_with_pretitle)) {
       $variables['pretitle'] = $variables['type'];
@@ -125,21 +138,43 @@ function casabio_preprocess_node(&$variables, $hook) {
 
 
 /**
+ * Implements template_preprocess_user_profile().
+ */
+function casabio_preprocess_user_profile(&$variables, $hook) {
+  // dpm($variables, 'variables');
+
+  // 'user_picture'
+  // 'field_collector_code'
+  // 'field_full_name'
+  // 'field_reliability'
+  // 'summary'
+
+  $variables['user_profile']['edit_url'] = array(
+    '#markup' => url('user/' . $variables['id'] . '/edit'),
+  );
+  $variables['user_profile']['username'] = array(
+    '#markup' => $variables['user']->name,
+  );
+}
+
+
+
+/**
  * Copied from andrew macrobert's comment on php.net/manual/en/function.time.php.
  */
 function ago($timestamp){
   $difference = time() - $timestamp;
   $periods = array("second", "minute", "hour", "day", "week", "month", "years", "decade");
   $lengths = array("60","60","24","7","4.35","12","10");
-  
+
   for($j = 0; $difference >= $lengths[$j]; $j++)
     $difference /= $lengths[$j];
-  
+
   $difference = round($difference);
-  
+
   if($difference != 1)
     $periods[$j].= "s";
-  
+
   $text = "$difference $periods[$j] ago";
   return $text;
 }
@@ -152,7 +187,7 @@ function casabio_preprocess_field(&$variables, $hook) {
 
   // Remove the clearfix class from all fields.
   // 'Self-clearing' will be handled by CSS directly
-  // The 'clearfix' class is added to 'inline-label' fields 
+  // The 'clearfix' class is added to 'inline-label' fields
   // by the fields module's template_preprocess_field() function
   foreach ($variables['classes_array'] as $key => $class) {
     if ($class == 'clearfix') {
@@ -160,12 +195,29 @@ function casabio_preprocess_field(&$variables, $hook) {
     }
   }
 
-  // if (in_array('field__image', $variables['theme_hook_suggestions'])) {
-  //   $variables['element'][0]['#attributes'] = array(
-  //     'class' => array('test'),
-  //     'target' => '_blank',
-  //   );
-  // }
+  // Make raw image links open in a new tab
+
+  if ($variables['field_type_css'] == 'image') {
+    // dpm($variables, 'variables');
+
+    foreach ($variables['items'] as $index => $timestamp) {
+
+      // If this field is linked.
+      if($variables['items'][$index]['#path']) {
+
+        // If the image link points to the file directly
+        $is_file_link = (strpos($variables['items'][$index]['#path']['path'], '/files/') !== FALSE);
+
+        if ($is_file_link) {
+          $variables['items'][$index]['#path']['options'] = array(
+            'attributes' => array(
+              'target' => '_blank',
+            ),
+          );
+        }
+      }
+    }
+  }
   // dpm($variables, 'variables after');
 }
 
@@ -180,7 +232,7 @@ function casabio_preprocess_field(&$variables, $hook) {
  *   The name of the template being rendered ("comment" in this case.)
  */
 function casabio_preprocess_comment(&$variables, $hook) {
-  // dpm($variables, 'comment variables');
+  // dpm($variables, '$variables');
   // dpm($variables['comment'], 'comment object');
   // $variables['sample_variable'] = t('Lorem ipsum.');
   $variables['created'] = format_date($variables['comment']->created, 'custom', 'd M');
@@ -188,6 +240,16 @@ function casabio_preprocess_comment(&$variables, $hook) {
   $variables['pubdate'] = '<time pubdate datetime="' . format_date($variables['comment']->created, 'custom', 'c') . '">' . $variables['created'] . '</time>';
   $variables['submitted'] = t('!username <br />!datetime', array('!username' => $variables['author'], '!datetime' => $variables['pubdate']));
   // $variables['submitted'] = "by " . $variables['author'] . ", " . ago($variables['created']);
+}
+
+
+
+/**
+ * Override or insert variables into the search result template.
+ */
+function casabio_preprocess_search_result(&$variables) {
+  // dpm($variables, '$variables');
+  $variables['type'] = $variables['result']['type'];
 }
 
 /**
@@ -261,8 +323,13 @@ function group_fields(&$variables, $fields, $classes = '', $weight = '') {
 
 
 
-
+/**
+ * Implements theme_status_messages(). Provides markup for a status messages.
+ */
 function casabio_status_messages($variables) {
+
+  // Include a 'remove' button.
+
   $display = $variables['display'];
   $output = '';
   $remove_button = '<button class="right" data-action="remove">×</button>';
@@ -297,6 +364,9 @@ function casabio_status_messages($variables) {
 
 
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
 function casabio_form_comment_node_observation_form_alter(&$form, &$form_state, $form_id) {
   // dpm($form, 'form');
   // module_load_include('inc', 'casa_node_mgt', 'node_forms');
@@ -309,4 +379,41 @@ function casabio_form_comment_node_observation_form_alter(&$form, &$form_state, 
 
   $form['comment_body']['und'][0]['#rows'] = 2;
   $form['comment_body']['und'][0]['#attributes']['placeholder'] = 'Add a comment';
+}
+
+
+
+
+// These 2 functions move the primary page tabs into a contextual menu
+// See https://www.drupal.org/node/951088#comment-3987026
+// Requires class 'contextual-links-region' to be put on .content in page.tpl.php
+
+/**
+ * Implements theme_menu_local_task().
+ * "Returns HTML for a single local task link."
+ */
+function casabio_menu_local_task($variables) {
+  $link = $variables['element']['#link'];
+  $link['localized_options']['html'] = TRUE;
+  $link_markup = l($link['title'], $link['href'], $link['localized_options']);
+  return '<li>' . $link_markup . '</li>' . "\n";
+}
+/**
+ * Implements theme_menu_local_tasks().
+ * "Returns HTML for primary and secondary local tasks."
+ */
+function casabio_menu_local_tasks($variables) {
+  $output = '';
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#prefix'] =
+      '<div class="contextual-links-wrapper"><ul class="contextual-links">';
+    $variables['primary']['#suffix'] = '</ul></div>';
+    $output .= drupal_render($variables['primary']);
+  }
+  if (!empty($variables['secondary'])) {
+    $variables['secondary']['#prefix'] = '<ul class="tabs secondary clearfix">';
+    $variables['secondary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['secondary']);
+  }
+  return $output;
 }

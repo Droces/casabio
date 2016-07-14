@@ -15,7 +15,7 @@ function content_type_identification_field_default_field_instances() {
     'bundle' => 'identification',
     'default_value' => array(
       0 => array(
-        'value' => 2,
+        'value' => 6,
       ),
     ),
     'deleted' => 0,
@@ -30,6 +30,12 @@ function content_type_identification_field_default_field_instances() {
         ),
         'type' => 'list_default',
         'weight' => 1,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -60,7 +66,7 @@ function content_type_identification_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -84,6 +90,12 @@ function content_type_identification_field_default_field_instances() {
         ),
         'type' => 'list_default',
         'weight' => 5,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -110,7 +122,7 @@ function content_type_identification_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 34,
+      'weight' => 4,
     ),
   );
 
@@ -130,6 +142,12 @@ function content_type_identification_field_default_field_instances() {
         ),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 2,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -168,7 +186,7 @@ function content_type_identification_field_default_field_instances() {
         'view_mode' => 'text',
       ),
       'type' => 'entityreference_view_widget',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -189,6 +207,12 @@ function content_type_identification_field_default_field_instances() {
         ),
         'type' => 'entityreference_label',
         'weight' => 4,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -219,7 +243,7 @@ function content_type_identification_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 33,
+      'weight' => 1,
     ),
   );
 

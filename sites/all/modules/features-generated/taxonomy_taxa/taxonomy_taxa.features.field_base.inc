@@ -31,6 +31,27 @@ function taxonomy_taxa_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_etymology'.
+  $field_bases['field_etymology'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_etymology',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_identifications_count'.
   $field_bases['field_identifications_count'] = array(
     'active' => 1,
@@ -44,6 +65,32 @@ function taxonomy_taxa_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_localities'.
+  $field_bases['field_localities'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_localities',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'locality',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_lsid'.
@@ -65,6 +112,41 @@ function taxonomy_taxa_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_pictures'.
+  $field_bases['field_pictures'] = array(
+    'active' => 1,
+    'cardinality' => 5,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_pictures',
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array(
+          'picture' => 'picture',
+        ),
+      ),
+      'target_type' => 'node',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
   );
 
   // Exported field_base: 'field_range'.
@@ -132,19 +214,20 @@ function taxonomy_taxa_field_default_field_bases() {
     'locked' => 0,
     'module' => 'entityreference',
     'settings' => array(
-      'handler' => 'views',
+      'handler' => 'base',
       'handler_settings' => array(
         'behaviors' => array(
           'views-select-list' => array(
             'status' => 0,
           ),
         ),
-        'view' => array(
-          'args' => array(
-            0 => 'test_argument',
-          ),
-          'display_name' => 'entityreference_1',
-          'view_name' => 'image_of_taxon_reference_widget',
+        'sort' => array(
+          'direction' => 'ASC',
+          'property' => 'title',
+          'type' => 'property',
+        ),
+        'target_bundles' => array(
+          'picture' => 'picture',
         ),
       ),
       'target_type' => 'node',

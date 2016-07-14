@@ -33,7 +33,7 @@
         <?php endif; ?>
       </div>
     <?php endif; ?>
-    
+
 
     <!-- <div class="icons">
       <span class='icon toggle'>Menu<img /></span>
@@ -88,7 +88,7 @@
   </div></div>
 
 
-  <div id="main"><div class="content">
+  <div id="main"><div class="content contextual-links-region">
 
     <?php
       // Render the sidebars to see if there's anything in them.

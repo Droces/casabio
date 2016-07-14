@@ -25,24 +25,51 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
+        'weight' => 10,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 12,
+      ),
+      'search_result' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
         'weight' => 12,
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => 'No description has been provided.',
-          'empty_fields_handler' => 'EmptyFieldText',
-          'trim_length' => 60,
-        ),
-        'type' => 'text_trimmed',
-        'weight' => 6,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'node',
@@ -88,24 +115,53 @@ function content_type_observation_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
+        'weight' => 4,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 1,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
         'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'inline',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '<div class="field-none">Not in a collection.</div>',
-          'empty_fields_handler' => 'EmptyFieldText',
-          'link' => 1,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 2,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
       ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'node',
@@ -132,15 +188,45 @@ function content_type_observation_field_default_field_instances() {
   // Exported field_instance: 'node-observation-field_count'.
   $field_instances['node-observation-field_count'] = array(
     'bundle' => 'observation',
-    'default_value' => array(
-      0 => array(
-        'value' => 1,
-      ),
-    ),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => 'The number of animals / plants / specimens seen at this location.',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 6,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'inline',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 11,
+      ),
+      'search_result' => array(
         'label' => 'inline',
         'module' => 'number',
         'settings' => array(
@@ -165,6 +251,12 @@ function content_type_observation_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'node',
@@ -207,6 +299,44 @@ function content_type_observation_field_default_field_instances() {
           'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
+        'weight' => 3,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+        ),
+        'type' => 'date_default',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+        ),
+        'type' => 'date_default',
         'weight' => 0,
       ),
       'teaser' => array(
@@ -223,13 +353,19 @@ function content_type_observation_field_default_field_instances() {
           'show_remaining_days' => 0,
         ),
         'type' => 'date_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'node',
@@ -269,6 +405,32 @@ function content_type_observation_field_default_field_instances() {
     'description' => 'For observations are from an external source: The unique ID code used to identify this observation in the source’ database',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 9,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 8,
+      ),
+      'search_result' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(
@@ -289,6 +451,12 @@ function content_type_observation_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'node',
@@ -315,84 +483,10 @@ function content_type_observation_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-observation-field_identifications'.
-  $field_instances['node-observation-field_identifications'] = array(
-    'bundle' => 'observation',
-    'default_value' => array(),
-    'default_value_function' => '',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'links' => 0,
-          'view_mode' => 'teaser',
-        ),
-        'type' => 'entityreference_entity_view',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '<div class="field-none">Not identified yet.</div>',
-          'empty_fields_handler' => 'EmptyFieldText',
-          'links' => 0,
-          'view_mode' => 'text',
-        ),
-        'type' => 'entityreference_entity_view',
-        'weight' => 1,
-      ),
-      'text' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_identifications',
-    'label' => 'Identifications',
-    'required' => 0,
-    'settings' => array(
-      'behaviors' => array(
-        'prepopulate' => array(
-          'status' => 0,
-        ),
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'inline_entity_form',
-      'settings' => array(
-        'fields' => array(),
-        'match_operator' => 'CONTAINS',
-        'path' => '',
-        'size' => 60,
-        'type_settings' => array(
-          'allow_existing' => 0,
-          'allow_new' => 1,
-          'delete_references' => 1,
-          'label_plural' => 'identifications',
-          'label_singular' => 'identification',
-          'match_operator' => 'CONTAINS',
-          'override_labels' => 1,
-        ),
-      ),
-      'type' => 'inline_entity_form',
-      'weight' => 6,
-    ),
-  );
-
   // Exported field_instance: 'node-observation-field_locality'.
   $field_instances['node-observation-field_locality'] = array(
     'bundle' => 'observation',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => 'The area of land that the observation was made within.',
     'display' => array(
@@ -406,7 +500,13 @@ function content_type_observation_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
       ),
-      'teaser' => array(
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(
@@ -416,11 +516,33 @@ function content_type_observation_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
       ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'node',
@@ -432,30 +554,55 @@ function content_type_observation_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 0,
-      'module' => 'taxonomy',
+      'module' => 'options',
       'settings' => array(
         'autocomplete_path' => 'taxonomy/autocomplete',
         'size' => 60,
       ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
+      'type' => 'options_select',
+      'weight' => 6,
     ),
   );
 
   // Exported field_instance: 'node-observation-field_location'.
   $field_instances['node-observation-field_location'] = array(
     'bundle' => 'observation',
-    'default_value' => array(
-      0 => array(
-        'dataType' => 'WKT',
-        'geom' => 'GEOMETRYCOLLECTION EMPTY',
-        'input_format' => 'wkt',
-      ),
-    ),
+    'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The place where this observation took place. This overrides the location of the collection, since it is more specific.',
+    'description' => 'The place where this observation took place. This overrides the location of the collection, since it is more specific.
+NB. Widget type needs to be WKT for the API to function correctly.',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'openlayers_geofield',
+        'settings' => array(
+          'data' => 'full',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
+        ),
+        'type' => 'openlayers_geofield',
+        'weight' => 1,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'hidden',
+        'module' => 'openlayers_geofield',
+        'settings' => array(
+          'data' => 'full',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
+        ),
+        'type' => 'openlayers_geofield',
+        'weight' => 3,
+      ),
+      'search_result' => array(
         'label' => 'hidden',
         'module' => 'openlayers_geofield',
         'settings' => array(
@@ -479,6 +626,12 @@ function content_type_observation_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'thumbnail' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
     ),
     'entity_type' => 'node',
     'field_name' => 'field_location',
@@ -489,126 +642,10 @@ function content_type_observation_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'openlayers_geofield',
-      'settings' => array(
-        'allow_edit' => 1,
-        'data_storage' => 'single',
-        'feature_types' => array(
-          'path' => 0,
-          'point' => 'point',
-          'polygon' => 0,
-        ),
-        'openlayers_map' => 'contribute_mo_observation_geofield_widget',
-        'showInputField' => 0,
-      ),
-      'type' => 'openlayers_geofield',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'node-observation-field_mls_probability'.
-  $field_instances['node-observation-field_mls_probability'] = array(
-    'bundle' => 'observation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The likelihood that ‘most likely species’ is correct; i.e. that this observation has been is correctly identified. This is calculated automatically.',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 14,
-      ),
-      'teaser' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
-      ),
-      'text' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_mls_probability',
-    'label' => 'MLS probability',
-    'required' => 0,
-    'settings' => array(
-      'max' => 1,
-      'min' => 0,
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'number',
+      'module' => 'geofield',
       'settings' => array(),
-      'type' => 'number',
-      'weight' => 8,
-    ),
-  );
-
-  // Exported field_instance: 'node-observation-field_most_likely_species'.
-  $field_instances['node-observation-field_most_likely_species'] = array(
-    'bundle' => 'observation',
-    'default_value' => NULL,
-    'default_value_function' => '',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'link' => 1,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 10,
-      ),
-      'teaser' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
-      ),
-      'text' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_most_likely_species',
-    'label' => 'Most likely species',
-    'required' => 0,
-    'settings' => array(
-      'behaviors' => array(
-        'prepopulate' => array(
-          'status' => 0,
-        ),
-        'taxonomy-index' => array(
-          'status' => TRUE,
-        ),
-      ),
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'entityreference',
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'path' => '',
-        'size' => 60,
-      ),
-      'type' => 'entityreference_autocomplete',
-      'weight' => 7,
+      'type' => 'geofield_wkt',
+      'weight' => 4,
     ),
   );
 
@@ -620,6 +657,24 @@ function content_type_observation_field_default_field_instances() {
     'description' => 'In the form ‘CBO0000001’',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 14,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 15,
+      ),
+      'search_result' => array(
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
@@ -636,6 +691,12 @@ function content_type_observation_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 11,
       ),
     ),
     'entity_type' => 'node',
@@ -677,6 +738,32 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
+        'weight' => 2,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 9,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
         'weight' => 9,
       ),
       'teaser' => array(
@@ -687,13 +774,19 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'node',
@@ -738,6 +831,36 @@ function content_type_observation_field_default_field_instances() {
           'view_mode' => 'medium',
         ),
         'type' => 'entityreference_entity_view',
+        'weight' => 0,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'links' => 0,
+          'view_mode' => 'medium',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 2,
+      ),
+      'search_result' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'links' => 0,
+          'view_mode' => 'medium',
+        ),
+        'type' => 'entityreference_entity_view',
         'weight' => 2,
       ),
       'teaser' => array(
@@ -756,6 +879,18 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'links' => 0,
+          'view_mode' => 'small',
+        ),
+        'type' => 'entityreference_entity_view',
         'weight' => 0,
       ),
     ),
@@ -777,7 +912,7 @@ function content_type_observation_field_default_field_instances() {
       'settings' => array(
         'fields' => array(),
         'type_settings' => array(
-          'allow_existing' => 0,
+          'allow_existing' => 1,
           'allow_new' => 1,
           'delete_references' => 0,
           'label_plural' => 'pictures',
@@ -800,6 +935,34 @@ function content_type_observation_field_default_field_instances() {
     'description' => 'For observations that aren\'t contributed directly into CasaBio; Where this observation comes from.',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 8,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 7,
+      ),
+      'search_result' => array(
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
@@ -814,13 +977,19 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 15,
+        'weight' => 14,
       ),
       'text' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'node',
@@ -852,6 +1021,32 @@ function content_type_observation_field_default_field_instances() {
     'description' => 'The number or code that uniquely identifies this plant or animal specimen when it has been collected, and is used by scientific institutes to refer to the specimen. The format of this ID will be specific to the collector. It can simply be an integer number, or it can be a code comprised of the name of the collector or the date the specimen was collected.',
     'display' => array(
       'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 16,
+      ),
+      'search_result' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(
@@ -872,6 +1067,12 @@ function content_type_observation_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'node',
@@ -908,22 +1109,19 @@ function content_type_observation_field_default_field_instances() {
   t('For observations are from an external source: The unique ID code used to identify this observation in the source’ database');
   t('For observations that aren\'t contributed directly into CasaBio; Where this observation comes from.');
   t('Full name of the person who originally recorded this observation');
-  t('Identifications');
   t('In the form ‘CBO0000001’');
   t('Locality');
   t('Location');
-  t('MLS probability');
-  t('Most likely species');
   t('Name of observer');
   t('Observation ID');
   t('Pictures in observation');
   t('Source');
   t('Specimen ID');
   t('The area of land that the observation was made within.');
-  t('The likelihood that ‘most likely species’ is correct; i.e. that this observation has been is correctly identified. This is calculated automatically.');
   t('The number of animals / plants / specimens seen at this location.');
   t('The number or code that uniquely identifies this plant or animal specimen when it has been collected, and is used by scientific institutes to refer to the specimen. The format of this ID will be specific to the collector. It can simply be an integer number, or it can be a code comprised of the name of the collector or the date the specimen was collected.');
-  t('The place where this observation took place. This overrides the location of the collection, since it is more specific.');
+  t('The place where this observation took place. This overrides the location of the collection, since it is more specific.
+NB. Widget type needs to be WKT for the API to function correctly.');
 
   return $field_instances;
 }

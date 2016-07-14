@@ -1,7 +1,7 @@
 name = Views: Content administration
 description = The views enabling the administration of website content
 core = 7.x
-package = Features: Structure
+package = Features: Views
 version = 7.x-1.0
 dependencies[] = views
 features[ctools][] = views:views_default:3.0

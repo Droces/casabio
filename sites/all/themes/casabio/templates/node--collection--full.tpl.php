@@ -9,10 +9,10 @@
 
   // dpm($content, 'content');
   // throw new Exception("Error Processing Request", 1);
-  
-  
+
+
 ?>
-<article class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
 
   <?php
     // We hide the comments and links now so that we can render them later.

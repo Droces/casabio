@@ -9,16 +9,11 @@
 
   // dpm($content, 'content');
   // throw new Exception("Error Processing Request", 1);
-  
-  
-?>
-<article class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
 
-  <?php
-    // We hide the comments and links now so that we can render them later.
-    hide($content['comments']);
-    hide($content['links']);
-  ?>
+
+?>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+
   <div class="col-container">
     <div class="col-1-2">
       <?php
@@ -64,25 +59,37 @@
       </section>
       <section class="field-group">
         <h2>Basic Info</h2>
+
         <?php
-          print render($content['field_observer_name']);
-          print render($content['field_date_observed']);
-          print render($content['field_collection']);
-          print render($content['field_locality']);
-          print render($content['field_count']);
-          print render($content['body']);
+          // Hide fields that shouldn't be displayed with the rest of $content
+          hide($content['comments']);
+          hide($content['links']);
+
+          hide($content['identifications_view']);
+          hide($content['interactions_view']);
+          hide($content['new_identification_form']);
+          hide($content['comments']);
         ?>
+
+        <?php print render($content); ?>
+
       </section>
       <section class="field-group">
         <h2>Identifications</h2>
         <?php
-          print render($content['field_identifications']);
-          print render($add_id_link);
+          print render($content['identifications_view']);
+          print render($content['new_identification_form']);
         ?>
       </section>
       <section class="field-group">
-        <?php print render($content); ?>
-        <?php /*print render($content['links']);*/ ?>
+        <h2>Interactions</h2>
+        <?php
+          print render($content['interactions_view']);
+          // print render($content['add_interaction_form']);
+        ?>
+      </section>
+      <section class="field-group">
+        <h2>Comments</h2>
         <?php print render($content['comments']); ?>
       </section>
 

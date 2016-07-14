@@ -8,7 +8,6 @@ dependencies[] = menu
 features[features_api][] = api:2
 features[menu_custom][] = main-menu
 features[menu_links][] = main-menu_home:<front>
-features[menu_links][] = main-menu_span-classicon-info2span-about:node/1
 features[menu_links][] = main-menu_span-classicon-lifebuoyspan-help:node/10
 features[menu_links][] = main-menu_span-classicon-mailoutlinespan-contact:contact
 features[menu_links][] = main-menu_span-classicon-viewlistspan-browse:node/11

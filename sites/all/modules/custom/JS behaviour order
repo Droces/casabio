@@ -18,6 +18,6 @@ contribute_maps					  Y			  11
 crew_observations                 -
 ctb_observation                   -
 edit_selected                     Y           6
-  edit_selected_maps              Y           10
+  es_maps              Y           10
 group_selected                    Y           5
 selection                         Y           3

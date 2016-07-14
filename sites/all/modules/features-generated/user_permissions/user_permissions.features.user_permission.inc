@@ -122,6 +122,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'access devel information',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'devel',
   );
@@ -133,6 +134,15 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'media',
+  );
+
+  // Exported permission: 'access mollom statistics'.
+  $permissions['access mollom statistics'] = array(
+    'name' => 'access mollom statistics',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mollom',
   );
 
   // Exported permission: 'access overlay'.
@@ -300,6 +310,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'administer contexts'.
+  $permissions['administer contexts'] = array(
+    'name' => 'administer contexts',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'context_ui',
+  );
+
   // Exported permission: 'administer date tools'.
   $permissions['administer date tools'] = array(
     'name' => 'administer date tools',
@@ -444,6 +463,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'system',
   );
 
+  // Exported permission: 'administer mollom'.
+  $permissions['administer mollom'] = array(
+    'name' => 'administer mollom',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mollom',
+  );
+
   // Exported permission: 'administer nodes'.
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
@@ -478,6 +506,24 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'administer restful'.
+  $permissions['administer restful'] = array(
+    'name' => 'administer restful',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'restful',
+  );
+
+  // Exported permission: 'administer restful resources'.
+  $permissions['administer restful resources'] = array(
+    'name' => 'administer restful resources',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'restful',
   );
 
   // Exported permission: 'administer search'.
@@ -543,6 +589,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'system',
   );
 
+  // Exported permission: 'administer unit tests'.
+  $permissions['administer unit tests'] = array(
+    'name' => 'administer unit tests',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'simpletest',
+  );
+
   // Exported permission: 'administer url aliases'.
   $permissions['administer url aliases'] = array(
     'name' => 'administer url aliases',
@@ -588,6 +643,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'file_entity',
   );
 
+  // Exported permission: 'bypass mollom protection'.
+  $permissions['bypass mollom protection'] = array(
+    'name' => 'bypass mollom protection',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mollom',
+  );
+
   // Exported permission: 'bypass node access'.
   $permissions['bypass node access'] = array(
     'name' => 'bypass node access',
@@ -595,6 +659,27 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'can contribute content'.
+  $permissions['can contribute content'] = array(
+    'name' => 'can contribute content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
+    ),
+    'module' => 'contribute',
+  );
+
+  // Exported permission: 'can maintain content'.
+  $permissions['can maintain content'] = array(
+    'name' => 'can maintain content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
+    ),
+    'module' => 'maintain',
   );
 
   // Exported permission: 'cancel account'.
@@ -666,6 +751,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'feeds',
   );
 
+  // Exported permission: 'context ajax block access'.
+  $permissions['context ajax block access'] = array(
+    'name' => 'context ajax block access',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'context_ui',
+  );
+
   // Exported permission: 'create article content'.
   $permissions['create article content'] = array(
     'name' => 'create article content',
@@ -702,19 +796,10 @@ function user_permissions_user_default_permissions() {
     'name' => 'create files',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'create gallery content'.
-  $permissions['create gallery content'] = array(
-    'name' => 'create gallery content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
     ),
-    'module' => 'node',
+    'module' => 'file_entity',
   );
 
   // Exported permission: 'create habitat_record content'.
@@ -750,11 +835,13 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'create link content'.
-  $permissions['create link content'] = array(
-    'name' => 'create link content',
+  // Exported permission: 'create interaction content'.
+  $permissions['create interaction content'] = array(
+    'name' => 'create interaction content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
   );
@@ -869,6 +956,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete any audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -898,18 +986,9 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete any document files',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'delete any gallery content'.
-  $permissions['delete any gallery content'] = array(
-    'name' => 'delete any gallery content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Maintainer' => 'Maintainer',
     ),
-    'module' => 'node',
+    'module' => 'file_entity',
   );
 
   // Exported permission: 'delete any habitat_record content'.
@@ -946,15 +1025,17 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete any image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
 
-  // Exported permission: 'delete any link content'.
-  $permissions['delete any link content'] = array(
-    'name' => 'delete any link content',
+  // Exported permission: 'delete any interaction content'.
+  $permissions['delete any interaction content'] = array(
+    'name' => 'delete any interaction content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
   );
@@ -1021,6 +1102,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete any video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1057,6 +1139,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete own audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1088,19 +1171,9 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete own document files',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'delete own gallery content'.
-  $permissions['delete own gallery content'] = array(
-    'name' => 'delete own gallery content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-      'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
     ),
-    'module' => 'node',
+    'module' => 'file_entity',
   );
 
   // Exported permission: 'delete own habitat_record content'.
@@ -1141,15 +1214,18 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete own image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
 
-  // Exported permission: 'delete own link content'.
-  $permissions['delete own link content'] = array(
-    'name' => 'delete own link content',
+  // Exported permission: 'delete own interaction content'.
+  $permissions['delete own interaction content'] = array(
+    'name' => 'delete own interaction content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
   );
@@ -1219,6 +1295,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'delete own video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1334,6 +1411,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'download any audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1343,6 +1421,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'download any document files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1352,6 +1431,10 @@ function user_permissions_user_default_permissions() {
     'name' => 'download any image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'file_entity',
   );
@@ -1361,6 +1444,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'download any video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1370,6 +1454,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'download own audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1379,6 +1465,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'download own document files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1388,6 +1476,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'download own image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1397,6 +1486,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'download own video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1424,6 +1515,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1453,18 +1545,9 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any document files',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'edit any gallery content'.
-  $permissions['edit any gallery content'] = array(
-    'name' => 'edit any gallery content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Maintainer' => 'Maintainer',
     ),
-    'module' => 'node',
+    'module' => 'file_entity',
   );
 
   // Exported permission: 'edit any habitat_record content'.
@@ -1501,15 +1584,17 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
 
-  // Exported permission: 'edit any link content'.
-  $permissions['edit any link content'] = array(
-    'name' => 'edit any link content',
+  // Exported permission: 'edit any interaction content'.
+  $permissions['edit any interaction content'] = array(
+    'name' => 'edit any interaction content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
   );
@@ -1576,6 +1661,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1603,6 +1689,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit own audio files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -1645,19 +1733,10 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit own document files',
     'roles' => array(
       'Administrator' => 'Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'edit own gallery content'.
-  $permissions['edit own gallery content'] = array(
-    'name' => 'edit own gallery content',
-    'roles' => array(
-      'Administrator' => 'Administrator',
       'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
     ),
-    'module' => 'node',
+    'module' => 'file_entity',
   );
 
   // Exported permission: 'edit own habitat_record content'.
@@ -1698,15 +1777,19 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit own image files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
 
-  // Exported permission: 'edit own link content'.
-  $permissions['edit own link content'] = array(
-    'name' => 'edit own link content',
+  // Exported permission: 'edit own interaction content'.
+  $permissions['edit own interaction content'] = array(
+    'name' => 'edit own interaction content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
   );
@@ -1776,6 +1859,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit own video files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -2031,6 +2116,24 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'features',
+  );
+
+  // Exported permission: 'report to mollom'.
+  $permissions['report to mollom'] = array(
+    'name' => 'report to mollom',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'mollom',
+  );
+
+  // Exported permission: 'restful clear render caches'.
+  $permissions['restful clear render caches'] = array(
+    'name' => 'restful clear render caches',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'restful',
   );
 
   // Exported permission: 'restore from backup'.
@@ -2300,6 +2403,10 @@ function user_permissions_user_default_permissions() {
     'name' => 'view files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'file_entity',
   );
@@ -2309,6 +2416,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'view own files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );
@@ -2318,6 +2427,8 @@ function user_permissions_user_default_permissions() {
     'name' => 'view own private files',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
+      'Maintainer' => 'Maintainer',
     ),
     'module' => 'file_entity',
   );

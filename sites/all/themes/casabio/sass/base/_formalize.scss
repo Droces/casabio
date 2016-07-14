@@ -13,7 +13,7 @@ IE6
 
 */
 
-@import "compass/css3";
+// @import "compass/css3";
 
 // -----------------------------------------------------------------------------
 //                                                              `Widths
@@ -51,12 +51,12 @@ textarea {
   // Suppress red glow that Firefox
   // adds to form fields by default.
   &:invalid {
-    @include box-shadow(none);
+    box-shadow: none;
   }
 
   // Add a bright-coloured glow.
   &:focus {
-    @include box-shadow(rgba( $colour-green, 0.8 ) 0 0 3px 0);
+    box-shadow: rgba( $colour-green, 0.8 ) 0 0 3px 0;
     // border: solid 1px $colour-orange !important;
     // for Opera
     z-index: 1;
@@ -68,7 +68,7 @@ input[type="radio"],
 input[type="checkbox"] {
   &:focus,
   &:active {
-    @include box-shadow(none);
+    box-shadow: none;
   }
 }
 input[type="radio"],
@@ -80,6 +80,7 @@ input[type="checkbox"] {
 
 button,
 a.button,
+a[role="button"],
 input[type="reset"],
 input[type="submit"],
 input[type="button"] {
@@ -110,7 +111,7 @@ input[type="button"] {
 
   &:active {
     background-color: scale-lightness( $colour-orange, -15% );
-    // @include box-shadow(inset rgba(black, 0.25) 0 1px 2px 0);
+    // box-shadow:inset rgba(black, 0.25) 0 1px 2px 0);
   }
 
   // Kill phantom spacing and dotted
@@ -130,7 +131,7 @@ input[type="button"] {
       }
       &:active {
         background: none;
-        @include box-shadow(none);
+        box-shadow: none;
         border: none;
       }
       .active {
@@ -154,9 +155,9 @@ input[type="text"],
 input[type="time"],
 input[type="url"],
 input[type="week"] {
-  @include box-sizing(border-box);
-  @include background-clip(padding-box);
-  @include border-radius(0);
+  box-sizing: border-box;
+  background-clip: padding-box;
+  @include border-radius($corner_radius-regular);
   -webkit-appearance: none;
   background-color: white;
   border: 1px solid;
@@ -187,7 +188,7 @@ select[disabled] option,
 select[disabled] optgroup,
 textarea[disabled],
 a.button_disabled {
-  @include box-shadow(none);
+  box-shadow: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
   -khtml-user-select: none;

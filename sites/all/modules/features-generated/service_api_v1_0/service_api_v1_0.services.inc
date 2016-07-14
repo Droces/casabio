@@ -50,6 +50,22 @@ function service_api_v1_0_default_services_endpoint() {
         'observations' => array(
           'enabled' => '1',
         ),
+        'pictures' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'file' => array(
+      'operations' => array(
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
       ),
     ),
     'identifications' => array(
@@ -58,6 +74,13 @@ function service_api_v1_0_default_services_endpoint() {
           'enabled' => '1',
         ),
         'create' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'interactions' => array(
+      'operations' => array(
+        'retrieve' => array(
           'enabled' => '1',
         ),
       ),
@@ -82,6 +105,30 @@ function service_api_v1_0_default_services_endpoint() {
       ),
       'relationships' => array(
         'community_identifications' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'targeted_actions' => array(
+        'add_interaction' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'pictures' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
           'enabled' => '1',
         ),
       ),

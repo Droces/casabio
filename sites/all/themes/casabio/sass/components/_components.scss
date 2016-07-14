@@ -33,8 +33,28 @@
                                                             Small helper classes
 */
 
+@mixin cover-whole {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 [aria-hidden="true"] {
   display: none;
+}
+
+[data-rotated='90deg'],
+[data-rotated='-270deg'] {
+  @include transform(rotate(90deg));
+}
+[data-rotated='180deg'] {
+  @include transform(rotate(180deg));
+}
+[data-rotated='270deg'],
+[data-rotated='-90deg'] {
+  @include transform(rotate(270deg));
 }
 
 .subtle {
@@ -43,6 +63,7 @@
 .left,
 .right {
 	z-index: 1;
+  position: relative;
 }
 .left {
     float: left;
@@ -110,7 +131,7 @@ $colour-unpublished: #CF5541;
 .tree.expandable {
 	li {
 		list-style: none;
-		
+
 		button {
 			margin: 0;
 		}
@@ -153,6 +174,33 @@ $colour-unpublished: #CF5541;
     text-transform: uppercase;
 }
 
+.choice-block {
+  & > div {
+    @include flex(1 1 0); // Starting from 0, both grow and shrink equally (same size).
+    padding: 1em;
+
+    &:not([aria-selected]) {
+      background: #e1e1e1;
+    }
+    &:not(:first-of-type) {
+      border-left: 1px solid #A4A4A4;
+    }
+    &:first-of-type {
+      @include border-radius(4px 0 0 4px);
+    }
+    &:last-of-type {
+      @include border-radius(0 4px 4px 0);
+    }
+  }
+  input[type="text"] {
+    width: 100%;
+  }
+}
+
+// .transition-resize {
+//   @include transition(width 0.5s ease, height 0.5s ease);
+// }
+
 
 
 /* -----------------------------------------------------------------------------
@@ -167,9 +215,20 @@ $colour-unpublished: #CF5541;
 	background-color: white;
 	// border: solid 1px rgba( black, 0.15 );
 	box-shadow: 0 0 0.1em rgba( black, 0.35 );
-	margin: 1em; // This will usually be overridden by extending components
+  display: block; // Most will be this by default
+	margin: 1em 0; // This will usually be overridden by extending components
+  max-width: 100%;
+  position: relative;
+  text-align: left;
 
-	header > h2 {
+  &.inline {
+    display: inline-block;
+    margin: 0 1em 1em 0;
+    vertical-align: top;
+  }
+
+  h2,
+  & > h3:first-child {
 		margin-top: 0;
 	}
 }
@@ -188,6 +247,34 @@ $colour-unpublished: #CF5541;
 }
 .info-pane { // Used for displaying bits of info such as the breadcrumbs
 	background-color: rgba(black, 0.13);
+}
+
+@mixin link_as_block {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+a[role="block"] {
+  @include link_as_block;
+}
+
+[role="link-block"] {
+  @extend .pane;
+
+  a:not([role="block"]) {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.option.site-section {
+  text-align: center;
+  width: 360px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -265,6 +352,25 @@ $toolbar-height: 2.8em;
     border: none;
     text-shadow: none;
 
+    &:not(:last-child) {
+      border-right: 1px solid rgba(black, 0.24);
+    }
+    &:not(:first-child) {
+      border-left: 1px solid rgba(white, 0.24);
+    }
+    // &:not(:first-child)::after {
+    //   content: "";
+    //   display: block;
+    //   float: left;
+    //   width: 0;
+    //   height: 100%;
+    //   border-left: 1px solid rgba(white, 0.24);
+    //   border-right: 1px solid rgba(black, 0.24);
+    // }
+    &:not(.right) {
+      float: left;
+    }
+
     &:hover,
     &:focus {
       background-color: rgba(black, 0.14);
@@ -303,7 +409,7 @@ $field-v-gap: 0.4em;
 		height: 1em;
 		overflow: hidden;
 		padding-left: 1em;
-		@include box-sizing( border-box );
+		box-sizing: border-box;
 		border-radius: 0.2em;
 	}
 }
@@ -323,7 +429,7 @@ $field-v-gap: 0.4em;
 		height: $line-height * 1em;
 		overflow: hidden;
 		// padding-left: 1em;
-		// @include box-sizing( border-box );
+		// box-sizing: border-box;
 		// border-radius: 0.2em;
 		font-size: 0.8em;
 	}
@@ -590,6 +696,23 @@ ul.cols-6 > li {
 
 
 /* -----------------------------------------------------------------------------
+                                                            Columns
+*/
+.cols {
+  @include display-flex;
+
+  $col-flex-grow: 1; // All columns grow equally
+  $col-flex-shrink: 1; // All columns shrink equally
+  $col-flex-basis: 0; // Columns don't have a default width: they're set equal.
+
+  & > .col {
+    @include flex($col-flex-grow $col-flex-shrink $col-flex-basis);
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
                                                             Masonry
 */
 .masonry {
@@ -597,7 +720,7 @@ ul.cols-6 > li {
 	$gap-h: 3%;
 	$gap-v: 2em;
 
-	.view-header, 
+	.view-header,
 	.view-filters,
 	.view-content {
 		width: 100%;
@@ -645,7 +768,7 @@ ul.cols-6 > li {
 /* -----------------------------------------------------------------------------
                                                                 Text editors
 */
-main .text-format-wrapper {
+.text-format-wrapper {
   fieldset.filter-wrapper {
     display: none;
   }
@@ -657,12 +780,20 @@ main .text-format-wrapper {
 		}
 	}
 }
+.hidden + .grippie {
+  display: none;
+}
 
 
 
 /* -----------------------------------------------------------------------------
                                                                 OpenLayers maps
 */
+.gm-style {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
 .openlayers-container {
     border: 1px solid rgba(0, 0, 0, 0.16);
 
@@ -686,7 +817,11 @@ main .text-format-wrapper {
   &.ol-geofield div:not(:first-child):not(:empty) {
     margin-left: 0.5em;
   }
+  .ol-geofield-controls button.enable {
+    background-color: rgba(#002451, 0.7);
+  }
 }
+.ol-control
 
 
 
@@ -713,7 +848,7 @@ main .text-format-wrapper {
   // display: flex;
   @include display-flex;
   padding: 1px;
-  @include box-sizing(border-box);
+  box-sizing: border-box;
 
   & > div {
     background-color: shade(white, 25%);
@@ -756,6 +891,21 @@ main .text-format-wrapper {
 .ui-widget-content a {
   @extend a;
 }
+// Used by dialogs and background overlays
+.ui-front {
+  z-index: $z-dialogs !important;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Search
+*/
+.search-result {
+  h3 .type {
+    color: grey;
+  }
+}
 
 
 
@@ -763,24 +913,26 @@ main .text-format-wrapper {
                                                                 Messages
 */
 div.messages { // actually a badly-named individual message
-    // background-position: 8px 8px;
-    // background-repeat: no-repeat;
-    // border: 1px solid;
-    @include border-radius( $corner_radius-large );
-    // margin: 6px 0px;
-    // padding: 10px 10px 10px 50px;
+  // background-position: 8px 8px;
+  // background-repeat: no-repeat;
+  // border: 1px solid;
+  @include border-radius( $corner_radius-large );
+  // margin: 6px 0px;
+  // padding: 10px 10px 10px 50px;
+  max-width: 60em;
+  margin: 0.6em auto;
 
-    ul {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
+  ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 
   button {
     margin: 0;
-    background: rgba(black, 0.15);
+    background: rgba(black, 0.6);
     padding: 0 0.5em;
     display: inline-block;
-    color: black;
+    color: white;
     font-weight: bold;
     border-radius: 0.2em;
   }
@@ -795,25 +947,29 @@ aside div.messages {
 div.status,
 div.warning,
 div.error {
-    font-weight: 600;
-    border-left-width: 5px;
-    @include border-radius( 2px );
+  font-weight: 600;
+  border-left-width: 5px;
+  @include border-radius( 2px );
+
+  li {
+    max-width: 100%;
+  }
 }
 div.status {
-    color: scale-lightness( $colour-success, -30% ) !important;
-    background-color: scale-lightness( $colour-success, 92% ) !important;
-    border-color: scale-lightness( $colour-success, 0% );
-    background-image: url('../images/check.svg');
+  color: shade( $colour-success, 30 ) !important;
+  background-image: url('../images/check.svg');
+  background-color: tint( $colour-success, 92 ) !important;
+  border-color: tint( $colour-success, 0 );
 }
 div.warning {
-    color: scale-lightness( $colour-warning, -30% );
-    background-image: url('../images/warning.svg');
-    background-color: scale-lightness( $colour-warning, 92% );
-    border-color: scale-lightness( $colour-warning, 0% );
+  color: shade( $colour-warning, 30 );
+  background-image: url('../images/warning.svg');
+  background-color: tint( $colour-warning, 92 );
+  border-color: tint( $colour-warning, 0 );
 }
 div.error {
-    color: scale-lightness( $colour-error, -30% );
-    background-image: url('../images/error.svg');
-    background-color: scale-lightness( $colour-error, 92% );
-    border-color: scale-lightness( $colour-error, 0% );
+  color: shade( $colour-error, 30 );
+  background-image: url('../images/error.svg');
+  background-color: tint( $colour-error, 92 );
+  border-color: tint( $colour-error, 0 );
 }

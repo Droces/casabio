@@ -18,7 +18,7 @@ function _zen_theme(&$existing, $type, $theme, $path) {
     && function_exists('user_access') && user_access('administer site configuration')
     && theme_get_setting('zen_rebuild_registry')
     // Always display in the admin section, otherwise limit to three per hour.
-    && (arg(0) == 'admin' || flood_is_allowed($GLOBALS['theme'] . '_rebuild_registry_warning', 3))
+    && (arg(0) == 'admin' || flood_is_allowed($GLOBALS['theme'] . '_rebuild_registry_warning', 1))
   ) {
     flood_register_event($GLOBALS['theme'] . '_rebuild_registry_warning');
     drupal_set_message(t('For easier theme development, the theme registry is being rebuilt on every page request. It is <em>extremely</em> important to <a href="!link">turn off this feature</a> on production websites.', array('!link' => url('admin/appearance/settings/' . $GLOBALS['theme']))), 'warning', FALSE);

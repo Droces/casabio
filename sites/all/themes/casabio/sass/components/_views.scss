@@ -5,7 +5,7 @@
 /*
  * Contents
 
-	Views
+  Views
 */
 
 
@@ -16,122 +16,209 @@
 $zen-column-count: 4; // views are within #content, which has 4 columns
 
 .view {
-	@include group;
+  @include group;
 
-	.view-header {
-		div {
-			margin-top: 1em;
-			margin-bottom: 1em;
-		}
-	}
+  &.format-list {
+    .view-content {
+      text-align: center;
+    }
+  }
 
-	&.rows {
-		.views-row {
-			clear: both;
-		}
-	}
-	&.rows-inline {
-		.views-row {
-			display: inline;
-			vertical-align: top;
-		}
-	}
-	&.grid-2 {
-		.views-row {
-			width: 49%;
-			display: inline-block;
-			vertical-align: top;
-		}
-	}
-	&.teasers-with-images {
-		.views-field:first-child {
-			/* assuming they're using 100px * 100px thumbnail images... */
-			width: 100px;
-			text-align: right;
-		}
-	}
-	// displayed as an HTML list
-	ul.content {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+  .view-header {
+    div {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+  }
 
-		& > li {}
-	}
-	&.view-galleries {
+  .view-content {
+    & > table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 
-		img,
-		a {
-			display: block;
-		}
+  &.rows {
+    .views-row {
+      clear: both;
+    }
+  }
+  &.rows-inline {
+    .views-row {
+      display: inline;
+      vertical-align: top;
+    }
+  }
+  .views-row {
+    display: inline;
+    vertical-align: top;
+  }
 
-		.view-content {
-			@include zen-grid-container();
-			@include group;
-		}
-		.views-row {
-			@include group;
-		}
-		.views-row:nth-child( n ) {
-			@include zen-grid-item(2, 1);
-		}
-		.views-row:nth-child( 2n ) {
-			@include zen-grid-item(2, 3);
-		}
+  &.grid-2 {
+    .views-row {
+      width: 49%;
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+  &.teasers-with-images {
+    .views-field:first-child {
+      /* assuming they're using 100px * 100px thumbnail images... */
+      width: 100px;
+      text-align: right;
+    }
+  }
+  // displayed as an HTML list
+  ul.content {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
-		.views-field-title {
-			margin-top: -3.4em;
-			background: rgba( black, 0.7 );
-			position: relative;
-			padding: 0.4em 0.6em;
-			@include box-sizing( border-box );
-			max-width: 300px; // to match the size of the pictures
+    & > li {}
+  }
+  &.view-galleries {
 
-			h3 {
-				margin: 0;
-			}
-		}
+    img,
+    a {
+      display: block;
+    }
 
-		&,
-		.view-content,
-		.views-row {
-			overflow: initial;
-		}
-	}
-	.views-field-title h3 {
-		margin-top: 0;
-	}
-	.views-view-grid {
-		// width: 100%;
+    .view-content {
+      @include zen-grid-container();
+      @include group;
+    }
+    .views-row {
+      @include group;
+    }
+    .views-row:nth-child( n ) {
+      @include zen-grid-item(2, 1);
+    }
+    .views-row:nth-child( 2n ) {
+      @include zen-grid-item(2, 3);
+    }
+
+    .views-field-title {
+      margin-top: -3.4em;
+      background: rgba( black, 0.7 );
+      position: relative;
+      padding: 0.4em 0.6em;
+      box-sizing: border-box;
+      max-width: 300px; // to match the size of the pictures
+
+      h3 {
+        margin: 0;
+      }
+    }
+
+    &,
+    .view-content,
+    .views-row {
+      overflow: initial;
+    }
+  }
+  .views-field-title h3 {
+    margin-top: 0;
+  }
+  .views-view-grid {
+    // width: 100%;
         // @extend .borderless;
 
         td,
         th {
-			vertical-align: top;
-			min-width: 6em;
-	    
-			@media all and (max-width: $w-narrow) {
-		        display: block;
-		        padding-left: 0;
-		        padding-right: 0;
-		    }
-		}
-	}
+      vertical-align: top;
+      min-width: 6em;
+
+      @media all and (max-width: $w-narrow) {
+            display: block;
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+  }
 }
+
+
+
 // The exposed form may be in a block and not inside the actual view
 .views-exposed-form {
-	.views-exposed-widget {
-	    // float: none;
-	    // padding: 0 /* 0.5em 1em 0px 0px */;
-	    // display: table-cell;
-	    // vertical-align: bottom;
-	}
-	main & {
-		label {
-		    margin-bottom: 0.2em;
-		}
-		input.form-autocomplete {
-			width: 22em;
-		}
-	}
+  text-align: center;
+
+  .views-exposed-widget {
+    float: none;
+    // padding: 0 /* 0.5em 1em 0px 0px */;
+    // vertical-align: bottom;
+  }
+  main & {
+    label {
+        margin-bottom: 0.2em;
+    }
+    input.form-autocomplete {
+      width: 22em;
+    }
+  }
+}
+.views-exposed-widgets {
+  // background: rgba(black, 0.03);
+  // border: solid 1px $colour-dividers;
+  // border-radius: $corner_radius-regular;
+  margin: 1.8em 0px;
+  font-size: 0.9em;
+}
+.views-exposed-widget { // Doesn't have unnecessary specificity
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+}
+
+
+
+/** ----------------------------------------------------------------------------
+ * Pager.
+ */
+
+/* A list of page numbers when more than 1 page of content is available. */
+.pager {
+  clear: both;
+  padding: 0;
+  text-align: center;
+
+  ul {
+    @extend .non-list;
+  }
+
+  li
+  /* .pager-item */ {
+    display: inline-block;
+    margin: 0; // None needed because inline-block.
+    // padding: 0 0.5em;
+    // list-style-type: none;
+    // background-image: none;
+
+    &.pager-current,
+    & > a {
+      padding: 0.4em 1em;
+      border: solid 1px #e0e0e0;
+      border-radius: 3px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    & > a {
+      color: #515151;
+      background-color: #eaeaea;
+    }
+    &.pager-current,
+    & > a:hover,
+    & > a:focus {
+      background-color: #C2C2C2;
+      color: #4E4E4E;
+      border-color: #B0B0B0;
+    }
+    &.pager-current {
+      cursor: default;
+    }
+  }
+}
+
+.pager-current {
+  font-weight: bold;
 }

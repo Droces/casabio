@@ -14,9 +14,9 @@
  *Inline Entity Form
  * Displays help and module information.
  *
- * @param path 
+ * @param path
  *   Which path of the site we're using to display help
- * @param arg 
+ * @param arg
  *   Array that holds the current path as returned from arg() function
  */
 function browse_help($path, $arg) {}
@@ -38,7 +38,7 @@ function browse_help($path, $arg) {}
 //     if (drupal_match_path(current_path(), $active_path)) {
 //       $file = drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js';
 //       drupal_add_js($file);
-      
+
 //       drupal_add_library('system', 'drupal.collapse');
 
 //       // $file = drupal_get_path('module', 'edit_selected') . '/stylesheets/edit_selected.css';
@@ -63,7 +63,13 @@ function browse_block_info() {
     'cache' => DRUPAL_CACHE_GLOBAL,
     // 'cache' => DRUPAL_NO_CACHE,
   );
-  
+
+  $blocks['browse_choice'] = array(
+    'info' => t('Browse choice'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
   return $blocks;
 }
 
@@ -97,16 +103,35 @@ function browse_block_info() {
  */
 function browse_block_view($delta = '') {
   $block = array();
-  
+
   switch ($delta) {
     // For the Selected Buttons block
     case 'browse_chooser_form':
       $block['subject'] = t('Choose Your Browse');
       $block['content'] = drupal_get_form('browse_chooser_form');
       break;
+
+    case 'browse_choice':
+      $block['subject'] = t('Choose Your Browse');
+      $block['content'] = browse_choice_content();
+      break;
   }
-  
+
   return $block;
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Defines the Browse chooser form.
+ */
+function browse_choice_content() {
+  $file_url = drupal_get_path('module', 'browse')
+    . '/browse_choice.html';
+  return file_get_contents($file_url);
 }
 
 
@@ -119,7 +144,7 @@ function browse_block_view($delta = '') {
  */
 function browse_chooser_form() {
   $options_entity = array(
-    'observations' => t('Observations'), 
+    'observations' => t('Observations'),
     'collections' => t('Collections'),
   );
 
@@ -132,7 +157,7 @@ function browse_chooser_form() {
   );
 
   $options_status = array(
-    'new' => t('New'), 
+    'new' => t('New'),
     'unidentified' => t('Unidentified'),
     'all' => t('All'),
   );
@@ -146,7 +171,7 @@ function browse_chooser_form() {
   );
 
   $options_format = array(
-    'map' => t('Map'), 
+    'map' => t('Map'),
     'table' => t('Table'),
     'list' => t('List'),
   );
@@ -177,7 +202,7 @@ function browse_chooser_form() {
 
 // =======================================================================================
 /**
- * 
+ *
  */
 function browse_chooser_submit($form, &$form_state) {
   // dpm($form, 'form');
@@ -185,7 +210,7 @@ function browse_chooser_submit($form, &$form_state) {
 
   $url = ''/*current_path()*/;
   // dpm($url, 'url');
-  
+
   $options = array(
     // 'query' => array(''),
     // 'fragment' => '',
@@ -202,7 +227,7 @@ function browse_chooser_submit($form, &$form_state) {
     case 'collections':
       $url .= 'browse/collections';
       break;
-    
+
     default:
       return; // Don't redirect.
       break;
@@ -224,12 +249,12 @@ function browse_chooser_submit($form, &$form_state) {
     case '':
       // Add nothing.
       break;
-    
+
     default:
       return; // Don't redirect.
       break;
   }
-  
+
   switch ($form_state['values']['status']) {
     case 'new':
       $options['query'] = array('created' => '2');
@@ -246,7 +271,7 @@ function browse_chooser_submit($form, &$form_state) {
     case '':
       // Add nothing.
       break;
-    
+
     default:
       return; // Don't redirect.
       break;

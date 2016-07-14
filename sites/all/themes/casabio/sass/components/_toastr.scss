@@ -122,7 +122,7 @@ button.toast-close-button {
 //     -moz-box-shadow: 0 0 12px #999999;
 //     -webkit-box-shadow: 0 0 12px #999999;
 //     box-shadow: 0 0 12px #999999;
-    @include box-shadow(2px 2px 5px rgba(black, 0.3));
+    box-shadow: 2px 2px 5px rgba(black, 0.3);
 //     color: white;
     opacity: 0.9;
 //     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);

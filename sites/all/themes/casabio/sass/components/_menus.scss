@@ -1,6 +1,6 @@
 /**
  * @file
- * 
+ *
  * File name       Components
  * For site		Devoted
  * Created by		Touchdreams
@@ -51,7 +51,7 @@
 		padding: 0;
 		display: table;
 		width: 100%;
-		@include box-sizing( border-box );
+		box-sizing: border-box;
 
 		li {
 			display: table-cell;
@@ -110,7 +110,7 @@
 }
 
 .block-menu {
-	@media all and (max-width: $w-menu-narrow) {
+	@media all and (max-width: $menu-w-narrow) {
 	// 	border-radius: 0.8em;
 		overflow: hidden;
 	}
@@ -126,7 +126,7 @@
 		@extend .toggleable;
 
 		@include element-invisible;
-		// @media all and (min-width: $w-menu-narrow) {
+		// @media all and (min-width: $menu-w-narrow) {
 		// 	@include element-invisible;
 		// }
 
@@ -163,7 +163,7 @@
 
 			&::after {
 				font-size: 0.8em !important;
-				height: 1em; 
+				height: 1em;
 				width: 1em;
 				position: absolute;
 				right: 0.5em;

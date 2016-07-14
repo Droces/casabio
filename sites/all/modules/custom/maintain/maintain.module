@@ -22,25 +22,20 @@
    */
   function maintain_menu() {
     $items['ajax/popular_taxa_form/%'] = array(
-      // 'title'             => 'Number Specimens',
-      'page callback'     => 'get_maintain_popular_taxa_form',
+      'page callback'     => 'maintain_popular_taxa_form_callback',
       'page arguments'    => array(2),
       'delivery callback' => 'ajax_deliver_html',
-      'access callback'   => TRUE,
-      // 'access arguments'  => array('bulk upload media'),
-      // 'file'              => 'casa_upload.upload.inc',
+      'access callback'   => 'user_access',
+      'access arguments'  => array('can contribute content'),
       'type'              => MENU_CALLBACK,
     );
 
     $items['maintain/taxa/most-popular'] = array(
-      // 'title'             => 'Number Specimens',
+      'title'             => 'Maintain Taxa',
       'page callback'     => 'maintain_popular_taxa_page',
-      // 'page arguments'    => array(2),
-      // 'delivery callback' => 'ajax_deliver_html',
-      'access callback'   => TRUE,
-      // 'access arguments'  => array('bulk upload media'),
-      // 'file'              => 'casa_upload.upload.inc',
-      // 'type'              => MENU_CALLBACK,
+      'access callback'   => 'user_access',
+      'access arguments'  => array('can contribute content'),
+      'type'              => MENU_NORMAL_ITEM,
     );
 
     return $items;
@@ -66,6 +61,23 @@
         drupal_add_js($path);
       }
     }
+  }
+
+
+
+
+
+  // =======================================================================================
+  /**
+   * Implements hook_permission().
+   */
+  function maintain_permission() {
+    return array(
+      'can maintain content' => array(
+        'title' => t('Can maintain content'),
+        'description' => t("Can edit other users' content of standard types"),
+      ),
+    );
   }
 
 
@@ -108,8 +120,13 @@
 
 
 
-  function get_maintain_popular_taxa_form($nid) {
-    $taxon = taxonomy_term_load ($nid);
+  function maintain_popular_taxa_form_callback($nid) {
+    return maintain_popular_taxa_get_form($nid);
+  }
+
+
+  function maintain_popular_taxa_get_form($nid) {
+    $taxon = taxonomy_term_load($nid);
     // dpm($taxon, 'taxon');
     if ($taxon) {
       module_load_include('inc', 'taxonomy', 'taxonomy.admin');
@@ -117,7 +134,8 @@
       $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
     }
     else {
-      throw new Exception("Cannot load the observation", 1);
+      // throw new Exception("Cannot load the observation", 1);
+      return null;
     }
 
     return $form;
@@ -181,13 +199,13 @@
 
     // $page_content['maintain_form'] = $form;
     $page_content['maintain_form'] = array(
-      '#type' => 'fieldset', 
-      '#title' => t('Edit the taxon'), 
-      // '#weight' => 5, 
-      '#collapsible' => TRUE, 
+      '#type' => 'fieldset',
+      '#title' => t('Edit the taxon'),
+      // '#weight' => 5,
+      '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       'form' => $form,
-  );
+    );
 
     return array($page_content);
   }

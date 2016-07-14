@@ -55,7 +55,7 @@ Drupal.casabio = {
 
 
 function set_up_pages(context) {
-  
+
   // Move Cancel button to end of form's actions
   var actions = $('.form-actions', context);
   actions.each(function(index, el) {
@@ -69,6 +69,18 @@ function set_up_pages(context) {
 
   // Set the HTML5 required attribute for form fields that are required.
   $('form .required').attr('required', true);
+
+  // Choice-block
+  var choice_blocks = $('.choice-block');
+  choice_blocks.children().on('click', function() {
+    $(this).siblings().attr('aria-selected', null);
+    $(this).siblings().find('input[type="checkbox"]').prop('checked', false);
+    // $(this).siblings().find('input').prop('disabled', true);
+
+    $(this).attr('aria-selected', true);
+    $(this).find('input[type="checkbox"]').prop('checked', true);
+    // $(this).find('input').prop('disabled', null);
+  });
 }
 
 
@@ -85,6 +97,24 @@ function add_listeners(context) {
     else {
       $(this).parent().remove();
     }
+  });
+
+  // Tabs
+  $('[role="tab"]').on('click', function() {
+    $(this).parent().find('[role="tab"][aria-selected]')
+      .attr('aria-selected', null);
+    $(this).parent().siblings('[role="tabpanel"][aria-selected]')
+      .attr('aria-selected', null);
+
+    $(this).attr('aria-selected', true);
+    $('[role="tabpanel"][data-name="' + $(this).attr('data-name') + '"]')
+      .attr('aria-selected', true);
+  });
+
+  // Views with bulk operations
+  // Clicking on a row selects the item
+  $('.view form table').find('tr').on('click', function() {
+    $(this).find('input[type="radio"]').prop( "checked", true );
   });
 }
 

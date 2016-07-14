@@ -1,0 +1,57 @@
+<?php
+/**
+ * @file
+ * Simpletest.
+ */
+
+class CasaNodeManagementUnitTestsTestCase extends DrupalUnitTestCase {
+
+  // public function setUp() {
+  //   parent::setUp();
+  // }
+
+  public static function getInfo() {
+    // Note: getInfo() strings should not be translated.
+    return array(
+      'name' =>         'AJAX functions tests',
+      'description' =>  'Test that AJAX functions work properly.',
+      'group' =>        'Casa Node Management',
+    );
+
+  }
+
+  public function testRotation() {
+
+    $nids = ['1'];
+    $degrees = 90;
+
+
+    $message = 'rotate_pictures() must not accept null for any parameters.';
+    try {
+      rotate_pictures($nids, NULL);
+      rotate_pictures(NULL, $degrees);
+      $this->fail($message);
+    }
+    catch (InvalidArgumentException $e) {
+      $this->pass($message);
+    }
+
+
+    $message = 'rotate_pictures() must not accept -200 for $degrees parameter.';
+    try {
+      rotate_pictures($nids, -200);
+      $this->fail($message);
+    }
+    catch (InvalidArgumentException $e) {
+      $this->pass($message);
+    }
+
+    // $result = simpletest_example_empty_mysql_date(NULL);
+    // // Note: Test output messages should not be translated.
+    // $message = 'A NULL value should return TRUE.';
+    // $this->assertTrue($result, $message);
+  }
+
+  // public function tearDown() {}
+
+}

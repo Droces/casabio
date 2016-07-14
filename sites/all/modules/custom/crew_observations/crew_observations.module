@@ -41,8 +41,6 @@ function get_crew_form_content() {
   // dpm($form, 'form');
   // dpm($form_state, 'form_state');
   // global $language;
-  
-  set_error_handler("exception_error_handler");
 
   // Create the collection node
     $values = array(

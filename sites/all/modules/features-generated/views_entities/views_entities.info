@@ -1,7 +1,7 @@
 name = Views: Entities
 description = Views displayed on nodes and other entities, typically showing referenced entities.
 core = 7.x
-package = Features: Structure
+package = Features: Views
 version = 7.x-1.0
 dependencies[] = entity
 dependencies[] = entityreference_view_widget

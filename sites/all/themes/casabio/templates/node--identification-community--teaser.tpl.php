@@ -7,9 +7,10 @@
  * @see https://drupal.org/node/1728164
  */
 ?>
-<article class="node-<?php print $node->nid; ?> <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
   <section class="show">
+    <?php print render($content['picture']); ?>
     <?php print render($content['field_reliability']); ?>
   </section>
   <section class="tell">
@@ -45,6 +46,7 @@
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
+      hide($content['node_block_link']);
       print render($content);
     ?>
 

@@ -1,6 +1,6 @@
 /**
  * @file
- * 
+ *
  * File name       Components
  * For site     Devoted
  * Created by       Touchdreams
@@ -32,7 +32,7 @@
     padding-right: 0.8em;
     @include border-radius( $corner_radius-small );
     @include transition(all 0.3s ease-in);
-  
+
     &.hidden {
         display: block !important;
         bottom: -3em; // Just enough to hide it
@@ -73,7 +73,7 @@
     margin-top: 1.2em;
     z-index: 100;
     display: none;
-    
+
   @media all and (max-width: $w-narrow) {
         display: block;
     }
@@ -87,7 +87,8 @@
 $img-max-width: 140px;
 $border-width: 2px;
 $selectable-padding: 0;
-$selectable-margin: 6px 2px 2px;
+$selectable-margin: /* 6px 2px 2px */ 0 7px 7px 0;
+$selectable-border-radius: 3px;
 .selectables {
 
     #edit-select,
@@ -104,23 +105,36 @@ $selectable-margin: 6px 2px 2px;
         // float: left;
         display: inline-block;
         vertical-align: top;
-
-        border-radius: 0.4em;
         // border: solid $border-width transparent;
         border: none;
+
+        .selectable-target {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
 
         [type="checkbox"],
         .views-field-views-bulk-operations {
             display: none;
         }
 
+        .views-field-field-image,
+        .field.image {
+            background-color: white;
+            border-radius: $selectable-border-radius;
+        }
+
         img {
-            @include box-sizing( border-box );
+            box-sizing: border-box;
             // border: 1px solid transparent;
             // width: $img-max-width;
             box-sizing: border-box;
             // border: 1px solid rgba(white, 0.9);
-            border-radius: 3px;
+            border-radius: $selectable-border-radius;
         }
         &[data-is-match="true"] {
             &::before {
@@ -137,6 +151,9 @@ $selectable-margin: 6px 2px 2px;
                 img {
                     opacity: 0.4;
                 }
+            }
+            img[src*="/files/styles"] {
+                opacity: 0.4;
             }
         }
         $highlight-padding: 0;
@@ -177,7 +194,7 @@ $selectable-margin: 6px 2px 2px;
     }
 
     .group .selectable {
-        margin-top: 2px;
+        // margin-top: 2px;
     }
 }
 
@@ -189,6 +206,8 @@ $selectable-margin: 6px 2px 2px;
 .groupables {
   $groupables-bg-colour: grey;
   $groupables-border-colour: shade($groupables-bg-colour, 12%);
+  $groupables-border-size: 8px;
+  $groupables-gap: 3px;
 
     ul.content {
         margin-top: 1em;
@@ -203,18 +222,26 @@ $selectable-margin: 6px 2px 2px;
     .view-content {
         @include group;
     }
-    .groupable {}
+    .groupable {
+        display: block;
+        float: left;
+        border: solid ($groupables-border-size + $groupables-gap) $groupables-bg-colour;
+        margin: 0;
+    }
     .group {
         list-style: none;
         background-color: rgba( white, 0.9 );
         // border: 1px solid $groupables-border-colour;
-        @include border-radius( $corner_radius-large );
-        padding: 0.2em;
-        @include box-sizing( border-box );
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: inline-block;
-        margin-right: 16px;
+        @include border-radius( $groupables-border-size + 4px );
+        padding: $groupables-border-size;
+        box-sizing: border-box;
+        // margin-top: 10px;
+        // margin-bottom: 10px;
+        // margin-right: 6px;
+        margin: 0 $groupables-border-size 0 0;
+        border: solid $groupables-gap $groupables-bg-colour;
+        // display: inline-block;
+        float: left;
 
         h3 {
             margin-top: 0;
@@ -227,6 +254,14 @@ $selectable-margin: 6px 2px 2px;
         &,
         ul {
             width: auto;
+        }
+
+        .groupable {
+            border: none;
+
+            &:not(:first-child) {
+                margin-left: 4px;
+            }
         }
     }
 

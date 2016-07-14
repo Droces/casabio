@@ -60,7 +60,7 @@ div.ctools-modal-content {
     height: $icon-size;
     overflow: hidden;
     padding: 0.2em;
-    @include box-sizing( border-box );
+    box-sizing: border-box;
 
     &:before {
       @extend %font-icon; /* using an icon-font for these icon-styled links */

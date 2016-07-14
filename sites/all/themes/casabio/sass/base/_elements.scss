@@ -2,7 +2,7 @@
                                                             FILE INFO
 
 File name       Components
-Description     
+Description
 
    ================================================================================
                                                             CONTENTS
@@ -12,7 +12,7 @@ Links
 Tables
 Forms
 
-*/ 
+*/
 
 
 
@@ -25,7 +25,7 @@ body {
     font-family: $font-body;
     line-height: $line-height;
     color: $colour-text;
-    background-color: #f8f8f8;
+    background-color: $colour-page-bg;
     /* these styles allow floated (absolutely-positioned) images behind body content */
     z-index: -10;
     position: relative;
@@ -53,7 +53,7 @@ p {
     line-height: 1.4em;
     margin: 0.8em 0;}
 p,
-li, 
+li,
 td, th {
     max-width: 60em;
     // text-align: justify;
@@ -72,29 +72,79 @@ pre {}
 img {
     width: auto;
     height: auto;
-    max-width: 100%;}
+    max-width: 100%;
+}
+
+main {
+    span,
+    a,
+    label,
+    strong,
+    em { // Basically, all inline elements that don't have a visible edge
+        &[title] {
+            border-bottom: dotted 2px $colour-links;
+            cursor: help;
+        }
+    }
+}
 
 fieldset {
-    padding: $data-field-padding !important;
+    padding: 1em;
     margin-top: 1em;
     margin-bottom: 1em;
     @include border-radius ( $corner-radius-large );
     background-color: rgba(black, 0.03);
+    box-sizing: border-box;
+    position: relative;
+
+    &.collapsible {
+        padding-top: 1.4em;
+        margin-top: 1em + 1.3em; // Extra to account for lifted legend
+    }
 
     legend {
-        padding-left: 0.3em;
-        padding-right: 0.3em;
         font-weight: 600;
+        box-sizing: border-box;
+        width: 100%;
+        position: absolute;
+        left: 0px;
+        top: -1em;
+            background: #dbdbdb;
+            border: 1px solid rgb(204, 204, 204);
+            border-radius: 3px;
+            padding: 0.4em 0.7em;
+
+        a {
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+            // background-image: inline-image("menu-expanded.png");
+            // background-image: inline-image("menu-collapsed.png");
+
+            &::before {
+                @extend %font-icon;
+                float: right;
+                font-weight: bold;
+                font-size: 1.4em;
+            }
+            @extend .icon-arrow_drop_up;
+        }
+        span.summary {
+            position: absolute;
+        }
     }
+    &.collapsed {
+        legend a {
+            @extend .icon-arrow_drop_down;
+        }
+    }
+
     form & .description {
         color: scale-lightness( $colour-text, 20% );
     }
     html.js &.collapsed {
-        // border-bottom-width: 1px;
-        // border-bottom-color: white;
-        // border-left-width: 1px;
-        // border-right-width: 1px;
         border-width: 1px;
+        height: 2em;
     }
 }
 
@@ -118,7 +168,7 @@ blockquote {
 
     p {
         margin: 0;}
-    
+
     /* the following rules insert large quotation marks */
     &:before, &:after {
         font-size: 2.5em;
@@ -142,6 +192,31 @@ cite {
     @extend cite;
 }
 
+main > section {}
+main > label,
+main > * > label {
+    font-size: 1.6em;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+[aria-collapsed] {
+    max-height: 0px;
+    overflow: hidden;
+}
+[aria-enabled="false"] {
+    position: relative;
+
+    &::before {
+        content: "";
+        z-index: 50;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba($colour-page-bg, 0.6);
+    }
+}
 
 
 /* -----------------------------------------------------------------------------
@@ -200,6 +275,8 @@ h1, h2, h3, h4, h5, h6 { // use of h5 and h6 are not recommended
 
 h1 {
     line-height: $h1-line-height;
+    font-size: 2.2em;
+    text-align: center;
 }
 h2 {
     line-height: $h2-line-height;
@@ -228,24 +305,29 @@ header h1 ~ p {
 /* -----------------------------------------------------------------------------
                                                             Links
 */
-a {
-    color: $colour-links;
+a,
+[role="link"] {
     font-weight: 600;
     text-decoration: none;
+
+    &,
+    &:link,
+    &:visited {
+        color: $colour-links;
+    }
+    &:hover,
+    &:focus {
+        color: shade( $colour-links, 50% );
+        text-decoration: underline;
+    }
+    &:active { /* a link when it is 'clicked' on */
+        color: shade( $colour-links, 30% );
+    }
+    &.active,
+    &[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
+        font-weight: bold;
+    }
 }
-a:link {}
-a:visited {
-    color: $colour-links;}
-a:hover,
-a:focus {
-    color: shade( $colour-links, 50% );
-    text-decoration: underline;
-}
-a:active { /* a link when it is 'clicked' on */
-    color: shade( $colour-links, 30% );}
-a.active,
-a[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
-    font-weight: bold;}
 
 
 
@@ -259,7 +341,8 @@ table {
     thead {
         tr {}
         a {
-            display: block;}
+            display: block;
+        }
     }
     tbody th {}
 
@@ -278,6 +361,11 @@ table {
     th {
         text-align: left;
         border-bottom: 1px solid #999;
+        background-color: rgba(black, 0.04);
+
+        [title] {
+            border-bottom: none;
+        }
 
         &.active {
             background-color: rgba(black, 0.03);
@@ -305,7 +393,7 @@ table {
 }
 
 .borderless {
-    td, 
+    td,
     th {
         border: none;}
 }
@@ -321,7 +409,7 @@ table {
 form {
     @include group;
     max-width: 100%;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
 }
 
 
@@ -372,7 +460,7 @@ label {
 /* Button text should always be in all-caps */
 /* Buttons should always have a minimum size for all pointers (including touch) */
 button,
-*[role="button"],
+a[role="button"],
 a.button,
 .button > a,
 input[type="reset"],
@@ -399,7 +487,7 @@ button {
     border: none /* solid 1px #CFCFCF */;
     text-shadow: -0.03em -0.03em 0.04em rgba(black, 0.3);
     padding: $pointer_target-padding;
-    
+
     &:hover,
     &:focus {
         @include background-image($pointable-background);
@@ -419,7 +507,7 @@ button {
         @include background-image(linear-gradient($colour-links, shade($colour-links, 12%)));
         // border-color: shade($colour-buttons, 5%);
         color: white;
-        
+
         &:hover,
         &:focus {
             background: shade( $colour-links, 15% );
@@ -439,12 +527,12 @@ button {
         color: rgba(white, 0.6);
         text-shadow: none;
     }
-    
+
     &.primary {
         @include background-image(linear-gradient($colour-buttons, shade($colour-buttons, 12%)));
         // border-color: shade($colour-buttons, 5%);
         color: white;
-        
+
         &:hover,
         &:focus {
             background: shade( $colour-buttons, 15% );
@@ -467,7 +555,7 @@ button {
         padding-left: 0.4em;
         padding-right: 0.4em;
         text-shadow: none;
-    
+
         &:hover,
         &:focus {
             // color: shade( $colour-text, 10% );

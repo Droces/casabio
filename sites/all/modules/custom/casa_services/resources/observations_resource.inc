@@ -171,67 +171,24 @@ function _observations_resource_definition() {
           ),
         ),
       ),
+      'targeted_actions' => array(
+        'add_interaction' => array(
+          'help' => "Add an interaction of an observation",
+          'file' => $observations_resource_file,
+          'callback' => '_observations_resource_add_interaction',
+          'access callback' => '_node_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+          'args' => array(
+            $node_operation_args['nid'],
+            $node_operation_args['node'],
+          ),
+        ),
+      ),
     ),
   );
 
   return $observation_resource;
-}
-
-
-
-/**
- * @return boolean
- *   TRUE if the user is permitted access, FALSE otherwise.
- */
-function _casa_node_resource_access($op = 'view', $args = array()) {
-  // dpm($op, 'op');
-  // dpm($args, 'args');
-
-  if ($op == 'update') {
-    $nids = explode('|', $args[0]);
-    // dpm($nids, 'nids');
-    if (count($nids) == 1) {
-      return _node_resource_access($op, $args);
-    }
-    else {
-      // // Adds backwards compatability with regression fixed in #1083242
-      // if (isset($args[0])) {
-      //   $args[0] = _services_access_value($args[0], 'node');
-      // }
-
-      // // Make sure we have an object or this all fails, some servers can
-      // // mess up the types.
-      // if (is_array($args[0])) {
-      //   $args[0] = (object) $args[0];
-      // }
-      // elseif (!is_array($args[0]) && !is_object($args[0])) { //This is to determine if it is just a string happens on node/%NID
-      //   $args[0] = (object) array('nid' => $args[0]);
-      // }
-
-      // if ($op != 'create' && !empty($args)) {
-      //   $node = node_load($args[0]->nid);
-      // }
-      // elseif ($op == 'create') {
-      //   if (isset($args[0]->type)) {
-      //     $node = $args[0]->type;
-      //     return node_access($op, $node);
-      //   }
-      //   else {
-      //     return services_error(t('Node type is required'), 406);
-      //   }
-      // }
-      // if (isset($node->nid) && $node->nid) {
-      //   return node_access($op, $node);
-      // }
-      // else {
-      //   return services_error(t('Node @nid could not be found', array('@nid' => $args[0]->nid)), 404);
-      // }
-      return TRUE;
-    }
-  }
-  else {
-    return _node_resource_access($op, $args);
-  }
 }
 
 
@@ -267,6 +224,9 @@ function _observations_resource_retrieve($nid) {
 function _observations_resource_create($node) {
   // dpm($node, 'node');
 
+  // node_payload_normaliser($node);
+  // return $node;
+
   // If the node isn't an observation
   if($node['type'] != 'observation') {
     services_error("Can only create observations.", 406); // 406: Not Acceptable
@@ -283,13 +243,22 @@ function _observations_resource_create($node) {
 
 /**
  * Checks that param $node is an observation; if it is, then calls _node_resource_update().
- * 
+ *
+ * How the _node_resource_update() function works:
+ *   1. Creates a 'new node values' object from submitted values
+ *   2. Loads the existing node from the nid parameter
+ *   3. Loads the existing node's edit form
+ *   4. Creates a form_state array and inserts the 'new node values'
+ *   5. Submits the new form_state array with the existing node
+ *
  * @param mixed $nid
  *   Either an int nid of a single node to be updated, or a string of nids concatenated by '|' (eg. '45|46') of mutiple nodes to be updated using the same values provided in $node.
  *
  * @see _node_resource_update()
  */
 function _observations_resource_update($nid, $node) {
+  // dpm($node, '$node');
+  // dpm($nid, '$nid');
 
   // If the node isn't an observation
   if ($node['type'] != 'observation') {
@@ -370,6 +339,11 @@ function _observations_resource_community_identifications($nid) {
   $output = array();
 
   $comm_ids = get_referencing_nodes($type, $field1, $column1, $nid1);
+
+  if(!$comm_ids) {
+    return NULL;
+  }
+
   // dpm($comm_ids, 'comm_ids');
   foreach ($comm_ids as $nid => $comm_id) {
     // ---------------------------------- Copied from Services' _node_resource_retrieve()
@@ -391,4 +365,81 @@ function _observations_resource_community_identifications($nid) {
 
   // dpm($comm_ids, 'comm_ids');
   return $comm_ids;
+}
+
+
+/**
+ * @param $params
+ *   an array
+ */
+function _observations_resource_add_interaction($nid, $params) {
+
+  try {
+    $interaction = observation_add_interaction($nid, $params);
+    return $interaction;
+  }
+  catch (Exception $e) {
+    services_error($e->getMessage(), 406); // 406: Not Acceptable
+    return NULL;
+  }
+}
+
+
+/**
+ * Converts a simple service payload of node info into a normalised array representing the node.
+ */
+function node_payload_normaliser($payload) {
+  $node_array = array();
+  $language = 'und';
+
+  foreach ($payload as $field_name => $value) {
+    // dpm($value);
+
+    $info = field_info_field($field_name);
+
+    if ($info) {
+      // dpm($info, $field_name . ' $info');
+
+      $columns = array_keys($info['columns']);
+
+      switch ($info['type']) {
+        case 'geofield':
+
+          // @todo Make this support more types.
+          $geometry_type = 'POINT';
+
+          $node_array[$field_name] =
+            array($language => array(0 => array($columns[0] =>
+              $geometry_type . ' (' . implode(' ', $value) . ')')));
+
+          break;
+        case 'entityreference':
+
+          $title = '';
+          $collection = node_load($value);
+          // dpm($collection, '$collection');
+          if ($collection) {
+            $title = $collection->title;
+          }
+
+          $node_array[$field_name] =
+            array($language => array(0 => array($columns[0] =>
+              $title . ' (' . $value . ')')));
+
+          break;
+
+        default:
+          $node_array[$field_name] =
+            array($language => array(0 => array($columns[0] => $value)));
+          break;
+      }
+    }
+    // If this is not a field, but a property (eg. title, nid, etc.)
+    else {
+      $node_array[$field_name] = $value;
+    }
+  }
+
+  // dpm($node_array, '$node_array');
+  return $node_array;
 }

@@ -113,7 +113,7 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
   );
   // Exported menu link: menu-my_span-classicon-assessmentspan-contributions:node/7.
@@ -134,7 +134,7 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -50,
+    'weight' => -49,
     'customized' => 1,
   );
 

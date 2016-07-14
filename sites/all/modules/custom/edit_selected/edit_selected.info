@@ -1,18 +1,18 @@
 ; ==============================================================================
-; 													BASICS
+;                           BASICS
 
-name = 			Edit Selected
-description = 	Creates blocks that display a simplified node edit form. When setup with a view, this allows selecting multiple nodes and editing them all at once.
+name =          Edit Selected
+description =   Creates blocks that display a simplified node edit form. When setup with a view, this allows selecting multiple nodes and editing them all at once.
 
-core = 			7.x
-package = 		Casabio
-; configure = 	admin/config/content/example
-; php = 		5.3
+core =          7.x
+package =       Casabio
+; configure =   admin/config/content/example
+; php =     5.3
 
 
 
 ; ==============================================================================
-; 													DEPENDENCIES
+;                           DEPENDENCIES
 
 dependencies[] = views
 dependencies[] = entity
@@ -20,21 +20,21 @@ dependencies[] = entity
 
 
 ; ==============================================================================
-; 													STYLESHEETS
+;                           STYLESHEETS
 
 ; stylesheets[all][] = node.css
 
 
 
 ; ==============================================================================
-; 													SCRIPTS
+;                           SCRIPTS
 
 ;scripts[] = scripts/script.js
 
 
 
 ; ==============================================================================
-; 													FILES
+;                           FILES
 
 files[] = form.class.inc
 files[] = selectable_form.class.inc

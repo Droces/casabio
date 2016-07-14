@@ -34,37 +34,39 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
-  $handler->display->display_options['style_options']['grouping'] = array(
-    0 => array(
-      'field' => 'title_1',
-      'rendered' => 1,
-      'rendered_strip' => 0,
-    ),
-  );
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
-    'field_image' => 'field_image',
+    'nid' => 'nid',
+    'field_pictures_observation' => 'field_pictures_observation',
     'title' => 'title',
     'name' => 'name',
     'field_location' => 'field_location',
-    'field_identifications' => 'field_identifications',
     'created' => 'created',
     'field_date_observed' => 'field_date_observed',
+    'changed' => 'changed',
     'title_1' => 'title_1',
     'edit_node' => 'edit_node',
     'delete_node' => 'edit_node',
     'view_node' => 'edit_node',
+    'field_collection' => 'field_collection',
+    'delta' => 'delta',
   );
-  $handler->display->display_options['style_options']['default'] = 'field_date_observed';
+  $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'views_bulk_operations' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_image' => array(
-      'sortable' => 0,
+    'nid' => array(
+      'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_pictures_observation' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -90,11 +92,6 @@ function views_content_administration_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_identifications' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
     'created' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
@@ -103,6 +100,13 @@ function views_content_administration_views_default_views() {
       'empty_column' => 0,
     ),
     'field_date_observed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -131,6 +135,18 @@ function views_content_administration_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'field_collection' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'delta' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
   );
   /* Footer: Global: Result summary */
   $handler->display->display_options['footer']['result']['id'] = 'result';
@@ -148,12 +164,6 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['relationships']['field_collection_target_id']['field'] = 'field_collection_target_id';
   $handler->display->display_options['relationships']['field_collection_target_id']['ui_name'] = 'Collection';
   $handler->display->display_options['relationships']['field_collection_target_id']['label'] = 'Collection';
-  /* Relationship: Main picture */
-  $handler->display->display_options['relationships']['field_main_image_target_id']['id'] = 'field_main_image_target_id';
-  $handler->display->display_options['relationships']['field_main_image_target_id']['table'] = 'field_data_field_main_image';
-  $handler->display->display_options['relationships']['field_main_image_target_id']['field'] = 'field_main_image_target_id';
-  $handler->display->display_options['relationships']['field_main_image_target_id']['ui_name'] = 'Main picture';
-  $handler->display->display_options['relationships']['field_main_image_target_id']['label'] = 'Main picture';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -186,17 +196,24 @@ function views_content_administration_views_default_views() {
       ),
     ),
   );
-  /* Field: Content: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['relationship'] = 'field_main_image_target_id';
-  $handler->display->display_options['fields']['field_image']['label'] = 'Main picture';
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'thumbnail',
-    'image_link' => 'content',
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  /* Field: Content: Pictures in observation */
+  $handler->display->display_options['fields']['field_pictures_observation']['id'] = 'field_pictures_observation';
+  $handler->display->display_options['fields']['field_pictures_observation']['table'] = 'field_data_field_pictures_observation';
+  $handler->display->display_options['fields']['field_pictures_observation']['field'] = 'field_pictures_observation';
+  $handler->display->display_options['fields']['field_pictures_observation']['label'] = 'Main picture';
+  $handler->display->display_options['fields']['field_pictures_observation']['type'] = 'entityreference_entity_view';
+  $handler->display->display_options['fields']['field_pictures_observation']['settings'] = array(
+    'view_mode' => 'inline',
+    'links' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
+  $handler->display->display_options['fields']['field_pictures_observation']['delta_limit'] = '1';
+  $handler->display->display_options['fields']['field_pictures_observation']['delta_offset'] = '0';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -217,14 +234,6 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_location']['settings'] = array(
     'data' => 'full',
   );
-  /* Field: Content: Identifications */
-  $handler->display->display_options['fields']['field_identifications']['id'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['field'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['settings'] = array(
-    'link' => 1,
-  );
-  $handler->display->display_options['fields']['field_identifications']['delta_offset'] = '0';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -244,6 +253,13 @@ function views_content_administration_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'short';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'long';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title_1']['id'] = 'title_1';
   $handler->display->display_options['fields']['title_1']['table'] = 'node';
@@ -270,6 +286,20 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['text'] = 'view';
+  /* Field: Content: Collection */
+  $handler->display->display_options['fields']['field_collection']['id'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['table'] = 'field_data_field_collection';
+  $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['settings'] = array(
+    'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Content: Identifications (field_identifications:delta) */
+  $handler->display->display_options['fields']['delta']['id'] = 'delta';
+  $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_identifications';
+  $handler->display->display_options['fields']['delta']['field'] = 'delta';
+  $handler->display->display_options['fields']['delta']['label'] = 'Identifications';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -312,6 +342,74 @@ function views_content_administration_views_default_views() {
     4 => 0,
     5 => 0,
     3 => 0,
+  );
+  /* Filter criterion: Content: Nid */
+  $handler->display->display_options['filters']['nid']['id'] = 'nid';
+  $handler->display->display_options['filters']['nid']['table'] = 'node';
+  $handler->display->display_options['filters']['nid']['field'] = 'nid';
+  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Nid';
+  $handler->display->display_options['filters']['nid']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
+  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Updated date */
+  $handler->display->display_options['filters']['changed']['id'] = 'changed';
+  $handler->display->display_options['filters']['changed']['table'] = 'node';
+  $handler->display->display_options['filters']['changed']['field'] = 'changed';
+  $handler->display->display_options['filters']['changed']['operator'] = '>=';
+  $handler->display->display_options['filters']['changed']['value']['type'] = 'offset';
+  $handler->display->display_options['filters']['changed']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['changed']['expose']['operator_id'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['label'] = 'Updated date';
+  $handler->display->display_options['filters']['changed']['expose']['description'] = 'An offset from the current date, such as "-1 day"';
+  $handler->display->display_options['filters']['changed']['expose']['operator'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['identifier'] = 'changed';
+  $handler->display->display_options['filters']['changed']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Identifications (field_identifications) */
+  $handler->display->display_options['filters']['field_identifications_target_id']['id'] = 'field_identifications_target_id';
+  $handler->display->display_options['filters']['field_identifications_target_id']['table'] = 'field_data_field_identifications';
+  $handler->display->display_options['filters']['field_identifications_target_id']['field'] = 'field_identifications_target_id';
+  $handler->display->display_options['filters']['field_identifications_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator_id'] = 'field_identifications_target_id_op';
+  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['label'] = 'Identifications (field_identifications)';
+  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator'] = 'field_identifications_target_id_op';
+  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['identifier'] = 'field_identifications_target_id';
+  $handler->display->display_options['filters']['field_identifications_target_id']['is_grouped'] = TRUE;
+  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['label'] = 'Identifications (field_identifications)';
+  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['identifier'] = 'field_identifications_target_id';
+  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['group_items'] = array(
+    1 => array(
+      'title' => 'No identifications',
+      'operator' => 'empty',
+      'value' => array(
+        'value' => '.',
+        'min' => '',
+        'max' => '',
+      ),
+    ),
+    2 => array(
+      'title' => 'Has identifications',
+      'operator' => 'not empty',
+      'value' => array(
+        'value' => '.',
+        'min' => '',
+        'max' => '',
+      ),
+    ),
   );
 
   /* Display: Page */
@@ -595,6 +693,15 @@ function views_content_administration_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
+  /* Field: Content: Collection */
+  $handler->display->display_options['fields']['field_collection']['id'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['table'] = 'field_data_field_collection';
+  $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['settings'] = array(
+    'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
@@ -860,15 +967,11 @@ function views_content_administration_views_default_views() {
       ),
     ),
   );
-  /* Field: Content: Preview image */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_main_image']['id'] = 'field_main_image';
   $handler->display->display_options['fields']['field_main_image']['table'] = 'field_data_field_main_image';
   $handler->display->display_options['fields']['field_main_image']['field'] = 'field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_main_image']['settings'] = array(
-    'view_mode' => 'thumbnail',
-    'links' => 1,
-  );
+  $handler->display->display_options['fields']['field_main_image']['label'] = 'Preview image';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -1152,13 +1255,18 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '50';
   $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
+    'nid' => 'nid',
+    'type' => 'type',
     'title' => 'title',
     'field_identified_species' => 'field_identified_species',
     'field_observation' => 'field_observation',
     'field_certainty' => 'field_certainty',
-    'uid' => 'uid',
+    'field_reliability' => 'field_certainty',
+    'name' => 'name',
+    'field_identification_source' => 'field_identification_source',
     'changed' => 'changed',
     'edit_node' => 'edit_node',
     'delete_node' => 'edit_node',
@@ -1166,6 +1274,20 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'type' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -1188,7 +1310,7 @@ function views_content_administration_views_default_views() {
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
-      'separator' => '',
+      'separator' => ' ',
       'empty_column' => 0,
     ),
     'field_certainty' => array(
@@ -1198,7 +1320,23 @@ function views_content_administration_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'uid' => array(
+    'field_reliability' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_identification_source' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -1225,6 +1363,12 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['footer']['result']['id'] = 'result';
   $handler->display->display_options['footer']['result']['table'] = 'views';
   $handler->display->display_options['footer']['result']['field'] = 'result';
+  /* Relationship: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['ui_name'] = 'Author';
+  $handler->display->display_options['relationships']['uid']['label'] = 'Author';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -1270,6 +1414,14 @@ function views_content_administration_views_default_views() {
       'label' => '',
     ),
   );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  /* Field: Content: Type */
+  $handler->display->display_options['fields']['type']['id'] = 'type';
+  $handler->display->display_options['fields']['type']['table'] = 'node';
+  $handler->display->display_options['fields']['type']['field'] = 'type';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -1280,13 +1432,16 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_identified_species']['id'] = 'field_identified_species';
   $handler->display->display_options['fields']['field_identified_species']['table'] = 'field_data_field_identified_species';
   $handler->display->display_options['fields']['field_identified_species']['field'] = 'field_identified_species';
-  $handler->display->display_options['fields']['field_identified_species']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_identified_species']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Content: Observation */
   $handler->display->display_options['fields']['field_observation']['id'] = 'field_observation';
   $handler->display->display_options['fields']['field_observation']['table'] = 'field_data_field_observation';
   $handler->display->display_options['fields']['field_observation']['field'] = 'field_observation';
   $handler->display->display_options['fields']['field_observation']['settings'] = array(
-    'link' => 0,
+    'link' => 1,
     'empty_fields_handler' => '',
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
@@ -1294,14 +1449,38 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_certainty']['id'] = 'field_certainty';
   $handler->display->display_options['fields']['field_certainty']['table'] = 'field_data_field_certainty';
   $handler->display->display_options['fields']['field_certainty']['field'] = 'field_certainty';
-  /* Field: Content: Author uid */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'node';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  /* Field: Content: Type */
-  $handler->display->display_options['fields']['type']['id'] = 'type';
-  $handler->display->display_options['fields']['type']['table'] = 'node';
-  $handler->display->display_options['fields']['type']['field'] = 'type';
+  $handler->display->display_options['fields']['field_certainty']['label'] = 'Certainty / Reliability';
+  $handler->display->display_options['fields']['field_certainty']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Field: Reliability */
+  $handler->display->display_options['fields']['field_reliability']['id'] = 'field_reliability';
+  $handler->display->display_options['fields']['field_reliability']['table'] = 'field_data_field_reliability';
+  $handler->display->display_options['fields']['field_reliability']['field'] = 'field_reliability';
+  $handler->display->display_options['fields']['field_reliability']['settings'] = array(
+    'thousand_separator' => '',
+    'decimal_separator' => '.',
+    'scale' => '2',
+    'prefix_suffix' => 1,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Contributor';
+  /* Field: Content: Identification source */
+  $handler->display->display_options['fields']['field_identification_source']['id'] = 'field_identification_source';
+  $handler->display->display_options['fields']['field_identification_source']['table'] = 'field_data_field_identification_source';
+  $handler->display->display_options['fields']['field_identification_source']['field'] = 'field_identification_source';
+  $handler->display->display_options['fields']['field_identification_source']['label'] = 'Source';
+  $handler->display->display_options['fields']['field_identification_source']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'node';
@@ -1351,14 +1530,17 @@ function views_content_administration_views_default_views() {
     3 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
+  $handler->display->display_options['filters']['type']['is_grouped'] = TRUE;
   $handler->display->display_options['filters']['type']['group_info']['label'] = 'Type';
   $handler->display->display_options['filters']['type']['group_info']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['group_info']['default_group'] = '1';
   $handler->display->display_options['filters']['type']['group_info']['group_items'] = array(
     1 => array(
-      'title' => 'Comm Id.',
+      'title' => 'Both',
       'operator' => 'in',
       'value' => array(
         'identification_community' => 'identification_community',
+        'identification' => 'identification',
         'all' => 0,
         'article' => 0,
         'page' => 0,
@@ -1366,12 +1548,12 @@ function views_content_administration_views_default_views() {
         'collection' => 0,
         'gallery' => 0,
         'habitat_record' => 0,
-        'identification' => 0,
         'link' => 0,
         'observation' => 0,
         'openlayers_example_content' => 0,
         'picture' => 0,
         'slide' => 0,
+        'slideshow_page' => 0,
         'source' => 0,
         'threat_assessment' => 0,
         'webform' => 0,
@@ -1395,17 +1577,17 @@ function views_content_administration_views_default_views() {
         'openlayers_example_content' => 0,
         'picture' => 0,
         'slide' => 0,
+        'slideshow_page' => 0,
         'source' => 0,
         'threat_assessment' => 0,
         'webform' => 0,
       ),
     ),
     3 => array(
-      'title' => 'Both',
+      'title' => 'Community identification',
       'operator' => 'in',
       'value' => array(
         'identification_community' => 'identification_community',
-        'identification' => 'identification',
         'all' => 0,
         'article' => 0,
         'page' => 0,
@@ -1413,11 +1595,13 @@ function views_content_administration_views_default_views() {
         'collection' => 0,
         'gallery' => 0,
         'habitat_record' => 0,
+        'identification' => 0,
         'link' => 0,
         'observation' => 0,
         'openlayers_example_content' => 0,
         'picture' => 0,
         'slide' => 0,
+        'slideshow_page' => 0,
         'source' => 0,
         'threat_assessment' => 0,
         'webform' => 0,
@@ -1458,6 +1642,76 @@ function views_content_administration_views_default_views() {
     3 => 0,
   );
   $handler->display->display_options['filters']['field_identified_species_tid']['vocabulary'] = 'taxa';
+  /* Filter criterion: Content: Nid */
+  $handler->display->display_options['filters']['nid']['id'] = 'nid';
+  $handler->display->display_options['filters']['nid']['table'] = 'node';
+  $handler->display->display_options['filters']['nid']['field'] = 'nid';
+  $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['label'] = 'Nid';
+  $handler->display->display_options['filters']['nid']['expose']['use_operator'] = TRUE;
+  $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
+  $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
+  $handler->display->display_options['filters']['nid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Updated date */
+  $handler->display->display_options['filters']['changed']['id'] = 'changed';
+  $handler->display->display_options['filters']['changed']['table'] = 'node';
+  $handler->display->display_options['filters']['changed']['field'] = 'changed';
+  $handler->display->display_options['filters']['changed']['operator'] = '>=';
+  $handler->display->display_options['filters']['changed']['value']['type'] = 'offset';
+  $handler->display->display_options['filters']['changed']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['changed']['expose']['operator_id'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['label'] = 'Updated date';
+  $handler->display->display_options['filters']['changed']['expose']['description'] = 'offset from the current time such as "+1 day"';
+  $handler->display->display_options['filters']['changed']['expose']['operator'] = 'changed_op';
+  $handler->display->display_options['filters']['changed']['expose']['identifier'] = 'changed';
+  $handler->display->display_options['filters']['changed']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Identification source (field_identification_source) */
+  $handler->display->display_options['filters']['field_identification_source_value']['id'] = 'field_identification_source_value';
+  $handler->display->display_options['filters']['field_identification_source_value']['table'] = 'field_data_field_identification_source';
+  $handler->display->display_options['filters']['field_identification_source_value']['field'] = 'field_identification_source_value';
+  $handler->display->display_options['filters']['field_identification_source_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_identification_source_value']['expose']['operator_id'] = 'field_identification_source_value_op';
+  $handler->display->display_options['filters']['field_identification_source_value']['expose']['label'] = 'Source';
+  $handler->display->display_options['filters']['field_identification_source_value']['expose']['operator'] = 'field_identification_source_value_op';
+  $handler->display->display_options['filters']['field_identification_source_value']['expose']['identifier'] = 'field_identification_source_value';
+  $handler->display->display_options['filters']['field_identification_source_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: User: Name */
+  $handler->display->display_options['filters']['uid']['id'] = 'uid';
+  $handler->display->display_options['filters']['uid']['table'] = 'users';
+  $handler->display->display_options['filters']['uid']['field'] = 'uid';
+  $handler->display->display_options['filters']['uid']['relationship'] = 'uid';
+  $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Contributor';
+  $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
+  $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');

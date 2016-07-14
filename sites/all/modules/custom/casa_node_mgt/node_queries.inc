@@ -37,7 +37,7 @@ function get_referencing_nodes($type = NULL,
     return $result['node'];
   }
   else {
-    return NULL;
+    return [];
   }
 
 }
@@ -57,8 +57,10 @@ function get_referencing_nodes($type = NULL,
  *   The nid of the observation that the identifications must reference.
  * @param $tid
  *   Optional. The tid of the taxon that the identifications must also reference.
+ * @param $uid
+ *   Optional. The UID of the user that created the identification.
  */
-function get_identifications_refing_observation($type = 'identification', $nid, $tid = NULL) {
+function get_identifications_refing_observation($type = 'identification', $nid, $tid = NULL, $uid = NULL) {
 
   if ($type != 'identification' && $type != 'identification_community') {
     throw new InvalidArgumentException("Param \$type not valid.", 1);
@@ -94,13 +96,110 @@ function get_identifications_refing_observation($type = 'identification', $nid, 
     $query -> fieldCondition($field2, $column2, $tid, '=');
   }
 
+  if ($uid) {
+    $query -> propertyCondition('uid', $uid);
+  }
+
   $result = $query -> execute();
 
   if (isset($result['node'])) {
     return $result['node'];
   }
   else {
-    return NULL;
+    return [];
+  }
+}
+
+
+
+function get_identifications_by_user($uid, $limit) {
+  $field = 'field_pictures_observation';
+  $column = 'target_id';
+
+  $query = new EntityFieldQuery();
+  $query
+    -> entityCondition('entity_type', 'node')
+    -> entityCondition('bundle', 'identification')
+    -> propertyCondition('uid', $uid)
+    -> propertyOrderBy('created', 'DESC') // Most recent first
+    -> range(0, $limit)
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+  $result = $query -> execute();
+
+  if (isset($result['node'])) {
+    return $result['node'];
+  }
+  else {
+    return [];
+  }
+}
+
+
+
+
+
+/**
+ * A specialised EntityFieldQuery function.
+ * Gets the identifications or community identifications that reference the
+ * observation specified by the provided nid.
+ *
+ * @param $type
+ *   The content type to get. Either 'identification' (default) or 'identification_community'.
+ * @param $nid
+ *   The nid of the observation that the identifications must reference.
+ * @param $tid
+ *   Optional. The tid of the taxon that the identifications must also reference.
+ */
+function get_comm_id_refing_identification($nid) {
+
+  // Get first node of this type to use, using EntityFieldQuery
+  $query = new EntityFieldQuery();
+  $query
+    -> entityCondition('entity_type', 'node')
+    -> entityCondition('bundle', 'identification_community')
+    -> fieldCondition('field_identifications', 'target_id', $nid, '=')
+    -> range(0, 1) // Return up to 100 results (there should never be that many).
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+
+  $result = $query -> execute();
+
+  if (isset($result['node'])) {
+    return reset($result['node']); // Return first (and only) resulting node.
+  }
+  else {
+    return [];
+  }
+}
+
+
+
+/**
+ * A specialised EntityFieldQuery function.
+ * Gets the observation (there should be only one) that references the picture
+ * specified by the provided nid.
+ */
+function get_observations_with_localities($range_max) {
+
+  $field = 'field_locality';
+  $column = 'tid';
+
+  $query = new EntityFieldQuery();
+  $query
+    -> entityCondition('entity_type', 'node')
+    -> entityCondition('bundle', 'observation')
+    -> fieldCondition('field_locality', 'tid', 'NULL', 'IS NOT NULL')
+    -> range(0, $range_max)
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+  $result = $query -> execute();
+
+  if (isset($result['node'])) {
+    return $result['node'];
+  }
+  else {
+    return [];
   }
 }
 
@@ -131,6 +230,70 @@ function get_observation_referencing_pic($pic_nid) {
     return reset($result['node']); // Return first (and only) resulting node.
   }
   else {
-    return NULL;
+    return [];
   }
+}
+
+
+
+
+/**
+ * A specialised EntityFieldQuery function.
+ * Gets the observation (there should be only one) that references the picture
+ * specified by the provided nid.
+ */
+function get_observations_referencing_collection($collection_nid) {
+
+  $field = 'field_collection';
+  $column = 'target_id';
+
+  $query = new EntityFieldQuery();
+  $query
+    -> entityCondition('entity_type', 'node')
+    -> entityCondition('bundle', 'observation')
+    -> fieldCondition($field, $column, $collection_nid, '=')
+    -> range(0, 2000) // Return up to 2000 results
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+  $result = $query -> execute();
+
+  if (isset($result['node'])) {
+    return $result['node']; // Return first (and only) resulting node.
+  }
+  else {
+    return [];
+  }
+}
+
+
+
+
+/**
+ * Counts number of entities referencing a particular node.
+ *
+ * @param $field
+ *   Machine name of field used as reference.
+ * @param $nid
+ *   Nid of the node that the entities must reference
+ * @param $bundle
+ *   (optional) Bundle of entities that should be counted.
+ */
+function get_referencings_count($field, $nid, $bundle = NULL) {
+
+  // $field = 'field_collection';
+  $column = 'target_id';
+
+  $query = new EntityFieldQuery();
+  $query
+    -> entityCondition('entity_type', 'node')
+    -> fieldCondition($field, $column, $nid, '=')
+    // ->addMetaData('account', user_load(1)) // Run the query as user 1.
+  ;
+
+  if ($bundle) {
+    $query -> entityCondition('bundle', $bundle);
+  }
+
+  $count = $query->count()->execute();
+  return $count;
 }

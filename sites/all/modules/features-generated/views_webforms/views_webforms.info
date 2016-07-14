@@ -1,0 +1,11 @@
+name = Views: Webforms
+description = Views powering the display of webforms and their results
+core = 7.x
+package = Features: Views
+version = 7.x-1.0
+dependencies[] = views
+dependencies[] = webform
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features-generated

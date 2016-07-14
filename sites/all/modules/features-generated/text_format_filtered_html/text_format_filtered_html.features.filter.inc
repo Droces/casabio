@@ -16,7 +16,7 @@ function text_format_filtered_html_filter_default_formats() {
     'name' => 'Filtered HTML',
     'cache' => 1,
     'status' => 1,
-    'weight' => -8,
+    'weight' => -10,
     'filters' => array(
       'filter_url' => array(
         'weight' => 0,

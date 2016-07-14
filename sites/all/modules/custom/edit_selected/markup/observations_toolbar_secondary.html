@@ -10,9 +10,13 @@
 <!-- Below are small forms that perform simple functions. -->
 
 <!-- Add picture-less observations form -->
-<div id="create-blank-observations" data-transform="to-dialog" style="display: none;" 
+<div id="create-blank-observations" data-transform="to-dialog" data-width="450" style="display: none;"
   title="Create picture-less observations: ">
-  <form action="ajax/create-blank-observations" method="post">
+
+  <p>Picture-less observations are useful when you've recorded a species you saw
+    but were not able to take a photograph of it.</p>
+
+  <form action="ajax/observations/create-blank" method="post">
     <input id="count" type="text" name="count" value="1" size="2" />
     <button type="submit">Create</button>
     <input id="collection-id" name="collection-id" type="hidden" />
@@ -20,9 +24,18 @@
 </div>
 
 <!-- Numbering specimens form -->
-<div id="number-specimens" data-transform="to-dialog" style="display: none;"
+<div id="number-specimens" data-transform="to-dialog" data-width="450" style="display: none;"
   title="Create picture-less observations: ">
   <form action="ajax/number_specimens" method="post">
+
+    <p>Numbering specimens (observations) is for scientific use, such as for
+      submitting plant specimens to a herbarium.</p>
+
+    <p>The <em>increment</em> method starts from a number you specify and adds
+      one for each specimen. Eg. starting with '300': 300, 301, 302, etc.</p>
+
+    <p>The <em>append</em> method adds an incremented number to the text you
+      specify. Eg. using 'Dave2013': Dave2013-1, Dave2013-2, etc.</p>
 
     <select id="method" name="method">
       <option value="increment">Increment</option>
@@ -40,29 +53,31 @@
 
 <!-- Show fields radios form -->
 <div role="toolbar">
-  <h3 for="show-fields-radios" class="inline">Show: </h3>
+  <h3 for="show-fields-radios" class="inline" title="Display information that you've added.">Show: </h3>
   <form>
   <div id="show-fields-radios" class="radios inline">
     <input type="radio" name="show-fields" id="show-no_fields" value="no_fields" checked>
       <label for="show-no_fields">No fields</label>
-    <input type="radio" name="show-fields" id="show-title" value="title"/>
-      <label for="show-title">Title</label>
-    <input type="radio" name="show-fields" id="show-count" value="count"/>
-      <label for="show-count">Count</label>
-    <input type="radio" name="show-fields" id="show-observer_name" value="observer_name"/>
-      <label for="show-observer_name">Observer</label>
-    <input type="radio" name="show-fields" id="show-date_observed" value="date_observed"/>
-      <label for="show-date_observed">Date</label>
-    <input type="radio" name="show-fields" id="show-body" value="body"/>
-      <label for="show-body">Description</label>
+    <input type="radio" name="show-fields" id="show-label" value="label"/>
+      <label for="show-label">Name</label>
+    <!-- <input type="radio" name="show-fields" id="show-count" value="count"/>
+      <label for="show-count">Count</label> -->
+    <input type="radio" name="show-fields" id="show-observerName" value="observerName"/>
+      <label for="show-observerName">Observer</label>
+    <input type="radio" name="show-fields" id="show-dateObserved" value="dateObserved"/>
+      <label for="show-dateObserved">Date</label>
+    <input type="radio" name="show-fields" id="show-description" value="description"/>
+      <label for="show-description">Description</label>
     <input type="radio" name="show-fields" id="show-location" value="location"/>
       <label for="show-location">Location</label>
     <input type="radio" name="show-fields" id="show-locality" value="locality"/>
       <label for="show-locality">Locality</label>
-    <input type="radio" name="show-fields" id="show-specimen_id" value="specimen_id"/>
-      <label for="show-specimen_id">Specimen ID</label>
-    <input type="radio" name="show-fields" id="show-identification" value="identification"/>
-      <label for="show-identification">Identification</label>
+    <input type="radio" name="show-fields" id="show-specimenId" value="specimenId"/>
+      <label for="show-specimenId">Specimen ID</label>
+    <input type="radio" name="show-fields" id="show-identifications" value="identifications"/>
+      <label for="show-identifications">Identifications</label>
+    <input type="radio" name="show-fields" id="show-interactions" value="interactions"/>
+      <label for="show-interactions">Interactions</label>
   </div>
   </form>
 </div>

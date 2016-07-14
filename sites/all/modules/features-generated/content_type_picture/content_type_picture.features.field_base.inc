@@ -105,37 +105,22 @@ function content_type_picture_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        'beside' => 'beside',
-        'eaten' => 'being eaten by',
+        'inhabiting' => 'inhabiting',
         'inhabited' => 'being inhabited by',
+        'eating' => 'eating',
+        'eaten' => 'being eaten by',
         'growing' => 'growing on',
-        'among' => 'growing among',
+        'grown' => 'being grown on by',
+        'carrying' => 'carrying',
+        'carried' => 'being carried by',
+        'aggressive' => 'being aggressive to',
+        'aggression' => 'experiencing aggression by',
+        'near' => 'near',
       ),
       'allowed_values_function' => '',
     ),
     'translatable' => 0,
     'type' => 'list_text',
-  );
-
-  // Exported field_base: 'field_interaction_subject'.
-  $field_bases['field_interaction_subject'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_interaction_subject',
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(
-      'max_length' => 255,
-    ),
-    'translatable' => 0,
-    'type' => 'text',
   );
 
   // Exported field_base: 'field_subject'.

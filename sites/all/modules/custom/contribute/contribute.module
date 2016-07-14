@@ -51,17 +51,19 @@
  */
 function contribute_menu() {
   $items['contribute/observation'] = array(
-    'title'           => 'Contribute Observation',
-    'page callback'   => 'contribute_observation_page',
-    'access callback' => TRUE, //array('administer bulk media upload'),
-    'type'            => MENU_NORMAL_ITEM,
+    'title'             => 'Contribute Observation',
+    'page callback'     => 'contribute_observation_page',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
   );
   $items['contribute/finished/%'] = array(
-    'title'           => 'Contribution Complete',
-    'page callback'   => 'get_contribute_mo_finish_content',
-    'page arguments'  => array(2),
-    'access callback' => TRUE, //array('administer bulk media upload'),
-    'type'            => MENU_NORMAL_ITEM,
+    'title'             => 'Contribution Complete',
+    'page callback'     => 'get_contribute_mo_finish_content',
+    'page arguments'    => array(2),
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
   );
   return $items;
 }
@@ -74,13 +76,29 @@ function contribute_menu() {
  * Implements hook_init().
  */
 function contribute_init() {
+
+  $js_files = array();
+
+  // All Contribute pages
+  if (drupal_match_path(current_path(), 'contribute*')) {
+    $js_files += array(
+      drupal_get_path('module', 'contribute') . '/scripts/contribute.js',
+    );
+  }
+
+  // Upload page
+  if (drupal_match_path(current_path(), 'contribute/upload')) {
+    $js_files += array(
+      drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
+    );
+  }
+
+  // Edit Selected pages
   // The paths for which the files should be included
   $pages_with_maps_paths = array(
     'contribute/multiple-observations/observation-info*',
     'contribute/multiple-observations/habitats*',
   );
-
-  // Add JS for maps
   foreach ($pages_with_maps_paths as $active_path) {
     if (drupal_match_path(current_path(), $active_path)) {
 
@@ -92,27 +110,43 @@ function contribute_init() {
       drupal_add_js(array('contribute' =>
         array('current_path' => $active_path)), 'setting');
 
-      $js_files = array(
+      $js_files += array(
         libraries_get_path('openlayers3') . '/build/ol.js',
         drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
       );
       // dpm($js_files, 'js_files');
-
-      foreach ($js_files as $path) {
-        drupal_add_js($path);
-      }
-
     }
   }
-  if (drupal_match_path(current_path(), 'contribute/upload')) {
-    $js_files = array(
+
+  // Contribute observation page
+  if (drupal_match_path(current_path(), 'contribute/observation')) {
+    $js_files += array(
+      libraries_get_path('openlayers3') . '/build/ol.js',
       drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
     );
-
-    foreach ($js_files as $path) {
-      drupal_add_js($path);
-    }
   }
+
+  // dpm($js_files, '$js_files');
+  foreach ($js_files as $path) {
+    drupal_add_js($path);
+  }
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Implements hook_permission().
+ */
+function contribute_permission() {
+  return array(
+    'can contribute content' => array(
+      'title' => t('Can contribute content'),
+      'description' => t('Can create and edit own content of standard types'),
+    ),
+  );
 }
 
 
@@ -125,7 +159,6 @@ function contribute_init() {
  */
 function contribute_observation_page() {
 
-  set_error_handler("exception_error_handler");
   module_load_include('inc', 'node', 'node.pages');
 
   $content = "";
@@ -224,8 +257,6 @@ function contribute_block_info() {
 function contribute_block_view($delta = '') {
   $block = array();
 
-  // set_error_handler("exception_error_handler");
-
   switch ($delta) {
     case 'steps' :
       $block['subject'] = t('Steps');
@@ -262,7 +293,7 @@ function steps_block_view() {
     //   'classes' => ''),
     array(
       'location_path' => 'contribute/upload',
-      'link_content' => '<span class="icon-file_upload"></span> Upload',
+      'link_content' => '<span class="icon-file_upload"></span> Upload pictures',
       'keep_suffix' => TRUE,
       'step_classes' => '',),
     array(
@@ -275,11 +306,11 @@ function steps_block_view() {
       'link_content' => 'Observation info',
       'keep_suffix' => TRUE,
       'step_classes' => '',),
-    array(
-      'location_path' => 'contribute/multiple-observations/picture-info*',
-      'link_content' => 'Picture info',
-      'keep_suffix' => TRUE,
-      'step_classes' => '',),
+    // array(
+    //   'location_path' => 'contribute/multiple-observations/picture-info*',
+    //   'link_content' => 'Picture info',
+    //   'keep_suffix' => TRUE,
+    //   'step_classes' => '',),
     // array(
     //   'location_path' => 'contribute/multiple-observations/habitats*',
     //   'link_content' => '<span class="icon-terrain"></span> Habitats',
@@ -334,16 +365,22 @@ function create_nav_button($links, $direction) {
 
   $buttons;
   $link_content = '';
+  $attributes = array(
+    'class' => 'button',
+  );
 
   if ($direction == 'prev') {
     $increment = -1;
     $link_content = '« Previous';
+    $attributes['rel'] = 'prev';
   }
   elseif ($direction == 'next') {
     $increment = 1;
     $link_content = 'Continue »';
+    $attributes['rel'] = 'next';
   }
 
+  // dpm($links, '$links');
   for ($i = 0; $i < sizeof($links); $i++) {
     if (drupal_match_path(current_path(), $links[$i]['location_path'])) {
       // Suffix is the wildcard in the path, used as a contextual filter for views
@@ -353,11 +390,15 @@ function create_nav_button($links, $direction) {
       $path_wild_pos = strpos($links[$i]['location_path'], '*');
       $suffix = substr(current_path(), $path_wild_pos);
 
-      // If current step is the first step
-      if ($i == 0) {
+      // If current step is the first step, and if this is the previous button
+      if ($i == 0 && $direction == 'prev') {
         return '';
       }
-      // If current step is the second step and this is the previous button (Can't go to first)
+      if ($i == 0 && $direction == 'next') {
+        $attributes['disabled'] = 'true';
+        $suffix = '';
+      }
+      // If current step is the second step, and if this is the previous button (Can't go to first)
       if ($i == 1 && $direction == 'prev') {
         return '<a class="button" disabled>' . $link_content . '</a>';
       }
@@ -373,7 +414,7 @@ function create_nav_button($links, $direction) {
       // dpm($suffix, 'suffix');
 
       // $buttons = '<a class="button" href="' . $url . '">' . $links[$i]['content'] . '</a>';
-      $buttons = l($link_content, $path, array('attributes' => array('class' => 'button')));
+      $buttons = l($link_content, $path, array('attributes' => $attributes));
       // @todo use Drupal's native l() instead.
     }
   }
@@ -391,9 +432,12 @@ function get_contribute_mo_finish_content($collection_nid) {
 
   drupal_set_title('Collection ' . drupal_get_title());
 
+  $nu_pictures = get_referencings_count('field_collection', $collection_nid, 'picture');
+  $nu_observations = get_referencings_count('field_collection', $collection_nid, 'observation');
+
   $content =
-    '<p>You uploaded <strong>#</strong> pictures.<br>'
-    . 'You grouped the pictures into <strong>#</strong> observations.<br>'
+    '<p>You uploaded <strong>' . $nu_pictures . '</strong> pictures.<br>'
+    . 'You grouped the pictures into <strong>' . $nu_observations . '</strong> observations.<br>'
 
     . '<p><em>Thank you for contributing to CasaBio! We appreciate it.</em></p>'
 

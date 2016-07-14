@@ -27,25 +27,6 @@ function menu_main_menu_default_menu_links() {
     'weight' => -45,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_span-classicon-info2span-about:node/1.
-  $menu_links['main-menu_span-classicon-info2span-about:node/1'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/1',
-    'router_path' => 'node/%',
-    'link_title' => '<span class="icon-info2"></span> About',
-    'options' => array(
-      'identifier' => 'main-menu_span-classicon-info2span-about:node/1',
-      'attributes' => array(),
-      'html' => 1,
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -48,
-    'customized' => 1,
-  );
   // Exported menu link: main-menu_span-classicon-lifebuoyspan-help:node/10.
   $menu_links['main-menu_span-classicon-lifebuoyspan-help:node/10'] = array(
     'menu_name' => 'main-menu',
@@ -112,7 +93,6 @@ function menu_main_menu_default_menu_links() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<span class="icon-info2"></span> About');
   t('<span class="icon-lifebuoy"></span> Help');
   t('<span class="icon-mail_outline"></span> Contact');
   t('<span class="icon-view_list"></span> Browse');

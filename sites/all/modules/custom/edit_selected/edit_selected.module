@@ -17,14 +17,13 @@
   edit_selected_menu()
   edit_selected_init()
 
-  number_specimens_page()
+  number_specimens_callback()
 
   // Block functions
   edit_selected_block_info()
   edit_selected_block_view()
 
   edit_selected_buttons_block_content()
-  get_block_info()
   array_replace_recursive_search()
   is_page()
 */
@@ -56,8 +55,8 @@
  */
 function edit_selected_menu() {
   $items['ajax/number_specimens'] = array(
-    'title'             => 'Number Specimens',
-    'page callback'     => 'number_specimens_page',
+    // 'title'             => 'Number Specimens',
+    'page callback'     => 'number_specimens_callback',
     // 'page arguments'    => array('casa_upload_upload_form'),
     'access callback'   => TRUE,
     // 'access arguments'  => array('bulk upload media'),
@@ -65,12 +64,32 @@ function edit_selected_menu() {
     'type'              => MENU_CALLBACK,
   );
 
+  $items['ajax/identifications/by_collection/%'] = array(
+    'page callback'     => 'identifications_by_collection',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'delivery callback' => 'ajax_deliver',
+    'type'              => MENU_CALLBACK,
+  );
+
+  $items['ajax/interactions/by_collection/%'] = array(
+    'page callback'     => 'interactions_by_collection',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'delivery callback' => 'ajax_deliver',
+    'type'              => MENU_CALLBACK,
+  );
+
   $items['contribute/multiple-observations/observation-info/%'] = array(
     // 'title'             => 'Observation Information',
     'page callback'     => 'contribute_mo_observation_page',
     'page arguments'    => array(3),
-    'access callback'   => TRUE,
-    // 'access arguments'  => array('bulk upload media'),
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
     // 'file'              => 'casa_upload.upload.inc',
     'type'              => MENU_NORMAL_ITEM,
   );
@@ -79,8 +98,8 @@ function edit_selected_menu() {
     // 'title'             => 'Observation Information',
     'page callback'     => 'contribute_mo_picture_page',
     'page arguments'    => array(3),
-    'access callback'   => TRUE,
-    // 'access arguments'  => array('bulk upload media'),
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
     // 'file'              => 'casa_upload.upload.inc',
     'type'              => MENU_NORMAL_ITEM,
   );
@@ -97,7 +116,9 @@ function edit_selected_menu() {
  */
 function edit_selected_init() {
 
-  if (is_page('picture-info') || is_page('observation-info')) {
+  if (is_page('picture_info')
+    || is_page('observation_info')
+    || is_page('upload')) {
 
     // Include required JavaScript files and libraries
     $js_files = array(
@@ -105,6 +126,9 @@ function edit_selected_init() {
       libraries_get_path('jquery.hotkeys') . '/jquery.hotkeys.js',
       drupal_get_path('module', 'selection') . '/scripts/selection.js',
       drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js',
+      drupal_get_path('module', 'edit_selected') . '/scripts/form_prefiller.js',
+      drupal_get_path('module', 'edit_selected') . '/scripts/es_api_interactions.js',
+      // drupal_get_path('module', 'edit_selected') . '/scripts/es_maps.js',
     );
 
     foreach ($js_files as $path) {
@@ -117,42 +141,79 @@ function edit_selected_init() {
 
     drupal_add_library('system', 'drupal.collapse');
 
+    // Add a JS setting variable: current_page
 
-    // If this is the '/picture-info' page
-    if (is_page('picture-info')) {
-      // Add a JS setting variable: current_page
-      drupal_add_js(array('edit_selected' =>
-        array('current_page' => 'picture-info')), 'setting');
+    $known_pages = array('upload', 'picture_info', 'observation_info');
+
+    foreach ($known_pages as $page_name) {
+      if (is_page($page_name)) {
+        drupal_add_js(array('edit_selected' =>
+          array('current_page' => $page_name)), 'setting');
+      }
     }
-    // If this is the '/observation-info' page
-    elseif (is_page('observation-info')) {
-      // Add a JS setting variable: current_page
-      drupal_add_js(array('edit_selected' =>
-        array('current_page' => 'observation-info')), 'setting');
-    }
+
+    // if (is_page('picture_info')) {
+    //   drupal_add_js(array('edit_selected' =>
+    //     array('current_page' => 'picture_info')), 'setting');
+    // }
+    // elseif (is_page('observation_info')) {
+    //   drupal_add_js(array('edit_selected' =>
+    //     array('current_page' => 'observation_info')), 'setting');
+    // }
 
   }
 }
 
+// function edit_selected_js_alter(&$javascript) {
+//   dpm($javascript, '$javascript');
+//   // if ($some_condition) {
+//   //   unset($javascript['path/to/script.js']);
+//   // }
+// }
 
 
 
 
-function number_specimens_page() {
+
+function number_specimens_callback() {
   $post = $_POST;
   // dpm($post, 'post');
 
+  $nids = $post['nids'];
+  $method = $post['method'];
+  $starting_number = $post['starting-number'];
+
+  number_specimens($nids, $method, $starting_number);
+}
+
+
+
+/**
+ * Sets an incremental value for Specimen ID field for observations.
+ *
+ * @param string $method
+ *   Either 'increment' or 'append'.
+ */
+function number_specimens($nids, $method, $starting_number) {
+  // dpm($nids, '$nids');
+  // dpm($method, '$method');
+  // dpm($starting_number, '$starting_number');
+
   // @todo Validate form values
 
-  $nids = explode('|', $post['nids']);
+  $nids = explode(',', $nids);
+  // dpm($nids, '$nids');
   $nodes;
   foreach ($nids as $nid) {
     $node_raw = node_load($nid);
-    $nodes[] = entity_metadata_wrapper('node', $node_raw);
+    if ($node_raw) {
+      $nodes[] = entity_metadata_wrapper('node', $node_raw);
+    }
   }
+  // dpm($nodes, '$nodes');
 
-  $method = $post['method'];
-  $starting_sid = $post['starting-number'];
+  $method = $method;
+  $starting_sid = $starting_number;
 
   for ($i = 0; $i < count($nodes); $i++) {
     $sid;
@@ -168,7 +229,73 @@ function number_specimens_page() {
     $nodes[$i]->save();
   }
 
-  // return "This is just a callback endpoint (URL)."; // Too slow
+  // return "This is just a callback endpoint (URL).";
+}
+
+
+
+/**
+ * Provides an array of all identifications that reference an observation
+ * within the specified collection (that reference it).
+ */
+function identifications_by_collection($collection_nid) {
+  $observations = get_observations_referencing_collection($collection_nid);
+  // dpm($observations, '$observations');
+  $identifications = [];
+
+  foreach ($observations as $nid => $observation) {
+    $handler = restful()
+      ->getResourceManager()
+      ->getPlugin('identifications:0.1');
+
+    $query['filter'] = array('observation' => $nid);
+
+    $get_result = restful()
+      ->getFormatterManager()
+      ->format($handler->doGet('', $query));
+    // dpm(json_decode($get_result), '$get_result');
+
+    $identifications = array_merge($identifications,
+      json_decode($get_result)->data);
+  }
+  // dpm($identifications, '$identifications');
+
+  $result = array('data' => $identifications);
+  $response = array('#type' => 'ajax', '#commands' => $result);
+  return $response;
+}
+
+
+
+/**
+ * Provides an array of all identifications that reference an observation
+ * within the specified collection (that reference it).
+ */
+function interactions_by_collection($collection_nid) {
+  $observations = get_observations_referencing_collection($collection_nid);
+  // dpm($observations, '$observations');
+  $interactions = [];
+
+  foreach ($observations as $nid => $observation) {
+    $handler = restful()
+      ->getResourceManager()
+      ->getPlugin('interactions:0.1');
+
+    $query['filter'] = array('observation' => $nid);
+
+    $get_result = restful()
+      ->getFormatterManager()
+      ->format($handler->doGet('', $query));
+    // dpm(json_decode($get_result), '$get_result');
+
+    $interactions = array_merge($interactions,
+      json_decode($get_result)->data);
+  }
+  // dpm($interactions, '$interactions');
+
+  $result = array('data' => $interactions);
+  $response = array('#type' => 'ajax', '#commands' => $result);
+  return $response;
 }
 
 
@@ -186,17 +313,17 @@ function contribute_mo_observation_page($collection_nid) {
   );
 
   // Add the view
-  $name = 'tag'; // @todo rename this
+  $name = 'contribute_observations_info'; // @todo rename this
   $display_id = 'block_1';
   $content['view'] = array(
-    '#markup' => views_embed_view($name, $display_id, $collection_nid)
+    '#markup' => views_embed_view($name, $display_id, $collection_nid),
   );
 
-  // Add the edit form
-  $delta = 'edit_selected_observations';
 
-  $block_content = edit_selected_block_get_content($delta);
+  // Add the edit form
+  $block_content = get_edit_selected_form('observation');
   // dpm($block_content, '$block_content');
+
   $content['edit_block'] = array(
     '#type' => 'fieldset',
     $block_content,
@@ -205,18 +332,99 @@ function contribute_mo_observation_page($collection_nid) {
     ),
   );
 
-  // Add the identify forms
-  $delta = 'identify_selected_observations';
-  $block_content = identify_selected_block_get_content($delta);
+  // Add the identification form (with embedded view)
+  $id_form_content = get_identify_selected_form();
   $content['identify_block'] = array(
     '#type' => 'fieldset',
-    $block_content,
+    $id_form_content,
     '#attributes' => array(
       'class' => array('identify_form_wrapper'),
     ),
   );
 
+  // Add the interaction form
+  $content['add_interaction'] = array(
+    '#type' => 'fieldset',
+    get_interaction_form(),
+    '#attributes' => array(
+      'class' => array('interaction_form_wrapper'),
+    ),
+  );
+
   // dpm($content, '$content');
+  return $content;
+}
+
+
+
+function get_interaction_form() {
+  $content = array();
+
+  // Embed the species view
+
+  $content['identified_species'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Choose a species'),
+    '#weight' => 0,
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#tree' => TRUE,
+    '#attributes' => array(
+      'class' => array('collapsible', 'collapsed'),
+    ),
+    '#attached' => array(
+      'library' => array(
+        array('system', 'drupal.collapse'),
+      ),
+    ),
+  );
+
+  $view_name = 'species_reference_selector_widget';
+  $display_id = 'entityreference_view_widget_2'; // 'default'
+
+  $view_rendered = views_embed_view($view_name, $display_id);
+
+  $content['identified_species']['chooser'] = array(
+    '#type' => 'markup',
+    '#markup' => $view_rendered,
+  );
+
+
+  // Embed an identification form
+
+  global $user;
+  $values = array(
+    'type' => 'identification',
+    'uid' => $user->uid,
+    'status' => 1,
+  );
+  $node = entity_create('node', $values);
+
+  $form = drupal_get_form('node_form', $node, ['form_view_mode' => 'contribute_new']);
+  // dpm($form, '$form');
+  $form['actions']['#access'] = FALSE;
+  $form['field_identified_species']['#access'] = FALSE;
+
+  $content['identification_form'] = array(
+    $form,
+    '#weight' => 1,
+  );
+
+
+  // Embed the interaction form
+
+  global $user;
+  $values = array(
+    'type' => 'interaction',
+    'uid' => $user->uid,
+    'status' => 1,
+  );
+  $node = entity_create('node', $values);
+
+  $content['interaction_form'] = array(
+    drupal_get_form('node_form', $node, ['form_view_mode' => 'add_to_observation']),
+    '#weight' => 2,
+  );
   return $content;
 }
 
@@ -235,7 +443,7 @@ function contribute_mo_picture_page($collection_nid) {
   );
 
   // Add the view
-  $name = 'observations'; // @todo rename this
+  $name = 'contribute_pictures_info'; // @todo rename this
   $display_id = 'block_1';
   $content['view'] = array(
     '#markup' => views_embed_view($name, $display_id, $collection_nid)
@@ -244,7 +452,7 @@ function contribute_mo_picture_page($collection_nid) {
   // Add the edit form
   $delta = 'edit_selected_pictures';
 
-  $block_content = edit_selected_block_get_content($delta);
+  $block_content = get_edit_selected_form('picture');
   // dpm($block_content, '$block_content');
   $content['edit_block'] = array(
     '#type' => 'fieldset',
@@ -268,20 +476,6 @@ function contribute_mo_picture_page($collection_nid) {
  */
 function edit_selected_block_info() {
   $blocks = array();
-
-  $block_names = array(
-    'edit_selected_pictures' => 'Edit selected pictures form',
-    'edit_selected_observations' => 'Edit selected observations form',
-    'identify_selected_observations' => 'Identify selected observations form',
-  );
-
-  foreach ($block_names as $key => $name) {
-    $blocks[$key] = array(
-      'info' => t($name),
-      // 'cache' => DRUPAL_CACHE_GLOBAL,
-      'cache' => DRUPAL_NO_CACHE, // Because the content depends on the page
-    );
-  }
 
   $blocks['edit_selected_buttons'] = array(
     'info' => t('Edit selection actions'),
@@ -310,27 +504,6 @@ function edit_selected_block_view($delta = '') {
       $block['subject'] = t('Group Selected Buttons');
       $block['content'] = edit_selected_buttons_block_content();
       break;
-
-    // For the Edit Selected blocks and Identify Selected block
-    case 'edit_selected_pictures':
-    case 'edit_selected_observations':
-    // default:
-      try {
-        $block['subject'] = t(get_block_info($delta)['title']);
-        $block['content'] = edit_selected_block_get_content($delta);
-      }
-      catch (Exception $e) {
-        drupal_set_message(get_class($e) .
-          ' caught: ' . $e -> getMessage() .
-          ' in ' . $e -> getFile() .
-          ' on line ' . $e -> getLine(), "error");
-      }
-      break;
-
-    case 'identify_selected_observations':
-      $block['subject'] = t(get_block_info($delta)['title']);
-      $block['content'] = identify_selected_block_get_content($delta);
-      break;
   }
 
   return $block;
@@ -350,12 +523,13 @@ function edit_selected_buttons_block_content() {
     . '<button data-display=".edit_form_wrapper" id="edit"><span style="text-decoration: underline;">E</span>dit</button>';
 
   // If this is the '/picture-info' page
-  if (is_page('picture-info')) {
+  if (is_page('picture_info')
+    || is_page('upload')) {
     $file_url = drupal_get_path('module', 'edit_selected') . '/markup/pictures_toolbar_primary.html';
     $content .= file_get_contents($file_url);
   }
   // If this is the '/observation-info' page
-  elseif (is_page('observation-info')) {
+  elseif (is_page('observation_info')) {
     $file_url = drupal_get_path('module', 'edit_selected') . '/markup/observations_toolbar_primary.html';
     $content .= file_get_contents($file_url);
   }
@@ -363,35 +537,6 @@ function edit_selected_buttons_block_content() {
   $content .= '</form>';
 
   return $content;
-}
-
-
-
-/**
- * Custom function.
- *
- * @return array
- *   returns an array of info for the user-defined blocks
- */
-function get_block_info($delta) {
-
-  $block_info = array(
-    'edit_selected_pictures' => array(
-      'title' => 'Edit pictures',
-      'bundle' => 'picture',
-    ),
-
-    'edit_selected_observations' => array(
-      'title' => 'Edit observations',
-      'bundle' => 'observation',
-    ),
-    'identify_selected_observations' => array(
-      'title' => 'Identify observations',
-      'bundle' => 'identification',
-    ),
-  );
-
-  return $block_info[$delta];
 }
 
 
@@ -448,21 +593,10 @@ function array_replace_recursive_search(array $array1, array $array2) {
  */
 function is_page($name) {
   $casa_paths = array(
-    'contribute/multiple-observations/picture-info*',
-    'contribute/multiple-observations/observation-info*',
+    'upload' => 'contribute/upload',
+    'picture_info' => 'contribute/multiple-observations/picture-info*',
+    'observation_info' => 'contribute/multiple-observations/observation-info*',
   );
 
-  switch ($name) {
-    case 'picture-info':
-      return drupal_match_path(current_path(), $casa_paths[0]) ? true : false;
-      break;
-
-    case 'observation-info':
-      return drupal_match_path(current_path(), $casa_paths[1]) ? true : false;
-      break;
-
-    default:
-      return false;
-      break;
-  }
+  return drupal_match_path(current_path(), $casa_paths[$name]);
 }

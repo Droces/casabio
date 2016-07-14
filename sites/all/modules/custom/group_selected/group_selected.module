@@ -24,7 +24,8 @@
   group_selected_block_info()
   group_selected_block_view()
 
-  group_pictures_into_observations()
+  group_pictures_callback()
+  group_pictures()
   delete_referring_nodes()
   selected_buttons_block_content()
   set_observation_fields()
@@ -57,9 +58,9 @@
  * Implements hook_menu().
  */
 function group_selected_menu() {
-  $items['ajax/collections/%/group_pictures_into_observations'] = array(
+  $items['ajax/collections/%/group_pictures'] = array(
     'title' => 'Group Selected Processor Page',
-    'page callback' => 'group_pictures_into_observations',
+    'page callback' => 'group_pictures_callback',
     'page arguments' => array(2),
     'access callback' => TRUE,  // Create a permission for this? array('administer bulk media upload'),
     'type' => MENU_CALLBACK,
@@ -148,8 +149,6 @@ function group_selected_block_info() {
 function group_selected_block_view($delta = '') {
   $block = array();
 
-  set_error_handler("exception_error_handler");
-
   switch ($delta) {
     // For the Selected Buttons block
     case 'group_selected_buttons':
@@ -167,14 +166,56 @@ function group_selected_block_view($delta = '') {
 
 // =============================================================================
 /**
- * @param string[] $nids
- *   the node ids that should be grouped by .
+ * A menu callback function for grouping all pictures of a collection into
+ * observations. This must be called via AJAX.
+ *
+ * @param $collection
+ *   The nid of the collection that the observations should reference.
  */
-function group_pictures_into_observations($collection) {
+function group_pictures_callback($collection) {
+  // dpm($collection, '$collection');
   // dpm($_POST, '_POST');
-  // dpm($_SERVER, '_SERVER');
 
-  $result = array('result' => 'success');
+  // $nids = $_POST;
+
+  $request_body = file_get_contents("php://input");
+  // $request_body = file_get_contents("drupal://input"); // Use inputstream module.
+  $groups = json_decode($request_body, TRUE);
+  // dpm($nids, '$nids');
+
+  $response = group_pictures($collection, $groups);
+  return $response;
+}
+
+
+
+
+
+// =============================================================================
+/**
+ * @param string[] $nids
+ *   Array of node id arrays; Each inner array represents an observation within
+ *   the collection, and each nid inside it is a picture within that obervation.
+ *
+ * @param $groups
+ *   Array in the format [{'id' => 345, 'pictures' => [34, 35]}].
+ */
+function group_pictures($collection, $groups) {
+  // dpm($collection, '$collection');
+  // dpm($groups, '$groups');
+
+  $result = array(
+    'result' => 'success',
+    'new_nodes' => [],
+  );
+
+  // // Delete all groups from this collection.
+  // // Assumes that all desired groupings will be provided in $groups.
+  // // If $_POST is empty, it is assumed that no groups are desired.
+  // delete_referring_nodes('observation', $collection);
+
+
+  // Create new groups
 
   global $user;
   // $language = "und";
@@ -188,48 +229,56 @@ function group_pictures_into_observations($collection) {
     'promote' =>  0,
   );
 
+  foreach ($groups as $group) {
 
-  // Create new groups
+    $nid = $group['id'];
+    // dpm($nid, '$nid');
+    $status = $group['status'];
+    // dpm($status, '$status');
+    $group_nids = $group['pictures'];
+    // dpm($group_nids, '$group_nids');
 
-  $nids = $_POST["groupings"];
-  // dpm ($nids, "nid groupings to save" );
 
+    $entity_raw;
 
-  // Delete all groups from this collection.
-  // Assumes that all desired groupings will be provided in $_POST.
-  // If $_POST is empty, it is assumed that no groups are desired.
-  delete_referring_nodes($values['type'], $collection);
-
-  foreach ($nids as $nid_group) {
-
-    // Get required values
-
-    $first_of_group = entity_metadata_wrapper('node', node_load($nid_group[0]));
-    // $location = $first_of_group -> field_location -> value();
-    // dpm($location, 'location');
-    // $date = $first_of_group ->  field_date_taken -> value();
-
-    // $collection = $_POST["collection"];
-
-    // Create the node
-
-    $entity_raw = entity_create('node', $values);
-    // Wrap the node to make dealing with the values of the entity's properties and fields easier
-    $observation = entity_metadata_wrapper('node', $entity_raw);
-
-    try {
-      // In auto_group_nodes.module
-      set_observation_fields($observation, $nid_group, $collection);
+    // If the group contains no nids, delete it.
+    if (! $group_nids) {
+      node_delete($nid);
     }
-    catch (Exception $e) {
-      $result = array(
-        'result' => 'failure',
-        'reason' => $e->getMessage()
-      );
+    else {
+      if ($status == 'altered') {
+        $entity_raw = node_load($nid);
+      }
+      else {
+        // Create a node
+        $entity_raw = entity_create('node', $values);
+      }
+
+      // Wrap the node to make dealing with the values of the entity's properties and fields easier
+      $observation = entity_metadata_wrapper('node', $entity_raw);
+
+      try {
+        // In auto_group_nodes.module
+        set_observation_fields($observation, $group_nids, $collection);
+      }
+      catch (Exception $e) {
+        $result = array(
+          'result' => 'failure',
+          'reason' => $e->getMessage()
+        );
+      }
+
+      $observation -> save();
+      // dpm($observation, 'observation');
+
+      if ($status == 'new') {
+        $result['new_nodes'][] = array(
+          'temp_id' => $nid,
+          'nid' => $observation -> getIdentifier(),
+        );
+      }
     }
 
-    $observation -> save();
-    // dpm($observation, 'observation');
   }
 
   // drupal_set_message(t("Pictures grouped successfully"), 'status');
@@ -306,8 +355,6 @@ function selected_buttons_block_content() {
  *   The nid of the collection that this observation should be part of.
  */
 function set_observation_fields(&$observation, $picture_nids, $collection) {
-
-  set_error_handler("exception_error_handler");
 
   $first_of_group = entity_metadata_wrapper('node', node_load($picture_nids[0]));
 

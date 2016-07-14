@@ -1,12 +1,14 @@
 name = Views: Contribute
 description = The views enabling the powering the contribute features
 core = 7.x
-package = Features: Structure
+package = Features: Views
 version = 7.x-1.0
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[views_view][] = contribute_mo_habitats
+features[views_view][] = contribute_observations_info
+features[views_view][] = contribute_pictures_info
 features[views_view][] = group_pictures
 features[views_view][] = observations
 features[views_view][] = tag

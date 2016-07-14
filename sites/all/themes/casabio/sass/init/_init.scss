@@ -18,18 +18,18 @@
 // Partials to be shared with all .scss files.
 // =============================================================================
 
+// Bourbon! As a replacement for Compass
+@import "../../node_modules/bourbon/app/assets/stylesheets/bourbon";
+
 // Add Compass' IE and vendor prefix support variables.
-@import "compass/support";
-// Better than Drupal's clearfix.
-// @import "compass/utilities/general/clearfix";
-// See http://compass-style.org/help/tutorials/spriting/
-// @import "compass/utilities/sprites";
+// @import "compass/support";
+
 // Use one CSS3 mixin instead of multiple vendor prefixes.
-@import "compass/css3";
-// Helps set up a vertical rhythm.
-// @import "compass/typography/vertical_rhythm";
+// @import "compass/css3";
+
 // Add the Zen Grids responsive layout mixins.
-@import "zen-grids";
+// @import "zen-grids";
+@import "../../node_modules/zen-grids/sass/zen-grids";
 
 // Now we add our custom helper mixins.
 @import "mixins";

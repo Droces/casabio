@@ -85,16 +85,11 @@ class ServicesContentTypeNegotiator implements ServicesContentTypeNegotiatorInte
 
     // Get the best matching format, default to json
     $response_format = variable_get('rest_server_default_response_format', 'json');
-
-    $consider_http_accept = FALSE;
-
-    if ($consider_http_accept) {
-      $http_accept = $context->getServerVariable('HTTP_ACCEPT');
-      if (!empty($http_accept)) {
-        $mime = $this->mimeParse();
-        $mime_type = $mime->best_match($mime_candidates, $http_accept);
-        $response_format = isset($mime_map[$mime_type]) ? $mime_map[$mime_type] : '';
-      }
+    $http_accept = $context->getServerVariable('HTTP_ACCEPT');
+    if (!empty($http_accept)) {
+      $mime = $this->mimeParse();
+      $mime_type = $mime->best_match($mime_candidates, $http_accept);
+      $response_format = isset($mime_map[$mime_type]) ? $mime_map[$mime_type] : '';
     }
 
     return $response_format;

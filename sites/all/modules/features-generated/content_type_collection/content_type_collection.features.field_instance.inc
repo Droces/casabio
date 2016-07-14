@@ -27,6 +27,12 @@ function content_type_collection_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 4,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'hidden',
         'module' => 'text',
@@ -87,6 +93,12 @@ function content_type_collection_field_default_field_instances() {
         ),
         'type' => 'text_default',
         'weight' => 3,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -173,6 +185,12 @@ function content_type_collection_field_default_field_instances() {
         'type' => 'date_default',
         'weight' => 2,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'inline',
         'module' => 'date',
@@ -255,6 +273,12 @@ If the images were all taken in one place, use the <strong>point</strong> featur
         'type' => 'openlayers_geofield',
         'weight' => 1,
       ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -294,15 +318,15 @@ If the images were all taken in one place, use the <strong>point</strong> featur
     ),
   );
 
-  // Exported field_instance: 'node-collection-field_main_image'.
-  $field_instances['node-collection-field_main_image'] = array(
+  // Exported field_instance: 'node-collection-field_representative_picture'.
+  $field_instances['node-collection-field_representative_picture'] = array(
     'bundle' => 'collection',
-    'default_value_function' => '',
+    'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'The picture that best represents the content of this collection.',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
@@ -310,19 +334,19 @@ If the images were all taken in one place, use the <strong>point</strong> featur
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
+        'weight' => 5,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'hidden',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'links' => 0,
-          'view_mode' => 'thumbnail',
-        ),
-        'type' => 'entityreference_entity_view',
-        'weight' => 1,
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'text' => array(
         'label' => 'above',
@@ -332,31 +356,22 @@ If the images were all taken in one place, use the <strong>point</strong> featur
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_main_image',
-    'label' => 'Preview image',
+    'field_name' => 'field_representative_picture',
+    'label' => 'Representative picture',
     'required' => 0,
     'settings' => array(
-      'behaviors' => array(
-        'prepopulate' => array(
-          'status' => 0,
-        ),
-      ),
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'entityreference_view_widget',
+      'module' => 'entityreference',
       'settings' => array(
-        'allow_duplicates' => 0,
-        'close_modal' => 0,
-        'pass_argument' => 1,
-        'pass_arguments' => '',
-        'rendered_entity' => 0,
-        'view' => 'reference_images_for_observation|entityreference_view_widget_1',
-        'view_mode' => 'full',
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
       ),
-      'type' => 'entityreference_view_widget',
-      'weight' => 5,
+      'type' => 'entityreference_autocomplete',
+      'weight' => 7,
     ),
   );
 
@@ -373,8 +388,9 @@ If the images were all taken in one place, use the <strong>point</strong> featur
   t('Date collected');
   t('If the pictures were taken over several days, provide the start and end date.');
   t('Location');
-  t('Preview image');
+  t('Representative picture');
   t('The <em>full name</em> of the person who recorded the observations; this is probably your full name.');
+  t('The picture that best represents the content of this collection.');
 
   return $field_instances;
 }
