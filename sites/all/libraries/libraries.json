@@ -1,0 +1,25 @@
+// This file records the libraries used in this project.
+// This file is written manually, not by a package / dependency manager.
+
+// Each library must be downloaded from it's own website,
+// and placed within a folder named as in "devDependencies" below.
+{
+  "name": "CasaBio libraries",
+  "version": "1.0.0",
+  "description": "Primarily JavaScript libraries that power features like mapping.",
+  "dependencies": {
+    "jquery": "~1.4.2"
+  },
+  "author": "Touchdreams <touchdreams.co.za>",
+  "license": "",
+  "libraries": {
+    "colorbox":       ["~1.6.1", "http://www.jacklmoore.com/colorbox"],
+    "jquery.cycle":   ["~3.0.2", "http://jquery.malsup.com/cycle"],
+    "jquery.hotkeys": ["~0.1.0", "http://github.com/jeresig/jquery.hotkeys"],
+    "leaflet":        ["~0.7.5", "http://leafletjs.com"],
+    "openlayers3":    ["~3.11.2", "http://openlayers.org"],
+    "plupload":       ["~1.5.4", "http://plupload.com"],
+    "tinymce":        ["~3.5.8", "https://www.tinymce.com"],
+    "toastr":         ["~2.1.2", "https://github.com/CodeSeven/toastr"]
+  }
+}
