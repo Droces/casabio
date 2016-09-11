@@ -728,7 +728,6 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     }
     foreach ($tree as $item) {
       if (!in_array($item->tid, $exclude)) {
-        // dpm($item->depth, '$item->depth');
         $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
       }
     }

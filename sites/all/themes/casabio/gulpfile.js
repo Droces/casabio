@@ -22,23 +22,6 @@ gulp.task('sass', function () {
 });
 
 
-
-// Using Bourbon instead of Compass
-// gulp.task('compass', function() {
-//   gulp.src('./sass/**.scss')
-//     // .pipe(sourcemaps.init())
-//     .pipe(compass({
-//       // config_file: './config.rb',
-//       css: 'css',
-//       sass: 'sass',
-//       sourcemap: true
-//     }).on('error', sass.logError))
-//     // .pipe(sourcemaps.write())
-//     .pipe(gulp.dest('./css'));
-// });
-
-
-
 // Type: gulp sass:watch
 gulp.task('sass:watch', function () {
   gulp.watch('./sass/**/*.scss', ['sass']);

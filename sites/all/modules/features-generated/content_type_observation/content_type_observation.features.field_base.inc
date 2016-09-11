@@ -81,6 +81,21 @@ function content_type_observation_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_count_identifications'.
+  $field_bases['field_count_identifications'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_count_identifications',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'entityreference_count',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'entityreference_count',
+  );
+
   // Exported field_base: 'field_date_observed'.
   $field_bases['field_date_observed'] = array(
     'active' => 1,

@@ -54,6 +54,49 @@ function casa_core_init() {
   drupal_add_js(array('API_path' => 'services'), 'setting');
 
   // calculate_user_reliability();
+
+  // import_etymologies();
+}
+
+
+
+function import_etymologies() {
+  dpm('Importing etymologies...');
+
+  $file_url = drupal_get_path('module', 'casa_core') . '/taxa_etymologies.json';
+  $file_contents = file_get_contents($file_url);
+  // dpm($file_contents, '$file_contents');
+  $etymology_data = json_decode($file_contents);
+  // dpm($etymology_data, '$etymology_data');
+
+  $etymology_data = array_slice($etymology_data, 1200, 400);
+  // dpm($etymology_data, '$etymology_data');
+
+  $count_changed = 0;
+  $count_skipped = 0;
+
+  // $etymology_data = [];
+
+  foreach ($etymology_data as $index => $term_data) {
+    $taxa = get_taxa_with_name($term_data -> name);
+    // dpm($taxa, '$taxa');
+
+    foreach ($taxa as $nid => $node) {
+      $taxon = entity_metadata_wrapper('taxonomy_term', $nid);
+      // dpm($taxon->raw(), '$taxon');
+
+      if ($taxon -> field_etymology -> value()) {
+        $count_skipped ++;
+        continue;
+      }
+
+      $taxon -> field_etymology -> set($term_data -> etymology);
+      $taxon -> save();
+      $count_changed ++;
+    }
+  }
+  dpm($count_changed, '$count_changed');
+  dpm($count_skipped, '$count_skipped');
 }
 
 
@@ -67,23 +110,40 @@ function casa_core_init() {
 function casa_core_menu() {
   $items['home'] = array(
     // 'title' => 'Home', // This page shouldn't display a title.
-    'page callback' => 'home_page_callback',
+    'page callback'   => 'home_page_callback',
     'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
+    'type'            => MENU_NORMAL_ITEM,
   );
 
-  $items['my-home'] = array(
-    'title' => 'My CasaBio Home',
-    'page callback' => 'my_home_page_callback',
+  $items['my/home'] = array(
+    'title'           => 'Home',
+    'page callback'   => 'my_home_page_callback',
     'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
+    'type'            => MENU_NORMAL_ITEM,
+    'menu_name'       => 'menu-my',
   );
+
+  $items['my/contributions'] = array(
+    'title'           => 'Contributions',
+    'page callback'   => 'my_contributions_page_callback',
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'menu_name'       => 'menu-my',
+  );
+
+  // $items['contribute/request'] = array(
+  //   'title'           => 'Request',
+  //   'page callback'   => 'contribute_request_page_callback',
+  //   'access callback' => TRUE,
+  //   'type'            => MENU_NORMAL_ITEM,
+  //   'menu_name'       => 'menu-contribute',
+  // );
 
   $items['dev/teasers'] = array(
-    'title' => 'Entity Teasers',
-    'page callback' => 'teasers_callback',
+    'title'           => 'Entity Teasers',
+    'page callback'   => 'teasers_callback',
     'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
+    'type'            => MENU_NORMAL_ITEM,
   );
 
   return $items;
@@ -198,11 +258,30 @@ function my_home_page_callback() {
           'default'),
     ),
     'new_contrib_ways' => array(
-      '#markup' => '<h2>Ways To Contribute</h2>',
+      '#markup' => '<h2>Ways To Contribute</h2>'
+        . '<ul class="non-list cols-4">'
+        . '  <li><a class="pane" href="' . base_path() . 'contribute/upload">Contribute observations</a></li>'
+        . '  <li><span class="pane">Identify new observations</span></li>'
+        . '  <li><span class="pane">Add species interactions</span></li>'
+        . '  <li><span class="pane">(Maintainers) Patrol recent contributions</span></li>'
+        . '</ul>'
+      ,
     ),
   );
 
   return $content;
+}
+
+
+
+function my_contributions_page_callback() {
+  return '';
+}
+
+
+
+function contribute_request_page_callback() {
+  return '';
 }
 
 
@@ -295,7 +374,7 @@ function casa_core_user_login(&$edit, $account) {
   else {
     drupal_set_message(t("Welcome back."), 'status', FALSE);
   }
-  drupal_goto('my-home');
+  drupal_goto('my/home');
 }
 
 

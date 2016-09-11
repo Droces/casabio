@@ -39,7 +39,7 @@
 // =============================================================================
 /**
  * Implements hook_help().
- *Inline Entity Form
+ * Inline Entity Form
  * Displays help and module information.
  *
  * @param path
@@ -96,6 +96,10 @@ function group_selected_init() {
     $file = libraries_get_path('jquery.hotkeys') . '/jquery.hotkeys.js';
     drupal_add_js($file);
 
+    // Tinysort - for sorting HTML elements
+    // $file = 'https://cdnjs.cloudflare.com/ajax/libs/tinysort/2.3.6/tinysort.min.js';
+    $file = drupal_get_path('module', 'group_selected') . '/scripts/tinysort.min.js';
+    drupal_add_js($file);
   }
 
 
@@ -135,6 +139,12 @@ function group_selected_block_info() {
     // 'cache' => DRUPAL_NO_CACHE,
   );
 
+  $blocks['group_selected_secondary_toolbar'] = array(
+    'info' => t('Contribute MO Grouping info toolbar'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
   return $blocks;
 }
 
@@ -155,10 +165,17 @@ function group_selected_block_view($delta = '') {
       $block['subject'] = t('Group Selected Buttons');
       $block['content'] = selected_buttons_block_content();
       break;
+
+    // For the Selected Buttons block
+    case 'group_selected_secondary_toolbar':
+      $block['subject'] = t('Group Selected Buttons');
+      $block['content'] = secondary_toolbar_block_content();
+      break;
   }
 
   return $block;
 }
+
 
 
 
@@ -207,6 +224,7 @@ function group_pictures($collection, $groups) {
   $result = array(
     'result' => 'success',
     'new_nodes' => [],
+    'altered_nodes' => [],
   );
 
   // // Delete all groups from this collection.
@@ -244,13 +262,17 @@ function group_pictures($collection, $groups) {
     // If the group contains no nids, delete it.
     if (! $group_nids) {
       node_delete($nid);
+      $result['altered_nodes'][] = array(
+        'id' => $nid,
+      );
     }
     else {
       if ($status == 'altered') {
+        // Fetch it
         $entity_raw = node_load($nid);
       }
       else {
-        // Create a node
+        // Create a new node (an observation)
         $entity_raw = entity_create('node', $values);
       }
 
@@ -274,7 +296,12 @@ function group_pictures($collection, $groups) {
       if ($status == 'new') {
         $result['new_nodes'][] = array(
           'temp_id' => $nid,
-          'nid' => $observation -> getIdentifier(),
+          'id' => $observation -> getIdentifier(),
+        );
+      }
+      else if ($status == 'altered') {
+        $result['altered_nodes'][] = array(
+          'id' => $observation -> getIdentifier(),
         );
       }
     }
@@ -324,9 +351,6 @@ function delete_referring_nodes($type, $collection_nid) {
 
 
 
-
-
-// =============================================================================
 /**
  * Implements hook_block_view().
  */
@@ -341,6 +365,19 @@ function selected_buttons_block_content() {
 
   return $content;
 }
+
+
+
+/**
+ * Implements hook_block_view().
+ */
+function secondary_toolbar_block_content() {
+  $file_url = drupal_get_path('module', 'group_selected') . '/markup/group_toolbar_secondary.html';
+  $content = file_get_contents($file_url);
+  return $content;
+}
+
+
 
 
 

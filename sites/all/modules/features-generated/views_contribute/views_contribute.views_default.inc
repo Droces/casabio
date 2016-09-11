@@ -573,18 +573,32 @@ function views_contribute_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<div class="selectable-target"></div>
 <span class="field-data"></span>';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'U';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
+  /* Field: Content: Date taken */
+  $handler->display->display_options['fields']['field_date_taken']['id'] = 'field_date_taken';
+  $handler->display->display_options['fields']['field_date_taken']['table'] = 'field_data_field_date_taken';
+  $handler->display->display_options['fields']['field_date_taken']['field'] = 'field_date_taken';
+  $handler->display->display_options['fields']['field_date_taken']['settings'] = array(
+    'format_type' => 'unix_timestamp',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Sort criterion: Content: Date taken (field_date_taken) */
   $handler->display->display_options['sorts']['field_date_taken_value']['id'] = 'field_date_taken_value';
   $handler->display->display_options['sorts']['field_date_taken_value']['table'] = 'field_data_field_date_taken';
   $handler->display->display_options['sorts']['field_date_taken_value']['field'] = 'field_date_taken_value';
-  $handler->display->display_options['sorts']['field_date_taken_value']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['field_date_taken_value']['expose']['label'] = 'Date taken';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['created']['expose']['label'] = 'Time uploaded';
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
@@ -743,7 +757,7 @@ function views_contribute_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
-  /* Field: Content: Body */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -1035,7 +1049,7 @@ function views_contribute_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
-  /* Field: Content: Body */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';

@@ -21,6 +21,47 @@ function is_taxon_in_casabio($sc_name) {
 }
 
 
+function get_taxa($limit) {
+  $query = new EntityFieldQuery();
+
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'taxa')
+    // ->propertyCondition('status', NODE_PUBLISHED)
+    // ->propertyCondition('name', $sc_name, 'like')
+    ->range(0, $limit);
+
+  $result = $query->execute();
+  // dpm($result, '$result');
+
+  if (! isset($result['taxonomy_term'])) {
+    return NULL;
+  }
+  return $result['taxonomy_term'];
+}
+
+
+/**
+ * Finds taxa that have a name containing the text specified.
+ */
+function get_taxa_with_name($name) {
+  $query = new EntityFieldQuery();
+
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'taxa')
+    // ->propertyCondition('status', NODE_PUBLISHED)
+    ->propertyCondition('name', '%' . $name . '%', 'like')
+    ->range(0, 10);
+
+  $result = $query->execute();
+  // dpm($result, '$result');
+
+  if (! isset($result['taxonomy_term'])) {
+    return [];
+  }
+  return $result['taxonomy_term'];
+}
+
+
 
 
 // /**

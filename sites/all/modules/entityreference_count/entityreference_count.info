@@ -1,0 +1,13 @@
+name = EntityReference Count
+description = Defines a field type for counting the references to a entity.
+package = Fields
+core = 7.x
+dependencies[] = field
+dependencies[] = entityreference
+
+; Information added by Drupal.org packaging script on 2016-03-07
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "entityreference_count"
+datestamp = "1457368790"
+

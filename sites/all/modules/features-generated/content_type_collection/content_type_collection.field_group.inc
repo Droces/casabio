@@ -55,6 +55,7 @@ function content_type_collection_field_group_info() {
       1 => 'field_date_collected',
       2 => 'field_collector',
       3 => 'field_representative_picture',
+      4 => 'field_featured_pictures',
     ),
     'format_type' => 'htab',
     'format_settings' => array(

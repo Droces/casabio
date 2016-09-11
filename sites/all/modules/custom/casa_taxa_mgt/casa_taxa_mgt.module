@@ -44,6 +44,7 @@
 
 
 module_load_include('inc', 'casa_taxa_mgt', 'term_queries');
+module_load_include('inc', 'casa_taxa_mgt', 'term_forms');
 
 // define("ID_SOURCE_CASABIO_INDIVIDUAL", 1);
 
@@ -735,6 +736,8 @@ function determine_points_from_QDS($qds) {
  * Callback.
  */
 function taxa_lookup_page_callback() {
+  // @todo Use Drupal's Flood system (common.inc) to ensure this isn't being abused.
+
   return drupal_get_form('taxa_lookup_form');
 }
 
@@ -781,15 +784,33 @@ function taxa_lookup_form() {
 function taxa_lookup_multiple_form() {
   $form['description'] = array(
     '#markup' => '<p>Use this to add multiple (or a whole lot) of taxa to CasaBio at once. Each taxon will be checked if it exists in CasaBio, and if not, it will be checked if it exists in the service you select when you submit them. If it exists in that service, it will be added to CasaBio.</p>'
-      . '<p>Add each scientific name on a new line.</p>',
+      . '<p>When complete, CasaBio will inform you how many were successfully '
+      . 'added, how many were already in CasaBio, and how many were not found in'
+      . ' CasaBio or the service and thus were not successfully added.</p>'
   );
   $form['scientific_names'] = array(
     '#title' => t('Scientific names'),
     '#type' => 'textarea',
+    '#description' => t('Add each scientific name on a new line.'),
     '#required' => TRUE,
   );
+  $form['localities'] = array(
+    '#title' => t('Localities'),
+    '#type' => 'textfield',
+    '#description' => t('OPTIONAL. Localities (such as a country) that these taxa are found in. '
+      . 'Locality term tids, separated by a semi-colon only. Eg. "31;61".'),
+  );
+  $form['service'] = array(
+    '#title' => t('Service'),
+    '#type' => 'select',
+    '#options' => array(
+        'CoL' => t('Catalogue of Life'),
+       ),
+    '#default_value' => 'CoL',
+    '#description' => t('The taxonomic database that the taxa should be looked up in.'),
+  );
   $form['submit'] = array(
-    '#value' => 'Lookup using Catalogue of Life',
+    '#value' => 'Lookup and Add',
     '#type' => 'submit',
     '#name' => 'col',
     // 'text' => array(
@@ -832,9 +853,14 @@ function taxa_lookup_multiple_form_submit($form_id, &$form_state) {
   $sc_names = array_map('trim', $sc_names_untrimmed);
   // dpm($sc_names, '$sc_names');
 
-  $taxa_service = $form_state['triggering_element']['#name'];
+  $localities_string = trim($form_state['values']['localities']);
+  $localities_untrimmed = explode(';', $localities_string); // split on lines
+  $localities = array_map('trim', $localities_untrimmed);
+  // dpm($localities, '$localities');
 
-  taxa_lookup_multiple($sc_names, $taxa_service);
+  $taxa_service = $form_state['values']['service'];
+
+  taxa_lookup_multiple($sc_names, $taxa_service, $localities);
 }
 
 
@@ -852,7 +878,7 @@ function taxa_lookup($sc_name, $taxa_service) {
   $taxon_info;
 
   switch ($taxa_service) {
-    case 'col':
+    case 'CoL':
       $taxon_info = lookup_catalogueoflife($sc_name);
       $service_name = 'Catalogue of Life';
       break;
@@ -880,6 +906,9 @@ function taxa_lookup($sc_name, $taxa_service) {
 /**
  * @param $sc_name
  *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
+ *
+ * @return
+ *   An array in the form "['name' = '', 'rank' = '']" if found, or [] if not found.
  */
 function lookup_catalogueoflife($sc_name) {
   // Settings
@@ -924,6 +953,8 @@ function lookup_catalogueoflife($sc_name) {
  *   A boolean indicating if a message should be shown.
  */
 function create_taxon($taxon_info, $show_message = TRUE) {
+  // dpm($taxon_info, '$taxon_info');
+
   $term_data = array(
     'type' => 'taxon',
     'name' => $taxon_info['name'],
@@ -935,6 +966,8 @@ function create_taxon($taxon_info, $show_message = TRUE) {
   $term = entity_metadata_wrapper('taxonomy_term', $term_raw);
 
   $term->field_taxon_rank->set($taxon_info['rank']);
+
+  $term->field_localities->set($taxon_info['localities']);
 
   $term->save();
   // dpm($term->raw(), '$term');
@@ -985,7 +1018,14 @@ function casa_taxa_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form
     // $form_dup['relations'] = '- UNSET -';
     // dpm($form_dup, "form_dup");
 
+  // Remove 'additional' node settings for non-administrators
+  global $user;
+  if (! in_array('Administrator', $user->roles)) {
+    $form['additional_settings']['#access'] = FALSE;
+  }
+
   $vocabulary = $form['vocabulary_machine_name']['#value'];
+  // dpm($vocabulary, '$vocabulary');
   // $language = $form['language']['#value']; // 'und'
 
   // Determine the form view mode from arguments passed to drupal_get_form().
@@ -997,6 +1037,7 @@ function casa_taxa_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form
       }
     }
   }
+  // dpm($form_view_mode, '$form_view_mode');
 
   switch ($vocabulary) {
     case 'habitats':
@@ -1013,7 +1054,13 @@ function casa_taxa_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form
         $form['relations']['#access'] = FALSE;
         $form['path']['#access'] = FALSE;
       }
+      break;
 
+    case 'locality':
+      if ($form_view_mode == 'contribute') {
+        $form['path']['#access'] = FALSE;
+        // $form['field_range']['#access'] = FALSE;
+      }
       break;
   }
 
@@ -1207,7 +1254,7 @@ function get_observation_primary_picture_nid($observation_raw) {
 
 
 /**
- * Implements hook_menu().
+ * Implements hook_init().
  */
 function casa_taxa_mgt_init() {
   // bulk_taxa_upload();
@@ -1227,7 +1274,11 @@ function bulk_taxa_upload() {
 
 
 
-function taxa_lookup_multiple($taxa, $taxa_service) {
+/**
+ * @param $taxa
+ *   An array of strings; the scientific names of the taxa.
+ */
+function taxa_lookup_multiple($taxa, $taxa_service, $localities = NULL) {
   // dpm($taxa, '$taxa');
 
   $lookup_existings = [];
@@ -1264,6 +1315,9 @@ function taxa_lookup_multiple($taxa, $taxa_service) {
         $lookup_failures[] = $sc_name;
       }
       else {
+        if ($localities) {
+          $taxon_info['localities'] = $localities;
+        }
         create_taxon($taxon_info, FALSE);
         $lookup_successes[] = $sc_name;
       }

@@ -9,11 +9,18 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
+// var page_is_setup = false;
+
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.es_maps = {
   attach: function(context, settings) {
     // console.log('es_maps');
+
+    // if (! page_is_setup) {
+
+    //   page_is_setup = true;
+    // }
 
   }/*,
   weight: 10*/

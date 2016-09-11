@@ -1,12 +1,23 @@
 <?php
 
+  /**
+   * Implements hook_form_FORM_ID_alter().
+   */
 	function form_node_form_alter(&$form, &$form_state, $form_id) {
     // dpm('Reached: edit_selected_form_node_form_alter');
     // dpm ($form, "form");
     // dpm ($form_state, "form_state");
 
+    if (! isset($form['#bundle'])) {
+      return NULL;
+    }
+
     $bundle = $form['#bundle'];
-    $language = $form['language']['#value']; // 'und'
+
+    $language = LANGUAGE_NONE; // 'und'
+    if (isset($form['language'])) {
+      $language = $form['language']['#value'];
+    }
 
     // Determine the form view mode from arguments passed to drupal_get_form().
     $form_view_mode = NULL;

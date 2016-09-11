@@ -142,8 +142,7 @@ function content_type_picture_field_group_info() {
       0 => 'group_description',
       1 => 'group_info',
       2 => 'group_tags',
-      3 => 'group_interaction',
-      4 => 'group_location',
+      3 => 'group_location',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(

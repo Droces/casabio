@@ -9,6 +9,8 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
+var page_is_setup = false;
+
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.contribute_maps = {
   attach: function(context, settings) {
@@ -16,7 +18,12 @@ Drupal.behaviors.contribute_maps = {
     // console.log('context: ', context);
     // console.log('settings: ', settings);
 
-    add_listeners(context, settings);
+    if (! page_is_setup) {
+
+      add_listeners(context, settings);
+
+      page_is_setup = true;
+    }
 
   },
   weight: 11

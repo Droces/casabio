@@ -26,7 +26,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -29,
+        'weight' => -28,
       ),
       'petal' => array(
         'region' => '',
@@ -269,7 +269,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -24,
+        'weight' => -23,
       ),
       'petal' => array(
         'region' => '',
@@ -377,7 +377,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -20,
+        'weight' => -19,
       ),
       'petal' => array(
         'region' => '',
@@ -404,7 +404,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -26,
+        'weight' => -25,
       ),
       'petal' => array(
         'region' => '',
@@ -431,7 +431,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -31,
+        'weight' => -30,
       ),
       'petal' => array(
         'region' => '',
@@ -512,7 +512,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -22,
+        'weight' => -21,
       ),
       'petal' => array(
         'region' => '',
@@ -539,7 +539,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -21,
+        'weight' => -20,
       ),
       'petal' => array(
         'region' => '',
@@ -566,7 +566,7 @@ function blocks_views_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -23,
+        'weight' => -22,
       ),
       'petal' => array(
         'region' => '',

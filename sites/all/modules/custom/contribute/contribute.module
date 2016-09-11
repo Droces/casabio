@@ -65,8 +65,40 @@ function contribute_menu() {
     'access arguments'  => array('can contribute content'),
     'type'              => MENU_NORMAL_ITEM,
   );
+  $items['contribute/locality'] = array(
+    'title'             => 'Add a Locality',
+    'page callback'     => 'contribute_locality_page_callback',
+    'access callback'   => 'user_has_roles',
+    'access arguments'  => array(array('Maintainer', 'Administrator')),
+    // 'access callback'   => 'user_access',
+    // 'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
   return $items;
 }
+
+
+
+
+function user_has_roles($roles) {
+  if (user_is_logged_in()) {
+    global $user;
+    // If administrator, always return true.
+    if (in_array('administrator', $user->roles)) {
+      return TRUE;
+    }
+    // For each role provided, check if user has it.
+    foreach ($roles as $role) {
+      if (in_array($role, $user->roles)) {
+        return TRUE;
+      }
+    }
+  }
+  else {
+    return FALSE;
+  }
+}
+
 
 
 
@@ -159,8 +191,6 @@ function contribute_permission() {
  */
 function contribute_observation_page() {
 
-  module_load_include('inc', 'node', 'node.pages');
-
   $content = "";
 
   $entity_type = 'node';
@@ -171,6 +201,7 @@ function contribute_observation_page() {
     $entity_bundle_key => $bundle,
   ));
 
+  module_load_include('inc', 'node', 'node.pages');
   $content = drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'contribute_new']);
 
   return $content;
@@ -450,4 +481,20 @@ function get_contribute_mo_finish_content($collection_nid) {
     . '</ul>'
   ;
   return $content;
+}
+
+
+
+function contribute_locality_page_callback() {
+  $vocabulary = taxonomy_vocabulary_machine_name_load('locality');
+
+  if (! $vocabulary) {
+    return '';
+  }
+
+  module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+  $edit = array();
+  $taxonomy_form = drupal_get_form('taxonomy_form_term', $edit, $vocabulary, ['form_view_mode' => 'contribute']);
+
+  return drupal_render($taxonomy_form);
 }

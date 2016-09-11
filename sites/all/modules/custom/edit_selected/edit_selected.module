@@ -393,14 +393,16 @@ function get_interaction_form() {
   // Embed an identification form
 
   global $user;
+  $bundle = 'identification';
   $values = array(
-    'type' => 'identification',
+    'type' => $bundle,
     'uid' => $user->uid,
     'status' => 1,
   );
   $node = entity_create('node', $values);
 
-  $form = drupal_get_form('node_form', $node, ['form_view_mode' => 'contribute_new']);
+  module_load_include('inc', 'node', 'node.pages');
+  $form = drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'contribute_new']);
   // dpm($form, '$form');
   $form['actions']['#access'] = FALSE;
   $form['field_identified_species']['#access'] = FALSE;
@@ -414,15 +416,17 @@ function get_interaction_form() {
   // Embed the interaction form
 
   global $user;
+  $bundle = 'interaction';
   $values = array(
-    'type' => 'interaction',
+    'type' => $bundle,
     'uid' => $user->uid,
     'status' => 1,
   );
   $node = entity_create('node', $values);
 
+  module_load_include('inc', 'node', 'node.pages');
   $content['interaction_form'] = array(
-    drupal_get_form('node_form', $node, ['form_view_mode' => 'add_to_observation']),
+    drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'add_to_observation']),
     '#weight' => 2,
   );
   return $content;

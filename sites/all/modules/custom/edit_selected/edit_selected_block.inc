@@ -37,9 +37,8 @@ function get_edit_selected_form($bundle) {
   $node = entity_create('node', $values);
 
   // Load node.pages.inc from the node module.
-  // module_load_include('inc', 'node', 'node.pages');
-
-  $content = drupal_get_form('node_form', $node, ['form_view_mode' => 'contribute_new']);
+  module_load_include('inc', 'node', 'node.pages');
+  $content = drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'contribute_new']);
   // dpm($content, '$content');
 
   return $content;
@@ -74,12 +73,11 @@ function get_identify_selected_form() {
 
 
   // @todo Need to resolve the ajax error caused by clicking 'Add item' submit button of block form's entity ref field.
-  // Load node.pages.inc from the node module.
-  // module_load_include('inc', 'node', 'node.pages');
-  // module_load_include('inc', 'ctools', 'includes/modal');
 
   try {
-    $content['form'] = drupal_get_form('node_form', $node, ['form_view_mode' => 'contribute_new']);
+    // Load node.pages.inc from the node module.
+    module_load_include('inc', 'node', 'node.pages');
+    $content['form'] = drupal_get_form('identification_node_form', $node, ['form_view_mode' => 'contribute_new']);
     $content['form']['#weight'] = 2;
     // dpm($content, 'content');
     $content['form']['field_identified_species']['#access'] = FALSE;

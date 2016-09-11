@@ -31,9 +31,7 @@ function openlayers_casabio_default_openlayers_sources() {
   $ol_source->description = '';
   $ol_source->factory_service = 'openlayers.Source:GoogleMaps';
   $ol_source->options = array(
-    'key' => '',
-    'client' => '',
-    'channel' => '',
+    'key' => 'AIzaSyDYt_5HvjZhw-AO3ajn6-Gdy0XzK2L1AIc',
     'mapTypeId' => 'HYBRID',
     'sensor' => 0,
   );

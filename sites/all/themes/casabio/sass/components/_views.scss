@@ -143,8 +143,12 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
 .views-exposed-form {
   text-align: center;
 
+  .views-exposed-widgets {
+    @include display(flex);
+  }
   .views-exposed-widget {
     float: none;
+    @include flex(1 1 auto);
     // padding: 0 /* 0.5em 1em 0px 0px */;
     // vertical-align: bottom;
   }

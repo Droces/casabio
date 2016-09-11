@@ -1,0 +1,100 @@
+/**
+ * Columns
+ * v1.0
+ */
+
+
+// Column
+// An element that is in a row with other elements.
+// It'll have a horizontal gap between the elements ($gutter-width).
+// It can have a margin-bottom ($gutter-height).
+@mixin column($cols: 2, $gutter-width: $gutter-wide, $gutter-height: $gutter-wide, $float-dir: left) {
+  $col-width: calc( (100% - #{$gutter-width} * (#{$cols} - 1)) / #{$cols});
+
+  $last-col: $cols + "n";
+  $first-col: $last-col + " - " + ($cols - 1);
+
+  float: $float-dir;
+  width: $col-width;
+  margin-left: $gutter-width / 2;
+  margin-right: $gutter-width / 2;
+  margin-bottom: $gutter-height;
+  // display: inline-block;
+
+  &:nth-child(#{$first-col}) {
+    margin-left: 0;
+    clear: $float-dir;
+  }
+  &:nth-child(#{$last-col}) {
+    margin-right: 0;
+  }
+}
+
+
+@mixin cols-2-3-4-6 {
+    @include group; // Needed because children are floated.
+
+    li + li {
+        margin-top: 0;
+    }
+
+    & > * {
+        margin-left: 0;
+        margin-right: 0;
+        &:last-child {
+            // margin-bottom: 0; // Needed because container is floated.
+        }
+    }
+}
+@mixin cols-2($gutter-width: $gutter-wide, $gutter-height: $gutter-wide) {
+    @include cols-2-3-4-6;
+
+    & > * {
+        margin-bottom: $gutter-height;
+        @media all and (min-width: $w-regular) {
+            @include column(2, $gutter-width, 0);
+        }
+    }
+}
+@mixin cols-3($gutter-width: $gutter-wide, $gutter-height: $gutter-wide) {
+    @include cols-2-3-4-6;
+
+    & > * {
+        margin-bottom: $gutter-height;
+        @media all and (min-width: $w-narrow) and (max-width: $w-regular) {
+            @include column(2, $gutter-width, $gutter-height);
+        }
+        @media all and (min-width: $w-regular) {
+            @include column(3, $gutter-width, 0);
+        }
+    }
+}
+@mixin cols-4($gutter-width: $gutter-wide, $gutter-height: $gutter-wide) {
+    @include cols-2-3-4-6;
+
+    & > * {
+        margin-bottom: $gutter-height;
+        @media all and (min-width: $w-narrow) and (max-width: $w-regular) {
+            @include column(2, $gutter-width, $gutter-height);
+        }
+        @media all and (min-width: $w-regular) {
+            @include column(4, $gutter-width, 0);
+        }
+    }
+}
+@mixin cols-6($gutter-width: $gutter-wide, $gutter-height: $gutter-wide) {
+    @include cols-2-3-4-6;
+
+    & > * {
+        margin-bottom: $gutter-height;
+        @media all and (max-width: $w-narrow) {
+            @include column(2, $gutter-width, $gutter-height);
+        }
+        @media all and (min-width: $w-narrow) and (max-width: $w-regular) {
+            @include column(3, $gutter-width, $gutter-height);
+        }
+        @media all and (min-width: $w-regular) {
+            @include column(6, $gutter-width, 0);
+        }
+    }
+}

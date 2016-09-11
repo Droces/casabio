@@ -43,8 +43,9 @@ function get_crew_form_content() {
   // global $language;
 
   // Create the collection node
+    $bundle = 'crew_species_observation';
     $values = array(
-      'type' =>     'crew_species_observation',
+      'type' =>     $bundle,
       'status' =>   1,
       'comment' =>  0,
       'promote' =>  0,
@@ -52,7 +53,7 @@ function get_crew_form_content() {
     $collection = entity_create('node', $values);
 
   module_load_include('inc', 'node', 'node.pages');
-  $form = drupal_get_form('node_form', $collection, 'crew_observations');
+  $form = drupal_get_form($bundle . '_node_form', $collection, 'crew_observations');
 
   $form['#after_build'][] = 'crew_observations_after_build';
 
@@ -72,6 +73,10 @@ function crew_observations_form_node_form_alter(&$form, &$form_state, $form_id) 
   // dpm('reached: crew_observations_form_node_form_alter');
   // dpm($form, 'form');
   // dpm($form_state, 'form_state');
+
+  if (! isset($form['#bundle'])) {
+    return NULL;
+  }
 
   $bundle = $form['#bundle'];
 

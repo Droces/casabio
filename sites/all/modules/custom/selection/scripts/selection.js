@@ -190,7 +190,7 @@ Drupal.selection = {
 
 
   /**
-   * @returns a Jquery element, regardless of whether it's in a group
+   * @returns a list of Jquery elements
    */
   get_selected_selectables: function(id) {
     var selecteds_indexes = Drupal.selection.get_selecteds_indexes();

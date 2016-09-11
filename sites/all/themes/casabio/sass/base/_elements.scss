@@ -46,12 +46,20 @@ hr {
     padding: 0;}
 
 li {
-    margin: 0.5em 0;}
+    li + & {
+        margin-top: 0.5em;
+    }
+}
 
 
 p {
     line-height: 1.4em;
-    margin: 0.8em 0;}
+    margin-block-end: 0px;
+
+    * + & {
+        margin-top: 0.8em;
+    }
+}
 p,
 li,
 td, th {
@@ -93,12 +101,13 @@ fieldset {
     margin-top: 1em;
     margin-bottom: 1em;
     @include border-radius ( $corner-radius-large );
+    padding: 1em;
     background-color: rgba(black, 0.03);
     box-sizing: border-box;
     position: relative;
 
     &.collapsible {
-        padding-top: 1.4em;
+        padding-top: 1em + 0.4em;
         margin-top: 1em + 1.3em; // Extra to account for lifted legend
     }
 
@@ -120,6 +129,8 @@ fieldset {
             box-sizing: border-box;
             // background-image: inline-image("menu-expanded.png");
             // background-image: inline-image("menu-collapsed.png");
+            color: #3b3b3b;
+
 
             &::before {
                 @extend %font-icon;
@@ -410,168 +421,4 @@ form {
     @include group;
     max-width: 100%;
     box-sizing: border-box;
-}
-
-
-input[type] {
-    vertical-align: middle;
-    max-width: 100%;
-
-    &[type="text"] {
-        @media all and (max-width: 700px) {
-            width: 100%;
-        }
-    }
-
-    aside &[type="text"] {
-        width: 100%;
-    }
-}
-input[type="radio"],
-input[type="checkbox"] {
-    margin-top: 0.3em;
-
-    &:focus {
-        box-shadow: 0 0 0.3em rgba($colour-links, 0.75);
-    }
-}
-
-label {
-    display: block;
-    cursor: pointer;
-    margin: 0 0 0.3em;
-    font-weight: 600;
-    font-size: 1.1em;
-    // @include transition( font-size );
-
-    input[type="radio"] + &,
-    input[type="checkbox"] + & {
-        padding-left: 0.2em;
-    }
-}
-
-
-
-/* -----------------------------------------------
-                            Buttons */
-/* Buttons can either be flat, or raised */
-/* In a group of buttons, the most important action should have highlight colour */
-/* Buttons may contain text or an icon (for obvious actions) */
-/* Button text should always be in all-caps */
-/* Buttons should always have a minimum size for all pointers (including touch) */
-button,
-a[role="button"],
-a.button,
-.button > a,
-input[type="reset"],
-input[type="submit"],
-input[type="button"],
-.tabs li a {
-    @extend button;
-}
-
-$button-border-colour: #CFCFCF;
-$pointable-bg-colour:  #838383;
-$pointable-background:  linear-gradient(tint($pointable-bg-colour, 10%), shade($pointable-bg-colour, 10%));
-button {
-    margin: 0.4em;
-    vertical-align: baseline;
-    @include appearance(none);
-    color: white;
-    text-transform: capitalize;
-    // background-color: white;
-    @include background-image($pointable-background);
-    box-shadow: none /* 0px 0px 0.3em rgba(black, 0.1) */;
-    color: white;
-    font-weight: 600;
-    border: none /* solid 1px #CFCFCF */;
-    text-shadow: -0.03em -0.03em 0.04em rgba(black, 0.3);
-    padding: $pointer_target-padding;
-
-    &:hover,
-    &:focus {
-        @include background-image($pointable-background);
-        // background: shade( white, 5% );
-        // border-color: shade( $button-border-colour, 10% );
-    }
-    &:focus {
-        box-shadow: 0 0 0.3em rgba(white, 0.75);
-    }
-    &:active {
-        @include background-image($pointable-background);
-        // background: shade( white, 8% );
-        // border-color: shade( $button-border-colour, 15% );
-    }
-    &.active {
-        // color: black;
-        @include background-image(linear-gradient($colour-links, shade($colour-links, 12%)));
-        // border-color: shade($colour-buttons, 5%);
-        color: white;
-
-        &:hover,
-        &:focus {
-            background: shade( $colour-links, 15% );
-            // border-color: shade($colour-buttons, 10%);
-        }
-        &:active {
-            background: shade( $colour-links, 25% );
-            // border-color: shade($colour-buttons, 15%);
-        }
-    }
-    .floating & {
-        display: block;
-        box-shadow: 1px 1px 4px rgba(black, 0.46);
-    }
-    &[disabled] {
-        background: #ADADAD;
-        color: rgba(white, 0.6);
-        text-shadow: none;
-    }
-
-    &.primary {
-        @include background-image(linear-gradient($colour-buttons, shade($colour-buttons, 12%)));
-        // border-color: shade($colour-buttons, 5%);
-        color: white;
-
-        &:hover,
-        &:focus {
-            background: shade( $colour-buttons, 15% );
-            // border-color: shade($colour-buttons, 10%);
-        }
-        &:active {
-            background: shade( $colour-buttons, 25% );
-            // border-color: shade($colour-buttons, 15%);
-        }
-        &[disabled] {
-            @include background-image(linear-gradient(scale-saturation($colour-buttons, -50%), scale-saturation(shade($colour-buttons, 12%), -50%)));
-            color: rgba(white, 0.6);
-        }
-    }
-
-    &.flat {
-        background: none;
-        border: none;
-        color: $colour-links;
-        padding-left: 0.4em;
-        padding-right: 0.4em;
-        text-shadow: none;
-
-        &:hover,
-        &:focus {
-            // color: shade( $colour-text, 10% );
-            // background: shade( white, 10% );
-        }
-        &:active {
-            // color: shade( $colour-text, 20% );
-            // background: shade( white, 20% );
-        }
-        &.active {
-            // color: shade( $colour-text, 20% );
-            // background: shade( white, 20% );
-        }
-    }
-
-    &.no-text .text {
-        display: none;
-    }
 }

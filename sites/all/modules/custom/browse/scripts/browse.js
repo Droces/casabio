@@ -9,6 +9,8 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
+var page_is_setup = false;
+
 var collections_disabled_options = [
 	'new',
 	'unidentified',
@@ -27,12 +29,17 @@ Drupal.behaviors.browse = {
   attach: function(context, settings) {
   	// alert('context: ' + context);
 
-	// $( '#browse-chooser-form [value="collections"]', context ).change( function(event) {
-	// 	manage_change( $( this ));
-	// });
-	$( '#browse-chooser-form [name="entity"]', context ).change( function(event) {
-		manage_change( $( this ));
-	});
+    if (! page_is_setup) {
+
+			// $( '#browse-chooser-form [value="collections"]', context ).change( function(event) {
+			// 	manage_change( $( this ));
+			// });
+			$( '#browse-chooser-form [name="entity"]', context ).change( function(event) {
+				manage_change( $( this ));
+			});
+
+      page_is_setup = true;
+		}
 
   }
 };

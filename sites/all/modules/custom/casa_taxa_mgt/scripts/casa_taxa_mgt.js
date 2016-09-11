@@ -9,18 +9,20 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-// Happens only once
-$( document ).ready(function() {
-});
+var page_is_setup = false;
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.casa_taxa_mgt = {
   attach: function(context, settings) {
   // console.log('Called: Drupal.behaviors.casa_taxa_mgt.attach()');
 
-    $( '.expand[data-ajax]', context ).on('click', function(event) {
-      expand_taxonomy_branch($( this ));
-    });
+    if (! page_is_setup) {
+      $( '.expand[data-ajax]', context ).on('click', function(event) {
+        expand_taxonomy_branch($( this ));
+      });
+
+      page_is_setup = true;
+    }
 
   }
 };

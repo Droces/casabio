@@ -95,7 +95,6 @@ features[user_permission][] = administer filters
 features[user_permission][] = administer image styles
 features[user_permission][] = administer linkit
 features[user_permission][] = administer media browser
-features[user_permission][] = administer media wysiwyg view mode
 features[user_permission][] = administer menu
 features[user_permission][] = administer module filter
 features[user_permission][] = administer modules

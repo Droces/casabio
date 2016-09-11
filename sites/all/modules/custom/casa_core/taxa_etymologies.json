@@ -1,0 +1,5802 @@
+[
+  {
+    "name": "abietina",
+    "etymology": "From the Latin ‘abie’ / ‘abies’ meaning ‘silver fir’; and the Latin ‘tina’ / ‘tina’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "abrotanifolius",
+    "etymology": "From the Latin ‘abrotani’ / ‘abrotum’ meaning ‘southernwood’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "abrotanoides",
+    "etymology": "From the Latin ‘abrotan’ / ‘abrotum’ meaning ‘southernwood’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "abruptus",
+    "etymology": "From the Latin ‘abruptus’ / ‘abruptus’ meaning ‘sudden’"
+  },
+  {
+    "name": "abyssinica",
+    "etymology": "From the Latin ‘abyssinica’ / ‘abyssinicus’ meaning ‘relating to Abyssinia’"
+  },
+  {
+    "name": "acaulis",
+    "etymology": "From the Latin ‘a’ / ‘a’ meaning ‘without’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "acaulos",
+    "etymology": "From the Latin ‘a’ / ‘a’ meaning ‘without’; and the Greek ‘caulos’ / ‘kaulos’ meaning ‘stalk’."
+  },
+  {
+    "name": "acerosa",
+    "etymology": "From the Latin ‘acer’ / ‘acer’ meaning ‘maple’; and the Latin ‘osa’ / ‘osus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "acetosella",
+    "etymology": "From the Latin ‘aceto’ / ‘acetum’ meaning ‘vinegar’; and the Latin ‘ella’ / ‘ellus’ meaning ‘diminutizing suffix implying a faint resemblance’."
+  },
+  {
+    "name": "acinaciformis",
+    "etymology": "From the Greek ‘acinaci’ / ‘akinakos’ meaning ‘scimitar’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "acinosa",
+    "etymology": "From the Greek ‘acin’ / ‘akinakos’ meaning ‘scimitar’; and the Latin ‘osa’ / ‘osus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "acipetala",
+    "etymology": "From the Greek ‘acin’ / ‘akinakos’ meaning ‘scimitar’; and the Greek ‘petala’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "acockii",
+    "etymology": "From the English ‘acockii’ / ‘Acock’ meaning ‘name honours a botanist named Acocks’"
+  },
+  {
+    "name": "acrostichoides",
+    "etymology": "From the Greek ‘acro’ / ‘akros’ meaning ‘summit’; and the stich ‘stichus’ / ‘stichos’ meaning ‘row’."
+  },
+  {
+    "name": "aculeastrum",
+    "etymology": "From the Latin ‘acule’ / ‘aculeatus’ meaning ‘prickly’; and the Latin ‘astrum’ / ‘aster’ meaning ‘star’."
+  },
+  {
+    "name": "aculeata",
+    "etymology": "From the Latin ‘aculeata’ / ‘aculeatus’ meaning ‘prickly’"
+  },
+  {
+    "name": "acuminata",
+    "etymology": "From the Latin ‘acuminata’ / ‘acuminatus’ meaning ‘tapering to a point’"
+  },
+  {
+    "name": "acuminatum",
+    "etymology": "From the Latin ‘acuminatum’ / ‘acuminatus’ meaning ‘tapering to a point’"
+  },
+  {
+    "name": "acutiflorum",
+    "etymology": "From the Latin ‘acuti’ / ‘acutus’ meaning ‘sharp’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "acutifolium",
+    "etymology": "From the Latin ‘acuti’ / ‘acutus’ meaning ‘sharp’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "adiantiformis",
+    "etymology": "From the Greek ‘a’ / ‘a’ meaning ‘not’; and the Greek ‘dianti’ / ‘diantos’ meaning ‘wettable’."
+  },
+  {
+    "name": "adiantum-nigrum",
+    "etymology": "From the Greek ‘a’ / ‘a’ meaning ‘not’; and the Greek ‘dianti’ / ‘diantos’ meaning ‘wettable’."
+  },
+  {
+    "name": "adnatus",
+    "etymology": "From the Latin ‘adnatus’ / ‘adnatus’ meaning ‘attached at birth’"
+  },
+  {
+    "name": "adpressa",
+    "etymology": "From the Latin ‘adpressus’ / ‘adpressa’ meaning ‘pressed together’"
+  },
+  {
+    "name": "aduncus",
+    "etymology": "From the Latin ‘aduncus’ / ‘aduncus’ meaning ‘hooked or bent’"
+  },
+  {
+    "name": "aemula",
+    "etymology": "From the Latin ‘aemula’ / ‘aemulus’ meaning ‘similar’"
+  },
+  {
+    "name": "aestivus",
+    "etymology": "From the Latin ‘aestivus’ / ‘aestivus’ meaning ‘relating to the summer’"
+  },
+  {
+    "name": "aethiopica",
+    "etymology": "From the Latin ‘aethiopica’ / ‘aethiopicus’ meaning ‘relating to Ethiopia or Africa in general’"
+  },
+  {
+    "name": "aethiopicum",
+    "etymology": "From the Latin ‘aethiopicum’ / ‘aethiopicus’ meaning ‘relating to Ethiopia or Africa in general’"
+  },
+  {
+    "name": "aethiopicus",
+    "etymology": "From the Latin ‘aethiopicus’ / ‘aethiopicus’ meaning ‘relating to Ethiopia or Africa in general’"
+  },
+  {
+    "name": "affinis",
+    "etymology": "From the Latin ‘affinis’ / ‘affinis’ meaning ‘kinned to’"
+  },
+  {
+    "name": "afra",
+    "etymology": "From the Latin ‘afra’ / ‘africanus’ meaning ‘relating to Africa’"
+  },
+  {
+    "name": "africana",
+    "etymology": "From the Latin ‘africana’ / ‘africanus’ meaning ‘relating to Africa’"
+  },
+  {
+    "name": "africana-caerulea",
+    "etymology": "From the Latin ‘africana’ / ‘africanus’ meaning ‘relating to Africa’; and the Latin ‘caerulea’ / ‘caeruleus’ meaning ‘sky-blue’."
+  },
+  {
+    "name": "africana-lutea",
+    "etymology": "From the Latin ‘africana’ / ‘africanus’ meaning ‘relating to Africa’; and the Latin ‘lutea’ / ‘luteus’ meaning ‘orange-yellow’."
+  },
+  {
+    "name": "africanum",
+    "etymology": "From the Latin ‘africanum’ / ‘africanus’ meaning ‘relating to Africa’"
+  },
+  {
+    "name": "africanus",
+    "etymology": "From the Latin ‘africanus’ / ‘africanus’ meaning ‘relating to Africa’"
+  },
+  {
+    "name": "afrum",
+    "etymology": "From the Latin ‘afra’ / ‘africanus’ meaning ‘relating to Africa’"
+  },
+  {
+    "name": "aggregatum",
+    "etymology": "From the Latin ‘aggregatum’ / ‘aggregatus’ meaning ‘aggregated’"
+  },
+  {
+    "name": "alata",
+    "etymology": "From the Latin ‘alata’ / ‘alatus’ meaning ‘winged’"
+  },
+  {
+    "name": "alaternoides",
+    "etymology": "From the Latin ‘alater’ / ‘alatus’ meaning ‘winged’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "alatum",
+    "etymology": "From the Latin ‘alatum’ / ‘alatus’ meaning ‘winged’"
+  },
+  {
+    "name": "alatus",
+    "etymology": "From the Latin ‘alatus’ / ‘alatus’ meaning ‘winged’"
+  },
+  {
+    "name": "alba",
+    "etymology": "From the Latin ‘alba’ / ‘albus’ meaning ‘white’"
+  },
+  {
+    "name": "albens",
+    "etymology": "From the Latin ‘albens’ / ‘albens’ meaning ‘turning white’"
+  },
+  {
+    "name": "albicans",
+    "etymology": "From the Latin ‘albicans’ / ‘albicans’ meaning ‘becoming white’"
+  },
+  {
+    "name": "albiflora",
+    "etymology": "From the Latin ‘albi’ / ‘albus’ meaning ‘white’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "albo-aristatus",
+    "etymology": "From the Latin ‘albo’ / ‘albus’ meaning ‘white’; and the Latin ‘aristatus’ / ‘aristatus’ meaning ‘bearded like wheat’."
+  },
+  {
+    "name": "album",
+    "etymology": "From the Latin ‘album’ / ‘albus’ meaning ‘white’"
+  },
+  {
+    "name": "alchemilloides",
+    "etymology": "From the Latin ‘alchemilla’ / ‘alchemilla’ meaning ‘flower with alchemical associations’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "alepecuroides",
+    "etymology": "From the Greek ‘alepecur’ / ‘alopekh’ meaning ‘fox’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "aliciae",
+    "etymology": "From the German ‘aliciae’ / ‘Adalheidis’ meaning ‘in honour of  a woman called Alicia’"
+  },
+  {
+    "name": "alliacea",
+    "etymology": "From the Latin ‘alli’ / ‘allium’ meaning ‘garlic’; and the Latin ‘acea’ / ‘aceus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "alnifolia",
+    "etymology": "From the Latin ‘alni’ / ‘alnus’ meaning ‘alder’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "aloides",
+    "etymology": "From the Greek ‘al’ / ‘aloe’ meaning ‘the plant of that name’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "alooides",
+    "etymology": "From the Greek ‘alo’ / ‘aloe’ meaning ‘the plant of that name’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "alopecuroides",
+    "etymology": "From the Greek ‘alopecur’ / ‘alopekh’ meaning ‘fox’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "alpini",
+    "etymology": "From the Latin ‘alpini’ / ‘alpinus’ meaning ‘alpine’"
+  },
+  {
+    "name": "altheaifolia",
+    "etymology": "From the Greek ‘althaeai’ / ‘althea’ meaning ‘hollyhock’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "altistylus",
+    "etymology": "From the Latin ‘alti’ / ‘altus’ meaning ‘high’; and the Greek ‘stylus’ / ‘stylos’ meaning ‘column’."
+  },
+  {
+    "name": "ambigua",
+    "etymology": "From the Latin ‘ambigua’ / ‘ambiguus’ meaning ‘doubtful’"
+  },
+  {
+    "name": "ambiguus",
+    "etymology": "From the Latin ‘ambiguus’ / ‘ambiguus’ meaning ‘doubtful’"
+  },
+  {
+    "name": "amoena",
+    "etymology": "From the Latin ‘amoena’ / ‘amoenus’ meaning ‘pleasant’"
+  },
+  {
+    "name": "amoenus",
+    "etymology": "From the Latin ‘amonus’ / ‘amoenus’ meaning ‘pleasant’"
+  },
+  {
+    "name": "ampla",
+    "etymology": "From the Latin ‘ampla’ / ‘amplus’ meaning ‘large’"
+  },
+  {
+    "name": "amplexicaulis",
+    "etymology": "From the Latin ‘amplexi’ / ‘amplexus’ meaning ‘embracing’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "anceps",
+    "etymology": "From the Latin ‘anceps’ / ‘anceps’ meaning ‘having two heads’"
+  },
+  {
+    "name": "androsacea",
+    "etymology": "From the Greek ‘androsac’ / ‘androsake’ meaning ‘a Greek name for a member of the primrose family’; and the Latin ‘acea’ / ‘aceus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "anemonoides",
+    "etymology": "From the Greek ‘anemon’ / ‘anemone’ meaning ‘a Greek name for a plant that grows in windy locations, whence its derivation from the Greek word for wind, anemos’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "anethifolium",
+    "etymology": "From the Greek ‘anethi’ / ‘anethon’ meaning ‘the Greek name for dill’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "angulata",
+    "etymology": "From the Latin ‘angulata’ / ‘angulatus’ meaning ‘angled’"
+  },
+  {
+    "name": "angusta",
+    "etymology": "From the Latin ‘angusta’ / ‘angustus’ meaning ‘narrow’"
+  },
+  {
+    "name": "angustifolia",
+    "etymology": "From the Latin ‘angusti’ / ‘angustus’ meaning ‘narrow’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "angustifolius",
+    "etymology": "From the Latin ‘angusti’ / ‘angustus’ meaning ‘narrow’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "angustus",
+    "etymology": "From the Latin ‘angustus’ / ‘angustus’ meaning ‘narrow’"
+  },
+  {
+    "name": "annectens",
+    "etymology": "From the Latin ‘annectens’ / ‘annectens’ meaning ‘binding’"
+  },
+  {
+    "name": "annua",
+    "etymology": "From the Latin ‘annua’ / ‘annuus’ meaning ‘that which lasts a year’"
+  },
+  {
+    "name": "anomala",
+    "etymology": "From the Latin ‘anomala’ / ‘anomalus’ meaning ‘abnormal’"
+  },
+  {
+    "name": "antarctica",
+    "etymology": "From the Latin ‘anarcticus’ / ‘southern’ meaning ‘’"
+  },
+  {
+    "name": "anthemoides",
+    "etymology": "From the Greek ‘anthe’ / ‘anthos’ meaning ‘flower ’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "antholyza",
+    "etymology": "From the Greek ‘antho’ / ‘anthos’ meaning ‘flower’; and the Greek ‘lyza’ / ‘lyssa’ meaning ‘rage’."
+  },
+  {
+    "name": "antirrhinoides",
+    "etymology": "From the Greek ‘anti’ / ‘ante’ meaning ‘before’; and the Greek ‘rhinos’ / ‘rhin’ meaning ‘nose’."
+  },
+  {
+    "name": "apetalus",
+    "etymology": "From the Greek ‘a’ / ‘a’ meaning ‘not’; and the Greek ‘petalus’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "aphylla",
+    "etymology": "From the Greek ‘a’ / ‘a’ meaning ‘not’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "appendiculata",
+    "etymology": "From the Latin ‘appendic’ / ‘appendix’ meaning ‘attachment’; and the Latin ‘ulata’ / ‘ulatus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "aquatica",
+    "etymology": "From the Latin ‘aquatica’ / ‘aquaticus’ meaning ‘relating to water’"
+  },
+  {
+    "name": "aquilinum",
+    "etymology": "From the Latin ‘aquilinus’ / ‘aquilinum’ meaning ‘eagle-like’"
+  },
+  {
+    "name": "araneosa",
+    "etymology": "From the Latin ‘arenosa’ / ‘arenosus’ meaning ‘sandy’"
+  },
+  {
+    "name": "arborea",
+    "etymology": "From the Latin ‘arborea’ / ‘arboreus’ meaning ‘relating to a tree’"
+  },
+  {
+    "name": "arborescens",
+    "etymology": "From the Latin ‘arborescens’ / ‘arborescens’ meaning ‘becoming tree-like’"
+  },
+  {
+    "name": "arceuthobioides",
+    "etymology": "From the Greek ‘arce’ / ‘arke???’ meaning ‘ward off???’; and the Greek ‘eutho’ / ‘euthos???’ meaning ‘????’."
+  },
+  {
+    "name": "arenaria",
+    "etymology": "From the Latin ‘arenaria’ / ‘arenarius’ meaning ‘sandy’"
+  },
+  {
+    "name": "arenarium",
+    "etymology": "From the Latin ‘arenarium’ / ‘arenarius’ meaning ‘sandy’"
+  },
+  {
+    "name": "arenarius",
+    "etymology": "From the Latin ‘arenarius’ / ‘arenarius’ meaning ‘sandy’"
+  },
+  {
+    "name": "arenicola",
+    "etymology": "From the Latin ‘areni’ / ‘arena’ meaning ‘sand’; and the Latin ‘cola’ / ‘colare’ meaning ‘inhabit’."
+  },
+  {
+    "name": "argentea",
+    "etymology": "From the Latin ‘argentea’ / ‘argenteus’ meaning ‘silver ’"
+  },
+  {
+    "name": "argenteum",
+    "etymology": "From the Latin ‘argenteum’ / ‘argenteus’ meaning ‘silver’"
+  },
+  {
+    "name": "argenteus",
+    "etymology": "From the Latin ‘argenteus’ / ‘argenteus’ meaning ‘silver’"
+  },
+  {
+    "name": "argyrella",
+    "etymology": "From the Greek ‘argyr’ / ‘argyros’ meaning ‘silver’; and the Latin ‘ella’ / ‘ellus’ meaning ‘diminutizing suffix implying a faint resemblance’."
+  },
+  {
+    "name": "argyropa",
+    "etymology": "From the Greek ‘argyr’ / ‘argyros’ meaning ‘silver’; and the Greek ‘opa’ / ‘opsis’ meaning ‘face’."
+  },
+  {
+    "name": "argyrophylla",
+    "etymology": "From the Greek ‘aryro’ / ‘argyros’ meaning ‘silver’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "arida",
+    "etymology": "From the Latin ‘arida’ / ‘aridus’ meaning ‘dry’"
+  },
+  {
+    "name": "aristata",
+    "etymology": "From the Latin ‘aristata’ / ‘aristatus’ meaning ‘bearded like wheat’"
+  },
+  {
+    "name": "aristatus",
+    "etymology": "From the Latin ‘aristatus’ / ‘aristatus’ meaning ‘bearded like wheat’"
+  },
+  {
+    "name": "aristidoides",
+    "etymology": "From the Latin ‘aristi’ / ‘arista’ meaning ‘wheat-beard’; and the Greek ‘oides’ / ‘oides’ meaning ‘in  the form of’."
+  },
+  {
+    "name": "armata",
+    "etymology": "From the Latin ‘armata’ / ‘armatus’ meaning ‘armed’"
+  },
+  {
+    "name": "arniciflorus",
+    "etymology": "From the Latin ‘arnici’ / ‘arnica’ meaning ‘a member of the Asteracids’; and the Latin ‘florus’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "aromatica",
+    "etymology": "From the Latin ‘aromatica’ / ‘aromaticus’ meaning ‘fragrant’"
+  },
+  {
+    "name": "arrhiza",
+    "etymology": "From the Greek ‘a’ / ‘a’ meaning ‘without’; and the Latin ‘rhiza’ / ‘rhiza’ meaning ‘root’."
+  },
+  {
+    "name": "articularis",
+    "etymology": "From the Latin ‘articularis’ / ‘articularis’ meaning ‘relating to joints’"
+  },
+  {
+    "name": "articulata",
+    "etymology": "From the Latin ‘articulata’ / ‘articulatus’ meaning ‘divided into joints’"
+  },
+  {
+    "name": "arvensis",
+    "etymology": "From the Latin ‘arvensis’ / ‘arvensis’ meaning ‘relating to meadows’"
+  },
+  {
+    "name": "asarina",
+    "etymology": "From the Latin ‘asar’ / ‘asarum’ meaning ‘ginger’; and the Latin ‘ina’ / ‘inus’ meaning ‘adjectival suffix implying likeness’."
+  },
+  {
+    "name": "aschersonianum",
+    "etymology": "From the English ‘achersonianum’ / ‘Acherson’ meaning ‘commemorating a person of this name’"
+  },
+  {
+    "name": "asiatica",
+    "etymology": "From the Latin ‘asiatica’ / ‘asiaticus’ meaning ‘relating to Asia’"
+  },
+  {
+    "name": "aspalathoides",
+    "etymology": "From the Greek ‘aspalath’ / ‘aspalathos’ meaning ‘a fragrant shrub found in Greece’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "aspera",
+    "etymology": "From the Latin ‘aspera’ / ‘asperus’ meaning ‘rough’"
+  },
+  {
+    "name": "asperiflora",
+    "etymology": "From the Latin ‘asperi’ / ‘asperus’ meaning ‘rough’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "asperulum",
+    "etymology": "From the Latin ‘asper’ / ‘asperus’ meaning ‘rough’; and the Latin ‘ullum’ / ‘ullus’ meaning ‘adjectival suffix implying a faint degree of the property’."
+  },
+  {
+    "name": "asperum",
+    "etymology": "From the Latin ‘asperum’ / ‘asperus’ meaning ‘rough’"
+  },
+  {
+    "name": "asteriscoides",
+    "etymology": "From the Latin ‘asterisc’ / ‘asteriscus’ meaning ‘small star’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "asteroides",
+    "etymology": "From the Latin ‘aster’ / ‘aster’ meaning ‘star’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "astroites",
+    "etymology": "From the Latin ‘astr’ / ‘aster’ meaning ‘star’; and the Greek ‘oites’ / ‘oios????’ meaning ‘single????’."
+  },
+  {
+    "name": "atrata",
+    "etymology": "From the Latin ‘atrata’ / ‘atratus’ meaning ‘blackened’"
+  },
+  {
+    "name": "atricapilla",
+    "etymology": "From the Latin ‘atri’ / ‘ater’ meaning ‘black’; and the Latin ‘capilla’ / ‘capillum’ meaning ‘hair’."
+  },
+  {
+    "name": "atropurpurea",
+    "etymology": "From the Latin ‘atro’ / ‘ater’ meaning ‘black’; and the Latin ‘purpurea’ / ‘purpureus’ meaning ‘purple’."
+  },
+  {
+    "name": "atrorubens",
+    "etymology": "From the Latin ‘atro’ / ‘ater’ meaning ‘black’; and the Latin ‘rubens’ / ‘rubens’ meaning ‘becoming red’."
+  },
+  {
+    "name": "aurantiacus",
+    "etymology": "From the Latin ‘auranti’ / ‘aurans’ meaning ‘gilding’; and the Latin ‘acus’ / ‘acus’ meaning ‘adjectival suffix. This word has been coined. It does not exist in classical Latin.’."
+  },
+  {
+    "name": "aurea",
+    "etymology": "From the Latin ‘aurea’ / ‘aureus’ meaning ‘golden’"
+  },
+  {
+    "name": "aureus",
+    "etymology": "From the Latin ‘aureus’ / ‘aureus’ meaning ‘golden’"
+  },
+  {
+    "name": "auritum",
+    "etymology": "From the Latin ‘auritum’ / ‘auritus’ meaning ‘provided with ears’"
+  },
+  {
+    "name": "australe",
+    "etymology": "From the Latin ‘australe’ / ‘australis’ meaning ‘southern’"
+  },
+  {
+    "name": "australis",
+    "etymology": "From the Latin ‘australis’ / ‘australis’ meaning ‘southern’"
+  },
+  {
+    "name": "autumnalis",
+    "etymology": "From the Latin ‘autumnalis’ / ‘autumnalis’ meaning ‘relating to autumn’"
+  },
+  {
+    "name": "avenacea",
+    "etymology": "From the Latin ‘avenacea’ / ‘avenaceus’ meaning ‘relating to oats’"
+  },
+  {
+    "name": "aviculare",
+    "etymology": "From the Latin ‘aviculare’ / ‘avicularis’ meaning ‘relating to birds’"
+  },
+  {
+    "name": "axillaris",
+    "etymology": "From the Latin ‘axillaris’ / ‘axillaris’ meaning ‘relating to the stem’"
+  },
+  {
+    "name": "baccans",
+    "etymology": "From the Latin ‘baccans’ / ‘bearing berries’ meaning ‘’"
+  },
+  {
+    "name": "baccifera",
+    "etymology": "From the Latin ‘bacci’ / ‘bacca’ meaning ‘berry’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "bakeri",
+    "etymology": "From the English ‘bakeri’ / ‘Bakeri’ meaning ‘commemorating a person of this name’"
+  },
+  {
+    "name": "banksii",
+    "etymology": "From the English ‘banksii’ / ‘Banks’ meaning ‘commemorating the eighteenth-century botanist’"
+  },
+  {
+    "name": "barbata",
+    "etymology": "From the Latin ‘barbata’ / ‘barbatus’ meaning ‘bearded’"
+  },
+  {
+    "name": "belladonna",
+    "etymology": "From the Italian ‘bella’ / ‘bella’ meaning ‘beautiful’; and the Italian ‘donna’ / ‘donna’ meaning ‘woman’."
+  },
+  {
+    "name": "bellendenii",
+    "etymology": "From the English ‘bellendenii’ / ‘Bellenden’ meaning ‘commemorating John Bellenden Ker, 19th-century botanist’"
+  },
+  {
+    "name": "bellidiformis",
+    "etymology": "From the Latin ‘bellidi’ / ‘bellis’ meaning ‘a daisy genus’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "bellidioides",
+    "etymology": "From the Latin ‘bellidi’ / ‘bellis’ meaning ‘a daisy genus’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "benghalensis",
+    "etymology": "From the Hindu ‘benghal’ / ‘Bengal’ meaning ‘an Indian province’; and the Latin ‘ensis’ / ‘ensis’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bergerana",
+    "etymology": "From the German??? ‘berger’ / ‘Berger’ meaning ‘commemorating a German botanist???’; and the Latin ‘ana’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bergiana",
+    "etymology": "From the Swedish ‘bergi’ / ‘Bergius’ meaning ‘commemorating an 18th-century Swedish botanist’; and the Latin ‘ana’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bergianum",
+    "etymology": "From the Swedish ‘bergi’ / ‘Bergius’ meaning ‘commemorating an 18th-century Swedish botanist’; and the Latin ‘anum’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "betulinum",
+    "etymology": "From the Latin ‘betuli’ / ‘betula’ meaning ‘birch’; and the Latin ‘inum’ / ‘inus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bicallosum",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘callosum’ / ‘callosus’ meaning ‘calloused’."
+  },
+  {
+    "name": "bicolor",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘color’ / ‘color’ meaning ‘colour’."
+  },
+  {
+    "name": "bicorne",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘corne’ / ‘cornis’ meaning ‘horned’."
+  },
+  {
+    "name": "bicornis",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘cornis’ / ‘cornis’ meaning ‘horned’."
+  },
+  {
+    "name": "bifida",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘fida’ / ‘fidus’ meaning ‘cut’."
+  },
+  {
+    "name": "bifidum",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘fidum’ / ‘fidus’ meaning ‘cut’."
+  },
+  {
+    "name": "bifidus",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘fidus’ / ‘fidus’ meaning ‘cut’."
+  },
+  {
+    "name": "biflora",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "bifurcus",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘furcus’ / ‘furca’ meaning ‘fork’."
+  },
+  {
+    "name": "bipinnatum",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘pinnatum’ / ‘pinnatus’ meaning ‘winged’."
+  },
+  {
+    "name": "bipinnatus",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘pinnatus’ / ‘pinnatus’ meaning ‘winged’."
+  },
+  {
+    "name": "bisquamata",
+    "etymology": "From the Latin ‘bis’ / ‘bis’ meaning ‘twice’; and the Latin ‘squamata’ / ‘squamata’ meaning ‘scaled’."
+  },
+  {
+    "name": "bituminosa",
+    "etymology": "From the Latin ‘bituminosa’ / ‘bituminosus’ meaning ‘tarry’"
+  },
+  {
+    "name": "bivalvata",
+    "etymology": "From the Latin ‘bi’ / ‘bi’ meaning ‘two’; and the Latin ‘valvata’ / ‘valvatus’ meaning ‘equipped with valves’."
+  },
+  {
+    "name": "blancheana",
+    "etymology": "From the French ‘blanche’ / ‘Blanche’ meaning ‘commemorating a woman named Blanche (French for 'white')’; and the Latin ‘ana’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bodkinii",
+    "etymology": "From the English ‘bodkinii’ / ‘Bodkin’ meaning ‘commemorating a man called Bodkin’"
+  },
+  {
+    "name": "boivinii",
+    "etymology": "From the French ‘boivinii’ / ‘Boivin’ meaning ‘commemorating a 16th-century French chronicler’"
+  },
+  {
+    "name": "bolusiana",
+    "etymology": "From the English ‘bolus’ / ‘Bolus’ meaning ‘commemorating the South African botanist’; and the Latin ‘ianus’ / ‘iana’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "bolusii",
+    "etymology": "From the English ‘bolus’ / ‘Bolus’ meaning ‘commemorating the South African botanist’"
+  },
+  {
+    "name": "bonaespei",
+    "etymology": "From the Latin ‘bonae’ / ‘bonus’ meaning ‘good’; and the Latin ‘spei’ / ‘spes’ meaning ‘hope’."
+  },
+  {
+    "name": "bonaspei",
+    "etymology": "From the Latin ‘bona’ / ‘bonus’ meaning ‘good’; and the Latin ‘spei’ / ‘spes’ meaning ‘hope’."
+  },
+  {
+    "name": "borbonica",
+    "etymology": "From the French ‘borbon’ / ‘Bourbon’ meaning ‘a region in France’; and the Latin ‘ica’ / ‘icus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "borbonifolia",
+    "etymology": "From the French ‘borbon’ / ‘Bourbon’ meaning ‘a region in France’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "brachialis",
+    "etymology": "From the Latin ‘brachialis’ / ‘brachialis’ meaning ‘relating to the arm’"
+  },
+  {
+    "name": "brachiata",
+    "etymology": "From the Latin ‘brachiata’ / ‘brachiatus’ meaning ‘branched’"
+  },
+  {
+    "name": "brachyandra",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘andra’ / ‘andros’ meaning ‘stamen’."
+  },
+  {
+    "name": "brachypetala",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘petala’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "brachyphylla",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "brachypoda",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘poda’ / ‘pous’ meaning ‘foot’."
+  },
+  {
+    "name": "brachypterus",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘pterus’ / ‘pterus’ meaning ‘wing’."
+  },
+  {
+    "name": "brachystachya",
+    "etymology": "From the Greek ‘brachy’ / ‘brachys’ meaning ‘short’; and the Greek ‘stachya’ / ‘stakhys’ meaning ‘spike’."
+  },
+  {
+    "name": "bracteata",
+    "etymology": "From the Latin ‘bracteata’ / ‘bracetatus’ meaning ‘provided with bracts’"
+  },
+  {
+    "name": "bracteatum",
+    "etymology": "From the Latin ‘bracteatum’ / ‘bracteatus’ meaning ‘provided with bracts’"
+  },
+  {
+    "name": "bracteolata",
+    "etymology": "From the Latin ‘bractelolata’ / ‘bracteolatus’ meaning ‘provided with bracts’"
+  },
+  {
+    "name": "bracteolatum",
+    "etymology": "From the Latin ‘bractelolatum’ / ‘bracteolatus’ meaning ‘provided with bracts’"
+  },
+  {
+    "name": "bracteolatus",
+    "etymology": "From the Latin ‘bracteolatus’ / ‘bracteolatus’ meaning ‘provided with bracts’"
+  },
+  {
+    "name": "brehmii",
+    "etymology": "From the German ‘brehmii’ / ‘Brehm’ meaning ‘commemorating a German botanist???’"
+  },
+  {
+    "name": "brevicaulis",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "brevicornu",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘cornu’ / ‘cprnus’ meaning ‘horn’."
+  },
+  {
+    "name": "brevifolia",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "brevifolium",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "brevifolius",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "brevipetala",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Greek ‘petalum’ / ‘petalon’ meaning ‘leaf’."
+  },
+  {
+    "name": "breviscapa",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Latin ‘scapa’ / ‘scapus’ meaning ‘stalk’."
+  },
+  {
+    "name": "brevistylum",
+    "etymology": "From the Latin ‘brevi’ / ‘brevis’ meaning ‘short’; and the Greek ‘stylum’ / ‘stylon’ meaning ‘column’."
+  },
+  {
+    "name": "bromoides",
+    "etymology": "From the Greek ‘brom’ / ‘bromos’ meaning ‘food’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "brownii",
+    "etymology": "From the English ‘brownii’ / ‘Brown’ meaning ‘commemorating an eighteenth-century English botanist’"
+  },
+  {
+    "name": "bruniades",
+    "etymology": "From the Latin ‘brunia’ / ‘brunia’ meaning ‘a fynbos species’; and the Greek ‘des’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "bufonius",
+    "etymology": "From the Latin ‘bufonius’ / ‘bufonius’ meaning ‘toad-like’"
+  },
+  {
+    "name": "bulbifera",
+    "etymology": "From the Latin ‘bulbi’ / ‘bulbus’ meaning ‘bulb’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "bulbillifera",
+    "etymology": "From the Latin ‘bulbilli’ / ‘bulbullus’ meaning ‘a small bulb’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "bulbosa",
+    "etymology": "From the Latin ‘bulbosa’ / ‘bulbosus’ meaning ‘in the form of a bulb’"
+  },
+  {
+    "name": "bullata",
+    "etymology": "From the Latin ‘bullata’ / ‘bullatus’ meaning ‘inflated’"
+  },
+  {
+    "name": "burchellianum",
+    "etymology": "From the English ‘burchelli’ / ‘Burchell’ meaning ‘commemorating the 19th-century English explorer’; and the Latin ‘anum’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "burchellii",
+    "etymology": "From the English ‘burchellii’ / ‘Burchell’ meaning ‘commemorating the 19th-century English explorer’"
+  },
+  {
+    "name": "burmannia",
+    "etymology": "From the Dutch ‘burmannii’ / ‘Burmann’ meaning ‘commemorating Dutch physician and botanist, Johannes Burmann (1707-1780) who specialized in plants from the Cape Colony.’"
+  },
+  {
+    "name": "buxifolia",
+    "etymology": "From the Latin ‘buxi’ / ‘buxus’ meaning ‘the box tree’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "byzantina",
+    "etymology": "From the Latin ‘byzantina’ / ‘byzantinus’ meaning ‘relating to Byzantium’"
+  },
+  {
+    "name": "caerulea",
+    "etymology": "From the Latin ‘caerulea’ / ‘caeruleus’ meaning ‘sky-blue’"
+  },
+  {
+    "name": "caespitosa",
+    "etymology": "From the Latin ‘caespitosa’ / ‘caespitosus’ meaning ‘tufted’"
+  },
+  {
+    "name": "caffra",
+    "etymology": "From the Latin ‘caffra’ / ‘Caffraria’ meaning ‘a former name of the Eastern Cape’"
+  },
+  {
+    "name": "caffrorum",
+    "etymology": "From the Latin ‘caffrorum’ / ‘caffri’ meaning ‘belonging to the inhabitants of the Eastern Cape’"
+  },
+  {
+    "name": "caffrum",
+    "etymology": "From the Latin ‘caffrum’ / ‘Caffraria’ meaning ‘a former name of the Eastern Cape’"
+  },
+  {
+    "name": "cafra",
+    "etymology": "From the Latin ‘cafra’ / ‘Caffraria’ meaning ‘a former name of the Eastern Cape’"
+  },
+  {
+    "name": "carica",
+    "etymology": "From the Latin ‘carica’ / ‘carica’ meaning ‘dried fig’"
+  },
+  {
+    "name": "calcaratus",
+    "etymology": "From the Latin ‘calcar’ / ‘calcar’ meaning ‘spur’; and the Latin ‘atus’ / ‘atus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "calendula",
+    "etymology": "From the Latin ‘calendula’ / ‘calendulus’ meaning ‘resembling a marigold’"
+  },
+  {
+    "name": "callosa",
+    "etymology": "From the Latin ‘callosa’ / ‘callosus’ meaning ‘calloused’"
+  },
+  {
+    "name": "calomelanos",
+    "etymology": "From the Greek ‘calo’ / ‘kallos?’ meaning ‘beauty?’; and the Greek ‘melanos’ / ‘melanos’ meaning ‘black’."
+  },
+  {
+    "name": "calycina",
+    "etymology": "From the Greek ‘calcyna’ / ‘kalkynos’ meaning ‘with a noticeable calyx’"
+  },
+  {
+    "name": "calyptrata",
+    "etymology": "From the Latin ‘calyptrata’ / ‘calyptratus’ meaning ‘equipped with a hood’"
+  },
+  {
+    "name": "campestris",
+    "etymology": "From the Latin ‘campestris’ / ‘campestris’ meaning ‘relating to the fields’"
+  },
+  {
+    "name": "camphorata",
+    "etymology": "From the Latin ‘camphorata’ / ‘camphoratus’ meaning ‘having the quality of camphor’"
+  },
+  {
+    "name": "camphoratus",
+    "etymology": "From the Latin ‘camphoratus’ / ‘camphoratus’ meaning ‘having the quality of camphor’"
+  },
+  {
+    "name": "canaliculata",
+    "etymology": "From the Latin ‘canaliculata’ / ‘canaliculatus’ meaning ‘channelled’"
+  },
+  {
+    "name": "canaliculatus",
+    "etymology": "From the Latin ‘canaliculatus’ / ‘canaliculatus’ meaning ‘channelled’"
+  },
+  {
+    "name": "canariensis",
+    "etymology": "From the Latin ‘canarensis’ / ‘Canary Islands’ meaning ‘pertaining to the Canary Islands’"
+  },
+  {
+    "name": "cancellata",
+    "etymology": "From the Latin ‘cancellata’ / ‘cancellatus’ meaning ‘trellised’"
+  },
+  {
+    "name": "cancellatus",
+    "etymology": "From the Latin ‘cancellatus’ / ‘cancellatus’ meaning ‘trellised’"
+  },
+  {
+    "name": "candens",
+    "etymology": "From the Latin ‘candens’ / ‘candens’ meaning ‘glowing’"
+  },
+  {
+    "name": "candicans",
+    "etymology": "From the Latin ‘candicans’ / ‘candicans’ meaning ‘increasing in glow’"
+  },
+  {
+    "name": "candidum",
+    "etymology": "From the Latin ‘candidum’ / ‘candidus’ meaning ‘radiant’"
+  },
+  {
+    "name": "candolleana",
+    "etymology": "From the Swiss ‘candolleana’ / ‘De Candolle’ meaning ‘commemorating Swiss botanist Augustin Pyramus De Candolle’"
+  },
+  {
+    "name": "canescens",
+    "etymology": "From the Latin ‘canescens’ / ‘canescens’ meaning ‘becoming white’"
+  },
+  {
+    "name": "capense",
+    "etymology": "From the Latin ‘capense’ / ‘Cape’ meaning ‘pertaining to the southern region of South Africa’"
+  },
+  {
+    "name": "capensis",
+    "etymology": "From the Latin ‘capensis’ / ‘Cape’ meaning ‘pertaining to the southern region of South Africa’"
+  },
+  {
+    "name": "capillacea",
+    "etymology": "From the Latin ‘capillacea’ / ‘capillaceus’ meaning ‘equipped with hairs’"
+  },
+  {
+    "name": "capillaceum",
+    "etymology": "From the Latin ‘capillaceum’ / ‘capillaceus’ meaning ‘equipped with hairs’"
+  },
+  {
+    "name": "capillare",
+    "etymology": "From the Latin ‘capillare’ / ‘capillaris’ meaning ‘hairy’"
+  },
+  {
+    "name": "capillaris",
+    "etymology": "From the Latin ‘capillaris’ / ‘capillaris’ meaning ‘hairy’"
+  },
+  {
+    "name": "capillifolia",
+    "etymology": "From the Latin ‘capilli’ / ‘capillum’ meaning ‘hair’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "capillus-veneris",
+    "etymology": "From the Latin ‘capillus’ / ‘capillum’ meaning ‘hair’; and the Latin ‘Veneris’ / ‘Venus’ meaning ‘of Venus’."
+  },
+  {
+    "name": "capitata",
+    "etymology": "From the Latin ‘capitata’ / ‘capitatus’ meaning ‘equipped with a head’"
+  },
+  {
+    "name": "capitatum",
+    "etymology": "From the Latin ‘capitatum’ / ‘capitatus’ meaning ‘equipped with a head’"
+  },
+  {
+    "name": "capitatus",
+    "etymology": "From the Latin ‘capitatus’ / ‘capitatus’ meaning ‘equipped with a head’"
+  },
+  {
+    "name": "capitella",
+    "etymology": "From the Latin ‘capitella’ / ‘capitelllum’ meaning ‘little head’"
+  },
+  {
+    "name": "capitellata",
+    "etymology": "From the Latin ‘capitellata’ / ‘capitellatus’ meaning ‘equipped with a  little head’"
+  },
+  {
+    "name": "capituliflorum",
+    "etymology": "From the Latin ‘capituli’ / ‘capitellum’ meaning ‘little head’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "caprina",
+    "etymology": "From the Latin ‘caprina’ / ‘caprinus’ meaning ‘resembling a goat’"
+  },
+  {
+    "name": "caput-medusae",
+    "etymology": "From the Latin ‘caput’ / ‘caput’ meaning ‘head’; and the Latin ‘medusae’ / ‘Medusa’ meaning ‘the gorgon with snakes for hair’."
+  },
+  {
+    "name": "carinata",
+    "etymology": "From the Latin ‘carinata’ / ‘carinatus’ meaning ‘equipped with a keel’"
+  },
+  {
+    "name": "carinatum",
+    "etymology": "From the Latin ‘carinatum’ / ‘carinatus’ meaning ‘equipped with a keel’"
+  },
+  {
+    "name": "carinatus",
+    "etymology": "From the Latin ‘carinatus’ / ‘carinatus’ meaning ‘equipped with a keel’"
+  },
+  {
+    "name": "carneum",
+    "etymology": "From the Latin ‘carneum’ / ‘carneus’ meaning ‘flesh-coloured’"
+  },
+  {
+    "name": "carneus",
+    "etymology": "From the Latin ‘carneus’ / ‘carneus’ meaning ‘flesh-coloured’"
+  },
+  {
+    "name": "carnosa",
+    "etymology": "From the Latin ‘carnosa’ / ‘carnosus’ meaning ‘fleshy’"
+  },
+  {
+    "name": "carnosum",
+    "etymology": "From the Latin ‘carnosum’ / ‘carnosus’ meaning ‘fleshy’"
+  },
+  {
+    "name": "caroliniana",
+    "etymology": "From the Latin ‘carolini’ / ‘Carolus’ meaning ‘Latin form of Charles’; and the Latin ‘ana’ / ‘anus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "carroensis",
+    "etymology": "From the Nama ‘carroensis’ / ‘Karoo’ meaning ‘relating to the Karoo’"
+  },
+  {
+    "name": "caruifolia",
+    "etymology": "From the Greek ‘carui’ / ‘karyos’ meaning ‘clove’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "caryophyllacea",
+    "etymology": "From the Greek ‘caryo’ / ‘karyos’ meaning ‘clove’; and the Latin ‘phyll’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "caterviflora",
+    "etymology": "From the Latin ‘catervi’ / ‘caterva’ meaning ‘crowd’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "catharticus",
+    "etymology": "From the Greek ‘catharicus’ / ‘kathartikos’ meaning ‘purging’"
+  },
+  {
+    "name": "catholicum",
+    "etymology": "From the Latin ‘catholicum’ / ‘catholicus’ meaning ‘universal’"
+  },
+  {
+    "name": "cepacea",
+    "etymology": "From the Latin ‘cepacea’ / ‘capaea’ meaning ‘portulacca’; and the Latin ‘ea’ / ‘eus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "cephalantha",
+    "etymology": "From the Greek ‘cephal’ / ‘kephale’ meaning ‘head’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "cephalophorum",
+    "etymology": "From the Greek ‘cephal’ / ‘kephale’ meaning ‘head’; and the Greek ‘phorum’ / ‘phoros’ meaning ‘bearing’."
+  },
+  {
+    "name": "cephalotes",
+    "etymology": "From the Greek ‘cephal’ / ‘kephale’ meaning ‘head’; and the Greek ‘otes’ / ‘????otis’ meaning ‘ear’."
+  },
+  {
+    "name": "cerinthoides",
+    "etymology": "From the Greek ‘cerinth’ / ‘kerinthe’ meaning ‘honeywort’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cernua",
+    "etymology": "From the Latin ‘cernua’ / ‘cernuus’ meaning ‘drooping’"
+  },
+  {
+    "name": "cernuum",
+    "etymology": "From the Latin ‘carnuum’ / ‘cernuus’ meaning ‘drooping’"
+  },
+  {
+    "name": "chamaedryfolium",
+    "etymology": "From the Greek ‘chamae’ / ‘khamai’ meaning ‘terrestrial’; and the Greek ‘dry’ / ‘dryas’ meaning ‘tree’."
+  },
+  {
+    "name": "chamelaeagnea",
+    "etymology": "From the Greek ‘chamelaeag’ / ‘khamaileon’ meaning ‘chameleon’; and the Latin ‘nea’ / ‘neus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "cheiranthus",
+    "etymology": "From the Greek ‘cheir’ / ‘kheiros’ meaning ‘hand’; and the Greek ‘anthus’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "chenopoda",
+    "etymology": "From the Greek ‘cheno’ / ‘khenos’ meaning ‘goose’; and the Greek ‘poda’ / ‘pous’ meaning ‘foot’."
+  },
+  {
+    "name": "chlamydophylla",
+    "etymology": "From the Greek ‘chlamydo’ / ‘khlamys’ meaning ‘an outer garment’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "chrysanthemoides",
+    "etymology": "From the Greek ‘chrys’ / ‘khrysos’ meaning ‘gold’; and the Greek ‘anthemo’ / ‘anthemon’ meaning ‘flower’."
+  },
+  {
+    "name": "ciliaris",
+    "etymology": "From the Latin ‘ciliaris’ / ‘ciliaris’ meaning ‘relating to the eyelash or fine hairs’"
+  },
+  {
+    "name": "ciliata",
+    "etymology": "From the Latin ‘ciliata’ / ‘ciliatus’ meaning ‘equipped with fine hairs’"
+  },
+  {
+    "name": "ciliatum",
+    "etymology": "From the Latin ‘ciliatum’ / ‘ciliatus’ meaning ‘equipped with fine hairs’"
+  },
+  {
+    "name": "ciliolata",
+    "etymology": "From the Latin ‘ciliolata’ / ‘ciliolatus’ meaning ‘equipped with fine hairs’"
+  },
+  {
+    "name": "cincinnata",
+    "etymology": "From the Latin ‘cincinnata’ / ‘cincinnatus’ meaning ‘equipped with curly hair’"
+  },
+  {
+    "name": "cincta",
+    "etymology": "From the Latin ‘cincta’ / ‘cinctus’ meaning ‘girdled’"
+  },
+  {
+    "name": "cinerea",
+    "etymology": "From the Latin ‘cinerea’ / ‘cinereus’ meaning ‘relating to ashes’"
+  },
+  {
+    "name": "cinereus",
+    "etymology": "From the Latin ‘cinereus’ / ‘cinereus’ meaning ‘relating to ashes’"
+  },
+  {
+    "name": "cinnamomea",
+    "etymology": "From the Latin ‘cinnamomea’ / ‘cinnemomeus’ meaning ‘cinnamon-coloured’"
+  },
+  {
+    "name": "circaeoides",
+    "etymology": "From the Latin ‘circcae’ / ‘circaea’ meaning ‘plant used as a charm’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "circumflexa",
+    "etymology": "From the Latin ‘circum’ / ‘circum’ meaning ‘around’; and the Latin ‘flexa’ / ‘flexus’ meaning ‘bent’."
+  },
+  {
+    "name": "cistiflora",
+    "etymology": "From the Latin ‘cisti’ / ‘cistus’ meaning ‘the rock rose’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "clandestina",
+    "etymology": "From the Latin ‘clandestina’ / ‘clandestinus’ meaning ‘secret’"
+  },
+  {
+    "name": "clandestinum",
+    "etymology": "From the Latin ‘clandestinum’ / ‘clandestinus’ meaning ‘secret’"
+  },
+  {
+    "name": "clavata",
+    "etymology": "From the Latin ‘clavata’ / ‘clavatus’ meaning ‘club-shaped’"
+  },
+  {
+    "name": "clavisepala",
+    "etymology": "From the Latin ‘clavi’ / ‘clava’ meaning ‘club’; and the Latin ‘sepala’ / ‘sepalum’ meaning ‘sepal’."
+  },
+  {
+    "name": "coarctata",
+    "etymology": "From the Latin ‘co’ / ‘cum’ meaning ‘together’; and the Latin ‘arctata’ / ‘arctatus’ meaning ‘contracted’."
+  },
+  {
+    "name": "coccinea",
+    "etymology": "From the Latin ‘coccinea’ / ‘coccineus’ meaning ‘scarlet’"
+  },
+  {
+    "name": "coccineus",
+    "etymology": "From the Latin ‘coccineus’ / ‘coccineus’ meaning ‘scarlet’"
+  },
+  {
+    "name": "coerulescens",
+    "etymology": "From the Latin ‘coerulescens’ / ‘caerulescens’ meaning ‘turning blue’"
+  },
+  {
+    "name": "cognata",
+    "etymology": "From the Latin ‘cognata’ / ‘cognatus’ meaning ‘related’"
+  },
+  {
+    "name": "coleura",
+    "etymology": "From the Greek ‘coleura’ / ‘koleuros’ meaning ‘relating to the thigh bone’"
+  },
+  {
+    "name": "collina",
+    "etymology": "From the Latin ‘collina’ / ‘collinus’ meaning ‘relating to hilly country’"
+  },
+  {
+    "name": "colorata",
+    "etymology": "From the Latin ‘colorata’ / ‘coloratus’ meaning ‘coloured’"
+  },
+  {
+    "name": "columbaria",
+    "etymology": "From the Latin ‘columbaria’ / ‘columbarius’ meaning ‘relating to doves or columbines’"
+  },
+  {
+    "name": "coma-aurea",
+    "etymology": "From the Latin ‘coma’ / ‘coma’ meaning ‘hair’; and the Latin ‘aurea’ / ‘aureus’ meaning ‘golden’."
+  },
+  {
+    "name": "commixta",
+    "etymology": "From the Latin ‘commixta’ / ‘commixtus’ meaning ‘mixed together’"
+  },
+  {
+    "name": "communis",
+    "etymology": "From the Latin ‘communis’ / ‘communis’ meaning ‘common’"
+  },
+  {
+    "name": "commutata",
+    "etymology": "From the Latin ‘commutata’ / ‘commutatus’ meaning ‘changed’"
+  },
+  {
+    "name": "commutatum",
+    "etymology": "From the Latin ‘commutatum’ / ‘commutatus’ meaning ‘changed’"
+  },
+  {
+    "name": "commutatus",
+    "etymology": "From the Latin ‘commutatus’ / ‘commutatus’ meaning ‘changed’"
+  },
+  {
+    "name": "comosa",
+    "etymology": "From the Latin ‘comosa’ / ‘comosus’ meaning ‘bearing locks’"
+  },
+  {
+    "name": "compacta",
+    "etymology": "From the Latin ‘compacta’ / ‘compactus’ meaning ‘compacted’"
+  },
+  {
+    "name": "compar",
+    "etymology": "From the Latin ‘compar’ / ‘compar’ meaning ‘similar’"
+  },
+  {
+    "name": "compressa",
+    "etymology": "From the Latin ‘compressa’ / ‘compressus’ meaning ‘compressed’"
+  },
+  {
+    "name": "compressus",
+    "etymology": "From the Latin ‘compressus’ / ‘compressus’ meaning ‘compressed’"
+  },
+  {
+    "name": "comptonii",
+    "etymology": "From the English ‘comptonii’ / ‘Compton’ meaning ‘commemorating the botanist Compton’"
+  },
+  {
+    "name": "concatenata",
+    "etymology": "From the Latin ‘con’ / ‘cum’ meaning ‘together’; and the Latin ‘catenata’ / ‘catenatus’ meaning ‘chained’."
+  },
+  {
+    "name": "conferta",
+    "etymology": "From the Latin ‘con’ / ‘cum’ meaning ‘together’; and the Latin ‘ferta’ / ‘fertus’ meaning ‘brought’."
+  },
+  {
+    "name": "confluens",
+    "etymology": "From the Latin ‘con’ / ‘cum’ meaning ‘together’; and the Latin ‘fluens’ / ‘fluens’ meaning ‘flowing’."
+  },
+  {
+    "name": "conforme",
+    "etymology": "From the Latin ‘conforme’ / ‘conformis’ meaning ‘symmetrical’"
+  },
+  {
+    "name": "congestus",
+    "etymology": "From the Latin ‘congestus’ / ‘congestus’ meaning ‘piled  up’"
+  },
+  {
+    "name": "conica",
+    "etymology": "From the Latin ‘conica’ / ‘conicus’ meaning ‘cone-shaped’"
+  },
+  {
+    "name": "conicum",
+    "etymology": "From the Latin ‘conicum’ / ‘conicus’ meaning ‘cone-shaped’"
+  },
+  {
+    "name": "coniferum",
+    "etymology": "From the Latin ‘coniferum’ / ‘coniferus’ meaning ‘bearing cones’"
+  },
+  {
+    "name": "connivens",
+    "etymology": "From the Latin ‘connivens’ / ‘connivens’ meaning ‘heavy with sleep’"
+  },
+  {
+    "name": "conocarpodendron",
+    "etymology": "From the Greek ‘cono’ / ‘konos’ meaning ‘cone’; and the Greek ‘carpo’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "contaminata",
+    "etymology": "From the Latin ‘contaminata’ / ‘contaminatus’ meaning ‘contaminated’"
+  },
+  {
+    "name": "contorta",
+    "etymology": "From the Latin ‘contorta’ / ‘contortus’ meaning ‘contorted’"
+  },
+  {
+    "name": "contortus",
+    "etymology": "From the Latin ‘contortus’ / ‘contortus’ meaning ‘contorted’"
+  },
+  {
+    "name": "contracta",
+    "etymology": "From the Latin ‘contracta’ / ‘contractus’ meaning ‘contracted’"
+  },
+  {
+    "name": "cooperi",
+    "etymology": "From the English ‘cooperi’ / ‘Cooper’ meaning ‘commemorating the botanist Cooper’"
+  },
+  {
+    "name": "coracana",
+    "etymology": "From the Latin ‘coracana (spelling??)’ / ‘coracinus’ meaning ‘black’"
+  },
+  {
+    "name": "cordata",
+    "etymology": "From the Latin ‘cordata’ / ‘cordatus’ meaning ‘heart-shaped’"
+  },
+  {
+    "name": "cordatum",
+    "etymology": "From the Latin ‘cordatum’ / ‘cordatus’ meaning ‘heart-shaped’"
+  },
+  {
+    "name": "cordatus",
+    "etymology": "From the Latin ‘cordatus’ / ‘cordatus’ meaning ‘heart-shaped’"
+  },
+  {
+    "name": "cordifolia",
+    "etymology": "From the Latin ‘cordi’ / ‘cor’ meaning ‘heart’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "cordifolium",
+    "etymology": "From the Latin ‘cordi’ / ‘cor’ meaning ‘heart’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "cordifolius",
+    "etymology": "From the Latin ‘cordi’ / ‘cor’ meaning ‘heart’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "cordiforme",
+    "etymology": "From the Latin ‘cordi’ / ‘cor’ meaning ‘heart’"
+  },
+  {
+    "name": "coricacea",
+    "etymology": "From the Latin ‘cori’ / ‘coris’ meaning ‘thick and leathery’; and the Latin ‘acea’ / ‘aceus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "corifolia",
+    "etymology": "From the Latin ‘cori’ / ‘coris’ meaning ‘thick and leathery’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "coriifolium",
+    "etymology": "From the Latin ‘cori’ / ‘coris’ meaning ‘thick and leathery’"
+  },
+  {
+    "name": "corneolus",
+    "etymology": "From the Latin ‘corneolus’ / ‘corneolus’ meaning ‘horny’"
+  },
+  {
+    "name": "corniculata",
+    "etymology": "From the Latin ‘corniculata’ / ‘corniculatus’ meaning ‘equipped with horns’"
+  },
+  {
+    "name": "cornuta",
+    "etymology": "From the Latin ‘cornuta’ / ‘cornutus’ meaning ‘horned’"
+  },
+  {
+    "name": "coronata",
+    "etymology": "From the Latin ‘coronata’ / ‘coronatus’ meaning ‘crowned’"
+  },
+  {
+    "name": "coronopifolia",
+    "etymology": "From the Latin ‘coronopi’ / ‘coronopus’ meaning ‘the plant called crowfoot’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "coronopus",
+    "etymology": "From the Latin ‘coronopus’ / ‘coronopus’ meaning ‘the plant called crowfoot’"
+  },
+  {
+    "name": "corymbosa",
+    "etymology": "From the Latin ‘corymbosa’ / ‘corymbosus’ meaning ‘bearing clusters’"
+  },
+  {
+    "name": "cracca",
+    "etymology": "From the Latin ‘cracca’ / ‘cracca’ meaning ‘vetch’"
+  },
+  {
+    "name": "crassifolia",
+    "etymology": "From the Latin ‘crassi’ / ‘crassus’ meaning ‘thick’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "crassulifolius",
+    "etymology": "From the Latin ‘crassuli’ / ‘crassula’ meaning ‘the plant called crassula’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "crenata",
+    "etymology": "From the Latin ‘crenata’ / ‘crenatus’ meaning ‘battlemented’"
+  },
+  {
+    "name": "cretica",
+    "etymology": "From the Latin ‘cretica’ / ‘creticus’ meaning ‘relating to Crete’"
+  },
+  {
+    "name": "crinalis",
+    "etymology": "From the Latin ‘crinalis’ / ‘crinalis’ meaning ‘relating to hair’"
+  },
+  {
+    "name": "crinifolia",
+    "etymology": "From the Latin ‘crini’ / ‘crinum’ meaning ‘hair’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "crispa",
+    "etymology": "From the Latin ‘crispa’ / ‘crispus’ meaning ‘curled’"
+  },
+  {
+    "name": "crispum",
+    "etymology": "From the Latin ‘crispum’ / ‘crispus’ meaning ‘curled’"
+  },
+  {
+    "name": "crispus",
+    "etymology": "From the Latin ‘crispus’ / ‘crispus’ meaning ‘curled’"
+  },
+  {
+    "name": "cristata",
+    "etymology": "From the Latin ‘cristata’ / ‘cristatus’ meaning ‘tufted’"
+  },
+  {
+    "name": "cristiflora",
+    "etymology": "From the Latin ‘cristi’ / ‘crista’ meaning ‘tuft’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "crithmifolia",
+    "etymology": "From the Greek ‘crithmi’ / ‘krithe’ meaning ‘barley’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "crocea",
+    "etymology": "From the Latin ‘crocea’ / ‘croceus’ meaning ‘saffron-coloured’"
+  },
+  {
+    "name": "cruciata",
+    "etymology": "From the Latin ‘cruciata’ / ‘cruciatus’ meaning ‘cross-shaped’"
+  },
+  {
+    "name": "cruciferum",
+    "etymology": "From the Latin ‘cruci’ / ‘crux’ meaning ‘cross’; and the Latin ‘ferum’ / ‘fertus’ meaning ‘bearing’."
+  },
+  {
+    "name": "crusgalli",
+    "etymology": "From the Latin ‘crus’ / ‘crus’ meaning ‘leg’; and the  Latin ‘galli’ / ‘gallus’ meaning ‘cock’."
+  },
+  {
+    "name": "crystallinum",
+    "etymology": "From the Latin ‘crystallinum’ / ‘crystallinus’ meaning ‘crystalline’"
+  },
+  {
+    "name": "cucullata",
+    "etymology": "From the Latin ‘cucullata’ / ‘cucullatus’ meaning ‘hooded’"
+  },
+  {
+    "name": "cucullatum",
+    "etymology": "From the Latin ‘cucullatum’ / ‘cucullatus’ meaning ‘hooded’"
+  },
+  {
+    "name": "cucullatus",
+    "etymology": "From the Latin ‘cucullatus’ / ‘cucullatus’ meaning ‘hooded’"
+  },
+  {
+    "name": "cuneata",
+    "etymology": "From the Latin ‘cuneata’ / ‘cuneatus’ meaning ‘wedge-shaped’"
+  },
+  {
+    "name": "cuneifolia",
+    "etymology": "From the Latin ‘cunei’ / ‘cunea’ meaning ‘wedge’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "cunonius",
+    "etymology": "From the Dutch ‘cunonius’ / ‘Cuno’ meaning ‘commemorating an 18th-century Dutch botanist’"
+  },
+  {
+    "name": "cupaniana",
+    "etymology": "From the Latin ‘cupani’ / ‘cupa?’ meaning ‘cask?’; and the Latin ‘iana’ / ‘ianus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "curculioides",
+    "etymology": "From the Latin ‘curculi’ / ‘curculio’ meaning ‘pertaining to weevils’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "curvifolia",
+    "etymology": "From the Latin ‘curvi’ / ‘curvus’ meaning ‘curved’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "curvipetala",
+    "etymology": "From the Latin ‘curvi’ / ‘curvus’ meaning ‘curved’; and the Greek ‘petala’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "curviramis",
+    "etymology": "From the Latin ‘curvi’ / ‘curvus’ meaning ‘curved’; and the Latin ‘ramis’ / ‘ramus’ meaning ‘branch’."
+  },
+  {
+    "name": "curvirostris",
+    "etymology": "From the Latin ‘curvi’ / ‘curvus’ meaning ‘curved’; and the Latin ‘rostris’ / ‘rostum’ meaning ‘beak’."
+  },
+  {
+    "name": "curvula",
+    "etymology": "From the Latin ‘curvula’ / ‘curvulus’ meaning ‘somewhat curved’"
+  },
+  {
+    "name": "cuspidata",
+    "etymology": "From the Latin ‘cuspidata’ / ‘cuspidatus’ meaning ‘pointed’"
+  },
+  {
+    "name": "cyanoides",
+    "etymology": "From the Greek ‘cyan’ / ‘kyanos’ meaning ‘blue-green’; and the Greek ‘oides’ / ‘oides’ meaning ‘tending toward’."
+  },
+  {
+    "name": "cyathuloides",
+    "etymology": "From the Greek ‘cyatha’ / ‘kyatholos’ meaning ‘small drinking cup’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cyclops",
+    "etymology": "From the Greek ‘cyc’ / ‘kuklos’ meaning ‘circle’; and the Greek ‘ops’ / ‘ops’ meaning ‘eye’."
+  },
+  {
+    "name": "cylindrica",
+    "etymology": "From the Latin ‘cylindrica’ / ‘cylindricus’ meaning ‘cylindrical’"
+  },
+  {
+    "name": "cylindriflorum",
+    "etymology": "From the Latin ‘cylindri’ / ‘cylindrus’ meaning ‘cylinder’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "cymbalariae",
+    "etymology": "From the Latin ‘cymbalar’ / ‘cymbalaris’ meaning ‘a plant called the cotyledon’; and the Latin ‘iae’ / ‘ia’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "cymbalarioides",
+    "etymology": "From the Latin ‘cynbalari’ / ‘cymbalaris’ meaning ‘a plant called the cotyledon’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cymbifolia",
+    "etymology": "From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "cymbiformis",
+    "etymology": "From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cymosa",
+    "etymology": "From the Greek ‘cym’ / ‘kyma’ meaning ‘wave’; and the Latin ‘osa’ / ‘osus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "cymosum",
+    "etymology": "From the Greek ‘cym’ / ‘kyma’ meaning ‘wave’; and the Latin ‘osum’ / ‘osus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "cynaroides",
+    "etymology": "From the Greek ‘cyna’ / ‘kynara’ meaning ‘globe artichoke’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cyperoides",
+    "etymology": "From the Greek ‘cyper’ / ‘kyperos’ meaning ‘sedge’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cyrilliflora",
+    "etymology": "From the Greek ‘cyrilli’ / ‘kyrillos?’ meaning ‘lordly?’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "cytisoides",
+    "etymology": "From the Greek ‘cytis’ / ‘cytisos’ meaning ‘the plant called broom’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "dactylon",
+    "etymology": "From the Greek ‘dactylon’ / ‘daktylos’ meaning ‘finger’"
+  },
+  {
+    "name": "dasyanthum",
+    "etymology": "From the Greek ‘dasy’ / ‘dasos’ meaning ‘rough’; and the Greek ‘anthum’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "dealbatum",
+    "etymology": "From the Latin ‘dealbatum’ / ‘dealbatus’ meaning ‘white-washed’"
+  },
+  {
+    "name": "debilis",
+    "etymology": "From the Latin ‘debilis’ / ‘debilis’ meaning ‘fragile’"
+  },
+  {
+    "name": "decipiens",
+    "etymology": "From the Latin ‘decipiens’ / ‘decipiens’ meaning ‘deceiving’"
+  },
+  {
+    "name": "decora",
+    "etymology": "From the Latin ‘decora’ / ‘decorus’ meaning ‘beautiful’"
+  },
+  {
+    "name": "decumbens",
+    "etymology": "From the Latin ‘decumbens’ / ‘decumbens’ meaning ‘lying down’"
+  },
+  {
+    "name": "decurrens",
+    "etymology": "From the Latin ‘decurrens’ / ‘decurrens’ meaning ‘running down’"
+  },
+  {
+    "name": "dejecta",
+    "etymology": "From the Latin ‘dejecta’ / ‘dejectus’ meaning ‘cast down’"
+  },
+  {
+    "name": "demissa",
+    "etymology": "From the Latin ‘demissa’ / ‘demissus’ meaning ‘sent down’"
+  },
+  {
+    "name": "densiflora",
+    "etymology": "From the Latin ‘densi’ / ‘densus’ meaning ‘dense’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "densiflorum",
+    "etymology": "From the Latin ‘densi’ / ‘densus’ meaning ‘dense’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "dentata",
+    "etymology": "From the Latin ‘dentata’ / ‘dentatus’ meaning ‘equipped with teeth’"
+  },
+  {
+    "name": "denudatus",
+    "etymology": "From the Latin ‘debudatus’ / ‘denudatus’ meaning ‘stripped bare’"
+  },
+  {
+    "name": "depressa",
+    "etymology": "From the Latin ‘depressa’ / ‘depressus’ meaning ‘pushed down’"
+  },
+  {
+    "name": "deusta",
+    "etymology": "From the Latin ‘deusta’ / ‘deustus’ meaning ‘severely scorched’"
+  },
+  {
+    "name": "deustum",
+    "etymology": "From the Latin ‘deustum’ / ‘deustus’ meaning ‘severely scorched’"
+  },
+  {
+    "name": "diabolica",
+    "etymology": "From the Latin ‘diabolica’ / ‘diabolicus’ meaning ‘devilish’"
+  },
+  {
+    "name": "diandrus",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘andrus’ / ‘andros’ meaning ‘stamen’."
+  },
+  {
+    "name": "dichotoma",
+    "etymology": "From the Greek ‘dichotoma’ / ‘dichotomia’ meaning ‘a division into two’"
+  },
+  {
+    "name": "difformis",
+    "etymology": "From the Latin ‘difformis’ / ‘difformis’ meaning ‘deformed’"
+  },
+  {
+    "name": "diffusa",
+    "etymology": "From the Latin ‘diffusa’ / ‘diffusus’ meaning ‘widespread’"
+  },
+  {
+    "name": "digitata",
+    "etymology": "From the Latin ‘digitata’ / ‘digitatus’ meaning ‘equipped with fingers’"
+  },
+  {
+    "name": "dimidiata",
+    "etymology": "From the Latin ‘dimiditata’ / ‘dimidiatus’ meaning ‘halved’"
+  },
+  {
+    "name": "dioica",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘oikos’ / ‘’ meaning ‘’."
+  },
+  {
+    "name": "diosmifolia",
+    "etymology": "From the Greek ‘diosmi’ / ‘diosmos’ meaning ‘a plant belonging to the Rutaceae’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "discolor",
+    "etymology": "From the Latin ‘discolor’ / ‘discolor’ meaning ‘variegated’"
+  },
+  {
+    "name": "dispar",
+    "etymology": "From the Latin ‘dispar’ / ‘dispar’ meaning ‘dissimilar’"
+  },
+  {
+    "name": "dissecta",
+    "etymology": "From the Latin ‘dissecta’ / ‘dissectus’ meaning ‘dissected’"
+  },
+  {
+    "name": "distachya",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘stachya’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "distachyon",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘stachyon’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "distachyos",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘stachyos’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "disticha",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘sticha’ / ‘stichos’ meaning ‘row’."
+  },
+  {
+    "name": "distichum",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘stichum’ / ‘stichos’ meaning ‘row’."
+  },
+  {
+    "name": "distichus",
+    "etymology": "From the Greek ‘di’ / ‘di’ meaning ‘two’; and the Greek ‘stichus’ / ‘stiichos’ meaning ‘row’."
+  },
+  {
+    "name": "distorta",
+    "etymology": "From the Latin ‘distorta’ / ‘distortus’ meaning ‘distorted’"
+  },
+  {
+    "name": "divaricata",
+    "etymology": "From the Latin ‘divaricata’ / ‘divaricatus’ meaning ‘divergent’"
+  },
+  {
+    "name": "divergens",
+    "etymology": "From the Latin ‘divergens’ / ‘divergens’ meaning ‘diverging’"
+  },
+  {
+    "name": "diversifolia",
+    "etymology": "From the Latin ‘diversi’ / ‘diversus’ meaning ‘diverse’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "dodecandra",
+    "etymology": "From the Greek ‘dodeca’ / ‘dodeko’ meaning ‘twelve’; and the Greek ‘andra’ / ‘andros’ meaning ‘anther’."
+  },
+  {
+    "name": "dodii",
+    "etymology": "From the English ‘dodii’ / ‘Dodd’ meaning ‘commemorating a South African botanist’"
+  },
+  {
+    "name": "draconis",
+    "etymology": "From the Latin ‘draconis’ / ‘draconis’ meaning ‘dragon-like’"
+  },
+  {
+    "name": "dregeana",
+    "etymology": "From the German ‘dregeanus’ / ‘Drege’ meaning ‘commemorates the brothers Carl Friedrich Drege (1791-1867) and Johann Franz Drege (1794-1881) of Huguenot ancestry.  Prodigious collectors in the Cape.’"
+  },
+  {
+    "name": "dregeanum",
+    "etymology": "From the German ‘dregeanum’ / ‘Drege’ meaning ‘commemorates the brothers Carl Friedrich Drege (1791-1867) and Johann Franz Drege (1794-1881) of Huguenot ancestry.  Prodigious collectors in the Cape.’"
+  },
+  {
+    "name": "dregeanus",
+    "etymology": "From the German ‘dregeanus’ / ‘Drege’ meaning ‘commemorates the brothers Carl Friedrich Drege (1791-1867) and Johann Franz Drege (1794-1881) of Huguenot ancestry.  Prodigious collectors in the Cape.’"
+  },
+  {
+    "name": "dregei",
+    "etymology": "From the German ‘dregei’ / ‘Drege’ meaning ‘commemorates the brothers Carl Friedrich Drege (1791-1867) and Johann Franz Drege (1794-1881) of Huguenot ancestry.  Prodigious collectors in the Cape.’"
+  },
+  {
+    "name": "dubia",
+    "etymology": "From the Latin ‘dubia’ / ‘dubius’ meaning ‘doubtful’"
+  },
+  {
+    "name": "dubius",
+    "etymology": "From the Latin ‘dubius’ / ‘dubius’ meaning ‘doubtful’"
+  },
+  {
+    "name": "dumosa",
+    "etymology": "From the Latin ‘domosus’ / ‘dumosa’ meaning ‘bushy’"
+  },
+  {
+    "name": "dunensis",
+    "etymology": "From the Middle Dutch ‘dun’ / ‘dune’ meaning ‘dune’; and the Latin ‘ensis’ / ‘ensis’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "ebracteatum",
+    "etymology": "From the Latin ‘e’ / ‘ex’ meaning ‘lacking’; and the Latin ‘bracteatum’ / ‘bracteatus’ meaning ‘equipped with bracts’."
+  },
+  {
+    "name": "eburnea",
+    "etymology": "From the Latin ‘eburnea’ / ‘eburneus’ meaning ‘made of ivory’"
+  },
+  {
+    "name": "ecalcarata",
+    "etymology": "From the Latin ‘e’ / ‘ex’ meaning ‘lacking’; and the Latin ‘calcarata’ / ‘calcarata’ meaning ‘equipped with spurs’."
+  },
+  {
+    "name": "echinatum",
+    "etymology": "From the Latin ‘echinatum’ / ‘echinatus’ meaning ‘resembling a hedgehog’"
+  },
+  {
+    "name": "echinatus",
+    "etymology": "From the Latin ‘echinatus’ / ‘echinatus’ meaning ‘resembling a hedgehog’"
+  },
+  {
+    "name": "ecklonea",
+    "etymology": "From the German ‘ecklonea’ / ‘Ecklon’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "eckloniana",
+    "etymology": "From the German ‘eckloniana’ / ‘Ecklon’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "ecklonianum",
+    "etymology": "From the German ‘ecklonianum’ / ‘Ecklon’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "ecklonii",
+    "etymology": "From the German ‘ecklonii’ / ‘Ecklon’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "edulis",
+    "etymology": "From the Latin ‘edulis’ / ‘edulis’ meaning ‘edible’"
+  },
+  {
+    "name": "effusus",
+    "etymology": "From the Latin ‘effusus’ / ‘effusus’ meaning ‘effuse, abundant’"
+  },
+  {
+    "name": "egregius",
+    "etymology": "From the Latin ‘egregius’ / ‘egregius’ meaning ‘distinguished’"
+  },
+  {
+    "name": "elata",
+    "etymology": "From the Latin ‘elata’ / ‘elatus’ meaning ‘high’"
+  },
+  {
+    "name": "elatior",
+    "etymology": "From the Latin ‘elatior’ / ‘elatior’ meaning ‘higher’"
+  },
+  {
+    "name": "elegans",
+    "etymology": "From the Latin ‘elegans’ / ‘elegans’ meaning ‘elegant’"
+  },
+  {
+    "name": "eleocharis",
+    "etymology": "From the Greek ‘eleo’ / ‘eleios’ meaning ‘relating to a marsh’; and the Greek ‘charis’ / ‘khare’ meaning ‘grace’."
+  },
+  {
+    "name": "ellaphieae",
+    "etymology": "From the Greek  ‘ellaphiae’ / ‘Elaphia’ meaning ‘commemorating the botanical artist Elaphia Ward-Hillhorst’"
+  },
+  {
+    "name": "elongata",
+    "etymology": "From the Latin ‘elongata’ / ‘elongatus’ meaning ‘elongated’"
+  },
+  {
+    "name": "elongatum",
+    "etymology": "From the Latin ‘elongatum’ / ‘elongatus’ meaning ‘elongated’"
+  },
+  {
+    "name": "elsiae",
+    "etymology": "From the German ‘elsiae’ / ‘Adalheidis’ meaning ‘commemorating the botanist Elsie Esterhuysen’"
+  },
+  {
+    "name": "emarginata",
+    "etymology": "From the Latin ‘emarginata’ / ‘emarginatus’ meaning ‘missing a part of the margin’"
+  },
+  {
+    "name": "emarginatus",
+    "etymology": "From the Latin ‘emarginatus’ / ‘emarginatus’ meaning ‘missing a part of the margin’"
+  },
+  {
+    "name": "empetrina",
+    "etymology": "From the Greek ‘empetrina’ / ‘empetros’ meaning ‘growing amidst rocks’"
+  },
+  {
+    "name": "enerve",
+    "etymology": "From the Latin ‘enerve’ / ‘enervis’ meaning ‘lacking vitality’"
+  },
+  {
+    "name": "equisetinum",
+    "etymology": "From the Latin ‘equi’ / ‘equus’ meaning ‘horse’; and the Latin ‘setinum’ / ‘setinus’ meaning ‘equipped with hairs’."
+  },
+  {
+    "name": "erecta",
+    "etymology": "From the Latin ‘erecta’ / ‘erectus’ meaning ‘’"
+  },
+  {
+    "name": "erectum",
+    "etymology": "From the Latin ‘erectum’ / ‘erectus’ meaning ‘’"
+  },
+  {
+    "name": "erectus",
+    "etymology": "From the Latin ‘erectus’ / ‘erectus’ meaning ‘’"
+  },
+  {
+    "name": "eriantha",
+    "etymology": "From the Greek ‘eri’ / ‘erion’ meaning ‘wool’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "ericifolia",
+    "etymology": "From the Latin ‘erici’ / ‘erica’ meaning ‘heath’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ericifolium",
+    "etymology": "From the Latin ‘erici’ / ‘erica’ meaning ‘heath’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ericoides",
+    "etymology": "From the Latin ‘eric’ / ‘erica’ meaning ‘heath’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "erinus",
+    "etymology": "From the Latin ‘erinus’ / ‘erinaceus’ meaning ‘resembling a hedgehog’"
+  },
+  {
+    "name": "eriocephalina ",
+    "etymology": "From the Greek ‘erio’ / ‘erion’ meaning ‘wool’; and the Greek ‘cephal’ / ‘kephale’ meaning ‘head’."
+  },
+  {
+    "name": "eriostoma",
+    "etymology": "From the Greek ‘erio’ / ‘erion’ meaning ‘wool’; and the Greek ‘stoma’ / ‘stoma’ meaning ‘leaf-pore’."
+  },
+  {
+    "name": "erosus",
+    "etymology": "From the Latin ‘erosus’ / ‘erosus’ meaning ‘eroded’"
+  },
+  {
+    "name": "erythrina  Link",
+    "etymology": "From the Greek ‘erythrina’ / ‘erythros’ meaning ‘blood-red’"
+  },
+  {
+    "name": "esculentus",
+    "etymology": "From the Latin ‘esculentus’ / ‘esculentus’ meaning ‘edible’"
+  },
+  {
+    "name": "etheliae",
+    "etymology": "From the Old English ‘etheliae’ / ‘Ethel’ meaning ‘commemorating a botanist with this first name’"
+  },
+  {
+    "name": "etusa",
+    "etymology": "From the Latin ‘etusa’ / ‘etusu’ meaning ‘beaten flat’"
+  },
+  {
+    "name": "eucliforme",
+    "etymology": "From the Greek ‘eucli’ / ‘euclea’ meaning ‘a certain tree’; and the Latin ‘forme’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "eucomoides",
+    "etymology": "From the Greek ‘eucom’ / ‘eucomis’ meaning ‘what is commonly called the pineapple flower’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "eucomus",
+    "etymology": "From the Greek ‘eu’ / ‘eu’ meaning ‘prefix signifying excellence’; and the Greek ‘comis’ / ‘kome’ meaning ‘hair’."
+  },
+  {
+    "name": "euphrasioides",
+    "etymology": "From the Greek ‘euphrasi’ / ‘euphrasia’ meaning ‘cow-wheat’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "europaea",
+    "etymology": "From the Latin ‘europaea’ / ‘europaeus’ meaning ‘pertaining to Europe’"
+  },
+  {
+    "name": "exacoides",
+    "etymology": "; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "exasperata",
+    "etymology": "From the Latin ‘exasperata’ / ‘exasperatus’ meaning ‘irritated’"
+  },
+  {
+    "name": "excelsa",
+    "etymology": "From the Latin ‘excelsa’ / ‘excelsus’ meaning ‘high’"
+  },
+  {
+    "name": "excisa",
+    "etymology": "From the Latin ‘excisa’ / ‘excisus’ meaning ‘cut out’"
+  },
+  {
+    "name": "excisum",
+    "etymology": "From the Latin ‘excisum’ / ‘excisus’ meaning ‘cut out’"
+  },
+  {
+    "name": "exiguum",
+    "etymology": "From the Latin ‘exiguum’ / ‘exiguus’ meaning ‘sparse’"
+  },
+  {
+    "name": "exilis",
+    "etymology": "From the Latin ‘exilis’ / ‘exilis’ meaning ‘banished ’"
+  },
+  {
+    "name": "eximia",
+    "etymology": "From the Latin ‘eximia’ / ‘eximius’ meaning ‘distinguished’"
+  },
+  {
+    "name": "exleeana",
+    "etymology": "From the English ‘exleeana’ / ‘Lee’ meaning ‘commemorating a plant merchant of this name’"
+  },
+  {
+    "name": "explanatus",
+    "etymology": "From the Latin ‘explanatus’ / ‘explanatus’ meaning ‘spread flat’"
+  },
+  {
+    "name": "exuvialis",
+    "etymology": "From the Latin ‘exuvialis’ / ‘exuvialis’ meaning ‘appearing to have shed skin’"
+  },
+  {
+    "name": "exuviata",
+    "etymology": "From the Latin ‘exuviata’ / ‘exuviatus’ meaning ‘having shed skin’"
+  },
+  {
+    "name": "fairii",
+    "etymology": "From the English ‘fairii’ / ‘Fair’ meaning ‘commemorating the botanist C B Fair’"
+  },
+  {
+    "name": "falcata",
+    "etymology": "From the Latin ‘falcata’ / ‘falcatus’ meaning ‘sickled’"
+  },
+  {
+    "name": "falcatula",
+    "etymology": "From the Latin ‘falcatula’ / ‘falcatula’ meaning ‘a little sickle’"
+  },
+  {
+    "name": "falcatus",
+    "etymology": "From the Latin ‘falcatus’ / ‘falcatus’ meaning ‘sickled’"
+  },
+  {
+    "name": "falciformis",
+    "etymology": "From the Latin ‘falci’ / ‘falx’ meaning ‘sickle’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "fallax",
+    "etymology": "From the Latin ‘fallax’ / ‘fallax’ meaning ‘deceptive’"
+  },
+  {
+    "name": "farinosus",
+    "etymology": "From the Latin ‘farinosus’ / ‘farinosus’ meaning ‘floury’"
+  },
+  {
+    "name": "fasciata",
+    "etymology": "From the Latin ‘fasciata’ / ‘fasciatus’ meaning ‘bundled’"
+  },
+  {
+    "name": "fascicularis",
+    "etymology": "From the Latin ‘fascicularis’ / ‘fascicularis’ meaning ‘relating to bundled faggots’"
+  },
+  {
+    "name": "fasciculata",
+    "etymology": "From the Latin ‘fasciculata’ / ‘fasciculatus’ meaning ‘bundled like faggots’"
+  },
+  {
+    "name": "fasciflora",
+    "etymology": "From the Latin ‘fasci’ / ‘fascis’ meaning ‘a bundle of faggots’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "fastigata",
+    "etymology": "From the Latin ‘fastigata’ / ‘fastigata’ meaning ‘sharpened’"
+  },
+  {
+    "name": "fastigiata",
+    "etymology": "From the Latin ‘fastigiata’ / ‘fastigiatus’ meaning ‘gabled’"
+  },
+  {
+    "name": "fastigiatus",
+    "etymology": "From the Latin ‘fastigiatus’ / ‘fastigiatus’ meaning ‘gabled’"
+  },
+  {
+    "name": "fastigiosa",
+    "etymology": "From the Latin ‘fastigiosa’ / ‘fastigiosus’ meaning ‘gabled’"
+  },
+  {
+    "name": "fatua",
+    "etymology": "From the Latin ‘fatua’ / ‘fatuus’ meaning ‘clumsy’"
+  },
+  {
+    "name": "favosa",
+    "etymology": "From the Latin ‘favosa’ / ‘favosus’ meaning ‘resembling honeycomb’"
+  },
+  {
+    "name": "fenestrata",
+    "etymology": "From the Latin ‘fenestrata’ / ‘fenestratus’ meaning ‘equipped with windows’"
+  },
+  {
+    "name": "ferocissimum",
+    "etymology": "From the Latin ‘ferocissimum’ / ‘ferocissimus’ meaning ‘most ferocious’"
+  },
+  {
+    "name": "ferrea",
+    "etymology": "From the Latin ‘ferrea’ / ‘ferreus’ meaning ‘relating to iron’"
+  },
+  {
+    "name": "ferruginea",
+    "etymology": "From the Latin ‘ferruginea’ / ‘ferrugineus’ meaning ‘relating to iron’"
+  },
+  {
+    "name": "ferulaceum",
+    "etymology": "From the Latin ‘ferulaceum’ / ‘ferulaceus’ meaning ‘resembling fennel’"
+  },
+  {
+    "name": "ferulifolia",
+    "etymology": "From the Latin ‘feruli’ / ‘ferula’ meaning ‘fennel’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ficoidea",
+    "etymology": "From the Latin ‘fic’ / ‘ficus’ meaning ‘fig’; and the Greek ‘oidea’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "filacea",
+    "etymology": "From the Latin ‘filacea’ / ‘filaceus’ meaning ‘thread-like’"
+  },
+  {
+    "name": "filicaulis",
+    "etymology": "From the Latin ‘fili’ / ‘filum’ meaning ‘thread’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "filicornis",
+    "etymology": "From the Latin ‘fili’ / ‘filum’ meaning ‘thread’; and the Latin ‘cornis’ / ‘cornus’ meaning ‘horn’."
+  },
+  {
+    "name": "filifolia",
+    "etymology": "From the Latin ‘fili’ / ‘filum’ meaning ‘thread’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "filiforme",
+    "etymology": "From the Latin ‘fili’ / ‘filum’ meaning ‘thread’; and the Latin ‘forme’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "filiformis",
+    "etymology": "From the Latin ‘fili’ / ‘filum’ meaning ‘thread’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "fimbriifolius",
+    "etymology": "From the Latin ‘fimbrii’ / ‘fimbriae’ meaning ‘fringe’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "fimbriolata",
+    "etymology": "From the Latin ‘fimbriolata’ / ‘fimbriolatus’ meaning ‘equipped with a fringe’"
+  },
+  {
+    "name": "fistulosa",
+    "etymology": "From the Latin ‘fistulosa’ / ‘fistulosus’ meaning ‘equipped with narrow pipes’"
+  },
+  {
+    "name": "flaccida",
+    "etymology": "From the Latin ‘flaccida’ / ‘flaccidus’ meaning ‘flaccid’"
+  },
+  {
+    "name": "flava",
+    "etymology": "From the Latin ‘flava’ / ‘flavus’ meaning ‘yellow’"
+  },
+  {
+    "name": "flexifolia",
+    "etymology": "From the Latin ‘flexi’ / ‘flexus’ meaning ‘bending’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "flexum",
+    "etymology": "From the Latin ‘flexum’ / ‘fleus’ meaning ‘bent’"
+  },
+  {
+    "name": "flexuosa",
+    "etymology": "From the Latin ‘flexuosa’ / ‘flexuosus’ meaning ‘tortuous’"
+  },
+  {
+    "name": "flexuosum",
+    "etymology": "From the Latin ‘flexuosum’ / ‘flexuosus’ meaning ‘tortuous’"
+  },
+  {
+    "name": "floribunda",
+    "etymology": "From the Latin ‘flori’ / ‘flos’ meaning ‘flower’; and the Latin ‘bunda’ / ‘abundus’ meaning ‘copious’."
+  },
+  {
+    "name": "floribundum",
+    "etymology": "From the Latin ‘flori’ / ‘flos’ meaning ‘flower’; and the Latin ‘bundum’ / ‘abundus’ meaning ‘copious’."
+  },
+  {
+    "name": "floridum",
+    "etymology": "From the Latin ‘floridum’ / ‘floridus’ meaning ‘flowery’"
+  },
+  {
+    "name": "foeniculoides",
+    "etymology": "From the Latin ‘foenicul’ / ‘foeniculum’ meaning ‘fennel’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "foetida",
+    "etymology": "From the Latin ‘foetida’ / ‘foetidus’ meaning ‘foetid’"
+  },
+  {
+    "name": "foetidum",
+    "etymology": "From the Latin ‘foetidum’ / ‘foetidus’ meaning ‘foetid’"
+  },
+  {
+    "name": "foliosa",
+    "etymology": "From the Latin ‘foliosa’ / ‘foliosus’ meaning ‘leafy’"
+  },
+  {
+    "name": "foliosum",
+    "etymology": "From the Latin ‘foliosum’ / ‘foliosus’ meaning ‘leafy’"
+  },
+  {
+    "name": "fontana",
+    "etymology": "From the Latin ‘fontana’ / ‘fontanus’ meaning ‘resembling a fountain’"
+  },
+  {
+    "name": "forbesiana",
+    "etymology": "From the English ‘forbesiana’ / ‘Forbes’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "forbesii",
+    "etymology": "From the English ‘forbesii’ / ‘Forbes’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "forficaria",
+    "etymology": "From the Latin ‘forficaria’ / ‘forficarius’ meaning ‘relating to a pair of shears’"
+  },
+  {
+    "name": "forficata",
+    "etymology": "From the Latin ‘forficata’ / ‘forficatus’ meaning ‘resembling a pair of shears’"
+  },
+  {
+    "name": "fourcadei",
+    "etymology": "From the French ‘fourcadei’ / ‘Fourcade’ meaning ‘commemorating botanist Henry Fourcade (1865-1948), surveyor and collector in the Southern Cape.’"
+  },
+  {
+    "name": "foveolatus",
+    "etymology": "From the Latin ‘foveolatus’ / ‘foveolatus’ meaning ‘marked with depressions’"
+  },
+  {
+    "name": "fragile",
+    "etymology": "From the Latin ‘fragile’ / ‘fragilis’ meaning ‘fragile’"
+  },
+  {
+    "name": "fragrans",
+    "etymology": "From the Latin ‘fragrans’ / ‘fragrans’ meaning ‘fragrant’"
+  },
+  {
+    "name": "frangula",
+    "etymology": "From the Latin ‘frangula???’ / ‘frangulus???’ meaning ‘somewhat broken’"
+  },
+  {
+    "name": "fraternus",
+    "etymology": "From the Latin ‘fraternus’ / ‘fraternus’ meaning ‘brotherly’"
+  },
+  {
+    "name": "frisea",
+    "etymology": "From the Dutch ‘frisea’ / ‘friseus’ meaning ‘relating to Friesland’"
+  },
+  {
+    "name": "frutescens",
+    "etymology": "From the Latin ‘frutescens’ / ‘frutenscens’ meaning ‘producing shoots’"
+  },
+  {
+    "name": "fruticans",
+    "etymology": "From the Latin ‘fruticans’ / ‘fruticans’ meaning ‘producing shoots’"
+  },
+  {
+    "name": "fruticosa",
+    "etymology": "From the Latin ‘fruticosa’ / ‘fruticosus’ meaning ‘bushy’"
+  },
+  {
+    "name": "fruticosum",
+    "etymology": "From the Latin ‘fruticosum’ / ‘fruticosus’ meaning ‘bushy’"
+  },
+  {
+    "name": "fruticosus",
+    "etymology": "From the Latin ‘fruticosus’ / ‘fruticosus’ meaning ‘bushy’"
+  },
+  {
+    "name": "fruticulosum",
+    "etymology": "From the Latin ‘fruticulosum’ / ‘fruticulosus’ meaning ‘somewhat bushy’"
+  },
+  {
+    "name": "fruticulosus",
+    "etymology": "From the Latin ‘fruticulosus’ / ‘fruticulosus’ meaning ‘somewhat bushy’"
+  },
+  {
+    "name": "fucatus",
+    "etymology": "From the Latin ‘fucatus’ / ‘fucatus’ meaning ‘painted’"
+  },
+  {
+    "name": "fugacissima",
+    "etymology": "From the Latin ‘fugacissima’ / ‘fugacissimus’ meaning ‘very fleeting’"
+  },
+  {
+    "name": "fugax",
+    "etymology": "From the Latin ‘fugax’ / ‘fugax’ meaning ‘fleeting’"
+  },
+  {
+    "name": "fulvum",
+    "etymology": "From the Latin ‘fulvum’ / ‘fulvus’ meaning ‘tawny or yellow’"
+  },
+  {
+    "name": "funale",
+    "etymology": "From the Latin ‘funale’ / ‘funalis’ meaning ‘thread-like’"
+  },
+  {
+    "name": "furvus",
+    "etymology": "From the Latin ‘furvus’ / ‘furvus’ meaning ‘dark’"
+  },
+  {
+    "name": "fusca",
+    "etymology": "From the Latin ‘fusca’ / ‘fuscus’ meaning ‘dark’"
+  },
+  {
+    "name": "galaxia",
+    "etymology": "From the Greek ‘galaxia’ / ‘galaxos’ meaning ‘the Milky Way’"
+  },
+  {
+    "name": "galbaniopse",
+    "etymology": "From the Latin ‘galbani’ / ‘galbanum’ meaning ‘an umbelliferous plant’; and the Greek ‘opse’ / ‘opsis’ meaning ‘face’."
+  },
+  {
+    "name": "galbanum",
+    "etymology": "From the Latin ‘galbanum’ / ‘galbanum’ meaning ‘resinous sap of an umbelliferous plant’"
+  },
+  {
+    "name": "galioides",
+    "etymology": "From the Latin ‘gali’ / ‘galium’ meaning ‘bed-straw’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "gallica",
+    "etymology": "From the Latin ‘gallica’ / ‘gallicus’ meaning ‘pertaining to France’"
+  },
+  {
+    "name": "garcinii",
+    "etymology": "From the Swiss ‘garcinii’ / ‘Garcin’ meaning ‘commemorating the Swiss botanist Laurent Garcin (1683-1751)’"
+  },
+  {
+    "name": "gaudichaudiana",
+    "etymology": "From the French ‘gaudichaudiana’ / ‘Gaudichand’ meaning ‘commemorating French botanist A. Gaudichand’"
+  },
+  {
+    "name": "gawleri",
+    "etymology": "From the English ‘gawleri’ / ‘Gawler’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "gayana",
+    "etymology": "From the English ‘gayana’ / ‘Gay’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "geifolia",
+    "etymology": "From the Latin ‘gei’ / ‘geum’ meaning ‘the herb called bennet’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "geminiflora",
+    "etymology": "From the Latin ‘gemini’ / ‘geminus’ meaning ‘twin’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "geniculata",
+    "etymology": "From the Latin ‘geniculata’ / ‘geniculatus’ meaning ‘equipped with little knees’"
+  },
+  {
+    "name": "genistifolia",
+    "etymology": "From the Latin ‘genisti’ / ‘genista’ meaning ‘the plant called broom’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "genistoides",
+    "etymology": "From the Latin ‘genist’ / ‘genista’ meaning ‘the plant called broom’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "gibba",
+    "etymology": "From the Latin ‘gibba’ / ‘gibbus’ meaning ‘hunched’"
+  },
+  {
+    "name": "gibbosa",
+    "etymology": "From the Latin ‘gibbosa’ / ‘gibbosus’ meaning ‘humped’"
+  },
+  {
+    "name": "gibbosum",
+    "etymology": "From the Latin ‘gibbosum’ / ‘gibbosus’ meaning ‘humped’"
+  },
+  {
+    "name": "giganteum",
+    "etymology": "From the Latin ‘giganteum’ / ‘giganteus’ meaning ‘huge’"
+  },
+  {
+    "name": "gilva",
+    "etymology": "From the Latin ‘gilva’ / ‘gilvus’ meaning ‘yellow’"
+  },
+  {
+    "name": "glabella",
+    "etymology": "From the Latin ‘glabella’ / ‘glabellus’ meaning ‘somewhat smooth’"
+  },
+  {
+    "name": "glaber",
+    "etymology": "From the Latin ‘glaber’ / ‘glaber’ meaning ‘smooth’"
+  },
+  {
+    "name": "glabra",
+    "etymology": "From the Latin ‘glabra’ / ‘glaber’ meaning ‘smooth’"
+  },
+  {
+    "name": "glabrata",
+    "etymology": "From the Latin ‘glabrata’ / ‘glabratus’ meaning ‘rendered smooth’"
+  },
+  {
+    "name": "glabripes",
+    "etymology": "From the Latin ‘glabri’ / ‘glaber’ meaning ‘smooth’; and the Latin ‘pes’ / ‘pes’ meaning ‘foot’."
+  },
+  {
+    "name": "glabrum",
+    "etymology": "From the Latin ‘glabrum’ / ‘glaber’ meaning ‘smooth’"
+  },
+  {
+    "name": "gladiata",
+    "etymology": "From the Latin ‘gladiata’ / ‘gladiatus’ meaning ‘sword-like’"
+  },
+  {
+    "name": "glandulosa",
+    "etymology": "From the Latin ‘glandulosa’ / ‘glandulosus’ meaning ‘equipped with glands’"
+  },
+  {
+    "name": "glauca",
+    "etymology": "From the Latin ‘glauca’ / ‘glaucus’ meaning ‘greenish-grey’"
+  },
+  {
+    "name": "glaucophyllus",
+    "etymology": "From the Latin ‘glauco’ / ‘glaucus’ meaning ‘greenish-grey’; and the Greek ‘phyllus’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "glaucus",
+    "etymology": "From the Latin ‘glaucus’ / ‘glaucus’ meaning ‘greenish-grey’"
+  },
+  {
+    "name": "globosa",
+    "etymology": "From the Latin ‘globosa’ / ‘globosus’ meaning ‘globe-shaped’"
+  },
+  {
+    "name": "globulosa",
+    "etymology": "From the Latin ‘globulosa’ / ‘globulosus’ meaning ‘equipped with globules’"
+  },
+  {
+    "name": "glomerata",
+    "etymology": "From the Latin ‘glomerata’ / ‘glomeratus’ meaning ‘thickly clustered’"
+  },
+  {
+    "name": "glomeratum",
+    "etymology": "From the Latin ‘glomeratum’ / ‘glomeratus’ meaning ‘thickly clustered’"
+  },
+  {
+    "name": "glomeratus",
+    "etymology": "From the Latin ‘glomeratus’ / ‘glomeratus’ meaning ‘thickly clustered’"
+  },
+  {
+    "name": "glutinarius",
+    "etymology": "From the Latin ‘glutinarius’ / ‘glutinarius’ meaning ‘gluey’"
+  },
+  {
+    "name": "glutinosa",
+    "etymology": "From the Latin ‘glutinosa’ / ‘glutinosus’ meaning ‘gluey’"
+  },
+  {
+    "name": "gnaphaloides",
+    "etymology": "From the Greek ‘gnaphal’ / ‘gnaphalon’ meaning ‘hank of wool’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "goodiana",
+    "etymology": "From the English ‘goodiana’ / ‘Good’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "gracile",
+    "etymology": "From the Latin ‘gracile’ / ‘gracilis’ meaning ‘graceful’"
+  },
+  {
+    "name": "gracilis",
+    "etymology": "From the Latin ‘gracilis’ / ‘gracilis’ meaning ‘graceful’"
+  },
+  {
+    "name": "gracillima",
+    "etymology": "From the Latin ‘gracillima’ / ‘gracillimus’ meaning ‘very graceful’"
+  },
+  {
+    "name": "graminea",
+    "etymology": "From the Latin ‘graminea’ / ‘gramineus’ meaning ‘grassy’"
+  },
+  {
+    "name": "graminifolia",
+    "etymology": "From the Latin ‘gramini’ / ‘gramen’ meaning ‘grass’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "graminifolium",
+    "etymology": "From the Latin ‘gramini’ / ‘gramen’ meaning ‘grass’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "grandiceps",
+    "etymology": "From the Latin ‘grandi’ / ‘grandis’ meaning ‘large’; and the Latin ‘ceps’ / ‘caput’ meaning ‘head’."
+  },
+  {
+    "name": "grandiflora",
+    "etymology": "From the Latin ‘grandi’ / ‘grandis’ meaning ‘large’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "grandiflorum",
+    "etymology": "From the Latin ‘grandi’ / ‘grandis’ meaning ‘large’; and the Latin ‘’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "grandiflorus",
+    "etymology": "From the Latin ‘grandi’ / ‘grandis’ meaning ‘large’; and the Latin ‘florus’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "grossularifolia",
+    "etymology": "From the Latin ‘grossulari’ / ‘grossulus’ meaning ‘a small unripe fig’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "grossularoides",
+    "etymology": "From the Latin ‘grossular’ / ‘grossulus’ meaning ‘a small unripe fig’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "guineense",
+    "etymology": "From the Latin ‘guineense’ / ‘guineensis’ meaning ‘relating to Guinea’"
+  },
+  {
+    "name": "guthriae",
+    "etymology": "From the English ‘guthriae’ / ‘Guthrie’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "guttata",
+    "etymology": "From the Latin ‘guttata’ / ‘guttatus’ meaning ‘spotted’"
+  },
+  {
+    "name": "haematocodon",
+    "etymology": "From the Greek ‘haemato’ / ‘haimatos’ meaning ‘resembling blood’; and the Latin ‘codon’ / ‘kodon’ meaning ‘bell’."
+  },
+  {
+    "name": "halicababa",
+    "etymology": ""
+  },
+  {
+    "name": "halimifolius",
+    "etymology": "From the Greek ‘halimi’ / ‘halimon’ meaning ‘resembling the plant called orach’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "hallackii",
+    "etymology": "From the English ‘hallackii’ / ‘Hallack’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "harveyana",
+    "etymology": "From the English ‘harveyana’ / ‘Harvey’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "harveyi",
+    "etymology": "From the English ‘harveyi’ / ‘Harvey’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "hastata",
+    "etymology": "From the Latin ‘hastata’ / ‘hastatus’ meaning ‘spear-like’"
+  },
+  {
+    "name": "hastatus",
+    "etymology": "From the Latin ‘hastatus’ / ‘hastatus’ meaning ‘spear-like’"
+  },
+  {
+    "name": "hastifolius",
+    "etymology": "From the Latin ‘hasti’ / ‘hasta’ meaning ‘spear’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "heisteria",
+    "etymology": "From the German ‘heisteria’ / ‘Heister’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "heleogena",
+    "etymology": "From the Greek ‘heleo’ / ‘eleios’ meaning ‘relating to a marsh’; and the Greek ‘genus’ / ‘genos’ meaning ‘born’."
+  },
+  {
+    "name": "helianthemifolium",
+    "etymology": "From the Greek ‘heli’ / ‘helios’ meaning ‘sun’; and the Greek ‘anthemum’ / ‘anthemon’ meaning ‘flower’."
+  },
+  {
+    "name": "hemisphaericus",
+    "etymology": "From the Greek ‘hemisphaericus’ / ‘hemisphaerikos’ meaning ‘hemispherical’"
+  },
+  {
+    "name": "herbacea",
+    "etymology": "From the Latin ‘herbacea’ / ‘herbaceus’ meaning ‘grassy’"
+  },
+  {
+    "name": "herniariifolia",
+    "etymology": "From the Latin ‘herniarii’ / ‘herniaius’ meaning ‘plant supposed to cure hernias’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "herrei",
+    "etymology": "From the German ‘herrei’ / ‘Herr’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "heterophylla",
+    "etymology": "From the Greek ‘hetero’ / ‘heteros’ meaning ‘the other of the two’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "heterophyllum",
+    "etymology": "From the Greek ‘hetero’ / ‘heteros’ meaning ‘the other of the two’; and the Greek ‘phyllon’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "hexandra",
+    "etymology": "From the Greek ‘hex’ / ‘hex’ meaning ‘six’; and the Greek ‘andra’ / ‘andros’ meaning ‘anther’."
+  },
+  {
+    "name": "hians",
+    "etymology": "From the Latin ‘hians’ / ‘hians’ meaning ‘hanging open’"
+  },
+  {
+    "name": "hiemalis",
+    "etymology": "From the Latin ‘hiemalis’ / ‘hiemalis’ meaning ‘relating to the  winter’"
+  },
+  {
+    "name": "hilaris",
+    "etymology": "From the Latin ‘hilaris’ / ‘hilaris’ meaning ‘cheerful’"
+  },
+  {
+    "name": "hirsuta",
+    "etymology": "From the Latin ‘hirsuta’ / ‘hirsutus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hirsutiflora",
+    "etymology": "From the Latin ‘hirsuti’ / ‘hirsutus’ meaning ‘hairy’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "hirsutum",
+    "etymology": "From the Latin ‘hirsutum’ / ‘hirsutus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hirsutus",
+    "etymology": "From the Latin ‘hirsutus’ / ‘hirsutus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hirta",
+    "etymology": "From the Latin ‘hirta’ / ‘hirtus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hirtiflora",
+    "etymology": "From the Latin ‘hirti’ / ‘hirtus’ meaning ‘hairy’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "hirtulum",
+    "etymology": "From the Latin ‘hirtulum’ / ‘hirtulus’ meaning ‘somewhat hairy’"
+  },
+  {
+    "name": "hirtum",
+    "etymology": "From the Latin ‘hirtum’ / ‘hirtus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hirtus",
+    "etymology": "From the Latin ‘hirtus’ / ‘hirtus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hispida",
+    "etymology": "From the Latin ‘hispida’ / ‘hispidus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hispidula",
+    "etymology": "From the Latin ‘hispidula’ / ‘hispidulus’ meaning ‘somewhat hairy’"
+  },
+  {
+    "name": "hispidulum",
+    "etymology": "From the Latin ‘hispidulum’ / ‘hispidulus’ meaning ‘somewhat hairy’"
+  },
+  {
+    "name": "hispidum",
+    "etymology": "From the Latin ‘hispidum’ / ‘hispidus’ meaning ‘hairy’"
+  },
+  {
+    "name": "hookeri",
+    "etymology": "From the English ‘hookeri’ / ‘Hooker’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "hordaeceus",
+    "etymology": "From the Latin ‘hordaceus’ / ‘hordaceus’ meaning ‘resembling barley’"
+  },
+  {
+    "name": "humifusa",
+    "etymology": "From the Latin ‘humi’ / ‘humus’ meaning ‘ground’; and the Latin ‘fusa’ / ‘fusus’ meaning ‘poured over’."
+  },
+  {
+    "name": "humile",
+    "etymology": "From the Latin ‘humile’ / ‘humilis’ meaning ‘humble’"
+  },
+  {
+    "name": "humilis",
+    "etymology": "From the Latin ‘humilis’ / ‘humilis’ meaning ‘humble’"
+  },
+  {
+    "name": "hyacinthoides",
+    "etymology": "From the Greek ‘hyacinth’ / ‘hyakinthos’ meaning ‘hyacinth’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "hyalinus",
+    "etymology": "From the Latin ‘hyalinus’ / ‘hyalinus’ meaning ‘glassy’"
+  },
+  {
+    "name": "hypophyllocarpodendron",
+    "etymology": "From the Greek ‘hypo’ / ‘hypo’ meaning ‘under’; and the Greek ‘phyllo’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "hyssopifolia",
+    "etymology": "From the Latin ‘hyssopi’ / ‘hyssopus’ meaning ‘hyssop’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "hyssopifolium",
+    "etymology": "From the Latin ‘hyssopi’ / ‘hyssopus’ meaning ‘hyssop’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "hystrix",
+    "etymology": "From the Latin ‘hystrix’ / ‘hystrix’ meaning ‘porcupine’"
+  },
+  {
+    "name": "ilicifolia",
+    "etymology": "From the Latin ‘ilici’ / ‘ilex’ meaning ‘holly’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "imberbis",
+    "etymology": "From the Latin ‘imberbis’ / ‘imberbis’ meaning ‘beardless’"
+  },
+  {
+    "name": "imbricata",
+    "etymology": "From the Latin ‘imbricata’ / ‘imbricatus’ meaning ‘tiled’"
+  },
+  {
+    "name": "imbricatum",
+    "etymology": "From the Latin ‘imbricatum’ / ‘imbricatus’ meaning ‘tiled’"
+  },
+  {
+    "name": "imbricatus",
+    "etymology": "From the Latin ‘imbricatus’ / ‘imbricatus’ meaning ‘tiled’"
+  },
+  {
+    "name": "impolita",
+    "etymology": "From the Latin ‘impolita’ / ‘impolitus’ meaning ‘rough’"
+  },
+  {
+    "name": "inaequalis",
+    "etymology": "From the Latin ‘inaequalis’ / ‘inaequalis’ meaning ‘unequal’"
+  },
+  {
+    "name": "incana",
+    "etymology": "From the Latin ‘incana’ / ‘incanus’ meaning ‘hoary’"
+  },
+  {
+    "name": "incanum",
+    "etymology": "From the Latin ‘incanum’ / ‘incanus’ meaning ‘hoary’"
+  },
+  {
+    "name": "incarnata",
+    "etymology": "From the Latin ‘incarnata’ / ‘incarnatus’ meaning ‘resembling pink flesh’"
+  },
+  {
+    "name": "incisa",
+    "etymology": "From the Latin ‘incisa’ / ‘incisus’ meaning ‘bearing cuts’"
+  },
+  {
+    "name": "incomptula",
+    "etymology": "From the Latin ‘incomptula’ / ‘incomptulus’ meaning ‘somewhat undecorated’"
+  },
+  {
+    "name": "inconspicua",
+    "etymology": "From the Latin ‘inconspicua’ / ‘inconspicuus’ meaning ‘inconspicuous’"
+  },
+  {
+    "name": "incurva",
+    "etymology": "From the Latin ‘incurva’ / ‘incurvus’ meaning ‘straight’"
+  },
+  {
+    "name": "incurvata",
+    "etymology": "From the Latin ‘incurvata’ / ‘incurvatus’ meaning ‘straight’"
+  },
+  {
+    "name": "indica",
+    "etymology": "From the Latin ‘indica’ / ‘indicus’ meaning ‘relating to India’"
+  },
+  {
+    "name": "indicum",
+    "etymology": "From the Latin ‘indicum’ / ‘indicus’ meaning ‘relating to India’"
+  },
+  {
+    "name": "inequalis",
+    "etymology": "From the Latin ‘inequalis’ / ‘inequalis’ meaning ‘unequal’"
+  },
+  {
+    "name": "inerme",
+    "etymology": "From the Latin ‘inerme’ / ‘inermis’ meaning ‘unarmed’"
+  },
+  {
+    "name": "iners",
+    "etymology": "From the Latin ‘iners’ / ‘iners’ meaning ‘motionless’"
+  },
+  {
+    "name": "inflata",
+    "etymology": "From the Latin ‘inflata’ / ‘infflatus’ meaning ‘inflated’"
+  },
+  {
+    "name": "inflexa",
+    "etymology": "From the Latin ‘inflexa’ / ‘inflexus’ meaning ‘inflexible’"
+  },
+  {
+    "name": "inflexum",
+    "etymology": "From the Latin ‘inflexum’ / ‘inflexus’ meaning ‘inflexible’"
+  },
+  {
+    "name": "integerrima",
+    "etymology": "From the Latin ‘integerrima’ / ‘integerrimus’ meaning ‘wholly complete’"
+  },
+  {
+    "name": "integrifolia",
+    "etymology": "From the Latin ‘integri’ / ‘integer’ meaning ‘complete’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "intermedia",
+    "etymology": "From the Latin ‘intermedia’ / ‘intermedius’ meaning ‘intermediate’"
+  },
+  {
+    "name": "inundatum",
+    "etymology": "From the Latin ‘inundatum’ / ‘inundatus’ meaning ‘flooded’"
+  },
+  {
+    "name": "inusta",
+    "etymology": "From the Latin ‘inusta’ / ‘inustus’ meaning ‘scorched’"
+  },
+  {
+    "name": "involucrata",
+    "etymology": "From the Latin ‘involucrata’ / ‘involucratus’ meaning ‘with a whorl of bracts’"
+  },
+  {
+    "name": "iocastum",
+    "etymology": "From the Greek? ‘iocastum’ / ‘Jocasta?’ meaning ‘alluding to the mother of Oedipus?’"
+  },
+  {
+    "name": "isoetifolia",
+    "etymology": "From the Latin ‘isoei’ / ‘isoetes’ meaning ‘a genus of fern’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ixioides",
+    "etymology": "From the Greek ‘ixi’ / ‘ixia’ meaning ‘a South African  flower Latin’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "jasminoides",
+    "etymology": "From the Arabic ‘jasmini’ / ‘yasamin’ meaning ‘sweet-smelling creeper’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "jonquilliodorus",
+    "etymology": "From the Spanish ‘jonquilli’ / ‘junquillo’ meaning ‘a kind of narcissus’; and the Latin ‘odorus’ / ‘odorus’ meaning ‘emitting a fragrance’."
+  },
+  {
+    "name": "juncea",
+    "etymology": "From the Latin ‘juncea’ / ‘junceus’ meaning ‘resembling a reed’"
+  },
+  {
+    "name": "junceus",
+    "etymology": "From the Latin ‘junceus’ / ‘junceus’ meaning ‘resembling a reed’"
+  },
+  {
+    "name": "juncifolia",
+    "etymology": "From the Latin ‘junci’ / ‘juncus’ meaning ‘reed’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "junciformis",
+    "etymology": "From the Latin ‘junci’ / ‘juncus’ meaning ‘reed’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "juniperifolia",
+    "etymology": "From the Latin ‘juniperi’ / ‘juniperus’ meaning ‘juniper tree’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "juniperina",
+    "etymology": "From the Latin ‘juniper’ / ‘juniperus’ meaning ‘juniper tree’; and the Latin ‘ina’ / ‘inus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "kali",
+    "etymology": "From the Hindu???? ‘kali’ / ‘Hindu goddess of vengeance????’ meaning ‘’"
+  },
+  {
+    "name": "karroo",
+    "etymology": "From the Nama ‘karroo’ / ‘karroo’ meaning ‘an arid area of South Africa’"
+  },
+  {
+    "name": "kraussiana",
+    "etymology": "From the German ‘kraussiana’ / ‘Krauss’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "kraussianus",
+    "etymology": "From the German ‘kraussianus’ / ‘Krauss’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "kraussii",
+    "etymology": "From the German ‘kraussii’ / ‘Krauss’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "krebsiana",
+    "etymology": "From the German ‘krebsiana’ / ‘Krebs’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "labialis",
+    "etymology": "From the Latin ‘labialis’ / ‘labialis’ meaning ‘relating to the lips’"
+  },
+  {
+    "name": "lacera",
+    "etymology": "From the Latin ‘lacera’ / ‘lacerare’ meaning ‘to lacerate’"
+  },
+  {
+    "name": "lachnantha",
+    "etymology": "From the Greek ‘lachnantha’ / ‘lachne’ meaning ‘wool’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "laeta",
+    "etymology": "From the Latin ‘laeta’ / ‘laetus’ meaning ‘joyful’"
+  },
+  {
+    "name": "laeve",
+    "etymology": "From the Latin ‘laeve’ / ‘laevis’ meaning ‘light’"
+  },
+  {
+    "name": "laevigata",
+    "etymology": "From the Latin ‘laevigata’ / ‘laevigatus’ meaning ‘smoothed’"
+  },
+  {
+    "name": "laevigatum",
+    "etymology": "From the Latin ‘laevigatum’ / ‘laevigatus’ meaning ‘smoothed’"
+  },
+  {
+    "name": "laevigatus",
+    "etymology": "From the Latin ‘laevigatus’ / ‘laevigatus’ meaning ‘smoothed’"
+  },
+  {
+    "name": "lagopus",
+    "etymology": "; and the Greek ‘pus’ / ‘pous’ meaning ‘foot’."
+  },
+  {
+    "name": "lalandii",
+    "etymology": ""
+  },
+  {
+    "name": "lamellata",
+    "etymology": "From the Latin ‘lamellata’ / ‘lamellatus’ meaning ‘equipped with small plates’"
+  },
+  {
+    "name": "lanata",
+    "etymology": "From the Latin ‘lanata’ / ‘lanatus’ meaning ‘furnished with wool’"
+  },
+  {
+    "name": "lanatum",
+    "etymology": "From the Latin ‘lanatum’ / ‘lanatus’ meaning ‘furnished with wool’"
+  },
+  {
+    "name": "lanatus",
+    "etymology": "From the Latin ‘lanatus’ / ‘lanatus’ meaning ‘furnished with wool’"
+  },
+  {
+    "name": "lanceolata",
+    "etymology": "From the Latin ‘lanceolata’ / ‘lanceolatus’ meaning ‘equipped with small lances’"
+  },
+  {
+    "name": "lanceum",
+    "etymology": "From the Latin ‘lanceum’ / ‘lanceus’ meaning ‘lance-like’"
+  },
+  {
+    "name": "lanceus",
+    "etymology": "From the Latin ‘lanceus’ / ‘lanceus’ meaning ‘lance-like’"
+  },
+  {
+    "name": "lancifolium",
+    "etymology": "From the Latin ‘lanci’ / ‘lancea’ meaning ‘lance’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "lanifer",
+    "etymology": "From the Latin ‘lani’ / ‘lana’ meaning ‘wool’; and the Latin ‘fer’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "lanuginosa",
+    "etymology": "From the Latin ‘lanuginosa’ / ‘lanuginosus’ meaning ‘woolly’"
+  },
+  {
+    "name": "laricifolia",
+    "etymology": "From the Latin ‘larici’ / ‘larix’ meaning ‘larch’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "lasciva",
+    "etymology": "From the Latin ‘lasciva’ / ‘lascivus’ meaning ‘lascivious’"
+  },
+  {
+    "name": "lateralis",
+    "etymology": "From the Latin ‘lateralis’ / ‘lateralis’ meaning ‘relating to the side’"
+  },
+  {
+    "name": "latifolia",
+    "etymology": "From the Latin ‘lati’ / ‘latus’ meaning ‘side’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "latifolius",
+    "etymology": "From the Latin ‘lati’ / ‘latus’ meaning ‘side’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "lativalvis",
+    "etymology": "From the Latin ‘lati’ / ‘latus’ meaning ‘side’; and the Latin ‘valvis’ / ‘valva’ meaning ‘the leaf of a door’."
+  },
+  {
+    "name": "laureoleum",
+    "etymology": "From the Latin ‘laureoleum’ / ‘laureolus’ meaning ‘relating to the laurel’"
+  },
+  {
+    "name": "laxa",
+    "etymology": "From the Latin ‘laxa’ / ‘laxus’ meaning ‘loose’"
+  },
+  {
+    "name": "laxiflorus",
+    "etymology": "From the Latin ‘laxi’ / ‘laxus’ meaning ‘loose’"
+  },
+  {
+    "name": "laxifolia",
+    "etymology": "From the Latin ‘laxi’ / ‘laxus’ meaning ‘loose’"
+  },
+  {
+    "name": "lehmanniana",
+    "etymology": "From the German ‘lehmanniana’ / ‘Lehmann’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "lehmannii",
+    "etymology": "From the German ‘lehmannii’ / ‘Lehmann’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "leoninum",
+    "etymology": "From the Latin ‘leoninum’ / ‘leoninus’ meaning ‘lion-like’"
+  },
+  {
+    "name": "leonorus",
+    "etymology": "From the Latin ‘leonorus’ / ‘leonorus’ meaning ‘lion-coloured’"
+  },
+  {
+    "name": "lepidocarpodendron",
+    "etymology": "From the Greek ‘lepido’ / ‘lepis’ meaning ‘scale’; and the Greek ‘carpo’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "lepta",
+    "etymology": "From the Greek ‘lepta’ / ‘leptos’ meaning ‘delicate’"
+  },
+  {
+    "name": "leptoclados",
+    "etymology": "From the Greek ‘lepto’ / ‘leptos’ meaning ‘delicate’; and the Greek ‘clados’ / ‘klados’ meaning ‘twig’."
+  },
+  {
+    "name": "leptoloba",
+    "etymology": "From the Greek ‘lepto’ / ‘leptos’ meaning ‘delicate’; and the Greek ‘loba’ / ‘lobos’ meaning ‘pod’."
+  },
+  {
+    "name": "leptophylla",
+    "etymology": "From the Greek ‘lepto’ / ‘leptos’ meaning ‘delicate’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "leptostachyus",
+    "etymology": "From the Greek ‘lepto’ / ‘leptos’ meaning ‘delicate’; and the Greek ‘stachys’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "leucoloma",
+    "etymology": "From the Greek ‘leuco’ / ‘leukos’ meaning ‘white’; and the Greek ‘loma’ / ‘lomentos’ meaning ‘breaking up when mature’."
+  },
+  {
+    "name": "levisanus",
+    "etymology": "From the Hebrew???? ‘levisanus’ / ‘Levy????’ meaning ‘commemorating a botanist of this name ???’"
+  },
+  {
+    "name": "levynsiae",
+    "etymology": "From the Hebrew ‘levynsiae’ / ‘Levyns’ meaning ‘commemorating the botanist of this name’"
+  },
+  {
+    "name": "lewisiae",
+    "etymology": "From the English ‘lewisiae’ / ‘Lewis’ meaning ‘commemorating the botanist of this name’"
+  },
+  {
+    "name": "lichtensteiniana",
+    "etymology": "From the German ‘lichstensteiniana’ / ‘Lichtenstein’ meaning ‘commemorating the botanist of this name’"
+  },
+  {
+    "name": "lignosus",
+    "etymology": "From the Latin ‘lignosus’ / ‘lignosus’ meaning ‘woody’"
+  },
+  {
+    "name": "ligulatum",
+    "etymology": "From the Latin ‘ligulatum’ / ‘ligulatus’ meaning ‘equipped with shoe straps’"
+  },
+  {
+    "name": "liliaceus",
+    "etymology": "From the Latin ‘liliaceus’ / ‘liliaceus’ meaning ‘resembling a lily’"
+  },
+  {
+    "name": "limosa",
+    "etymology": "From the Latin ‘limosa’ / ‘limosus’ meaning ‘slimy or muddy’"
+  },
+  {
+    "name": "lineare",
+    "etymology": "From the Latin ‘lineare’ / ‘linearis’ meaning ‘relating to lines’"
+  },
+  {
+    "name": "linearis",
+    "etymology": "From the Latin ‘linearis’ / ‘linearis’ meaning ‘rellating to lines’"
+  },
+  {
+    "name": "lineata",
+    "etymology": "From the Latin ‘lineata’ / ‘lineatus’ meaning ‘striped’"
+  },
+  {
+    "name": "lineatus",
+    "etymology": "From the Latin ‘lineatus’ / ‘lineatus’ meaning ‘striped’"
+  },
+  {
+    "name": "linguiloba",
+    "etymology": "From the Latin ‘lingui’ / ‘linguis’ meaning ‘tongue’; and the Latin ‘loba’ / ‘lobus’ meaning ‘lobe’."
+  },
+  {
+    "name": "linnaei",
+    "etymology": "From the Latin ‘linnaei’ / ‘Linnaeus’ meaning ‘commemorating the botanist of this name’"
+  },
+  {
+    "name": "linoides",
+    "etymology": "From the Greek ‘lin’ / ‘linon’ meaning ‘flax’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "litorale",
+    "etymology": "From the Latin ‘litorale’ / ‘litorale’ meaning ‘relating to a bank or shore’"
+  },
+  {
+    "name": "litoralis",
+    "etymology": "From the Latin ‘litoralis’ / ‘litoralis’ meaning ‘relating to a bank or shore’"
+  },
+  {
+    "name": "littorea",
+    "etymology": "From the Latin ‘littorea’ / ‘littorea’ meaning ‘relating to a bank or shore’"
+  },
+  {
+    "name": "littoreus",
+    "etymology": "From the Latin ‘littoreus’ / ‘littoreus’ meaning ‘ relating to a bank or shore’"
+  },
+  {
+    "name": "livida",
+    "etymology": "From the Latin ‘livida’ / ‘lividus’ meaning ‘bluish’"
+  },
+  {
+    "name": "lobatum",
+    "etymology": "From the Latin ‘lobatum’ / ‘lobatus’ meaning ‘lobed’"
+  },
+  {
+    "name": "longebracteata",
+    "etymology": "From the Latin ‘longe’ / ‘longe’ meaning ‘at length’; and the Latin ‘bracteata’ / ‘bracteatus’ meaning ‘equipped with bracts’."
+  },
+  {
+    "name": "longicaule",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘caule’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "longicornu",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘cornu’ / ‘cornus’ meaning ‘horn’."
+  },
+  {
+    "name": "longiflora",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "longifolia",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "longifolium",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "longifolius",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "longiglumis",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’; and the Latin ‘glumis’ / ‘gluma’ meaning ‘husk’."
+  },
+  {
+    "name": "longum",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’"
+  },
+  {
+    "name": "longus",
+    "etymology": "From the Latin ‘longi’ / ‘longus’ meaning ‘long’"
+  },
+  {
+    "name": "lotoides",
+    "etymology": "From the Greek ‘lot’ / ‘lotos’ meaning ‘the lotos tree’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "lucens",
+    "etymology": "From the Latin ‘lucens’ / ‘lucens’ meaning ‘shining’"
+  },
+  {
+    "name": "lucida",
+    "etymology": "From the Latin ‘lucida’ / ‘lucidus’ meaning ‘bright’"
+  },
+  {
+    "name": "ludwigii",
+    "etymology": "From the German ‘ludwigii’ / ‘Ludwig’ meaning ‘Probably commemorating Friedrich Ludwig (1851-1918), a German botanist.’"
+  },
+  {
+    "name": "lugens",
+    "etymology": "From the Latin ‘lugens’ / ‘lugens’ meaning ‘mourning’"
+  },
+  {
+    "name": "lugubris",
+    "etymology": "From the Latin ‘lugubris’ / ‘lugubris’ meaning ‘mournful’"
+  },
+  {
+    "name": "lunulatum",
+    "etymology": "From the Latin ‘lunulatum’ / ‘lunulatus’ meaning ‘crescent-shaped’"
+  },
+  {
+    "name": "lupulinum",
+    "etymology": "From the Latin ‘lupulinum’ / ‘lupulinus’ meaning ‘resembling hops’"
+  },
+  {
+    "name": "lurida",
+    "etymology": "From the Latin ‘lurida’ / ‘pale yellow’ meaning ‘’"
+  },
+  {
+    "name": "lutea",
+    "etymology": "From the Latin ‘lutea’ / ‘golden  yellow’ meaning ‘’"
+  },
+  {
+    "name": "luteola",
+    "etymology": "From the Latin ‘luteola’ / ‘yellowish’ meaning ‘’"
+  },
+  {
+    "name": "luxurians",
+    "etymology": "From the Latin ‘;uxurians’ / ‘luxurians’ meaning ‘luxuriant’"
+  },
+  {
+    "name": "lychnidea",
+    "etymology": "From the Greek ‘lychn’ / ‘lychnos’ meaning ‘a red-flowered plant’; and the Latin ‘idea’ / ‘ideus’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "lycopodioides",
+    "etymology": "From the Greek ‘lyco’ / ‘lykos’ meaning ‘wolf’; and the Greek ‘podi’ / ‘pous’ meaning ‘foot’."
+  },
+  {
+    "name": "lyratus",
+    "etymology": "From the Latin ‘lyratus’ / ‘lyratus’ meaning ‘resembling a lyre’"
+  },
+  {
+    "name": "macowanii",
+    "etymology": "From the Gaelic ‘macowanii’ / ‘Macowan’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "macrantha",
+    "etymology": "From the Greek ‘macr’ / ‘makros’ meaning ‘big’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "macrocalycina",
+    "etymology": "From the Greek ‘macro’ / ‘makros’ meaning ‘big’; and the Greek ‘calcyina’ / ‘kalkynos’ meaning ‘relating to the calyx’."
+  },
+  {
+    "name": "macrocalyx",
+    "etymology": "From the Greek ‘macro’ / ‘makros’ meaning ‘big’; and the Greek ‘calyx’ / ‘kalyx’ meaning ‘the petal clasp’."
+  },
+  {
+    "name": "macrocarpa",
+    "etymology": "From the Greek ‘macro’ / ‘makros’ meaning ‘big’; and the Greek ‘carpa’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "macrodus",
+    "etymology": "From the Greek ‘macr’ / ‘makros’ meaning ‘big’; and the Greek ‘odus’ / ‘odos????’ meaning ‘pathway????’."
+  },
+  {
+    "name": "macropetala",
+    "etymology": "From the Greek ‘macro’ / ‘makros’ meaning ‘big’; and the Greek ‘petala’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "macrourum",
+    "etymology": "From the Gaelic???? ‘macrourum’ / ‘Macrory????’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "maculata",
+    "etymology": "From the Latin ‘maculata’ / ‘maculatus’ meaning ‘stained’"
+  },
+  {
+    "name": "maculatus",
+    "etymology": "From the Latin ‘maculatus’ / ‘maculatus’ meaning ‘stained’"
+  },
+  {
+    "name": "major",
+    "etymology": "From the Latin ‘major’ / ‘major’ meaning ‘bigger’"
+  },
+  {
+    "name": "malouinensis",
+    "etymology": "From the ????? ‘malouinensis’ / ‘Mali?????’ meaning ‘deriving from Mali????’"
+  },
+  {
+    "name": "mammosa",
+    "etymology": "From the Latin ‘mammosa’ / ‘mammosus’ meaning ‘equipped with breasts’"
+  },
+  {
+    "name": "margaritacea",
+    "etymology": "From the Latin ‘margaritacea’ / ‘margaritaceus’ meaning ‘pearl-like or daisy-like’"
+  },
+  {
+    "name": "marginata",
+    "etymology": "From the Latin ‘marginata’ / ‘marginatus’ meaning ‘with a defined edge’"
+  },
+  {
+    "name": "marginatus",
+    "etymology": "From the Latin ‘marginatus’ / ‘marginatus’ meaning ‘with a defined edge’"
+  },
+  {
+    "name": "marifolia",
+    "etymology": "From the Latin ‘mari’ / ‘mare’ meaning ‘sea’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "mariscus",
+    "etymology": "From the Latin ‘mariscus’ / ‘mariscus’ meaning ‘rush’"
+  },
+  {
+    "name": "maritima",
+    "etymology": "From the Latin ‘maritima’ / ‘maritimus’ meaning ‘maritime’"
+  },
+  {
+    "name": "maritimum",
+    "etymology": "From the Latin ‘maritumum’ / ‘maritimus’ meaning ‘maritime’"
+  },
+  {
+    "name": "maritimus",
+    "etymology": "From the Latin ‘maritimus’ / ‘martimus’ meaning ‘maritime’"
+  },
+  {
+    "name": "martleyi",
+    "etymology": "From the English ‘martleyi’ / ‘Martley’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "maura",
+    "etymology": "From the Latin ‘maura’ / ‘maurus’ meaning ‘relating to the Moors’"
+  },
+  {
+    "name": "mauritanica",
+    "etymology": "From the Latin ‘mauritanica’ / ‘Mauritania’ meaning ‘relating to Mauritania’"
+  },
+  {
+    "name": "mauritianum",
+    "etymology": "From the Latin ‘mauritianum’ / ‘Mauritania’ meaning ‘relating to Mauritania’"
+  },
+  {
+    "name": "maxima",
+    "etymology": "From the Latin ‘maxima’ / ‘maximus’ meaning ‘biggest’"
+  },
+  {
+    "name": "maximum",
+    "etymology": "From the Latin ‘maximum’ / ‘maximus’ meaning ‘biggest’"
+  },
+  {
+    "name": "mearnsii",
+    "etymology": "From the English ‘mearnsii’ / ‘Mearns’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "media",
+    "etymology": "From the Latin ‘media’ / ‘medius’ meaning ‘in between’"
+  },
+  {
+    "name": "mediana",
+    "etymology": "From the Latin ‘mediana’ / ‘medianus’ meaning ‘relating to the  norm’"
+  },
+  {
+    "name": "melanophloeos",
+    "etymology": "From the Greek ‘melano’ / ‘melanos’ meaning ‘black’; and the Greek ‘pholoeos’ / ‘phloeos’ meaning ‘bark’."
+  },
+  {
+    "name": "melanoxylon",
+    "etymology": "From the Greek ‘melano’ / ‘melanos’ meaning ‘black’; and the Greek ‘xylon’ / ‘xylon’ meaning ‘wood’."
+  },
+  {
+    "name": "melicoides",
+    "etymology": "From the Italian ‘melic’ / ‘melica’ meaning ‘sorghum’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "meliusculus",
+    "etymology": "From the Latin ‘meliusculus’ / ‘meliusculus’ meaning ‘somewhat better’"
+  },
+  {
+    "name": "membranacea",
+    "etymology": "From the Latin ‘membranacea’ / ‘membranaceus’ meaning ‘resembling a  membrane’"
+  },
+  {
+    "name": "meriana",
+    "etymology": "From the Dutch ‘meriana’ / ‘Merian’ meaning ‘commemorating a Dutch floral artist’"
+  },
+  {
+    "name": "meridionalis",
+    "etymology": "From the Latin ‘meridionalis’ / ‘meridionalis’ meaning ‘relating to the afternoon’"
+  },
+  {
+    "name": "meyeri",
+    "etymology": "From the German ‘meyeri’ / ‘Meyer’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "meyeriana",
+    "etymology": "From the German ‘meyeriana’ / ‘Meyer’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "micans",
+    "etymology": "From the Latin ‘micans’ / ‘micans’ meaning ‘glittering’"
+  },
+  {
+    "name": "micrantha",
+    "etymology": "From the Greek ‘mic’ / ‘mikros’ meaning ‘small’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "microcarpum",
+    "etymology": "From the Greek ‘micro’ / ‘mikros’ meaning ‘small’; and the Greek ‘carpum’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "microglossum",
+    "etymology": "From the Greek ‘micro’ / ‘mikros’ meaning ‘small’; and the Greek ‘glossum’ / ‘glossa’ meaning ‘tongue’."
+  },
+  {
+    "name": "micropetala",
+    "etymology": "From the Greek ‘micro’ / ‘mikros’ meaning ‘small’; and the Greek ‘petalum’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "microphylla",
+    "etymology": "From the Greek ‘micro’ / ‘mikros’ meaning ‘small’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "microstachys",
+    "etymology": "From the Greek ‘micro’ / ‘mikros’ meaning ‘small’; and the Greek ‘stachys’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "miniata",
+    "etymology": "From the Latin ‘miniata’ / ‘miniatus’ meaning ‘red’"
+  },
+  {
+    "name": "miniata",
+    "etymology": "From the DUPLICATE ‘’ / ‘’ meaning ‘’"
+  },
+  {
+    "name": "minor",
+    "etymology": "From the Latin ‘minor’ / ‘minor’ meaning ‘smaller’"
+  },
+  {
+    "name": "minuta",
+    "etymology": "From the Latin ‘minuta’ / ‘minutus’ meaning ‘minute’"
+  },
+  {
+    "name": "minutiflora",
+    "etymology": "From the Latin ‘minuti’ / ‘mintus’ meaning ‘minute’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "mitior",
+    "etymology": "From the Latin ‘mitior’ / ‘mitior’ meaning ‘milder’"
+  },
+  {
+    "name": "mitis",
+    "etymology": "From the Latin ‘mitis’ / ‘mitis’ meaning ‘mild’"
+  },
+  {
+    "name": "mixta",
+    "etymology": "From the Latin ‘mixta’ / ‘mixtus’ meaning ‘mixed’"
+  },
+  {
+    "name": "moeserianum",
+    "etymology": "From the German???? ‘moeserianum’ / ‘Moeser???’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "mollis",
+    "etymology": "From the Latin ‘mollis’ / ‘gentle’ meaning ‘’"
+  },
+  {
+    "name": "mollugo",
+    "etymology": "From the Latin ‘mollugo’ / ‘mollugo’ meaning ‘a Roman name for a certain plant’"
+  },
+  {
+    "name": "monadelpha",
+    "etymology": "From the Greek ‘mon’ / ‘mono’ meaning ‘one’; and the Greek ‘adelpha’ / ‘adelphos’ meaning ‘brother’."
+  },
+  {
+    "name": "monanthes",
+    "etymology": "From the Greek ‘mon’ / ‘mono’ meaning ‘one’"
+  },
+  {
+    "name": "monilifera",
+    "etymology": "From the Greek ‘mon’ / ‘mono’ meaning ‘one’"
+  },
+  {
+    "name": "monopetala",
+    "etymology": "From the Greek ‘mono’ / ‘mono’ meaning ‘one’"
+  },
+  {
+    "name": "monophylla",
+    "etymology": "From the Greek ‘mono’ / ‘mono’ meaning ‘one’"
+  },
+  {
+    "name": "monspeliensis",
+    "etymology": "From the Latin ‘mons’ / ‘mons’ meaning ‘mountain’; and the Latin ‘peliensis’ / ‘peliensis’ meaning ‘relating to the mountain Pelion’."
+  },
+  {
+    "name": "montanus",
+    "etymology": "From the Latin ‘montanus’ / ‘montanus’ meaning ‘relating to mountains’"
+  },
+  {
+    "name": "monticola",
+    "etymology": "From the Latin ‘monticola’ / ‘monticola’ meaning ‘a mountain-dweller’"
+  },
+  {
+    "name": "morgsana",
+    "etymology": ""
+  },
+  {
+    "name": "mucronata",
+    "etymology": "From the Latin ‘mucronata’ / ‘mucronatus’ meaning ‘pointed’"
+  },
+  {
+    "name": "mucronatum",
+    "etymology": "From the Latin ‘mucronatum’ / ‘mucronatus’ meaning ‘pointed’"
+  },
+  {
+    "name": "muirii",
+    "etymology": "From the Gaelic ‘muirii’ / ‘Muir’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "multicaulis",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "multifidus",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘fidus’ / ‘fidus’ meaning ‘cleavage’."
+  },
+  {
+    "name": "multiflora",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "multiflorum",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "multiflorus",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘florus’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "multiradiatum",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘radiatum’ / ‘radiatus’ meaning ‘invested with rays’."
+  },
+  {
+    "name": "multiradiatus",
+    "etymology": "From the Latin ‘multi’ / ‘multi’ meaning ‘many’; and the Latin ‘radiatus’ / ‘rardiatus’ meaning ‘invested with rays’."
+  },
+  {
+    "name": "multumbellifera",
+    "etymology": "From the Latin ‘mult’ / ‘multi’ meaning ‘many’; and the Latin ‘umbelli’ / ‘umbellum’ meaning ‘umbrella’."
+  },
+  {
+    "name": "mundianum",
+    "etymology": "From the German ‘mundianum’ / ‘Mundt’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "mundii",
+    "etymology": "From the Latin ‘mundii’ / ‘Mundt’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "muralis",
+    "etymology": "From the Latin ‘muralis’ / ‘muralis’ meaning ‘relating to walls’"
+  },
+  {
+    "name": "muricata",
+    "etymology": "From the Latin ‘muricata’ / ‘muricatus’ meaning ‘pointed’"
+  },
+  {
+    "name": "muricatus",
+    "etymology": "From the Latin ‘muricatus’ / ‘muricatus’ meaning ‘pointed’"
+  },
+  {
+    "name": "murinum ",
+    "etymology": "From the Latin ‘murinum’ / ‘murinus’ meaning ‘mouse-like’"
+  },
+  {
+    "name": "muscosa",
+    "etymology": "From the Latin ‘muscosa’ / ‘muscosus’ meaning ‘mossy’"
+  },
+  {
+    "name": "myriophylloides",
+    "etymology": "From the Greek ‘myrio’ / ‘myrios’ meaning ‘countless’; and the Greek ‘phyll’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "myrrhifolium",
+    "etymology": "From the Greek ‘myrrhi’ / ‘myrrhis’ meaning ‘myrrh’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "myrsinites",
+    "etymology": "From the Greek ‘myrsin’ / ‘myrsine’ meaning ‘myrtle’; and the Greek ‘ites’ / ‘ites’ meaning ‘adjectival suffix’."
+  },
+  {
+    "name": "myrtifolia",
+    "etymology": "From the Greek ‘myrt’ / ‘myrtos’ meaning ‘myrtle’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "myrtina",
+    "etymology": "From the Latin ‘myrtina’ / ‘myrtinus’ meaning ‘myrtle-like’"
+  },
+  {
+    "name": "myuros",
+    "etymology": "From the Greek ‘myuros’ / ‘mus’ meaning ‘mouse’; and the Greek ‘uros’ / ‘ouros’ meaning ‘tail’."
+  },
+  {
+    "name": "namaquensis",
+    "etymology": "From the Nama ‘namaquensis’ / ‘nama gu a’ meaning ‘a dry region of South Africa’"
+  },
+  {
+    "name": "nana",
+    "etymology": "From the Latin ‘nana’ / ‘nanus’ meaning ‘dwarf’"
+  },
+  {
+    "name": "nanodes",
+    "etymology": "From the Latin ‘nan’ / ‘nanus’ meaning ‘dwarf’; and the Greek ‘odes’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "nanum",
+    "etymology": "From the Latin ‘nanum’ / ‘nanus’ meaning ‘dwarf’"
+  },
+  {
+    "name": "natalensis",
+    "etymology": "From the Latin ‘natalensis’ / ‘Natal’ meaning ‘subtropical region of South Africa’"
+  },
+  {
+    "name": "natans",
+    "etymology": "From the Latin ‘natans’ / ‘natans’ meaning ‘swimming’"
+  },
+  {
+    "name": "neesii",
+    "etymology": "From the Dutch ‘neesii’ / ‘Nees’ meaning ‘commemorating Nees von Eysenbeck’"
+  },
+  {
+    "name": "neglecta",
+    "etymology": "From the Latin ‘neglecta’ / ‘neglectus’ meaning ‘neglected’"
+  },
+  {
+    "name": "nematocaulis",
+    "etymology": "From the Greek ‘nematocaulis’ / ‘nematos’ meaning ‘thread-like’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "neriifolia",
+    "etymology": "From the Greek ‘nerii’ / ‘nerion’ meaning ‘oleander’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "nevillei",
+    "etymology": "From the English ‘nevillei’ / ‘Neville’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "nidulans",
+    "etymology": "From the Latin ‘nidulans’ / ‘nidulans’ meaning ‘nest-forming’"
+  },
+  {
+    "name": "nigrescens",
+    "etymology": "From the Latin ‘nigrescens’ / ‘nigrescens’ meaning ‘turning black’"
+  },
+  {
+    "name": "nigricans",
+    "etymology": "From the Latin ‘nigricans’ / ‘nigricans’ meaning ‘appearing blackish’"
+  },
+  {
+    "name": "nigrita",
+    "etymology": "From the Latin ‘nigrita’ / ‘nigritus’ meaning ‘blackened’"
+  },
+  {
+    "name": "nigromontanum ",
+    "etymology": "From the Latin ‘nigro’ / ‘niger’ meaning ‘black’"
+  },
+  {
+    "name": "nigrum",
+    "etymology": "From the Latin ‘nigrum’ / ‘niger’ meaning ‘black’"
+  },
+  {
+    "name": "nitida",
+    "etymology": "From the Latin ‘nitida’ / ‘nitidus’ meaning ‘shiny’"
+  },
+  {
+    "name": "nitidus",
+    "etymology": "From the Latin ‘nitidus’ / ‘nitidus’ meaning ‘shiny’"
+  },
+  {
+    "name": "nivea",
+    "etymology": "From the Latin ‘nivea’ / ‘niveus’ meaning ‘snowy’"
+  },
+  {
+    "name": "niveum",
+    "etymology": "From the Latin ‘niveum’ / ‘niveus’ meaning ‘snowy’"
+  },
+  {
+    "name": "nodiflora",
+    "etymology": "From the Latin ‘nodi’ / ‘nodus’ meaning ‘knot’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "nodiflorum",
+    "etymology": "From the Latin ‘nodi’ / ‘nodus’ meaning ‘knot’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "nodosus",
+    "etymology": "From the Latin ‘nodosus’ / ‘nodosus’ meaning ‘knotty’"
+  },
+  {
+    "name": "noduliflora",
+    "etymology": "From the Latin ‘noduli’ / ‘nodulus’ meaning ‘somewhat knotty’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "nouchali",
+    "etymology": "From the French? ‘nouchali’ / ‘Nouchal’ meaning ‘commemorating a botanist of this name?’"
+  },
+  {
+    "name": "nuda",
+    "etymology": "From the Latin ‘nuda’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nudicaule",
+    "etymology": "From the Latin ‘nudi’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nudicaulis",
+    "etymology": "From the Latin ‘nudi’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nudiflora",
+    "etymology": "From the Latin ‘nudi’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nudifolium",
+    "etymology": "From the Latin ‘nudi’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nudum",
+    "etymology": "From the Latin ‘nudum’ / ‘nudus’ meaning ‘bare’"
+  },
+  {
+    "name": "nutans",
+    "etymology": "From the Latin ‘nutans’ / ‘nutans’ meaning ‘nodding’"
+  },
+  {
+    "name": "nycthemerum",
+    "etymology": "From the Greek ‘nycthemerum’ / ‘nykthemeros’ meaning ‘lasting 24 hours’"
+  },
+  {
+    "name": "obcordata",
+    "etymology": "From the Latin ‘ob’ / ‘ob’ meaning ‘inversely’; and the Latin ‘cordata’ / ‘cordatus’ meaning ‘heart-shaped’."
+  },
+  {
+    "name": "oblanceolata",
+    "etymology": "From the Latin ‘ob’ / ‘ob’ meaning ‘inversely’; and the Latin ‘lanceolata’ / ‘lanceolatus’ meaning ‘equipped with small lances’."
+  },
+  {
+    "name": "obliqua",
+    "etymology": "From the Latin ‘obliqua’ / ‘obliquus’ meaning ‘oblique’"
+  },
+  {
+    "name": "obliquum",
+    "etymology": "From the Latin ‘obliquum’ / ‘obliquus’ meaning ‘oblique’"
+  },
+  {
+    "name": "obliterum",
+    "etymology": "From the Latin ‘obliterum’ / ‘obliterus’ meaning ‘forgotten or erased’"
+  },
+  {
+    "name": "obovata",
+    "etymology": "From the Latin ‘ob’ / ‘ob’ meaning ‘inversely’; and the Latin ‘ovata’ / ‘ovatus’ meaning ‘egg-shaped’."
+  },
+  {
+    "name": "obscura",
+    "etymology": "From the Latin ‘obscura’ / ‘obscurus’ meaning ‘obscure’"
+  },
+  {
+    "name": "obtusissimus",
+    "etymology": "From the Latin ‘obtusisimus’ / ‘obtusisimus’ meaning ‘most blunt’"
+  },
+  {
+    "name": "obtusa",
+    "etymology": "From the Latin ‘obtusa’ / ‘obtusus’ meaning ‘blunt’"
+  },
+  {
+    "name": "obtusata",
+    "etymology": "From the Latin ‘obtusata’ / ‘obtusatus’ meaning ‘rendered blunt’"
+  },
+  {
+    "name": "obtusifolium",
+    "etymology": "From the Latin ‘obtusi’ / ‘obtusus’ meaning ‘blunt’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "obtusus",
+    "etymology": "From the Latin ‘obtusus’ / ‘obtusus’ meaning ‘blunt’"
+  },
+  {
+    "name": "occidentale",
+    "etymology": "From the Latin ‘occidentale’ / ‘occidentalis’ meaning ‘western’"
+  },
+  {
+    "name": "occidentalis ",
+    "etymology": "From the Latin ‘occidentalis’ / ‘occidentalis’ meaning ‘western’"
+  },
+  {
+    "name": "ocellata",
+    "etymology": "From the Latin ‘ocellata’ / ‘ocellatus’ meaning ‘invested with small eyes’"
+  },
+  {
+    "name": "ochroleuca",
+    "etymology": "From the Greek ‘ochro’ / ‘ochros’ meaning ‘ochre’; and the Greek ‘leuca’ / ‘leukos’ meaning ‘white’."
+  },
+  {
+    "name": "ocreata",
+    "etymology": "From the Latin ‘ocreata’ / ‘ocreatus’ meaning ‘rendered ochre’"
+  },
+  {
+    "name": "odorata",
+    "etymology": "From the Latin ‘odorata’ / ‘odoratus’ meaning ‘fragrant’"
+  },
+  {
+    "name": "odoratissimum",
+    "etymology": "From the Latin ‘odoratissimum’ / ‘odoratissimus’ meaning ‘most fragrant’"
+  },
+  {
+    "name": "odorum",
+    "etymology": "From the Latin ‘odorum’ / ‘odorus’ meaning ‘fragrant’"
+  },
+  {
+    "name": "oleoides",
+    "etymology": "From the Latin ‘ole’ / ‘olea’ meaning ‘olive’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "oligantha",
+    "etymology": "From the Greek ‘olig’ / ‘oligoi’ meaning ‘few’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "onobromoides",
+    "etymology": "From the Greek ‘onobro’ / ‘onobrychis????’ meaning ‘the plant called palmes assini’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "ophrydea",
+    "etymology": "From the Greek ‘ophrydea’ / ‘ophrydeos’ meaning ‘equipped with eyebrows’"
+  },
+  {
+    "name": "oppositifolia",
+    "etymology": "From the Latin ‘oppositi’ / ‘oppositus’ meaning ‘opposite’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "orbicularis",
+    "etymology": "From the Latin ‘orbicularis’ / ‘orbicularis’ meaning ‘orb-shaped’"
+  },
+  {
+    "name": "orbiculata",
+    "etymology": "From the Latin ‘orbiculata’ / ‘orbiculata’ meaning ‘made into an orb’"
+  },
+  {
+    "name": "orchidiflorus",
+    "etymology": "From the Latin ‘orchidi’ / ‘orchis’ meaning ‘orchid’; and the Latin ‘florus’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "orchioides",
+    "etymology": "From the Latin ‘orchi’ / ‘orchis’ meaning ‘orchid’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "orientalis",
+    "etymology": "From the Latin ‘orientalis’ / ‘orientalis’ meaning ‘eastern’"
+  },
+  {
+    "name": "ornatus",
+    "etymology": "From the Latin ‘ornatus’ / ‘ornatus’ meaning ‘ornate’"
+  },
+  {
+    "name": "ornithopodon",
+    "etymology": "From the Greek ‘ornitho’ / ‘ornithos’ meaning ‘bird’; and the Greek ‘podon’ / ‘podion’ meaning ‘small foot’."
+  },
+  {
+    "name": "orobanchoides",
+    "etymology": "From the Greek ‘orobanch’ / ‘orobanche’ meaning ‘vetch’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "oroboides",
+    "etymology": "From the Greek ‘orobo’ / ‘orobos’ meaning ‘vetch’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "ottonis",
+    "etymology": "From the German ‘ottonis’ / ‘Otto’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "ovata",
+    "etymology": "From the Latin ‘ovata’ / ‘ovatus’ meaning ‘egg-shaped’"
+  },
+  {
+    "name": "ovatus",
+    "etymology": "From the Latin ‘ovatus’ / ‘ovatus’ meaning ‘egg-shaped’"
+  },
+  {
+    "name": "oxycoccifolia",
+    "etymology": "From the Greek ‘oxy’ / ‘oxy’ meaning ‘sharp’; and the Greek ‘cocci’ / ‘kokkos’ meaning ‘berry’."
+  },
+  {
+    "name": "oxyptera",
+    "etymology": "From the Greek ‘oxy’ / ‘oxy’ meaning ‘sharp’; and the Greek ‘ptera’ / ‘pteros’ meaning ‘wing’."
+  },
+  {
+    "name": "pageae",
+    "etymology": "From the English ‘pageae’ / ‘Page’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "paleacea",
+    "etymology": "From the Latin ‘paleacea’ / ‘paleaceus’ meaning ‘chaff-like’"
+  },
+  {
+    "name": "pallens",
+    "etymology": "From the Latin ‘pallens’ / ‘pallens’ meaning ‘pale’"
+  },
+  {
+    "name": "pallescens",
+    "etymology": "From the Latin ‘pallescens’ / ‘pallescens’ meaning ‘becoming  pale’"
+  },
+  {
+    "name": "pallida",
+    "etymology": "From the Latin ‘pallida’ / ‘pallidus’ meaning ‘pale’"
+  },
+  {
+    "name": "paludicola",
+    "etymology": "From the Latin ‘paludicola’ / ‘paludicola’ meaning ‘marsh-inhabitant’"
+  },
+  {
+    "name": "paludosa",
+    "etymology": "From the Latin ‘paludosa’ / ‘paludosus’ meaning ‘relating to a marsh’"
+  },
+  {
+    "name": "palustris",
+    "etymology": "From the Latin ‘palustris’ / ‘palustris’ meaning ‘relating to a marsh’"
+  },
+  {
+    "name": "pandifolium",
+    "etymology": "From the Latin ‘pandi’ / ‘pandus’ meaning ‘bent’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "paniculata",
+    "etymology": "From the Latin ‘paniculata’ / ‘paniculatus’ meaning ‘tufted’"
+  },
+  {
+    "name": "paniculatum",
+    "etymology": "From the Latin ‘paniculatum’ / ‘paniculatus’ meaning ‘tufted’"
+  },
+  {
+    "name": "paniculatus",
+    "etymology": "From the Latin ‘paniculatus’ / ‘paniculatus’ meaning ‘tufted’"
+  },
+  {
+    "name": "paniculiformis",
+    "etymology": "From the Latin ‘paniculi’ / ‘panicula’ meaning ‘tuft’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "papilionacea",
+    "etymology": "From the Latin ‘papilionacea’ / ‘papilionaceus’ meaning ‘butterfly-like’"
+  },
+  {
+    "name": "papillosa",
+    "etymology": "From the Latin ‘papillosa’ / ‘papillosus’ meaning ‘equipped with nipples’"
+  },
+  {
+    "name": "pappei",
+    "etymology": "From the German ‘pappei’ / ‘Pappe’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "papulosum",
+    "etymology": "From the Latin ‘papulosum’ / ‘pappulosus’ meaning ‘invested with hairy seeds’"
+  },
+  {
+    "name": "papyracea",
+    "etymology": "From the Latin ‘papyracea’ / ‘papyraceus’ meaning ‘papyrus-like’"
+  },
+  {
+    "name": "paradoxa",
+    "etymology": "From the Latin ‘paradoxa’ / ‘paradoxus’ meaning ‘paradoxical’"
+  },
+  {
+    "name": "partita",
+    "etymology": "From the Latin ‘partita’ / ‘partitus’ meaning ‘divided’"
+  },
+  {
+    "name": "parva",
+    "etymology": "From the Latin ‘parva’ / ‘parvus’ meaning ‘small’"
+  },
+  {
+    "name": "parviflora",
+    "etymology": "From the Latin ‘parvi’ / ‘parvus’ meaning ‘small’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "parviflorum",
+    "etymology": "From the Latin ‘parvi’ / ‘parvus’ meaning ‘small’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "parvifolia",
+    "etymology": "From the Latin ‘parvi’ / ‘parvus’ meaning ‘small’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "parvula",
+    "etymology": "From the Latin ‘parvula’ / ‘parvulus’ meaning ‘somewhat small’"
+  },
+  {
+    "name": "parvulum",
+    "etymology": "From the Latin ‘parvulum’ / ‘parvulus’ meaning ‘somewhat small’"
+  },
+  {
+    "name": "patersonia",
+    "etymology": "From the English ‘patersonia’ / ‘Paterson’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "patula",
+    "etymology": "From the Latin ‘patula’ / ‘patulus’ meaning ‘standing open’"
+  },
+  {
+    "name": "patulum",
+    "etymology": "From the Latin ‘patulum’ / ‘patulus’ meaning ‘standing open’"
+  },
+  {
+    "name": "pauciflora",
+    "etymology": "From the Latin ‘pauci’ / ‘pauci’ meaning ‘few’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "pauciflorum",
+    "etymology": "From the Latin ‘pauci’ / ‘pauci’ meaning ‘few’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "peacockiae",
+    "etymology": "From the English ‘peacockiae’ / ‘Peacock’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "pectinata",
+    "etymology": "From the Latin ‘pectinata’ / ‘pectinatus’ meaning ‘combed’"
+  },
+  {
+    "name": "pectinatus",
+    "etymology": "From the Latin ‘pectinatus’ / ‘pectinatus’ meaning ‘combed’"
+  },
+  {
+    "name": "pedicellatus",
+    "etymology": "From the Latin ‘pedicellatus’ / ‘pedicellatus’ meaning ‘covered with lice-like features’"
+  },
+  {
+    "name": "pedunculata",
+    "etymology": "From the Latin ‘pedunculata’ / ‘pedunculatus’ meaning ‘equipped with a stalk’"
+  },
+  {
+    "name": "pellucida",
+    "etymology": "From the Latin ‘pellucida’ / ‘transparent’ meaning ‘’"
+  },
+  {
+    "name": "peltatum",
+    "etymology": "From the Latin ‘peltatum’ / ‘peltatus’ meaning ‘armed with small crescent shields’"
+  },
+  {
+    "name": "penicillata",
+    "etymology": "From the Latin ‘penicillata’ / ‘penicillatus’ meaning ‘resembling a paintbrush’"
+  },
+  {
+    "name": "peninsulae",
+    "etymology": "From the Latin ‘peninsula’ / ‘peninsulae’ meaning ‘occurring in the Cape Peninsula’"
+  },
+  {
+    "name": "peragua",
+    "etymology": "From the Latin ‘peragua’ / ‘peraguus’ meaning ‘widespread’"
+  },
+  {
+    "name": "perennis",
+    "etymology": "From the Latin ‘perennis’ / ‘perennis’ meaning ‘perennial’"
+  },
+  {
+    "name": "perfoliata",
+    "etymology": "From the Latin ‘perfoliata’ / ‘perfoliatus’ meaning ‘entirely covered with leaves’"
+  },
+  {
+    "name": "perigrinum",
+    "etymology": "From the Latin ‘perigrinum’ / ‘perigrinus’ meaning ‘wandering’"
+  },
+  {
+    "name": "perpensa",
+    "etymology": "From the Latin ‘perpensa’ / ‘perpensus’ meaning ‘hung vertically’"
+  },
+  {
+    "name": "perplexa",
+    "etymology": "From the Latin ‘perplexa’ / ‘perplexus’ meaning ‘intricate’"
+  },
+  {
+    "name": "perplexus",
+    "etymology": "From the Latin ‘perplexus’ / ‘perplexus’ meaning ‘intricate’"
+  },
+  {
+    "name": "personata",
+    "etymology": "From the Latin ‘personata’ / ‘personata’ meaning ‘the plant called burdock’"
+  },
+  {
+    "name": "pes-caprae",
+    "etymology": "From the Latin ‘pes’ / ‘pes’ meaning ‘foot’; and the Latin ‘caprae’ / ‘capra’ meaning ‘sne-goat’."
+  },
+  {
+    "name": "petiolaris",
+    "etymology": "From the Latin ‘petiolaris’ / ‘petiolaris’ meaning ‘equipped with a little foot’"
+  },
+  {
+    "name": "phleoides",
+    "etymology": "From the Greek ‘phle’ / ‘phloos?’ meaning ‘bark?’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pholiuroides",
+    "etymology": "From the Greek ‘pholi’ / ‘phollis?’ meaning ‘coin?’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "physodes",
+    "etymology": "From the Greek ‘phys’ / ‘physe’ meaning ‘a pair of bellows’; and the Greek ‘odes’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "phyteuma",
+    "etymology": "From the Greek ‘phyteuma’ / ‘phyteuma’ meaning ‘that which is planted’"
+  },
+  {
+    "name": "pillansii",
+    "etymology": "From the English ‘pillansii’ / ‘Pillans’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "pilosa",
+    "etymology": "From the Latin ‘pilosa’ / ‘pilosus’ meaning ‘hairy’"
+  },
+  {
+    "name": "pilosellifolia",
+    "etymology": "From the Latin ‘piloselli’ / ‘pilosellus’ meaning ‘covered with tiny hairs’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "piloselloides",
+    "etymology": "From the Latin ‘piloselli’ / ‘pilosellus’ meaning ‘covered with tiny hairs’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pilosum",
+    "etymology": "From the Latin ‘pilosum’ / ‘pilosus’ meaning ‘hairy’"
+  },
+  {
+    "name": "pilulifera",
+    "etymology": "From the Latin ‘piluli’ / ‘pilulus’ meaning ‘tiny hair’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "pinaster",
+    "etymology": "From the Latin ‘pinaster’ / ‘pinaster’ meaning ‘pine-tree’"
+  },
+  {
+    "name": "pinguior",
+    "etymology": "From the Latin ‘pinguior’ / ‘pinguior’ meaning ‘fatter’"
+  },
+  {
+    "name": "pinifolia",
+    "etymology": "From the Latin ‘pini’ / ‘pinus’ meaning ‘pine-tree’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "pinifolium",
+    "etymology": "From the Latin ‘pini’ / ‘pinus’ meaning ‘pine-tree’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "pinifolius",
+    "etymology": "From the Latin ‘pini’ / ‘pinus’ meaning ‘pine-tree’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "pinnata",
+    "etymology": "From the Latin ‘pinnata’ / ‘pinnatus’ meaning ‘feathered’"
+  },
+  {
+    "name": "pinnatifida",
+    "etymology": "From the Latin ‘pinnatifida’ / ‘pinnatifidus’ meaning ‘divided into feathers’"
+  },
+  {
+    "name": "pinnatum",
+    "etymology": "From the Latin ‘pinnatum’ / ‘pinnatus’ meaning ‘feathered’"
+  },
+  {
+    "name": "pinnatus",
+    "etymology": "From the Latin ‘pinnatus’ / ‘pinnatus’ meaning ‘feathered’"
+  },
+  {
+    "name": "pinnulatus",
+    "etymology": "From the Latin ‘pinnulatus’ / ‘pinnulatus’ meaning ‘covered in small feathers’"
+  },
+  {
+    "name": "planifolia",
+    "etymology": "From the Latin ‘plani’ / ‘planus’ meaning ‘flat’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "plantagineus",
+    "etymology": "From the Latin ‘plantagineus’ / ‘plantagineus’ meaning ‘resembling a plantain’"
+  },
+  {
+    "name": "plantago-aquatica",
+    "etymology": "From the Latin ‘plantago’ / ‘plantago’ meaning ‘plantain’; and the Latin ‘aquatica’ / ‘aquaticus’ meaning ‘relating to water’."
+  },
+  {
+    "name": "platypetalum",
+    "etymology": "From the Greek ‘plat y’ / ‘platys’ meaning ‘broad’; and the Greek ‘petalum’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "plicatum",
+    "etymology": "From the Latin ‘plicatum’ / ‘plicatus’ meaning ‘folded’"
+  },
+  {
+    "name": "plukenetiana",
+    "etymology": "From the English ‘plunketiana’ / ‘Plunkenet’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "plukenetii",
+    "etymology": "From the English ‘plunkenetii’ / ‘Plunkenet’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "plumosa",
+    "etymology": "From the Latin ‘plumosa’ / ‘plumosus’ meaning ‘feathered’"
+  },
+  {
+    "name": "plurisectum",
+    "etymology": "From the Latin ‘pluri’ / ‘pluri’ meaning ‘many’; and the Latin ‘sectum’ / ‘sectus’ meaning ‘cut’."
+  },
+  {
+    "name": "pluvialis",
+    "etymology": "From the Latin ‘pluvialis’ / ‘pluvialis’ meaning ‘prompted by rain’"
+  },
+  {
+    "name": "pocockiae",
+    "etymology": "From the English ‘pocockiae’ / ‘Pocock’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "poiretii",
+    "etymology": "From the French ‘poiretii’ / ‘Poiret’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "polifolia",
+    "etymology": "From the Latin ‘poli’ / ‘polus’ meaning ‘the end of an axis’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "polygaloides",
+    "etymology": "From the Greek ‘polygal’ / ‘polygala’ meaning ‘a fabaceous shrub’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "polygonifolia",
+    "etymology": "From the Greek ‘polygoni’ / ‘polygon’ meaning ‘polygon’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "polygonoides",
+    "etymology": "From the Greek ‘polygon’ / ‘polygon’ meaning ‘polygon’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "polyphylla",
+    "etymology": "From the Greek ‘poly’ / ‘poly’ meaning ‘many’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "polypodioides",
+    "etymology": "From the Greek ‘polypdi’ / ‘polypodos???’ meaning ‘a plant having a many-legged appearance????’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "polypogonoides",
+    "etymology": "From the Greek ‘polypogon’ / ‘polypogon’ meaning ‘a bearded plant’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "polystachya",
+    "etymology": "From the Greek ‘poly’ / ‘poly’ meaning ‘many’; and the Greek ‘stachya’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "polystachyos",
+    "etymology": "From the Greek ‘poly’ / ‘poly’ meaning ‘many’; and the Greek ‘stachos’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "pomeridiana",
+    "etymology": "From the Latin ‘pomeridiana’ / ‘pomeridianus’ meaning ‘relating to the afternoon’"
+  },
+  {
+    "name": "populifolia",
+    "etymology": "From the Latin ‘populi’ / ‘populus’ meaning ‘poplar’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "porosus",
+    "etymology": "From the Latin ‘porosus’ / ‘porosus’ meaning ‘bearing pores’"
+  },
+  {
+    "name": "praemorsa",
+    "etymology": "From the Latin ‘praemorsa’ / ‘praemorsus’ meaning ‘nibbled in the forepart’"
+  },
+  {
+    "name": "pratensis",
+    "etymology": "From the Latin ‘pratensis’ / ‘pratensis’ meaning ‘relating to meadows’"
+  },
+  {
+    "name": "priorii",
+    "etymology": "From the English ‘priorii’ / ‘Prior’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "prismatocarpa",
+    "etymology": "From the Greek ‘prismato’ / ‘prismatos’ meaning ‘sawn’; and the Greek ‘carpa’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "procumbens",
+    "etymology": "From the Latin ‘procumbens’ / ‘procumbens’ meaning ‘lying down’"
+  },
+  {
+    "name": "prolifera",
+    "etymology": "From the Latin ‘prolifera’ / ‘proliferus’ meaning ‘bearing much fruit or many flowers’"
+  },
+  {
+    "name": "prominens",
+    "etymology": "From the Latin ‘prominens’ / ‘prominens’ meaning ‘standing out’"
+  },
+  {
+    "name": "promontorii",
+    "etymology": "From the Latin ‘promontorii’ / ‘promontorius’ meaning ‘relating to a promontary, ie the Cape????’"
+  },
+  {
+    "name": "prostrata",
+    "etymology": "From the Latin ‘prostrata’ / ‘prostratus’ meaning ‘lying down’"
+  },
+  {
+    "name": "prostratum",
+    "etymology": "From the Latin ‘prostratum’ / ‘prostratus’ meaning ‘lying down’"
+  },
+  {
+    "name": "proteoides",
+    "etymology": "From the Greek ‘prote’ / ‘protea’ meaning ‘the flower named after the Greek god of change’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pruinosa",
+    "etymology": "From the Latin ‘pruinosa’ / ‘pruinosus’ meaning ‘frosty’"
+  },
+  {
+    "name": "pseudocapsicum",
+    "etymology": "From the Greek ‘pseudo’ / ‘pseudes’ meaning ‘untrue (I can't type false)’; and the Latin ‘capsicum’ / ‘capsicum’ meaning ‘pepper’."
+  },
+  {
+    "name": "pseudovirgatum",
+    "etymology": "From the Greek ‘pseudo’ / ‘pseudes’ meaning ‘untrue (I can't type false)’; and the Latin ‘virgatum’ / ‘virgatus’ meaning ‘made of twigs’."
+  },
+  {
+    "name": "psoraleoides",
+    "etymology": "From the Greek ‘psorale’ / ‘psoralea’ meaning ‘a plant of a warty appearance’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pterocarpa",
+    "etymology": "From the Greek ‘ptero’ / ‘pteron’ meaning ‘wing’; and the Greek ‘carpus’ / ‘karpos’ meaning ‘fruit’."
+  },
+  {
+    "name": "pteroides",
+    "etymology": "From the Greek ‘pter’ / ‘pteron’ meaning ‘wing’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pterophorus",
+    "etymology": "From the Greek ‘ptero’ / ‘pteron’ meaning ‘wing’; and the Greek ‘phorus’ / ‘phoros’ meaning ‘bearing’."
+  },
+  {
+    "name": "pubescens",
+    "etymology": "From the Latin ‘pubescens’ / ‘pubescens’ meaning ‘becoming downy’"
+  },
+  {
+    "name": "pubigerus",
+    "etymology": "From the Latin ‘pubigerus’ / ‘pubigerus’ meaning ‘bearing down’"
+  },
+  {
+    "name": "pugioniformis",
+    "etymology": "From the Latin ‘pugnioni’ / ‘pugnus’ meaning ‘fist’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’."
+  },
+  {
+    "name": "pulchella",
+    "etymology": "From the Latin ‘pulchella’ / ‘pulchellus’ meaning ‘beautiful and small’"
+  },
+  {
+    "name": "pulverulenta",
+    "etymology": "From the Latin ‘pulverulenta’ / ‘pulverulentus’ meaning ‘dusty’"
+  },
+  {
+    "name": "pumilum",
+    "etymology": "From the Latin ‘pumilum’ / ‘pumilus’ meaning ‘dwarfish’"
+  },
+  {
+    "name": "punctata   ",
+    "etymology": "From the Latin ‘punctata’ / ‘punctatus’ meaning ‘punctured or pock-marked’"
+  },
+  {
+    "name": "punctatus",
+    "etymology": "From the Latin ‘puctatus’ / ‘punctatus’ meaning ‘punctured or pock-marked’"
+  },
+  {
+    "name": "punctoria",
+    "etymology": "From the Latin ‘puctoria’ / ‘punctorius’ meaning ‘resembling a pricker’"
+  },
+  {
+    "name": "punctorius",
+    "etymology": "From the Latin ‘punctorius’ / ‘punctorius’ meaning ‘resembling a pricker’"
+  },
+  {
+    "name": "punctulatum",
+    "etymology": "From the Latin ‘punctulatum’ / ‘punctulatus’ meaning ‘slightly pock-marked’"
+  },
+  {
+    "name": "pungens",
+    "etymology": "From the Latin ‘pungens’ / ‘pungens’ meaning ‘prickly’"
+  },
+  {
+    "name": "purpurascens",
+    "etymology": "From the Latin ‘purpurascens’ / ‘purpurascens’ meaning ‘becoming purple’"
+  },
+  {
+    "name": "purpurea",
+    "etymology": "From the Latin ‘purpurea’ / ‘purpureus’ meaning ‘purple’"
+  },
+  {
+    "name": "purpureus",
+    "etymology": "From the Latin ‘purpureus’ / ‘purpureus’ meaning ‘purple’"
+  },
+  {
+    "name": "pusilla",
+    "etymology": "From the Latin ‘pusilla’ / ‘pusillus’ meaning ‘very small’"
+  },
+  {
+    "name": "pusillus",
+    "etymology": "From the Latin ‘pusillus’ / ‘pusillus’ meaning ‘very small’"
+  },
+  {
+    "name": "pustulata",
+    "etymology": "From the Latin ‘pustulata’ / ‘pustulatus’ meaning ‘blistered’"
+  },
+  {
+    "name": "pycnantha",
+    "etymology": "From the Greek ‘pcyn’ / ‘pyknos’ meaning ‘dense’; and the Greek ‘antha’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "pygmaea",
+    "etymology": "From the Latin ‘pygmaea’ / ‘pygmaea’ meaning ‘dwarfish’"
+  },
+  {
+    "name": "pyracantha",
+    "etymology": "From the Greek ‘pyra’ / ‘pyr’ meaning ‘fire’; and the Greek ‘acantha’ / ‘akantha’ meaning ‘thorn’."
+  },
+  {
+    "name": "pyramidalis",
+    "etymology": "From the Latin ‘pyrmidalis’ / ‘pyramidalis’ meaning ‘pyramid-shaped’"
+  },
+  {
+    "name": "pyrophila",
+    "etymology": "From the Greek ‘pyro’ / ‘pyr’ meaning ‘fire’; and the Greek ‘phila’ / ‘philein’ meaning ‘love’."
+  },
+  {
+    "name": "pyxidiflora",
+    "etymology": "From the Greek ‘pyxidi’ / ‘pyxidion’ meaning ‘small box’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "quadrangularis",
+    "etymology": "From the Latin ‘quadrangularis’ / ‘quadrangularis’ meaning ‘quadrangular’"
+  },
+  {
+    "name": "quadrangulus",
+    "etymology": "From the Latin ‘quandrangulus’ / ‘quadrangulus’ meaning ‘quadrangular’"
+  },
+  {
+    "name": "quadratus",
+    "etymology": "From the Latin ‘quadratus’ / ‘quadratus’ meaning ‘quartered’"
+  },
+  {
+    "name": "quadrifolium",
+    "etymology": "From the Latin ‘quadri’ / ‘quadrus’ meaning ‘square’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "quadrisepala",
+    "etymology": "From the Latin ‘quadri’ / ‘quadrus’ meaning ‘square’; and the Latin ‘sepala’ / ‘sepulus’ meaning ‘sepal’."
+  },
+  {
+    "name": "quadrisulcata",
+    "etymology": "From the Latin ‘quadri’ / ‘quadrus’ meaning ‘square’; and the Latin ‘sulcatus’ / ‘sulcatus’ meaning ‘furrowed’."
+  },
+  {
+    "name": "quercifolia",
+    "etymology": "From the Latin ‘querci’ / ‘quercus’ meaning ‘oak’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "quinquedentata  Thunberg",
+    "etymology": "From the Latin ‘quinque’ / ‘quinque’ meaning ‘five’; and the Latin ‘dentata’ / ‘dentatus’ meaning ‘toothed’."
+  },
+  {
+    "name": "quinquefarius",
+    "etymology": "From the Latin ‘quinque’ / ‘quinque’ meaning ‘five’; and the Latin ‘farius’ / ‘farius??? No such word’ meaning ‘speaking????’."
+  },
+  {
+    "name": "quinquefolia",
+    "etymology": "From the Latin ‘quinque’ / ‘quinque’ meaning ‘five’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "racemosa",
+    "etymology": "From the Latin ‘racemosa’ / ‘racemosus’ meaning ‘clustered’"
+  },
+  {
+    "name": "racemosus",
+    "etymology": "From the Latin ‘racemosus’ / ‘racemosus’ meaning ‘clustered’"
+  },
+  {
+    "name": "radens",
+    "etymology": "From the Latin ‘radens’ / ‘radens?????’ meaning ‘rooting????’"
+  },
+  {
+    "name": "radiata",
+    "etymology": "From the Latin ‘radiata’ / ‘radiatus’ meaning ‘radiating’"
+  },
+  {
+    "name": "radulifolium",
+    "etymology": "From the Latin ‘raduli’ / ‘radula’ meaning ‘scraper’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ramentacea",
+    "etymology": "From the Latin ‘ramentacea’ / ‘ramentaceus’ meaning ‘resembling shavings’"
+  },
+  {
+    "name": "ramosa",
+    "etymology": "From the Latin ‘ramosa’ / ‘ramosus’ meaning ‘branched’"
+  },
+  {
+    "name": "ramosissima",
+    "etymology": "From the Latin ‘ramossisima’ / ‘ramossisimus’ meaning ‘excessively branched’"
+  },
+  {
+    "name": "rangei",
+    "etymology": "From the German ‘rangei’ / ‘Range’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "rapaceum",
+    "etymology": "From the Latin ‘rapaceum’ / ‘rapaceus?’ meaning ‘greedy (of space)?’"
+  },
+  {
+    "name": "rapunculoides",
+    "etymology": "From the Latin ‘rapuncul’ / ‘rapunculus’ meaning ‘a little turnip’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "rariflorum",
+    "etymology": "From the Latin ‘rari’ / ‘rarus’ meaning ‘rare’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "recognita",
+    "etymology": "From the Latin ‘recognita’ / ‘recognitus’ meaning ‘reviewed??? Overlooking???’"
+  },
+  {
+    "name": "rectum",
+    "etymology": "From the Latin ‘rectum’ / ‘rectus’ meaning ‘straight’"
+  },
+  {
+    "name": "recurvata",
+    "etymology": "From the Latin ‘recurvata’ / ‘recurvatus’ meaning ‘curved back’"
+  },
+  {
+    "name": "reflexa",
+    "etymology": "From the Latin ‘reflexa’ / ‘reflexus’ meaning ‘bending back’"
+  },
+  {
+    "name": "refracta",
+    "etymology": "From the Latin ‘refracta’ / ‘refractus’ meaning ‘bent back’"
+  },
+  {
+    "name": "rehmannii",
+    "etymology": "From the German ‘rehmannii’ / ‘Rehmann’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "remota",
+    "etymology": "From the Latin ‘remota’ / ‘remotus’ meaning ‘remote’"
+  },
+  {
+    "name": "repandus",
+    "etymology": "From the Latin ‘repandus’ / ‘repandus’ meaning ‘opening back’"
+  },
+  {
+    "name": "repens",
+    "etymology": "From the Latin ‘repens’ / ‘repens’ meaning ‘creeping’"
+  },
+  {
+    "name": "reptans",
+    "etymology": "From the Latin ‘reptans’ / ‘reptans’ meaning ‘creeping’"
+  },
+  {
+    "name": "restioides",
+    "etymology": "From the Greek ‘resti’ / ‘restio’ meaning ‘a grass-like plant’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "reticulata",
+    "etymology": "From the Latin ‘reticulata’ / ‘reticulatus’ meaning ‘net-like’"
+  },
+  {
+    "name": "retortum",
+    "etymology": "From the Latin ‘retortum’ / ‘retortus’ meaning ‘bent back’"
+  },
+  {
+    "name": "retroflexa",
+    "etymology": "From the Latin ‘retroflexa’ / ‘retroflexus’ meaning ‘bending back’"
+  },
+  {
+    "name": "retrofractus",
+    "etymology": "From the Latin ‘retrofractus’ / ‘retrofractus’ meaning ‘bent back’"
+  },
+  {
+    "name": "retusum",
+    "etymology": "From the Latin ‘retusum’ / ‘retusus’ meaning ‘blunt’"
+  },
+  {
+    "name": "revoluta",
+    "etymology": "From the Latin ‘revoluta’ / ‘revolutus’ meaning ‘turned round’"
+  },
+  {
+    "name": "revolutum",
+    "etymology": "From the Latin ‘revolutum’ / ‘revolutus’ meaning ‘turned round’"
+  },
+  {
+    "name": "rhinocerotis",
+    "etymology": "From the Greek ‘rhinocer’ / ‘rhinoceros’ meaning ‘rhinoceros’; and the Greek ‘otis’ / ‘otis’ meaning ‘ear’."
+  },
+  {
+    "name": "rhyncanthum",
+    "etymology": "From the Greek ‘rhync’ / ‘rhynkos’ meaning ‘snout’; and the Greek ‘anthum’ / ‘anthos’ meaning ‘flower’."
+  },
+  {
+    "name": "richardiana",
+    "etymology": "From the English ‘richardiana’ / ‘Richard’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "rigida",
+    "etymology": "From the Latin ‘rigida’ / ‘rigidus’ meaning ‘rigid’"
+  },
+  {
+    "name": "rigidifolia",
+    "etymology": "From the Latin ‘rigidi’ / ‘rigidus’ meaning ‘rigid’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "rigidissima",
+    "etymology": "From the Latin ‘rigidissima’ / ‘rigidissimus’ meaning ‘very rigid’"
+  },
+  {
+    "name": "rigidum",
+    "etymology": "From the Latin ‘rigidum’ / ‘rigidus’ meaning ‘rigid’"
+  },
+  {
+    "name": "rigidus",
+    "etymology": "From the Latin ‘rigidus’ / ‘rigidus’ meaning ‘rigid’"
+  },
+  {
+    "name": "ringens",
+    "etymology": "From the Latin ‘ringens’ / ‘ringens’ meaning ‘gaping’"
+  },
+  {
+    "name": "rosea",
+    "etymology": "From the Latin ‘rosea’ / ‘roseus’ meaning ‘rose-coloured’"
+  },
+  {
+    "name": "rosmarinifolia",
+    "etymology": "From the Latin ‘rosmarini’ / ‘rosmarinus’ meaning ‘the herb rosemary’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "rosmarinifolius",
+    "etymology": "From the Latin ‘rosmarini’ / ‘rosmarinus’ meaning ‘the herb rosemary’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "rostratus",
+    "etymology": "From the Latin ‘rostratus’ / ‘rostratus’ meaning ‘beaked’"
+  },
+  {
+    "name": "rotundifolium",
+    "etymology": "From the Latin ‘rotundi’ / ‘rotundus’ meaning ‘round’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "rubicunda",
+    "etymology": "From the Latin ‘rubicunda’ / ‘rubicundus’ meaning ‘red’"
+  },
+  {
+    "name": "rubicundis",
+    "etymology": "From the Latin ‘rubicundis’ / ‘rubicundus’ meaning ‘red’"
+  },
+  {
+    "name": "rubida",
+    "etymology": "From the Latin ‘rubida’ / ‘rubidus’ meaning ‘red’"
+  },
+  {
+    "name": "rubiginosa",
+    "etymology": "From the Latin ‘rubiginosa’ / ‘rubiginosus’ meaning ‘red’"
+  },
+  {
+    "name": "rubra",
+    "etymology": "From the Latin ‘rubra’ / ‘ruber’ meaning ‘red’"
+  },
+  {
+    "name": "rubricaulis",
+    "etymology": "From the Latin ‘rubri’ / ‘ruber’ meaning ‘red’; and the Latin ‘caulis’ / ‘caulis’ meaning ‘stalk’."
+  },
+  {
+    "name": "rubrum",
+    "etymology": "From the Latin ‘rubrum’ / ‘ruber’ meaning ‘red’"
+  },
+  {
+    "name": "rudis",
+    "etymology": "From the Latin ‘rudis’ / ‘rudis’ meaning ‘slender stick’"
+  },
+  {
+    "name": "rufa",
+    "etymology": "From the Latin ‘rufa’ / ‘rufus’ meaning ‘red’"
+  },
+  {
+    "name": "rufescens",
+    "etymology": "From the Latin ‘rufescens’ / ‘rufescens’ meaning ‘reddening’"
+  },
+  {
+    "name": "rugosa",
+    "etymology": "From the Latin ‘rugosa’ / ‘rugosus’ meaning ‘wrinkled’"
+  },
+  {
+    "name": "rugosus",
+    "etymology": "From the Latin ‘rugosus’ / ‘rugosus’ meaning ‘wrinkled’"
+  },
+  {
+    "name": "rupestris",
+    "etymology": "From the Latin ‘rupestris’ / ‘rupestis’ meaning ‘associated with caves or rocks’"
+  },
+  {
+    "name": "ruscifolia",
+    "etymology": "From the Latin ‘rusci’ / ‘ruscus’ meaning ‘the plant called butcher's broom’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "sabulosa",
+    "etymology": "From the Latin ‘sabulosa’ / ‘sabulosus’ meaning ‘sandy’"
+  },
+  {
+    "name": "sabulosum",
+    "etymology": "From the Latin ‘sabulosum’ / ‘sabulosus’ meaning ‘sandy’"
+  },
+  {
+    "name": "saggitatus",
+    "etymology": "From the Latin ‘saggitatus’ / ‘saggitatus’ meaning ‘equipped with arrows’"
+  },
+  {
+    "name": "sagittatum",
+    "etymology": "From the Latin ‘saggitatum’ / ‘saggitatus’ meaning ‘equipped with arrows’"
+  },
+  {
+    "name": "saligna",
+    "etymology": "From the Latin ‘saligna’ / ‘salignus’ meaning ‘relating to willows’"
+  },
+  {
+    "name": "salignum",
+    "etymology": "From the Latin ‘salignum’ / ‘salignus’ meaning ‘relating to willows’"
+  },
+  {
+    "name": "salteri",
+    "etymology": "From the English ‘salter’ / ‘Salter’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "salviifolia",
+    "etymology": "From the Latin ‘salvii’ / ‘salvia’ meaning ‘sage’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "sanguinalis",
+    "etymology": "From the Latin ‘sanguinalis’ / ‘sanguinalis’ meaning ‘bloody’"
+  },
+  {
+    "name": "sanguinea",
+    "etymology": "From the Latin ‘sanguinea’ / ‘sanguineus’ meaning ‘blood-red’"
+  },
+  {
+    "name": "sanguineus",
+    "etymology": "From the Latin ‘sanguineus’ / ‘sanguineus’ meaning ‘blood-red’"
+  },
+  {
+    "name": "sarcocladus",
+    "etymology": "From the Greek ‘sarco’ / ‘sarkos’ meaning ‘flesh’; and the Greek ‘cladus’ / ‘klados’ meaning ‘twig’."
+  },
+  {
+    "name": "sarcocolla",
+    "etymology": "From the Greek ‘sarco’ / ‘sarkos’ meaning ‘flesh’; and the Latin ‘collus’ / ‘collum’ meaning ‘neck’."
+  },
+  {
+    "name": "sarcoides",
+    "etymology": "From the Greek ‘sarc’ / ‘sarkos’ meaning ‘flesh’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "sarmentosa",
+    "etymology": "From the Latin ‘sarmentosa’ / ‘sarmentosus’ meaning ‘twiggy’"
+  },
+  {
+    "name": "sarmentosum",
+    "etymology": "From the Latin ‘sarmentosum’ / ‘sarmentosus’ meaning ‘twiggy’"
+  },
+  {
+    "name": "sarniensis",
+    "etymology": "From the English ‘sarniensis’ / ‘Sarnia’ meaning ‘a region in Canada’"
+  },
+  {
+    "name": "sativa",
+    "etymology": "From the Latin ‘sativa’ / ‘sativus’ meaning ‘cultivated’"
+  },
+  {
+    "name": "satureioides",
+    "etymology": "From the Latin ‘saturei’ / ‘satureia’ meaning ‘the pot-herb cunila’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "saxifraga",
+    "etymology": "From the Latin ‘saxi’ / ‘saxum’ meaning ‘boulder’; and the Latin ‘fraga’ / ‘fragans’ meaning ‘breaking’."
+  },
+  {
+    "name": "scabra",
+    "etymology": "From the Latin ‘scabra’ / ‘scaber’ meaning ‘scabby’"
+  },
+  {
+    "name": "scabrida",
+    "etymology": "From the Latin ‘scabrida’ / ‘scabridus’ meaning ‘rough’"
+  },
+  {
+    "name": "scabriusculus",
+    "etymology": "From the Latin ‘scabriusculus’ / ‘scabriusculus’ meaning ‘a little rougher’"
+  },
+  {
+    "name": "scabrosa",
+    "etymology": "From the Latin ‘scabrosa’ / ‘scabrosus’ meaning ‘rough’"
+  },
+  {
+    "name": "scabrum",
+    "etymology": "From the Latin ‘scabrum’ / ‘scaber’ meaning ‘rough’"
+  },
+  {
+    "name": "scandens",
+    "etymology": "From the Latin ‘scandens’ / ‘scandens’ meaning ‘climbing’"
+  },
+  {
+    "name": "scapiflorus",
+    "etymology": "From the Latin ‘scapi’ / ‘scapus’ meaning ‘sheet of paper’; and the Latin ‘florus’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "schinoides",
+    "etymology": "From the Greek ‘schin’ / ‘schinos’ meaning ‘pepper-tree’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "schlechteri",
+    "etymology": "From the German ‘schlecteri’ / ‘Schlecter’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "schlechterianum",
+    "etymology": "From the German ‘schlecterianum’ / ‘Schlecter’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "schumannianum",
+    "etymology": "From the German ‘schumannianum’ / ‘Schumann’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "scillaris",
+    "etymology": "From the Latin ‘scillaris’ / ‘scillaris’ meaning ‘resembling a sea-onion’"
+  },
+  {
+    "name": "scirpoideus",
+    "etymology": "From the Latin ‘scirp’ / ‘scirpus’ meaning ‘reed’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "scolymocephala",
+    "etymology": "From the Greek ‘scolymo’ / ‘skolymos’ meaning ‘artichoke’; and the Greek ‘cephala’ / ‘kephale’ meaning ‘head’."
+  },
+  {
+    "name": "scoparia",
+    "etymology": "From the Latin ‘scopraria’ / ‘scoprarius’ meaning ‘sweeper’"
+  },
+  {
+    "name": "scorzonerifolia",
+    "etymology": "From the Italian ‘scorzoneri’ / ‘scorzonero’ meaning ‘relating to bark’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "secunda",
+    "etymology": "From the Latin ‘secundus’ / ‘second’ meaning ‘’"
+  },
+  {
+    "name": "secundatum",
+    "etymology": "From the Latin ‘secundatum’ / ‘secundatus’ meaning ‘adapted’"
+  },
+  {
+    "name": "sedifolium",
+    "etymology": "From the Latin ‘sedi’ / ‘sedum’ meaning ‘leek’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "selloana",
+    "etymology": "From the Latin? ‘selloana/sellariolus’ / ‘sello/seat-like’ meaning ‘commemorating a botanist of this name?’"
+  },
+  {
+    "name": "semibaccata",
+    "etymology": "From the Latin ‘semibaccata’ / ‘semibaccatus’ meaning ‘half endowed with berries’"
+  },
+  {
+    "name": "semiquinquefidum",
+    "etymology": "From the Latin ‘semquinquefidum’ / ‘semiquinquefidushalf divided into fives’ meaning ‘’"
+  },
+  {
+    "name": "senecioides",
+    "etymology": "From the Latin ‘seneci’ / ‘senecio’ meaning ‘groundsel’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "sericea",
+    "etymology": "From the Latin ‘sericea’ / ‘sericeus’ meaning ‘silky’"
+  },
+  {
+    "name": "serpens",
+    "etymology": "From the Latin ‘serpens’ / ‘serpens’ meaning ‘creeping’"
+  },
+  {
+    "name": "serpyllacea",
+    "etymology": "From the Latin ‘serpyllacea’ / ‘serpyllaceus’ meaning ‘resembling thyme’"
+  },
+  {
+    "name": "serpyllifolia",
+    "etymology": "From the Latin ‘serpylli’ / ‘serpyllum’ meaning ‘thyme’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "serpylloides",
+    "etymology": "From the Latin ‘serpyll’ / ‘serpyllum’ meaning ‘thyme’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "serrata",
+    "etymology": "From the Latin ‘serrata’ / ‘serratus’ meaning ‘serrated’"
+  },
+  {
+    "name": "serratum",
+    "etymology": "From the Latin ‘serratus’ / ‘serratus’ meaning ‘serrated’"
+  },
+  {
+    "name": "sesamoides",
+    "etymology": "From the Latin ‘sesam’ / ‘sesamum’ meaning ‘oily plant’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "sessiliflora",
+    "etymology": "From the Latin ‘sessili’ / ‘sessilis’ meaning ‘spreading’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "sessiliflorum",
+    "etymology": "From the Latin ‘sessili’ / ‘sessilis’ meaning ‘spreading’; and the Latin ‘florum’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "sessilifolium",
+    "etymology": "From the Latin ‘sessili’ / ‘sessilis’ meaning ‘spreading’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "sessilis",
+    "etymology": "From the Latin ‘sessilis’ / ‘sessilis’ meaning ‘spreading’"
+  },
+  {
+    "name": "setacea",
+    "etymology": "From the Latin ‘setacea’ / ‘setaceus’ meaning ‘bristly’"
+  },
+  {
+    "name": "setaceum",
+    "etymology": "From the Latin ‘setaceum’ / ‘setaceus’ meaning ‘bristly’"
+  },
+  {
+    "name": "setifolia",
+    "etymology": "From the Latin ‘seti’ / ‘setum’ meaning ‘bristle’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "setiger",
+    "etymology": "From the Latin ‘seti’ / ‘setum’ meaning ‘bristle’; and the Latin ‘ger’ / ‘gerus’ meaning ‘wielding’."
+  },
+  {
+    "name": "setosa",
+    "etymology": "From the Latin ‘setosa’ / ‘setosus’ meaning ‘bristly’"
+  },
+  {
+    "name": "sexfaria",
+    "etymology": "From the Latin ‘sex’ / ‘sex’ meaning ‘six’; and the Latin ‘faria’ / ‘farius??? No such word’ meaning ‘speaking????’."
+  },
+  {
+    "name": "sieberi",
+    "etymology": "From the German ‘sieberi’ / ‘Sieber’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "silenifolia",
+    "etymology": "From the Latin ‘sileni’ / ‘silene’ meaning ‘a carnation-like kind of plant’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "silenoides",
+    "etymology": "From the Latin ‘silen’ / ‘silene’ meaning ‘a carnation-like kind of plant’; and the Greek ‘oides’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "similis",
+    "etymology": "From the Latin ‘similis’ / ‘similis’ meaning ‘similar’"
+  },
+  {
+    "name": "simplex",
+    "etymology": "From the Latin ‘simplex’ / ‘simplex’ meaning ‘simple’"
+  },
+  {
+    "name": "sociorum",
+    "etymology": "From the Latin ‘sociorum’ / ‘sociorum’ meaning ‘of the allies’"
+  },
+  {
+    "name": "solitaria",
+    "etymology": "From the Latin ‘solitaria’ / ‘solitarius’ meaning ‘solitary’"
+  },
+  {
+    "name": "sparsisora",
+    "etymology": "From the Latin ‘sparsi’ / ‘sparsus’ meaning ‘sparse’; and the Latin ‘????misprint?’ / ‘????’ meaning ‘????’."
+  },
+  {
+    "name": "sparteum",
+    "etymology": "From the Latin ‘sparteum’ / ‘sparteus’ meaning ‘resembling the plant called broom’"
+  },
+  {
+    "name": "spathalum",
+    "etymology": "From the Latin ‘spathulum’ / ‘spathulum’ meaning ‘a broad  piece’"
+  },
+  {
+    "name": "speciosa",
+    "etymology": "From the Latin ‘speciosa’ / ‘speciosus’ meaning ‘beautiful’"
+  },
+  {
+    "name": "speciosissima",
+    "etymology": "From the Latin ‘speciocissima’ / ‘speciossisimus’ meaning ‘most beautiful’"
+  },
+  {
+    "name": "speciosus",
+    "etymology": "From the Latin ‘speciosus’ / ‘speciosus’ meaning ‘beautiful’"
+  },
+  {
+    "name": "spermacoccea",
+    "etymology": "From the Greek ‘sperma’ / ‘sperma’ meaning ‘seed’; and the Latin ‘coccea’ / ‘cocceus’ meaning ‘invested with berries’."
+  },
+  {
+    "name": "sphacelata",
+    "etymology": "From the Greek ‘sphacelata’ / ‘sphakelatos’ meaning ‘gangrened’"
+  },
+  {
+    "name": "sphaerospermus",
+    "etymology": "From the Greek ‘sphaero’ / ‘sphaeros’ meaning ‘sphere’; and the Greek ‘spermus’ / ‘sperma’ meaning ‘seed’."
+  },
+  {
+    "name": "spicata",
+    "etymology": "From the Latin ‘spicata’ / ‘spicatus’ meaning ‘spiked’"
+  },
+  {
+    "name": "spicatum",
+    "etymology": "From the Latin ‘spicatum’ / ‘spicatus’ meaning ‘spiked’"
+  },
+  {
+    "name": "spicatus",
+    "etymology": "From the Latin ‘spicatus’ / ‘spicatus’ meaning ‘spiked’"
+  },
+  {
+    "name": "spicigerus",
+    "etymology": "From the Latin ‘spici’ / ‘spica’ meaning ‘spike’; and the Latin ‘gerus’ / ‘gerus’ meaning ‘wielding’."
+  },
+  {
+    "name": "spiniformis",
+    "etymology": "From the Latin ‘spini’ / ‘spina’ meaning ‘thorn’; and the Latin ‘formis’ / ‘formis’ meaning ‘formis’."
+  },
+  {
+    "name": "spinosa",
+    "etymology": "From the Latin ‘spinosa’ / ‘spinosus’ meaning ‘thorny’"
+  },
+  {
+    "name": "spinosum",
+    "etymology": "From the Latin ‘spinosum’ / ‘spinosus’ meaning ‘thorny’"
+  },
+  {
+    "name": "spinulosum",
+    "etymology": "From the Latin ‘spinulosum’ / ‘spinulosus’ meaning ‘somewhat thorny’"
+  },
+  {
+    "name": "spirale",
+    "etymology": "From the Latin ‘spirale’ / ‘spiralis’ meaning ‘spiral’"
+  },
+  {
+    "name": "spiralepis",
+    "etymology": "From the Latin ‘spira’ / ‘spiralis’ meaning ‘spiral’; and the Greek ‘lepis’ / ‘lepis’ meaning ‘scale’."
+  },
+  {
+    "name": "spiralis",
+    "etymology": "From the Latin ‘spiralis’ / ‘spiralis’ meaning ‘spiral’"
+  },
+  {
+    "name": "spissifolium",
+    "etymology": "From the Latin ‘spissi’ / ‘spissus’ meaning ‘thick or dense’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "splendens",
+    "etymology": "From the Latin ‘splendens’ / ‘splendens’ meaning ‘splendid’"
+  },
+  {
+    "name": "sporadicus",
+    "etymology": "From the Latin ‘sporadicus’ / ‘sporadicus’ meaning ‘sporadic’"
+  },
+  {
+    "name": "spumosa",
+    "etymology": "From the Latin ‘spumosa’ / ‘spumosus’ meaning ‘foamy’"
+  },
+  {
+    "name": "spuria",
+    "etymology": "From the Latin ‘spuria’ / ‘spurius’ meaning ‘inauthentic’"
+  },
+  {
+    "name": "spurium",
+    "etymology": "From the Latin ‘spurium’ / ‘spurius’ meaning ‘inauthentic’"
+  },
+  {
+    "name": "squamosa",
+    "etymology": "From the Latin ‘squamosa’ / ‘squamosus’ meaning ‘scaly’"
+  },
+  {
+    "name": "squarrosa",
+    "etymology": "From the Latin ‘squarrosa’ / ‘squarrosus’ meaning ‘scurfy’"
+  },
+  {
+    "name": "steenbergensis",
+    "etymology": "From the Dutch ‘steenbergensis’ / ‘relating to the Steenberg in South Africa’ meaning ‘’"
+  },
+  {
+    "name": "stellata",
+    "etymology": "From the Latin ‘stelllata’ / ‘stellatus’ meaning ‘made star-like’"
+  },
+  {
+    "name": "stellatifolium",
+    "etymology": "From the Latin ‘stellati’ / ‘stellatus’ meaning ‘made star-like’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "stellenbossiensis",
+    "etymology": "From the Dutch ‘stellenbossiensis’ / ‘Stellenbosch’ meaning ‘relating to the town of Stellenbosch’"
+  },
+  {
+    "name": "stenopetalum",
+    "etymology": "From the Greek ‘steno’ / ‘stenos’ meaning ‘short’; and the Greek ‘petalum’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "stenopetalus",
+    "etymology": "From the Greek ‘steno’ / ‘stenos’ meaning ‘short’; and the Greek ‘petalus’ / ‘petalon’ meaning ‘petal’."
+  },
+  {
+    "name": "stenophylla",
+    "etymology": "From the Greek ‘steno’ / ‘stenos’ meaning ‘short’; and the Greek ‘phylla’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "stenus",
+    "etymology": "From the Greek ‘stenus’ / ‘stenos’ meaning ‘short’"
+  },
+  {
+    "name": "sterilis",
+    "etymology": "From the Latin ‘sterilis’ / ‘sterilis’ meaning ‘sterile’"
+  },
+  {
+    "name": "stipitata",
+    "etymology": "From the Latin ‘stipitata’ / ‘stipitatus????’ meaning ‘resembling a log????’"
+  },
+  {
+    "name": "stipulacea",
+    "etymology": "From the Latin ‘stipulacea’ / ‘stipulaceus’ meaning ‘straw-like’"
+  },
+  {
+    "name": "stipulaceum",
+    "etymology": "From the Latin ‘stipulaceum’ / ‘stipulaceus’ meaning ‘straw-like’"
+  },
+  {
+    "name": "stipulaceus",
+    "etymology": "From the Latin ‘stipulaceum’ / ‘stipulaceus’ meaning ‘straw-like’"
+  },
+  {
+    "name": "stipularis",
+    "etymology": "From the Latin ‘stipularis’ / ‘stipularis’ meaning ‘straw-like’"
+  },
+  {
+    "name": "stoechadifolia",
+    "etymology": "From the Greek ‘stoechadi’ / ‘stoechas’ meaning ‘lavender’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "stokoei",
+    "etymology": "From the English ‘stokoei’ / ‘Stokoe’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "stolonifera",
+    "etymology": "From the Latin ‘stoloni’ / ‘stolo’ meaning ‘sucker’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "striata",
+    "etymology": "From the Latin ‘striata’ / ‘striatus’ meaning ‘striped’"
+  },
+  {
+    "name": "striatum",
+    "etymology": "From the Latin ‘striatum’ / ‘striatus’ meaning ‘striped’"
+  },
+  {
+    "name": "stricta",
+    "etymology": "From the Latin ‘stricta’ / ‘strictus’ meaning ‘compressed’"
+  },
+  {
+    "name": "strictum",
+    "etymology": "From the Latin ‘strictum’ / ‘strictus’ meaning ‘compressed’"
+  },
+  {
+    "name": "strictus",
+    "etymology": "From the Latin ‘strictus’ / ‘strictus’ meaning ‘compressed’"
+  },
+  {
+    "name": "strigosa",
+    "etymology": "From the Latin ‘strigosa’ / ‘strigosus’ meaning ‘lank’"
+  },
+  {
+    "name": "strobilifera",
+    "etymology": "From the Latin ‘strobili’ / ‘strobilus’ meaning ‘pine-cone’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "strobilinum",
+    "etymology": "From the Greek ‘strobilinum’ / ‘strobilinum’ meaning ‘a little pine-cone’"
+  },
+  {
+    "name": "suaveolens",
+    "etymology": "From the Latin ‘suave’ / ‘suave’ meaning ‘pleasantly’; and the Latin ‘olens’ / ‘olens’ meaning ‘smelling’."
+  },
+  {
+    "name": "subcapitata",
+    "etymology": "From the Latin ‘subcapitata’ / ‘subcapitatus’ meaning ‘with heads below’"
+  },
+  {
+    "name": "subdivaricata",
+    "etymology": "From the Latin ‘subdivaricata’ / ‘subdivaricatus’ meaning ‘branching below’"
+  },
+  {
+    "name": "subsetacea",
+    "etymology": "From the Latin ‘subsetacea’ / ‘subsetaceus’ meaning ‘with bristles below’"
+  },
+  {
+    "name": "subulata",
+    "etymology": "From the Latin ‘subulata’ / ‘subulatus’ meaning ‘with  awls below’"
+  },
+  {
+    "name": "succotrina",
+    "etymology": "From the ???? ‘succotrina’ / ‘succotrinus’ meaning ‘deriving from the island of Sokotra’"
+  },
+  {
+    "name": "suffruticosum",
+    "etymology": "From the Latin ‘suffruticosum’ / ‘suffruticosus’ meaning ‘bushy below’"
+  },
+  {
+    "name": "sulcata",
+    "etymology": "From the Latin ‘sulcata’ / ‘sulcatus’ meaning ‘furrowed’"
+  },
+  {
+    "name": "sulphurea",
+    "etymology": "From the Latin ‘sulphurea’ / ‘sulphureus’ meaning ‘yellow’"
+  },
+  {
+    "name": "sylvatica",
+    "etymology": "From the Latin ‘sylvatica’ / ‘sylvaticus’ meaning ‘pertaining to woodland’"
+  },
+  {
+    "name": "tabulare",
+    "etymology": "From the Latin ‘tabulare’ / ‘tabularis’ meaning ‘tabular’"
+  },
+  {
+    "name": "tabularis",
+    "etymology": "From the Latin ‘tabularis’ / ‘tabularis’ meaning ‘tabular’"
+  },
+  {
+    "name": "tagetes",
+    "etymology": "From the Etruscan ‘tagetes’ / ‘Tages’ meaning ‘a city in Etruria’"
+  },
+  {
+    "name": "taxifolia",
+    "etymology": "From the Latin ‘taxi’ / ‘taxus’ meaning ‘yew’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "tectorum",
+    "etymology": "From the Latin ‘tectorum’ / ‘tecti’ meaning ‘roofs’"
+  },
+  {
+    "name": "tegens",
+    "etymology": "From the Latin ‘tegens’ / ‘tegens’ meaning ‘covering’"
+  },
+  {
+    "name": "telipogonis",
+    "etymology": "From the Greek? ‘’ / ‘tele?’ meaning ‘far off?’; and the Greek ‘pogonis’ / ‘pogon’ meaning ‘beard’."
+  },
+  {
+    "name": "temulentum",
+    "etymology": "From the Latin ‘temulentum’ / ‘temulentus’ meaning ‘drunken’"
+  },
+  {
+    "name": "tenella",
+    "etymology": "From the Latin ‘tenella’ / ‘tenellus’ meaning ‘somewhat tender’"
+  },
+  {
+    "name": "tenellus",
+    "etymology": "From the Latin ‘tenellus’ / ‘tenellus’ meaning ‘somewhat tender’"
+  },
+  {
+    "name": "tenuicornis",
+    "etymology": "From the Latin ‘tenui’ / ‘tenuus’ meaning ‘fine or sparse’; and the Latin ‘cornis’ / ‘cornus’ meaning ‘horn’."
+  },
+  {
+    "name": "tenuifolia",
+    "etymology": "From the Latin ‘tenui’ / ‘tenuus’ meaning ‘fine or sparse’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "tenuifolium",
+    "etymology": "From the Latin ‘tenui’ / ‘tenuus’ meaning ‘fine or sparse’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "tenuifolius",
+    "etymology": "From the Latin ‘tenui’ / ‘tenuus’ meaning ‘fine or sparse’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "tenuis",
+    "etymology": "From the Latin ‘tenuis’ / ‘tenuis’ meaning ‘fine’"
+  },
+  {
+    "name": "tenuissima",
+    "etymology": "From the Latin ‘tenuissima’ / ‘tenuissimus’ meaning ‘extremely fine’"
+  },
+  {
+    "name": "teretifolia",
+    "etymology": "From the Latin ‘tereti’ / ‘teres’ meaning ‘rounded’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "teretifolium",
+    "etymology": "From the Latin ‘tereti’ / ‘teres’ meaning ‘rounded’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "ternata",
+    "etymology": "From the Latin ‘ternata’ / ‘ternatus’ meaning ‘divided into three’"
+  },
+  {
+    "name": "ternifolia",
+    "etymology": "From the Latin ‘terni’ / ‘terni’ meaning ‘having three each’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "terrestris",
+    "etymology": "From the Latin ‘terrestris’ / ‘terrestris’ meaning ‘relating to the earth’"
+  },
+  {
+    "name": "tetragona",
+    "etymology": "From the Latin ‘tetragona’ / ‘tetragonus’ meaning ‘having four sides’"
+  },
+  {
+    "name": "tetragonum",
+    "etymology": "From the Latin ‘tetragonum’ / ‘tetragonus’ meaning ‘having four sides’"
+  },
+  {
+    "name": "tetragonus",
+    "etymology": "From the Latin ‘tetragonus’ / ‘tetragonus’ meaning ‘having four sides’"
+  },
+  {
+    "name": "tetraphyllum",
+    "etymology": "From the Greek ‘tetra’ / ‘tetra’ meaning ‘four’; and the Greek ‘phyllum’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "textilis",
+    "etymology": "From the Latin ‘textilis’ / ‘textilis’ meaning ‘woven’"
+  },
+  {
+    "name": "thelliana",
+    "etymology": "From the German? ‘thelliana’ / ‘Thell?’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "theodori-friesii",
+    "etymology": "From the Dutch ‘theodori-friessii’ / ‘Theodorus Friesius’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "thermalis",
+    "etymology": "From the Latin ‘thermalis’ / ‘thermalis’ meaning ‘relating to hot springs’"
+  },
+  {
+    "name": "thesioides",
+    "etymology": "From the Greek ‘thesio’ / ‘thesion’ meaning ‘toad-flax’; and the Greek ‘oides’ / ‘olens’ meaning ‘in the form of’."
+  },
+  {
+    "name": "thimifolia",
+    "etymology": "From the Latin ‘thimi’ / ‘thimum’ meaning ‘thyme’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "thomii",
+    "etymology": "From the Dutch ‘thomii’ / ‘Thom’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "thunbergiana",
+    "etymology": "From the Swedish ‘thunbergiana’ / ‘Thunberg’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "thunbergii",
+    "etymology": "From the Swedish ‘thunbergii’ / ‘Thunberg’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "thymifolia",
+    "etymology": "From the Latin ‘thymi’ / ‘thymum’ meaning ‘thyme’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "thyrsifera",
+    "etymology": "From the Latin ‘thyrsi’ / ‘thyrsus’ meaning ‘stalk or thorn’; and the Latin ‘fera’ / ‘ferus’ meaning ‘bearing’."
+  },
+  {
+    "name": "thyrsiflora",
+    "etymology": "From the Latin ‘thyrsi’ / ‘thyrsus’ meaning ‘rod’; and the Latin ‘flora’ / ‘flos’ meaning ‘flower’."
+  },
+  {
+    "name": "thyrsoides",
+    "etymology": "From the Latin ‘thyrs’ / ‘thyrsus’ meaning ‘rod’; and the Greek ‘oides’ / ‘olens’ meaning ‘in the form of’."
+  },
+  {
+    "name": "tinctum",
+    "etymology": "From the Latin ‘tinctum’ / ‘tincta’ meaning ‘dyed’"
+  },
+  {
+    "name": "tomentosa",
+    "etymology": "From the Latin ‘tomentosa’ / ‘tomentosus’ meaning ‘downy’"
+  },
+  {
+    "name": "tomentosum",
+    "etymology": "From the Latin ‘tomentosum’ / ‘tomentosus’ meaning ‘downy’"
+  },
+  {
+    "name": "tongo",
+    "etymology": ""
+  },
+  {
+    "name": "tortuosa",
+    "etymology": "From the Latin ‘tortuosa’ / ‘tortuosus’ meaning ‘winding’"
+  },
+  {
+    "name": "trachysperma",
+    "etymology": "From the Greek ‘trachy’ / ‘trachys’ meaning ‘rough’; and the Greek ‘sperma’ / ‘sperma’ meaning ‘seed’."
+  },
+  {
+    "name": "transparens",
+    "etymology": "From the Latin ‘transparens’ / ‘transparens’ meaning ‘transparent’"
+  },
+  {
+    "name": "triandra",
+    "etymology": "From the Greek ‘tri’ / ‘tri’ meaning ‘three’; and the Greek ‘andra’ / ‘andros’ meaning ‘anther’."
+  },
+  {
+    "name": "triangularis",
+    "etymology": "From the Latin ‘triangularis’ / ‘triangularis’ meaning ‘triangular’"
+  },
+  {
+    "name": "trichodes",
+    "etymology": "From the Greek ‘tricho’ / ‘thrix’ meaning ‘hair’; and the Greek ‘odes’ / ‘oides’ meaning ‘in the form of’."
+  },
+  {
+    "name": "trichophyllus",
+    "etymology": "From the Greek ‘tricho’ / ‘thrix’ meaning ‘hair’; and the Greek ‘phyllus’ / ‘phyllon’ meaning ‘leaf’."
+  },
+  {
+    "name": "trichotomus",
+    "etymology": "From the Greek ‘trichotomus’ / ‘trichotomos’ meaning ‘divided into three’"
+  },
+  {
+    "name": "tricolor",
+    "etymology": "From the Latin ‘tricolor’ / ‘tricolor’ meaning ‘three-coloured’"
+  },
+  {
+    "name": "tricuspidata",
+    "etymology": "From the Latin ‘tri’ / ‘tri’ meaning ‘three’; and the Latin ‘cuspidata’ / ‘cuspidatus’ meaning ‘pointed’."
+  },
+  {
+    "name": "tricuspidatus",
+    "etymology": "From the Latin ‘tri’ / ‘tri’ meaning ‘three’; and the Latin ‘cuspidatus’ / ‘cuspidatus’ meaning ‘pointed’."
+  },
+  {
+    "name": "tridentata",
+    "etymology": "From the Latin ‘tridentata’ / ‘tridentatus’ meaning ‘three-toothed’"
+  },
+  {
+    "name": "triflora",
+    "etymology": "From the Latin ‘triflora’ / ‘triflorus’ meaning ‘bearing three flowers’"
+  },
+  {
+    "name": "triflorum",
+    "etymology": "From the Latin ‘triflorum’ / ‘triflorus’ meaning ‘bearing three flowers’"
+  },
+  {
+    "name": "triflorus",
+    "etymology": "From the Latin ‘triflorus’ / ‘triflorus’ meaning ‘bearing three flowers’"
+  },
+  {
+    "name": "trifurcata",
+    "etymology": "From the Latin ‘trifurcata’ / ‘trifurcatus’ meaning ‘shaped like a trident’"
+  },
+  {
+    "name": "triloba",
+    "etymology": "From the Latin ‘triloba’ / ‘trilobus’ meaning ‘having three lobes’"
+  },
+  {
+    "name": "trilopha",
+    "etymology": "From the Greek ‘tri’ / ‘tri’ meaning ‘three’; and the Greek ‘lopha’ / ‘lophos’ meaning ‘crest’."
+  },
+  {
+    "name": "trinervia",
+    "etymology": "From the Latin ‘trinervis’ / ‘trinervis’ meaning ‘having three nerves (or veins?)’"
+  },
+  {
+    "name": "trionum",
+    "etymology": "From the Latin ‘trionum’ / ‘trionus’ meaning ‘resembling the reptiles of the genus Trionyx’"
+  },
+  {
+    "name": "tripetala",
+    "etymology": "From the Greek ‘tripetala’ / ‘tripetalos’ meaning ‘three-petalled’"
+  },
+  {
+    "name": "tripolium",
+    "etymology": "From the Latin ‘tripolium’ / ‘tripolius’ meaning ‘having three divisions of pollen’"
+  },
+  {
+    "name": "triqueter",
+    "etymology": "From the Latin ‘triqueter’ / ‘triquetrus’ meaning ‘triangular’"
+  },
+  {
+    "name": "triquetra",
+    "etymology": "From the Latin ‘triquetra’ / ‘triquetrus’ meaning ‘triangular’"
+  },
+  {
+    "name": "tristachya",
+    "etymology": "From the Greek ‘tri’ / ‘tri’ meaning ‘three’; and the Greek ‘stachya’ / ‘stachys’ meaning ‘spike’."
+  },
+  {
+    "name": "triste",
+    "etymology": "From the Latin ‘triste’ / ‘tristis’ meaning ‘sad’"
+  },
+  {
+    "name": "tristis",
+    "etymology": "From the Latin ‘tristis’ / ‘tristis’ meaning ‘sad’"
+  },
+  {
+    "name": "triticea",
+    "etymology": "From the Latin ‘triticea’ / ‘triticeus’ meaning ‘wheaten’"
+  },
+  {
+    "name": "triticeus",
+    "etymology": "From the Latin ‘triticeus’ / ‘triticeus’ meaning ‘wheaten’"
+  },
+  {
+    "name": "tuberosa",
+    "etymology": "From the Latin ‘tuberosa’ / ‘tuberosus’ meaning ‘lumpy’"
+  },
+  {
+    "name": "tuberosum",
+    "etymology": "From the Latin ‘tuberosum’ / ‘tuberosus’ meaning ‘lumpy’"
+  },
+  {
+    "name": "tubulosa",
+    "etymology": "From the Latin ‘tubulosa’ / ‘tubulosus’ meaning ‘equipped with small pipes’"
+  },
+  {
+    "name": "tubulosus",
+    "etymology": "From the Latin ‘tubulosus’ / ‘tubulosus’ meaning ‘equipped with small pipes’"
+  },
+  {
+    "name": "tunbridgense",
+    "etymology": "From the English ‘tunbridgense’ / ‘Tunbridge’ meaning ‘????commemorating a botanist of this name; deriving from Tunbridge Wells?’"
+  },
+  {
+    "name": "turbinata",
+    "etymology": "From the Latin ‘turbinata’ / ‘turbinatus’ meaning ‘conical’"
+  },
+  {
+    "name": "turgida",
+    "etymology": "From the Latin ‘turgida’ / ‘turgidus’ meaning ‘swollen’"
+  },
+  {
+    "name": "umbellata",
+    "etymology": "From the Latin ‘umbellata’ / ‘umbellatus’ meaning ‘equipped with parasols’"
+  },
+  {
+    "name": "umbellatum",
+    "etymology": "From the Latin ‘umbellatum’ / ‘umbellatus’ meaning ‘equipped with parasols’"
+  },
+  {
+    "name": "umbellatus",
+    "etymology": "From the Latin ‘umbellatus’ / ‘umbellatus’ meaning ‘equipped with parasols’"
+  },
+  {
+    "name": "umbrosa",
+    "etymology": "From the Latin ‘umbrosa’ / ‘umbrosus’ meaning ‘shady’"
+  },
+  {
+    "name": "uncinata",
+    "etymology": "From the Latin ‘uncinata’ / ‘uncinatus’ meaning ‘furnished with hooks’"
+  },
+  {
+    "name": "undulata",
+    "etymology": "From the Latin ‘undulata’ / ‘undulatus’ meaning ‘undulating’"
+  },
+  {
+    "name": "undulatum",
+    "etymology": "From the Latin ‘undulatum’ / ‘undulatus’ meaning ‘undulating’"
+  },
+  {
+    "name": "undulatus",
+    "etymology": "From the Latin ‘undulatus’ / ‘undulatus’ meaning ‘undulating’"
+  },
+  {
+    "name": "unguicularis",
+    "etymology": "From the Latin ‘unguicularis’ / ‘unguicularis’ meaning ‘claw-like’"
+  },
+  {
+    "name": "unifolia",
+    "etymology": "From the Latin ‘unifolia’ / ‘unifolius’ meaning ‘having one leaf’"
+  },
+  {
+    "name": "uniolae",
+    "etymology": "From the Latin ‘uniolae’ / ‘uniola’ meaning ‘unknown plant’"
+  },
+  {
+    "name": "urceolata",
+    "etymology": "From the Latin ‘urceolata’ / ‘urceolatus’ meaning ‘equipped with little pitchers’"
+  },
+  {
+    "name": "urna-viridis",
+    "etymology": "From the Latin ‘urna’ / ‘urna’ meaning ‘urn’; and the Latin ‘viridis’ / ‘viridis’ meaning ‘green’."
+  },
+  {
+    "name": "urvellei",
+    "etymology": "From the German ‘urvelli’ / ‘Urvell?’ meaning ‘commemorating a botanist of this name’"
+  },
+  {
+    "name": "ustulata",
+    "etymology": "From the Latin ‘ustulata’ / ‘ustulatus’ meaning ‘slightly scorched’"
+  },
+  {
+    "name": "utriculosa",
+    "etymology": "From the Latin ‘utricolosa’ / ‘utricolosus’ meaning ‘equipped with tiny bottles’"
+  },
+  {
+    "name": "uvaria",
+    "etymology": "From the Latin ‘uvaria’ / ‘uvarius’ meaning ‘grape-like’"
+  },
+  {
+    "name": "vaginata",
+    "etymology": "From the Latin ‘vaginata’ / ‘vaginatus’ meaning ‘sheathed’"
+  },
+  {
+    "name": "vaginatum",
+    "etymology": "From the Latin ‘vaginatum’ / ‘vaginatus’ meaning ‘sheathed’"
+  },
+  {
+    "name": "vaginatus",
+    "etymology": "From the Latin ‘vaginatus’ / ‘vaginatus’ meaning ‘sheathed’"
+  },
+  {
+    "name": "vaginellata",
+    "etymology": "From the Latin ‘vaginellata’ / ‘vaginellatus’ meaning ‘equipped with tiny sheathes’"
+  },
+  {
+    "name": "vaginulata",
+    "etymology": "From the Latin ‘vaginulata’ / ‘vaginulatus’ meaning ‘somewhat sheathed’"
+  },
+  {
+    "name": "valliantii",
+    "etymology": "From the French ‘valliantii’ / ‘Valliant’ meaning ‘commemorating a botanist by this name’"
+  },
+  {
+    "name": "variabilis",
+    "etymology": "From the Latin ‘variabilis’ / ‘variabilis’ meaning ‘variable’"
+  },
+  {
+    "name": "variegata",
+    "etymology": "From the Latin ‘variegata’ / ‘variegatus’ meaning ‘variegated’"
+  },
+  {
+    "name": "vegeta",
+    "etymology": "From the Latin ‘vegeta’ / ‘vegetus’ meaning ‘vigorous’"
+  },
+  {
+    "name": "venosa",
+    "etymology": "From the Latin ‘venosa’ / ‘venosus’ meaning ‘veined’"
+  },
+  {
+    "name": "ventosa",
+    "etymology": "From the Latin ‘ventosa’ / ‘ventosus’ meaning ‘windy’"
+  },
+  {
+    "name": "ventricosus",
+    "etymology": "From the Latin ‘ventricosus’ / ‘ventricosus’ meaning ‘relating to the belly’"
+  },
+  {
+    "name": "venusta",
+    "etymology": "From the Latin ‘venusta’ / ‘venustus’ meaning ‘charming’"
+  },
+  {
+    "name": "venustula",
+    "etymology": "From the Latin ‘venustula’ / ‘venustulus’ meaning ‘somewhat charming’"
+  },
+  {
+    "name": "verbascifolius",
+    "etymology": "From the Latin ‘verbasci’ / ‘verbascum’ meaning ‘the plant of that name’; and the Latin ‘folius’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "verreauxii",
+    "etymology": "From the French ‘verreauxii’ / ‘Verraux’ meaning ‘commemorating the botanist of this name’"
+  },
+  {
+    "name": "verrucosula",
+    "etymology": "From the Latin ‘verrucosula’ / ‘verrucosulus’ meaning ‘somewhat warty’"
+  },
+  {
+    "name": "versicolor",
+    "etymology": "From the Latin ‘versicolor’ / ‘versicolor’ meaning ‘changing colour’"
+  },
+  {
+    "name": "verticillata",
+    "etymology": "From the Latin ‘verticillata’ / ‘verticillatus’ meaning ‘whirling’"
+  },
+  {
+    "name": "veruculata",
+    "etymology": "From the Latin ‘veruculata’ / ‘veruculatus’ meaning ‘furnished with small pikes’"
+  },
+  {
+    "name": "vesicaria",
+    "etymology": "From the Latin ‘vesicaria’ / ‘vesicarius’ meaning ‘bladder-like’"
+  },
+  {
+    "name": "vesicatoria",
+    "etymology": "From the Latin ‘vesicatoria’ / ‘vesicatorius’ meaning ‘relating to the bladder’"
+  },
+  {
+    "name": "vestita",
+    "etymology": "From the Latin ‘vestita’ / ‘vestitus’ meaning ‘clad’"
+  },
+  {
+    "name": "vigilans",
+    "etymology": "From the Latin ‘vigilans’ / ‘vigilans’ meaning ‘keeping watch’"
+  },
+  {
+    "name": "villosa",
+    "etymology": "From the Latin ‘villosa’ / ‘villosus’ meaning ‘shaggy’"
+  },
+  {
+    "name": "villosula",
+    "etymology": "From the Latin ‘villosula’ / ‘villosulus’ meaning ‘somewhat shaggy’"
+  },
+  {
+    "name": "villosus",
+    "etymology": "From the Latin ‘villosus’ / ‘villosus’ meaning ‘shaggy’"
+  },
+  {
+    "name": "viminea",
+    "etymology": "From the Latin ‘viminea’ / ‘vimineus’ meaning ‘willow-like’"
+  },
+  {
+    "name": "violacea",
+    "etymology": "From the Latin ‘violacea’ / ‘violaceus’ meaning ‘purple’"
+  },
+  {
+    "name": "violifolia",
+    "etymology": "From the Latin ‘violi’ / ‘viola’ meaning ‘violet’; and the Latin ‘folia’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "virgata",
+    "etymology": "From the Latin ‘virgata’ / ‘virgatus’ meaning ‘made of twigs’"
+  },
+  {
+    "name": "virgatum",
+    "etymology": "From the Latin ‘virgatum’ / ‘virgatus’ meaning ‘made of twigs’"
+  },
+  {
+    "name": "virginicus",
+    "etymology": "From the English ‘virginicus’ / ‘Virginia’ meaning ‘deriving from this state in the USA’"
+  },
+  {
+    "name": "viride",
+    "etymology": "From the Latin ‘viride’ / ‘viridis’ meaning ‘green’"
+  },
+  {
+    "name": "viridifolium",
+    "etymology": "From the Latin ‘viridi’ / ‘viridis’ meaning ‘green’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "viridis",
+    "etymology": "From the Latin ‘viridis’ / ‘viridis’ meaning ‘green’"
+  },
+  {
+    "name": "viscaria",
+    "etymology": "From the Latin ‘viscaria’ / ‘viscarius’ meaning ‘resembling mistletoe?????’"
+  },
+  {
+    "name": "viscosa",
+    "etymology": "From the Latin ‘viscosa’ / ‘viscosus’ meaning ‘sticky’"
+  },
+  {
+    "name": "vitifolium",
+    "etymology": "From the Latin ‘viti’ / ‘vitis’ meaning ‘vine’; and the Latin ‘folium’ / ‘folium’ meaning ‘leaf’."
+  },
+  {
+    "name": "volubilis",
+    "etymology": "From the Latin ‘volubilis’ / ‘volubilis’ meaning ‘prone to turn around’"
+  },
+  {
+    "name": "volucris",
+    "etymology": "From the Latin ‘volucris’ / ‘volucris’ meaning ‘winged’"
+  },
+  {
+    "name": "vulgare ",
+    "etymology": "From the Latin ‘vulgare’ / ‘vulgaris’ meaning ‘common’"
+  },
+  {
+    "name": "vulgaris",
+    "etymology": "From the Latin ‘vulgaris’ / ‘vulgaris’ meaning ‘common’"
+  },
+  {
+    "name": "watsonius",
+    "etymology": "From the English ‘watsonius’ / ‘Watson’ meaning ‘commemorating a botanist of that name’"
+  },
+  {
+    "name": "whyteana",
+    "etymology": "From the English ‘whyteana’ / ‘Whyte’ meaning ‘commemorating a biblical scholar of that name’"
+  },
+  {
+    "name": "willdenowia",
+    "etymology": "From the German ‘wildenowia’ / ‘Wildenow’ meaning ‘commemorating a botanist of that name’"
+  },
+  {
+    "name": "wrightii",
+    "etymology": "From the English ‘wrightii’ / ‘Wright’ meaning ‘commemorating a botanist of that name’"
+  },
+  {
+    "name": "xanthoconus",
+    "etymology": "From the Greek ‘xantho’ / ‘xanthos’ meaning ‘yellow’; and the Latin ‘conus’ / ‘conus’ meaning ‘cone’."
+  },
+  {
+    "name": "zeyheri",
+    "etymology": "From the German ‘zeyheri’ / ‘Zeyher’ meaning ‘commemorating a botanist of that name’"
+  }
+]

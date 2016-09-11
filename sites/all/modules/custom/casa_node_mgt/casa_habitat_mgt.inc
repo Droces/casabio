@@ -19,8 +19,6 @@
  */
 function habitat_form_block_view() {
 
-  module_load_include('inc', 'node', 'node.pages');
-
   $content = "";
 
   $entity_type = 'node';
@@ -31,6 +29,7 @@ function habitat_form_block_view() {
     $entity_bundle_key => $bundle,
   ));
 
+  module_load_include('inc', 'node', 'node.pages');
   $content = drupal_get_form($bundle . '_node_form', $node, 'contribute');
 
   return $content;

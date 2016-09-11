@@ -4,6 +4,19 @@
  * Summary for the file...
  */
 
+/**
+ * CONTENTS
+
+  get_referencing_nodes
+  get_identifications_refing_observation
+  get_identifications_by_user
+  get_comm_id_refing_identification
+  get_observations_with_localities
+  get_observation_referencing_pic
+  get_observations_referencing_collection
+  get_referencings_count
+ */
+
 
 // namespace Drupal\casa_node_management\node_queries;
 
@@ -141,8 +154,7 @@ function get_identifications_by_user($uid, $limit) {
 
 /**
  * A specialised EntityFieldQuery function.
- * Gets the identifications or community identifications that reference the
- * observation specified by the provided nid.
+ * Gets the community identification that references an identification.
  *
  * @param $type
  *   The content type to get. Either 'identification' (default) or 'identification_community'.

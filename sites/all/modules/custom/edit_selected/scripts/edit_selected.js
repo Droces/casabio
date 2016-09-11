@@ -26,6 +26,7 @@
  *  .get_selectable_data()
  *  .get_selectables_map()
  *  .get_selectable_from_nid()
+ *  .get_selectables_from_nids()
  *  .refresh_current_field_indicator()
  *  // .get_selectable_field_value()
  *
@@ -51,9 +52,10 @@
  * handle_keypress_identify()
  */
 
-
 var page_is_setup = false;
 var settings_of_setup;
+var page_setup_loadings = [];
+var page_setup_loadings_message;
 
 var edit_form;
 var identify_form;
@@ -76,9 +78,11 @@ var selectables_map = {}; // Maps selectable's nid: its position in the selectab
 
 var identifications_data = [];
 var identifications_map = {}; // Maps selectable's nid: list of positions of identifications of it
+// In the form of {nid: [0, 1, 3]}
 
 var interactions_data = [];
-var interactions_map = {}; // Maps selectable's nid: list of positions of identifications of it
+var interactions_map = {}; // Maps selectable's nid: list of positions of interactions of it ?
+// In the form of {nid: [0, 1, 3]} ?
 
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
@@ -87,47 +91,28 @@ Drupal.behaviors.edit_selected = {
     // console.log('settings: ', settings);
 
     if (! page_is_setup) {
-      settings_of_setup = settings;
+      // console.log('edit_selected_behaviors');
 
-      current_page = settings.edit_selected.current_page;
-      // console.log('current_page: ', current_page);
+      define_variables(context, settings);
 
-      edit_form =         $('.edit_form_wrapper', context);
-      identify_form =     $('.identify_form_wrapper', context);
-      interaction_form =  $('.interaction_form_wrapper', context);
-      toolbar =           $('[role="toolbar"][aria-label*="primary"]', context);
-
-      selectables =       $('.selectable', context);
-      // console.log('selectables: ', selectables);
-
-      if (Drupal.edit_selected.is_page('observation_info')) {
-        page_has_map = true;
-      }
-      else {
-        page_has_map = false;
-      }
-
-
-      if (page_has_map) {
-        var colour_semi_red = [255, 0, 0, 0.4];
-        standard_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_red, 'red');
-        var colour_semi_blue = [0, 0, 255, 0.4];
-        selected_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_blue, 'blue');
-      }
+      page_setup_loadings_message = toastr.info('Page setup loading…');
 
       // fetch_selectables_data
       if (Drupal.edit_selected.is_page('observation_info') || Drupal.edit_selected.is_page('picture_info')) {
         // console.log('Calling fetch_selectables_data()');
-        Drupal.es_api_interactions.fetch_selectables_data();
+        page_setup_loadings.push('fetch_selectables_data');
+        Drupal.es_api_interactions.fetch_selectables_data(false);
       }
       if (Drupal.edit_selected.is_page('observation_info')) {
-        Drupal.es_api_interactions.fetch_identifications_data();
-        Drupal.es_api_interactions.fetch_interactions_data();
+        page_setup_loadings.push('fetch_identifications_data');
+        Drupal.es_api_interactions.fetch_identifications_data(false);
+        page_setup_loadings.push('fetch_interactions_data');
+        Drupal.es_api_interactions.fetch_interactions_data(false);
       }
 
-      // fetch_token
-      Drupal.es_api_interactions.fetch_token();
-
+      // console.log('fetch_token()');
+      page_setup_loadings.push('fetch_token');
+      Drupal.es_api_interactions.fetch_token(false);
 
 
       // Page setup
@@ -159,6 +144,11 @@ Drupal.edit_selected = {
   },
 
 
+  is_page_setup_complete: function() {
+    return (page_setup_loadings.length <= 0);
+  },
+
+
   selectables_append: function(selectable) {
     selectables = selectables.add(selectable);
   },
@@ -172,7 +162,7 @@ Drupal.edit_selected = {
 
   set_selectable: function(nid, selectable) {
     // If nid not provided, just append selectable to the end of the array
-    if (nid == null) {
+    if (typeof nid === 'undefined' || nid == null) {
       var index = selectables_data.push(selectable);
       populate_selectables_map();
       // selectables_map[nid] = index;
@@ -196,11 +186,10 @@ Drupal.edit_selected = {
   },
 
   populate_selectables_map: function() {
-    // Populate selectables_map
+    selectables_map = {};
+
     $.each(selectables_data, function( index, node ) {
-      var nid = node.id;
-      // console.log('nid: ', nid);
-      selectables_map[nid] = index;
+      selectables_map[node.id] = index;
     });
     // console.log('selectables_map: ', selectables_map);
   },
@@ -216,6 +205,20 @@ Drupal.edit_selected = {
     return selectable;
   },
 
+
+  /**
+   * Returns an array of jQuery objects.
+   */
+  get_selectables_from_nids: function(nids) {
+    selectables_out = [];
+
+    $.each(nids, function(index, nid) {
+      selectables_out.push(selectables.find('.property-nid:contains("' + nid + '")')
+        .parents('.selectable'));
+    });
+    return selectables_out;
+  },
+
   // ===========================================================================
   //                                      identifications_data
 
@@ -227,8 +230,12 @@ Drupal.edit_selected = {
     identifications_data.push(identification_in);
   },
 
+  /**
+   * Remember that the _map object is keyed by the obervations' nids, not the identifications' nids
+   */
   populate_identifications_map: function() {
-    // Populate selectables_map
+    identifications_map = {};
+
     $.each(identifications_data, function( index, node ) {
       var nid = node.attributes.observation;
       // console.log('nid: ', nid);
@@ -238,8 +245,9 @@ Drupal.edit_selected = {
       }
 
       identifications_map[nid].push(index);
+      // identifications_map[nid] = index;
     });
-    // console.log('identifications_map: ', identifications_map);
+    // console.log('identifications_map after population: ', identifications_map);
   },
 
   // ===========================================================================
@@ -253,8 +261,12 @@ Drupal.edit_selected = {
     interactions_data.push(interaction_in);
   },
 
+  /**
+   * Remember that the _map object is keyed by the obervations' nids, not the identifications' nids
+   */
   populate_interactions_map: function() {
-    // Populate selectables_map
+    interactions_map = {};
+
     $.each(interactions_data, function( index, node ) {
       var nid = node.attributes.observation;
       // console.log('nid: ', nid);
@@ -264,6 +276,7 @@ Drupal.edit_selected = {
       }
 
       interactions_map[nid].push(index);
+      // identifications_map[nid] = index;
     });
     // console.log('interactions_map: ', interactions_map);
   },
@@ -327,6 +340,9 @@ Drupal.edit_selected = {
   },
 
 
+  /**
+   * Makes changes to a map feature (point) representing a node's location.
+   */
   update_feature: function(nid) {
     // console.log('nid: ', nid);
     if (! page_has_map) {
@@ -334,6 +350,8 @@ Drupal.edit_selected = {
     }
 
     var features = map_layer_all_locations.getSource().getFeatures();
+
+    // Get the feature
     var feature;
     $.each(features, function(index, feature_index) {
       // console.log('feature_index: ', feature_index);
@@ -342,12 +360,13 @@ Drupal.edit_selected = {
       }
     });
 
-    // If this nid doesn't yet have a feature on the map
+    // If this nid doesn't yet have a feature on the map, create one for it.
     if (typeof feature == 'undefined') {
       var selectable = Drupal.edit_selected.get_selectable_data(nid);
       add_observation_to_map(selectable, selected_feature_style);
     }
 
+    // Otherwise, alter its longitude and latitude.
     else {
       var location = selectables_data[selectables_map[nid]].attributes.location;
       // console.log('location: ', location);
@@ -358,10 +377,64 @@ Drupal.edit_selected = {
       // console.log('coords after: ', feature.getGeometry().getCoordinates());
       Drupal.casa_map_mgt.transform_geometry_from_4326(feature);
     }
+  },
+
+
+  set_load_finished: function(nid) {
+    // console.log('nid: ', nid);
+    var selectable = Drupal.edit_selected.get_selectable_from_nid(nid)
+      .find('.loader').remove();
+  },
+
+  /**
+   * Removes the circular 'loading' indicator image from selectables.
+   *
+   * @param nids
+   *   An array of node ids.
+   */
+  set_loads_finished: function(nids) {
+    // console.log('nid: ', nid);
+    $.each(nids, function(index, nid) {
+      var selectable = Drupal.edit_selected.get_selectable_from_nid(nid)
+        .find('.loader').remove();
+    });
   }
 
-
 };
+
+
+
+  /**
+   * Sets variables needed by page, called during page load.
+   */
+function define_variables(context, settings) {
+  settings_of_setup = settings;
+
+  current_page = settings.edit_selected.current_page;
+  // console.log('current_page: ', current_page);
+
+  edit_form =         $('.edit_form_wrapper', context);
+  identify_form =     $('.identify_form_wrapper', context);
+  interaction_form =  $('.interaction_form_wrapper', context);
+  toolbar =           $('[role="toolbar"][aria-label*="primary"]', context);
+
+  selectables =       $('.selectable', context);
+  // console.log('selectables: ', selectables);
+
+  if (Drupal.edit_selected.is_page('observation_info')) {
+    page_has_map = true;
+  }
+  else {
+    page_has_map = false;
+  }
+
+  if (page_has_map) {
+    var colour_semi_red = [255, 0, 0, 0.4];
+    standard_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_red, 'red');
+    var colour_semi_blue = [0, 0, 255, 0.4];
+    selected_feature_style = Drupal.casa_map_mgt.create_style('point', 5, colour_semi_blue, 'blue');
+  }
+}
 
 
 
@@ -442,6 +515,10 @@ function add_listeners(context, settings) {
     field_shown = show_field_indicators(context, field_shown, $(this));
   });
 
+  $('[data-display="#delete-observations"]').on('click', function () {
+    delete_selected_observations(context);
+  });
+
 
 
 
@@ -476,19 +553,32 @@ function add_listeners(context, settings) {
     event.preventDefault();
     // console.log('edit form submitted.');
 
+    if (! Drupal.edit_selected.is_page_setup_complete()) {
+      toastr.warning('Page setup is not complete yet.'); // @todo add an 'undo' button
+      return null;
+    }
+
+    // --------------------------------
+    // Get altered field values
+
     var node_serialized_raw = $( this ).serializeArray();
-    console.log('node_serialized_raw: ', node_serialized_raw);
+    // console.log('node_serialized_raw: ', node_serialized_raw);
     var fields_raw = Drupal.casa_node_mgt.convert_form_to_node(node_serialized_raw);
-    console.log('fields_raw: ', fields_raw);
+    // console.log('fields_raw: ', fields_raw);
     var fields_altered = remove_unaltered_node_fields(fields_raw);
-    console.log('fields_altered: ', fields_altered);
+    // console.log('fields_altered: ', fields_altered);
 
     if ($.isEmptyObject(fields_altered)) {
       toastr.warning('Nothing to save'); // @todo add an 'undo' button
-      return false;
+      return null;
     }
 
+    // --------------------------------
+    // Convert field values into note object to save
+
     // var node = Drupal.casa_node_mgt.normalise_node(fields_altered);
+
+    // Convert {field_year[und][0][value]: "2016"} to {year: "2016"}
     var fields = Drupal.casa_node_mgt.simplify_node_fields(fields_altered, settings);
     // console.log('fields: ', fields);
 
@@ -498,6 +588,9 @@ function add_listeners(context, settings) {
     node = reformat_fields_for_API(node);
 
     // console.log('node: ', node);
+
+    // --------------------------------
+    // Apply the save to all selected nodes
 
     var nids = Drupal.selection.get_selected_nids();
 
@@ -511,6 +604,19 @@ function add_listeners(context, settings) {
       var type = "picture";
       Drupal.es_api_interactions.update_nodes(node, type, nids, context);
     }
+
+    // --------------------------------
+    // Close dialog, show loading indicators
+
+    var dialog = $(this).parents('.ui-dialog-content');
+    dialog.dialog('close');
+
+    var loader = Drupal.casa_core.get_loader_markup();
+    $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
+      selectable.append(loader);
+    });
+
+    Drupal.selection.deselect_all();
   });
 
 
@@ -567,6 +673,36 @@ function add_listeners(context, settings) {
     // Prevent submitting again.
     return false;
   });
+
+  // When each 'loading function' of the 'page setup' is completed
+  $(document).on('selectables_data_fetched', function() {
+    check_page_setup_loadings_done('fetch_selectables_data');
+  });
+  $(document).on('identifications_data_fetched', function() {
+    check_page_setup_loadings_done('fetch_identifications_data');
+  });
+  $(document).on('interactions_data_fetched', function() {
+    check_page_setup_loadings_done('fetch_interactions_data');
+  });
+  $(document).on('token_fetched', function() {
+    check_page_setup_loadings_done('fetch_token');
+  });
+}
+
+
+/**
+ * When a 'loading function' of the 'page setup' is completed, remove it from
+ * the list, and check if all loading functions have completed.
+ *
+ * @param loading_completed
+ *   Name of loading function that has just been completed.
+ */
+function check_page_setup_loadings_done(loading_completed) {
+  page_setup_loadings.splice(page_setup_loadings.indexOf(loading_completed), 1);
+
+  if (Drupal.edit_selected.is_page_setup_complete()) {
+    page_setup_loadings_message.remove();
+  }
 }
 
 
@@ -985,6 +1121,15 @@ function manage_form_add_blank_obs(form) {
 
 
 
+function delete_selected_observations(context) {
+  var type = 'observation';
+  var nids = Drupal.selection.get_selected_nids();
+  Drupal.es_api_interactions.delete_nodes(type, nids, context);
+}
+
+
+
+
 // function set_up_field_progress(context) {
 //   // console.log('Called: set_up_field_progress()');
 //   var fields_count = 10;
@@ -1022,7 +1167,7 @@ function show_field_indicators(context, field_shown, button) {
   // @todo Validate: Check that selectables data has been fetched (using AJAX).
 
   // Make sure .field-data elements are empty, and no .selectables are 'matched'.
-  selectables.find('.field-data').html('');
+  selectables.find('.field-data').empty();
   selectables.attr('data-is-match', 'false');
 
   var fields_with_data_count = 0; // How many selectables have data for this field.
@@ -1103,14 +1248,14 @@ function show_field_indicators(context, field_shown, button) {
 
 
       else if (field_name == 'identifications') {
-        // console.log('identifications_data: ', identifications_data);
         var identifications_indexes = identifications_map[parseInt(nid)];
+        // console.log('identifications_indexes: ', identifications_indexes);
 
         if (typeof identifications_indexes != 'undefined') {
 
           identifications_indexes.forEach(function(identifications_index, index) {
             if (index != 0) {
-              field_data += ', ';
+              field_data += '';
             }
             var identification = identifications_data[identifications_index];
             var certainty_label = settings_of_setup['node_info']['fields_info']
@@ -1118,8 +1263,8 @@ function show_field_indicators(context, field_shown, button) {
               [identification.attributes.certainty];
 
             field_data
-              += identification.attributes.label
-              + " (" + certainty_label + ')';
+              += '<span>' + identification.attributes.label
+              + " (" + certainty_label + ')</span>';
           });
         }
       }
@@ -1134,11 +1279,11 @@ function show_field_indicators(context, field_shown, button) {
 
           interactions_indexes.forEach(function(interaction_index, index) {
             if (index != 0) {
-              field_data += ', ';
+              // field_data += ', ';
             }
             var interaction = interactions_data[interaction_index];
             field_data
-              += interaction.attributes.label;
+              += '<span>' + interaction.attributes.label + '</span>';
           });
         }
       }
@@ -1211,9 +1356,11 @@ function set_up_keypress_mgmt(context) {
       + "<tr><td><strong>x</strong> : </td><td>Select observation</td></tr>"
       + "<tr><td><strong>c</strong> : </td><td>Un-select all observations</td></tr>"
       + "<tr><td><strong>e</strong> : </td><td>Edit selected observations</td></tr>"
-      + "<tr><td><strong>i</strong> : </td><td>Identify selected observations</td></tr>");
+      + "<tr><td><strong>i</strong> : </td><td>Identify selected observations</td></tr>"
+      + "<tr><td><strong>a</strong> : </td><td>Add interaction of selected observations</td></tr>");
 
     $(document, context).bind('keydown', 'i',         handle_keypress_identify);
+    $(document, context).bind('keydown', 'a',         handle_keypress_interaction);
   }
 
   // $(document, context).bind('keydown', 'esc',       handle_keypress_close_dialog);
@@ -1225,6 +1372,10 @@ function handle_keypress_edit() {
 
 function handle_keypress_identify() {
   identify_form.dialog('open');
+}
+
+function handle_keypress_interaction() {
+  interaction_form.dialog('open');
 }
 
 // Not needed; jQuery ui Dialogs close with 'esc' automatically.

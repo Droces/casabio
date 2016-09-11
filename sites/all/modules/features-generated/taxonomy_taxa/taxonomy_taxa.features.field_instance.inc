@@ -28,14 +28,14 @@ function taxonomy_taxa_field_default_field_instances() {
         'weight' => 1,
       ),
       'field_guide' => array(
-        'label' => 'inline',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'small' => array(
         'label' => 'inline',
@@ -72,6 +72,65 @@ function taxonomy_taxa_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-taxa-field_description'.
+  $field_instances['taxonomy_term-taxa-field_description'] = array(
+    'bundle' => 'taxa',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+      'field_guide' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'trim_length' => 200,
+        ),
+        'type' => 'text_trimmed',
+        'weight' => 5,
+      ),
+      'small' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_description',
+    'label' => 'Description',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 9,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-taxa-field_etymology'.
   $field_instances['taxonomy_term-taxa-field_etymology'] = array(
     'bundle' => 'taxa',
@@ -87,13 +146,17 @@ function taxonomy_taxa_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 8,
       ),
       'field_guide' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 6,
       ),
       'small' => array(
         'label' => 'above',
@@ -151,7 +214,7 @@ function taxonomy_taxa_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 11,
       ),
       'small' => array(
         'label' => 'above',
@@ -195,13 +258,13 @@ function taxonomy_taxa_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
+        'weight' => 9,
       ),
       'field_guide' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 10,
       ),
       'small' => array(
         'label' => 'above',
@@ -225,7 +288,7 @@ function taxonomy_taxa_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 41,
+      'weight' => 6,
     ),
   );
 
@@ -249,13 +312,9 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
       ),
       'field_guide' => array(
         'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'type' => 'text_default',
-        'weight' => 4,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
       ),
       'small' => array(
         'label' => 'inline',
@@ -304,13 +363,19 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 8,
+        'weight' => 7,
       ),
       'field_guide' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'links' => 0,
+          'view_mode' => 'thumbnail',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 1,
       ),
       'small' => array(
         'label' => 'above',
@@ -365,10 +430,62 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'weight' => 6,
       ),
       'field_guide' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'hidden',
+        'module' => 'leaflet',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'height' => 130,
+          'icon' => array(
+            'html' => '',
+            'htmlClass' => '',
+            'iconAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconImageStyle' => '',
+            'iconSize' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconType' => 'marker',
+            'iconUrl' => '',
+            'popupAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowUrl' => '',
+          ),
+          'leaflet_map' => 'OSM Mapnik',
+          'popup' => array(
+            'show' => 0,
+            'text' => '',
+          ),
+          'vector_display' => array(
+            'clickable' => 0,
+            'color' => '',
+            'dashArray' => '',
+            'fill' => 1,
+            'fillColor' => '',
+            'fillOpacity' => 0.3,
+            'opacity' => 0.9,
+            'stroke' => 1,
+            'stroke_override' => 1,
+            'weight' => 1,
+          ),
+          'zoom' => array(
+            'initialZoom' => -1,
+            'maxZoom' => -1,
+            'minZoom' => 1,
+            'scrollWheelZoom' => 0,
+          ),
+        ),
+        'type' => 'geofield_leaflet',
+        'weight' => 2,
       ),
       'small' => array(
         'label' => 'above',
@@ -423,9 +540,15 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'weight' => 3,
       ),
       'field_guide' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'links' => 0,
+          'view_mode' => 'small',
+        ),
+        'type' => 'entityreference_entity_view',
         'weight' => 0,
       ),
       'small' => array(
@@ -476,17 +599,13 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 11,
       ),
       'field_guide' => array(
-        'label' => 'inline',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'type' => 'text_default',
-        'weight' => 2,
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
       ),
       'small' => array(
         'label' => 'hidden',
@@ -548,7 +667,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
           'empty_fields_handler' => '',
         ),
         'type' => 'list_default',
-        'weight' => 1,
+        'weight' => 3,
       ),
       'small' => array(
         'label' => 'hidden',
@@ -580,6 +699,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
   t('A Life Science IDentifier (LSID) is the globally-unique code that is a reference to an authoritative source of information on this taxon. 
 It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[version].');
   t('Common names');
+  t('Description');
   t('Eg. From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’.');
   t('Etymology');
   t('LSID');

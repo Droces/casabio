@@ -1688,6 +1688,7 @@ function views_browse_views_default_views() {
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->display->display_options['title'] = 'Taxa Field Guide';
+  $handler->display->display_options['css_class'] = 'format-list';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -1709,11 +1710,6 @@ function views_browse_views_default_views() {
   $handler->display->display_options['header']['result']['id'] = 'result';
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
-  /* Relationship: Taxonomy term: Parent term */
-  $handler->display->display_options['relationships']['parent']['id'] = 'parent';
-  $handler->display->display_options['relationships']['parent']['table'] = 'taxonomy_term_hierarchy';
-  $handler->display->display_options['relationships']['parent']['field'] = 'parent';
-  $handler->display->display_options['relationships']['parent']['label'] = 'Parent term';
   /* Relationship: Identification */
   $handler->display->display_options['relationships']['reverse_field_identified_species_node']['id'] = 'reverse_field_identified_species_node';
   $handler->display->display_options['relationships']['reverse_field_identified_species_node']['table'] = 'taxonomy_term_data';
@@ -1769,25 +1765,6 @@ function views_browse_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
   $handler->display->display_options['filters']['name']['expose']['remember'] = TRUE;
-  /* Filter criterion: Taxonomy term: Name */
-  $handler->display->display_options['filters']['name_1']['id'] = 'name_1';
-  $handler->display->display_options['filters']['name_1']['table'] = 'taxonomy_term_data';
-  $handler->display->display_options['filters']['name_1']['field'] = 'name';
-  $handler->display->display_options['filters']['name_1']['relationship'] = 'parent';
-  $handler->display->display_options['filters']['name_1']['operator'] = 'contains';
-  $handler->display->display_options['filters']['name_1']['group'] = 1;
-  $handler->display->display_options['filters']['name_1']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['name_1']['expose']['operator_id'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['label'] = 'Parent taxon';
-  $handler->display->display_options['filters']['name_1']['expose']['operator'] = 'name_1_op';
-  $handler->display->display_options['filters']['name_1']['expose']['identifier'] = 'name_1';
-  $handler->display->display_options['filters']['name_1']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    4 => 0,
-    5 => 0,
-    3 => 0,
-  );
   /* Filter criterion: Taxonomy term: Rank (field_taxon_rank) */
   $handler->display->display_options['filters']['field_taxon_rank_value']['id'] = 'field_taxon_rank_value';
   $handler->display->display_options['filters']['field_taxon_rank_value']['table'] = 'field_data_field_taxon_rank';

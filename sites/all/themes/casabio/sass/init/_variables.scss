@@ -11,15 +11,15 @@
 $page-max-width:        1300px;
 $menu-w-narrow:         800px;
 
-$page_width-narrow:     60em; // For pages with primarily static content
-$page_width-regular:    80em; // For most pages
-$page_width-full:       100%; // For pages with large views that needs as much space as possible
+$w-narrow:              480px;
+$w-regular:             960px;
+$w-wide:                1270px;
+$w-v-wide:              1350px;
 
-/* Microsoft research says 40px is ideal size for a touch target */
-$pointer_target-size:   2.5rem; /* height or width */
+$pointer_target-size:   40px;
 
-$pointer_target-padding: 0.6em 1.2em; /* used by buttons */
-$pointer_target-line-height: 1.3; /* Assuming font-size: 1rem; */
+$pointer_target-padding:      0.6em 1.2em; /* used by buttons */
+$pointer_target-line-height:  1.3;
 
 $data-field-padding:    0.3em 0.5em; /* used by table cells and text fields */
 
@@ -129,6 +129,7 @@ $font-headings:         $font-body;
 $colour-green:          #50862B;
 $colour-orange:         #D57C25;
 $colour-pale-grey:      #bbb;
+$colour-cyan:           #0099cb;
 
 $colour-selection:      #0B87D4;
 $colour-danger:         #c72100;
@@ -139,8 +140,8 @@ $colour-success:        #42A80E;
 // Assignments
 
 $colour-text:           #333; // dark grey
-$colour-links:          $colour-green;
-$colour-buttons:        $colour-orange;
+$colour-links:          $colour-cyan;
+$colour-buttons:        $colour-green;
 $colour-headings:       #212121;
 $colour-subtle:         rgba(black, 0.42);
 $colour-page-bg:        #f8f8f8;

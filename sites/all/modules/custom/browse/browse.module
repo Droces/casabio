@@ -23,29 +23,41 @@ function browse_help($path, $arg) {}
 
 
 
+/**
+ * Implements hook_menu().
+ */
+function browse_menu() {
+  $items['browse'] = array(
+    // 'title'           => '<span class="icon-gesture"></span> Browse', // Problem; displays as plain text in page title
+    'title'           => 'Browse',
+    'page callback'   => 'browse_page_callback',
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'menu_name'       => 'main-menu',
+    'options'         => array(
+      'attributes'    => array(),
+      'html'          => TRUE,
+    ),
+  );
+
+  return $items;
+}
+
+
+
+
+function browse_page_callback() {
+  return browse_choice_content();
+}
+
+
+
 
 
 /**
  * Implements hook_init().
  */
-// function browse_init() {
-//   // The paths for which the files should be included
-//   $active_paths = array(
-//     'browse*',
-//   );
-
-//   foreach ($active_paths as $active_path) {
-//     if (drupal_match_path(current_path(), $active_path)) {
-//       $file = drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js';
-//       drupal_add_js($file);
-
-//       drupal_add_library('system', 'drupal.collapse');
-
-//       // $file = drupal_get_path('module', 'edit_selected') . '/stylesheets/edit_selected.css';
-//       // drupal_add_css($file);
-//     }
-//   }
-// }
+// function browse_init() {}
 
 
 
@@ -60,12 +72,6 @@ function browse_block_info() {
 
   $blocks['browse_chooser_form'] = array(
     'info' => t('Browse chooser form'),
-    'cache' => DRUPAL_CACHE_GLOBAL,
-    // 'cache' => DRUPAL_NO_CACHE,
-  );
-
-  $blocks['browse_choice'] = array(
-    'info' => t('Browse choice'),
     'cache' => DRUPAL_CACHE_GLOBAL,
     // 'cache' => DRUPAL_NO_CACHE,
   );
@@ -109,11 +115,6 @@ function browse_block_view($delta = '') {
     case 'browse_chooser_form':
       $block['subject'] = t('Choose Your Browse');
       $block['content'] = drupal_get_form('browse_chooser_form');
-      break;
-
-    case 'browse_choice':
-      $block['subject'] = t('Choose Your Browse');
-      $block['content'] = browse_choice_content();
       break;
   }
 

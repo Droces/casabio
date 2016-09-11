@@ -10,6 +10,8 @@
 (function ($, Drupal, window, document, undefined) {
 
 
+var page_is_setup = false;
+
 var collection_to_use =   null;
 var collection_to_use_title = '';
 var choice_block_element;
@@ -22,48 +24,54 @@ Drupal.behaviors.casa_upload = {
   attach: function(context, settings) {
     // console.log('settings: ', settings);
 
-    api_url = settings.basePath + settings.API_path;
+    if (! page_is_setup) {
 
-    choice_block_element = $('.choice-block');
+      api_url = settings.basePath + settings.API_path;
 
-    choice_block_element.find('input, select').change(function() {
-      // console.log('changed');
-      $('#uploader').attr('aria-enabled', true);
-    });
+      choice_block_element = $('.choice-block');
 
-    var PLuploader = $(".plupload-element", context).pluploadQueue();
+      choice_block_element.find('input, select').change(function() {
+        // console.log('changed');
+        $('#uploader').attr('aria-enabled', true);
+      });
 
-    PLuploader.bind('FilesAdded', function(up, files) {
-      if (collection_to_use == null) {
-        set_collection();
-      }
+      var PLuploader = $(".plupload-element", context).pluploadQueue();
 
-      $('#collection_choice')
-        .attr('aria-collapsed', true)
-        .prev().html("Adding to collection: " + collection_to_use_title);
-      $('#saved_pics')
-        .attr('aria-enabled', true);
+      PLuploader.bind('FilesAdded', function(up, files) {
+        if (collection_to_use == null) {
+          set_collection();
+        }
 
-      $('a[rel="next"]').attr('disabled', false);
+        $('#collection_choice')
+          .attr('aria-collapsed', true)
+          .prev().html("Adding to collection: " + collection_to_use_title);
+        $('#saved_pics')
+          .attr('aria-enabled', true);
 
-      Drupal.es_api_interactions.fetch_selectables_data();
-    });
+        $('a[rel="next"]').attr('disabled', false);
 
-    PLuploader.bind('FileUploaded', function(uploader, file, response) {
-      // console.log('uploader: ', uploader);
-      // console.log('file: ', file);
-      // console.log('response: ', response);
+        Drupal.es_api_interactions.fetch_selectables_data();
+      });
 
-      $request_body = {
-        collection: collection_to_use,
-        temp_name: file.id,
-        file_name: file.name
-      };
-      // console.log('$request_body: ', $request_body);
+      PLuploader.bind('FileUploaded', function(uploader, file, response) {
+        // console.log('uploader: ', uploader);
+        // console.log('file: ', file);
+        // console.log('response: ', response);
 
-      save_temp_file($request_body, settings);
+        $request_body = {
+          collection: collection_to_use,
+          temp_name: file.id,
+          file_name: file.name
+        };
+        // console.log('$request_body: ', $request_body);
 
-    });
+        save_temp_file($request_body, settings);
+
+      });
+
+
+      page_is_setup = true;
+    }
 
   }/*,
   weight: 1*/

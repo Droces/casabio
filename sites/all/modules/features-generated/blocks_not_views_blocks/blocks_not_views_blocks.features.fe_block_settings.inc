@@ -12,6 +12,36 @@ function blocks_not_views_blocks_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['block-maintainer_contribution_options'] = array(
+    'cache' => -1,
+    'css_class' => '',
+    'custom' => 0,
+    'machine_name' => 'maintainer_contribution_options',
+    'module' => 'block',
+    'node_types' => array(),
+    'pages' => 'contribute-other',
+    'roles' => array(
+      'Administrator' => 3,
+      'Maintainer' => 5,
+    ),
+    'themes' => array(
+      'casabio' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => 'Maintainer contribution options',
+    'visibility' => 1,
+  );
+
   $export['browse-browse_choice'] = array(
     'cache' => 8,
     'css_class' => '',
@@ -26,7 +56,7 @@ function blocks_not_views_blocks_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -18,
+        'weight' => -17,
       ),
       'petal' => array(
         'region' => '',
@@ -80,7 +110,7 @@ function blocks_not_views_blocks_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -19,
+        'weight' => -18,
       ),
       'petal' => array(
         'region' => '',
@@ -107,7 +137,7 @@ function blocks_not_views_blocks_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -27,
+        'weight' => -26,
       ),
       'petal' => array(
         'region' => '',
@@ -737,7 +767,7 @@ contribute/multiple-observations/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -28,
+        'weight' => -27,
       ),
       'petal' => array(
         'region' => '',
@@ -872,7 +902,7 @@ contribute/multiple-observations/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'casabio',
-        'weight' => -32,
+        'weight' => -31,
       ),
       'petal' => array(
         'region' => 'content',
@@ -1099,33 +1129,6 @@ contribute/multiple-observations/*',
     ),
     'title' => '',
     'visibility' => 0,
-  );
-
-  $export['webform-client-block-16'] = array(
-    'cache' => -1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'client-block-16',
-    'module' => 'webform',
-    'node_types' => array(),
-    'pages' => 'request',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -30,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 9,
-      ),
-    ),
-    'title' => '<none>',
-    'visibility' => 1,
   );
 
   return $export;

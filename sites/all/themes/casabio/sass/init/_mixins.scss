@@ -89,6 +89,28 @@
     }
 }
 
+// Navigation
+@mixin menu-vertical {
+  li {
+    display: block;
+
+    a {
+      text-align: left;
+    }
+  }
+}
+@mixin menu-horizontal {
+  @include display(flex);
+  li {
+    // display: table-cell;
+    @include flex(1 1 auto);
+
+    a {
+      text-align: center;
+    }
+  }
+}
+
 
 // Flexbox
 

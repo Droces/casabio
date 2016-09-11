@@ -32,6 +32,18 @@
   margin: 0; // overrides misc.scss
 }
 
+.children-inline {
+	@include display(flex);
+
+	& > * {
+		@include flex(1 1 auto);
+
+		&[type] {
+			margin-top: 0;
+		}
+	}
+}
+
 
 form {
 	&[role="toolbar"],
@@ -157,11 +169,6 @@ form {
 
 	.form-item {
 		margin-bottom: $form-item-spacing;
-	}
-
-	label {
-		font-weight: bold;
-		margin: 0 1.2em 0.4em 0; // @todo Should the first 2 values be reversed?
 	}
 
 	.description {

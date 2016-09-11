@@ -10,16 +10,27 @@
 
 /**
  * Creates a DateTime object from EXIF data.
+ * @see https://www.media.mit.edu/pia/Research/deepview/exif.html for Exif details.
  */
 function get_date_time($exif) {
   $date_time = NULL;
   $date_time_string = '';
 
-  if (isset($exif['DateTime'])) {
-    // dpm($exif['DateTime'], 'DateTime');
+  // Date / Time of original image taken. This value should not be modified by user program.
+  if (isset($exif['DateTimeOriginal'])) { // 0x9003
+    $date_time_string = $exif['DateTimeOriginal'];
+  }
+  // Date/Time of image was last modified. Format is "YYYY:MM:DD HH:MM:SS".
+  elseif (isset($exif['DateTime'])) { // 0x0132
     $date_time_string = $exif['DateTime'];
   }
-  elseif (isset($exif['GPSDateStamp']) && isset($exif['GPSTimeStamp'])) {
+  // DON'T USE THIS - it's related to when the files were last modified
+  // // Date/Time of image was last modified. Format is
+  // elseif (isset($exif['FileDateTime'])) { // 0x0132
+  //   $date_time = date_create_from_format('U', $exif['FileDateTime']);
+  // }
+  // Date and time information relative to UTC.
+  elseif (isset($exif['GPSDateStamp']) && isset($exif['GPSTimeStamp'])) { // 0x001d
     // dpm($exif['GPSDateStamp'], 'GPSDateStamp');
     // dpm($exif['GPSTimeStamp'], 'GPSTimeStamp');
     $time = array();
@@ -66,7 +77,7 @@ function get_longitude($exif) {
 
 /**
  * Converts a GPS coordinate part (Latitude or Longitude) into a float degrees value
- * 
+ *
  * @param string[] $exifCoord
  *   Coordinate part as a 3-item array of string fractions representing degrees, minutes, and seconds respectively
  *   Eg. array( 46/1, 0/1, 5403/100 )
@@ -85,8 +96,8 @@ function toDegrees($exifCoord, $hemi) {
 }
 
 /**
- * Converts a calculates the float value of a fraction in string format 
- * 
+ * Converts a calculates the float value of a fraction in string format
+ *
  * @param string $fraction
  *   Fraction that should be evaluated
  */

@@ -9,16 +9,19 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-// Happens only once
-$( document ).ready(function() {
-});
+var page_is_setup = false;
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.taxon_identifications_map = {
   attach: function(context, settings) {
     // console.log('taxon_identifications_map');
 
-    set_up_maps(context);
+    if (! page_is_setup) {
+
+      set_up_maps(context);
+
+      page_is_setup = true;
+    }
   }
 };
 
@@ -74,7 +77,7 @@ function set_up_maps(context) {
 
     // Zoom to and center on vector layer.
     map.getView().fit(vector_layer.getSource().getExtent(), map.getSize());
-    
+
   });
 }
 
@@ -174,7 +177,7 @@ function get_qds_count_colour(count) {
   var colour = 'black';
 
   // Validation.
-  // if (typeof count !== 
+  // if (typeof count !==
 
   var categories = {
     1: {

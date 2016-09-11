@@ -73,18 +73,17 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
   );
-  // Exported menu link: menu-contribute_span-classicon-photolibraryspan-multiple-observations:contribute/upload.
-  $menu_links['menu-contribute_span-classicon-photolibraryspan-multiple-observations:contribute/upload'] = array(
-    'menu_name' => 'menu-contribute',
-    'link_path' => 'contribute/upload',
-    'router_path' => 'contribute/upload',
-    'link_title' => '<span class="icon-photo_library"></span> Multiple observations',
+  // Exported menu link: menu-my_home:my-home.
+  $menu_links['menu-my_home:my-home'] = array(
+    'menu_name' => 'menu-my',
+    'link_path' => 'my-home',
+    'router_path' => 'my-home',
+    'link_title' => 'Home',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'html' => 1,
-      'identifier' => 'menu-contribute_span-classicon-photolibraryspan-multiple-observations:contribute/upload',
+      'identifier' => 'menu-my_home:my-home',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -94,19 +93,19 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: menu-my_span-classicon-accountboxspan-profile:user.
-  $menu_links['menu-my_span-classicon-accountboxspan-profile:user'] = array(
+  // Exported menu link: menu-my_profile:user.
+  $menu_links['menu-my_profile:user'] = array(
     'menu_name' => 'menu-my',
     'link_path' => 'user',
     'router_path' => 'user',
-    'link_title' => '<span class="icon-account_box"></span> Profile',
+    'link_title' => 'Profile',
     'options' => array(
       'alter' => TRUE,
       'attributes' => array(
         'title' => '',
       ),
       'html' => 1,
-      'identifier' => 'menu-my_span-classicon-accountboxspan-profile:user',
+      'identifier' => 'menu-my_profile:user',
     ),
     'module' => 'system',
     'hidden' => 0,
@@ -142,10 +141,10 @@ function menus_contribute_and_my_menu_default_menu_links() {
   // Included for use with string extractors like potx.
   t('<span class=" icon-add_circle"></span> Other');
   t('<span class=" icon-help"></span> Request');
-  t('<span class="icon-account_box"></span> Profile');
   t('<span class="icon-assessment"></span> Contributions');
   t('<span class="icon-image"></span> An observation');
-  t('<span class="icon-photo_library"></span> Multiple observations');
+  t('Home');
+  t('Profile');
 
   return $menu_links;
 }

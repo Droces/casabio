@@ -326,7 +326,7 @@ paths:
       description: "View a list of all API endpoints and their schemas."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   /example:
     get:
@@ -334,7 +334,7 @@ paths:
       description: "A resource that serves as an example of a custom RESTful resource."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Authentication          #
@@ -347,7 +347,7 @@ paths:
       description: "Provides CSRF token for cookie authentication."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
   /login:
     get:
       tags:
@@ -356,7 +356,7 @@ paths:
       description: "Login a user and return a JSON along with the authentication cookie."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   /login-token:
     get:
@@ -366,7 +366,7 @@ paths:
       description: "Provides access_token for token authentication."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   /refresh-token:
     post:
@@ -376,7 +376,7 @@ paths:
       description: "Refreshes access_token for token authentication."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Users                   #
@@ -392,7 +392,7 @@ paths:
       description: "View a list of users registered in CasaBio. Requires authentication."
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Example sub-module      #
@@ -403,7 +403,7 @@ paths:
   #     description: "View a list of all variables in CasaBio."
   #     responses:
   #       200:
-  #         description: "Okay"
+  #         description: "Successful"
 
   # /v2.1/articles:
   #   get:
@@ -411,7 +411,7 @@ paths:
   #     description: "View a list of all articles."
   #     responses:
   #       200:
-  #         description: "Okay"
+  #         description: "Successful"
 
   # /v1.0/tags:
   #   get:
@@ -419,7 +419,7 @@ paths:
   #     description: "View a list of all tags."
   #     responses:
   #       200:
-  #         description: "Okay"
+  #         description: "Successful"
 
   # ==========================================================================#
   #                                                   Files                   #
@@ -434,7 +434,7 @@ paths:
         - $ref: '#/parameters/Picture'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Pictures                #
@@ -454,7 +454,7 @@ paths:
         - $ref: '#/parameters/Filter-picture-subject'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Picture"
         # 401:
@@ -472,7 +472,7 @@ paths:
         - $ref: '#/parameters/Picture'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Picture"
 
@@ -484,7 +484,7 @@ paths:
       parameters:
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   /v0.1/pictures/{id}:
     get:
@@ -496,7 +496,7 @@ paths:
         - $ref: '#/parameters/id'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Picture"
 
@@ -511,7 +511,7 @@ paths:
         - $ref: '#/parameters/Picture'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Picture"
 
@@ -526,7 +526,7 @@ paths:
         - $ref: '#/parameters/Picture'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Picture"
 
@@ -540,7 +540,7 @@ paths:
         - $ref: '#/parameters/id'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Observations            #
@@ -560,7 +560,7 @@ paths:
         # - $ref: '#/parameters/Filter-picture-subject'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Observation"
         # 401:
@@ -578,7 +578,7 @@ paths:
         - $ref: '#/parameters/id'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Observation"
 
@@ -593,7 +593,7 @@ paths:
         - $ref: '#/parameters/Observation'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Observation"
 
@@ -608,7 +608,7 @@ paths:
         - $ref: '#/parameters/Observation'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Observation"
 
@@ -622,7 +622,7 @@ paths:
         - $ref: '#/parameters/Access token'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
 
   # ==========================================================================#
   #                                                   Collections             #
@@ -642,7 +642,7 @@ paths:
         - $ref: '#/parameters/Filter-picture-subject'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           # schema:
           #   $ref: "#/definitions/Picture"
         # 401:
@@ -660,7 +660,7 @@ paths:
         - $ref: '#/parameters/Collection'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Collection"
 
@@ -680,7 +680,7 @@ paths:
         - $ref: '#/parameters/Filter-label'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Identification"
         # 401:
@@ -698,7 +698,7 @@ paths:
         - $ref: '#/parameters/Identification'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Identification"
 
@@ -718,7 +718,7 @@ paths:
         - $ref: '#/parameters/Filter-label'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Interaction"
         # 401:
@@ -736,7 +736,7 @@ paths:
         - $ref: '#/parameters/Identification'
       responses:
         200:
-          description: "Okay"
+          description: "Successful"
           schema:
             $ref: "#/definitions/Interactions"
 
@@ -774,27 +774,32 @@ definitions:
     properties:
       type:
         type: string
+        example: 'picture'
       id:
         type: integer
         format: int64
+        example: 42
       attributes:
         type: object
         properties:
           label:
             type: string
+            example: 'aloe.jpg'
           self:
             type: string
             description: "The API URL at which this picture can be retrieved."
+            example: 'http://localhost/Current/CasaBio/services/v0.1/pictures/42'
           location:
             type: string
             example: {
-              "longitude": 0,
-              "latitude": 0}
+              "longitude": 18.4241,
+              "latitude": 33.9249}
 
   Picture-for-submission:
     properties:
       label:
         type: string
+        example: 'aloe.jpg'
       location:
         type: string
         example: {
@@ -805,6 +810,7 @@ definitions:
     properties:
       type:
         type: string
+        example: 'observation'
       id:
         type: integer
         format: int64
@@ -813,6 +819,7 @@ definitions:
         properties:
           label:
             type: string
+            example: 'aloe beside rock'
           self:
             type: string
             description: "The API URL at which this picture can be retrieved."

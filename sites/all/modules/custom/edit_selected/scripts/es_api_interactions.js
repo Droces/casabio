@@ -31,6 +31,7 @@
  * save_add_interaction()
  */
 
+// var page_is_setup = false;
 
 var security_token =      '';
 
@@ -43,14 +44,33 @@ Drupal.behaviors.es_api_interactions = {
   attach: function(context, settings) {
     api_url = settings.basePath + settings.API_path;
     // console.log('api_url: ', api_url);
+
+    // if (! page_is_setup) {
+
+    //   page_is_setup = true;
+    // }
+
+    // // Change toastr global options
+    // toastr.options = {
+    //   "showDuration": "800"
+    // }
   }
 }
 
 
 Drupal.es_api_interactions = {
 
+  fetch_token: function(show_message) {
+    // console.log('fetch_token()');
+    if (typeof show_message === 'undefined') {
+      show_message = true;
+    }
 
-  fetch_token: function() {
+    // console.log('toastr.options: ', toastr.options);
+    if (show_message) {
+      var toastr_info = toastr.info('Fetching token…'); // @todo add an 'undo' button
+    }
+
     var ajax_settings = {
       // type: "POST",
       type: "GET",
@@ -70,6 +90,13 @@ Drupal.es_api_interactions = {
       // security_token = data['token'];
       security_token = data['access_token'];
       // console.log('security_token: ', security_token);
+      $(document).trigger('token_fetched');
+    });
+
+    jqxhr.always(function( data ) {
+      if (show_message) {
+        toastr_info.remove();
+      }
     });
   },
 
@@ -83,8 +110,15 @@ Drupal.es_api_interactions = {
   // =============================================================================
   //                                              Local functions
 
-  fetch_selectables_data: function() {
-    var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+  fetch_selectables_data: function(show_message) {
+    if (typeof show_message === 'undefined') {
+      show_message = true;
+    }
+
+    if (show_message) {
+      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+    }
+
     var collection_nid = get_collection_nid();
 
     var url;
@@ -126,6 +160,7 @@ Drupal.es_api_interactions = {
 
 
 
+      // Create the elements (rather than using view)
 
       // $.each(Drupal.edit_selected.get_selectables_data(), function(index, selectable_data) {
       //   console.log('index: ', index);
@@ -143,7 +178,9 @@ Drupal.es_api_interactions = {
     });
 
     jqxhr.always(function( data ) {
-      toastr_info.remove();
+      if (show_message) {
+        toastr_info.remove();
+      }
     });
   },
 
@@ -152,7 +189,11 @@ Drupal.es_api_interactions = {
   // =============================================================================
   //                                              Local functions
 
-  fetch_identifications_data: function() {
+  fetch_identifications_data: function(show_message) {
+    if (typeof show_message === 'undefined') {
+      show_message = true;
+    }
+
     var collection_nid = get_collection_nid();
 
     var url = Drupal.casa_core.get_site_url() + 'ajax/identifications/by_collection/' + collection_nid;
@@ -164,7 +205,9 @@ Drupal.es_api_interactions = {
       url: url
     }
 
-    var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+    if (show_message) {
+      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+    }
 
     var jqxhr = $.ajax(request_params);
 
@@ -181,17 +224,23 @@ Drupal.es_api_interactions = {
       Drupal.edit_selected.populate_identifications_map();
       // console.log('data.data: ', data.data);
 
-      // $(document).trigger('selectables_data_fetched');
+      $(document).trigger('identifications_data_fetched');
     });
 
     jqxhr.always(function( data ) {
-      toastr_info.remove();
+      if (show_message) {
+        toastr_info.remove();
+      }
     });
   },
 
 
 
-  fetch_interactions_data: function() {
+  fetch_interactions_data: function(show_message) {
+    if (typeof show_message === 'undefined') {
+      show_message = true;
+    }
+
     var collection_nid = get_collection_nid();
 
     var url = Drupal.casa_core.get_site_url() + 'ajax/interactions/by_collection/' + collection_nid;
@@ -203,7 +252,9 @@ Drupal.es_api_interactions = {
       url: url
     }
 
-    var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+    if (show_message) {
+      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+    }
 
     var jqxhr = $.ajax(request_params);
 
@@ -220,11 +271,13 @@ Drupal.es_api_interactions = {
       Drupal.edit_selected.populate_interactions_map();
       // console.log('data.data: ', data.data);
 
-      // $(document).trigger('selectables_data_fetched');
+      $(document).trigger('interactions_data_fetched');
     });
 
     jqxhr.always(function( data ) {
-      toastr_info.remove();
+      if (show_message) {
+        toastr_info.remove();
+      }
     });
   },
 
@@ -269,7 +322,6 @@ Drupal.es_api_interactions = {
 
       // Update selectables_data with new identification
       identification_nid = data['nid'];
-      var identification_vid = identification_nid;
 
       // Record returned identification
       Drupal.edit_selected.identifications_data_append(data.data[0]);
@@ -321,28 +373,123 @@ Drupal.es_api_interactions = {
     return interaction;
   },
 
+
+
   /**
    * @returns true if successful, false otherwise.
    */
-  update_nodes: function(node_data, type, nids, context) {
+  update_nodes: function(node_data, type, nids, context, attempt_num) {
     // console.log('node_data: ', node_data);
     // console.log('nids: ', nids);
 
     if (! node_data || Object.keys(node_data).length == 0) {
       throw 'Parameter node_data is empty in ' + 'Drupal.es_api_interactions.update_nodes().';
     }
+    if (typeof attempt_num === 'undefined') {
+      attempt_num = 1;
+    }
 
     var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
     var jqxhrs = [];
     var all_successful = true;
-    var request_group_id = 0;
+    var request_group_id = 0; // Not used yet...
+    var nids_failed = [];
+
+    nids.forEach(function(nid, index){
+      var is_last = index == nids.length - 1;
+      // console.log('is_last: ', is_last);
+      var jqxhr;
+
+      // DEVELOPMENT - for testing only
+      // @todo #remove this.
+      if (nid == '62630') {
+        nid = 'breaker';
+      }
+
+      jqxhr = Drupal.es_api_interactions.update_node(node_data, type, nid);
+      jqxhrs.push(jqxhr);
+
+      jqxhr.fail(function( data ) {
+        console.log( "In jqxhr.fail(), data: ", data );
+        all_successful = false;
+        nids_failed.push(nid);
+      });
+
+      jqxhr.done(function( data ) {
+        // console.log( "In jqxhr.done(), data: ", data );
+
+        // Update node in selectables_data with saved node info
+        Drupal.edit_selected.set_selectable(nid, data.data);
+
+        Drupal.edit_selected.update_feature(nid); // Map feature
+
+        Drupal.edit_selected.refresh_current_field_indicator(context);
+
+        Drupal.edit_selected.set_loads_finished([nid]);
+      });
+
+      if (is_last) {
+        jqxhr.always(function( data ) {
+          toastr_info.remove();
+
+          if (all_successful) {
+            toastr.success(type + 's updated successfully.');
+          }
+          else {
+            manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num);
+          }
+        });
+      }
+
+    });
+
+  },
+
+
+  /**
+   * @returns true if successful, false otherwise.
+   */
+  update_node: function(data_object, type, nid) {
+
+    var method = "PATCH";
+    var data = JSON.stringify(data_object, null, 2);
+    var url = Drupal.casa_core.get_api_resource_url(type) + '/' + nid;
+
+    var settings = {
+      type: method,
+      contentType: "application/json",
+      data: data,
+      headers: {
+        "access_token": Drupal.es_api_interactions.get_token()
+        // Session id header is not specified, because it's automatically added by browser (it's a cookie).
+      },
+      url: url
+    }
+    var jqxhr = $.ajax(settings);
+    return jqxhr;
+  },
+
+
+
+
+
+  /**
+   * @returns true if successful, false otherwise.
+   */
+  delete_nodes: function(type, nids, context) {
+    // console.log('nids: ', nids);
+
+    var toastr_info = toastr.info('Deleting…'); // @todo add an 'undo' button
+    // var jqxhrs = [];
+    var all_successful = true;
+    var request_group_id = 0; // Not used yet...
 
     nids.forEach(function(nid, index){
       var is_last = index == nids.length - 1;
       // console.log('is_last: ', is_last);
 
-      var jqxhr = Drupal.es_api_interactions.update_node(node_data, type, nid, context);
-      jqxhrs.push(jqxhr);
+      var jqxhr = Drupal.es_api_interactions.delete_node(type, nid);
+      // jqxhrs.push(jqxhr);
 
       jqxhr.fail(function( data ) {
         console.log( "In jqxhr.fail(), data: ", data );
@@ -353,22 +500,27 @@ Drupal.es_api_interactions = {
         // console.log( "In jqxhr.done(), data: ", data );
 
         // Update selectables_data with saved node info
-        Drupal.edit_selected.set_selectable(nid, data.data);
+        // Drupal.edit_selected.set_selectable(nid, data.data);
 
-        Drupal.edit_selected.update_feature(nid);
-
-        Drupal.edit_selected.refresh_current_field_indicator(context);
+        // Drupal.edit_selected.update_feature(nid);
       });
 
       if (is_last) {
         jqxhr.always(function( data ) {
           if (all_successful) {
             toastr_info.remove();
-            toastr.success(type + 's updated successfully.');
+            toastr.success(type + 's updated deleted.');
+
+            var selecteds = Drupal.selection.get_selected_selectables();
+            // console.log('selecteds: ', selecteds);
+
+            $.each( selecteds, function() {
+              $(this).remove();
+            });
           }
           else {
             toastr_info.remove();
-            toastr.error('Sorry, there was a problem updating the nodes.');
+            toastr.error('Sorry, there was a problem deleting the nodes.');
           }
         });
       }
@@ -382,14 +534,16 @@ Drupal.es_api_interactions = {
   /**
    * @returns true if successful, false otherwise.
    */
-  update_node: function(node_data, type, nid, context) {
+  delete_node: function(type, nid) {
 
+    var method = "DELETE";
+    var data = '';
     var url = Drupal.casa_core.get_api_resource_url(type) + '/' + nid;
 
     var settings = {
-      type: "PATCH",
+      type: method,
       contentType: "application/json",
-      data: JSON.stringify(node_data, null, 2),
+      data: data,
       headers: {
         "access_token": Drupal.es_api_interactions.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
@@ -584,6 +738,33 @@ function save_add_interaction(params, nid, context) {
   jqxhr.always(function( data ) {
     toastr_info.remove();
   });
+}
+
+
+/**
+ * Describes the save failure to the user, and re-attempts the save.
+ * Should be called when multiple nodes are saved but some fail.
+ */
+function manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num) {
+  // console.log('nids_failed: ', nids_failed);
+  // console.log('attempt_num: ', attempt_num);
+
+  if (attempt_num == 1) {
+    toastr.error('Sorry, there was a problem updating the nodes. '
+      + nids_failed.length + ' nodes did not save successfully. Retrying…');
+  }
+  else if (attempt_num < 3) {
+    toastr.error('In attempt ' + attempt_num + ', '
+      + nids_failed.length + ' nodes did not save successfully. Retrying…');
+  }
+
+  if (attempt_num < 3) {
+    Drupal.es_api_interactions.update_nodes(node_data, type, nids_failed, context, attempt_num + 1);
+  }
+  else {
+    toastr.error('Three unsuccessful attempts were made to save the node. You may try again.');
+    Drupal.edit_selected.set_loads_finished(nids_failed);
+  }
 }
 
 

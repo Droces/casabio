@@ -234,6 +234,20 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_location']['settings'] = array(
     'data' => 'full',
   );
+  /* Field: Content: Collection */
+  $handler->display->display_options['fields']['field_collection']['id'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['table'] = 'field_data_field_collection';
+  $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['settings'] = array(
+    'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Content: Identifications (field_identifications:delta) */
+  $handler->display->display_options['fields']['delta']['id'] = 'delta';
+  $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_identifications';
+  $handler->display->display_options['fields']['delta']['field'] = 'delta';
+  $handler->display->display_options['fields']['delta']['label'] = 'Identifications';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -286,20 +300,6 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['text'] = 'view';
-  /* Field: Content: Collection */
-  $handler->display->display_options['fields']['field_collection']['id'] = 'field_collection';
-  $handler->display->display_options['fields']['field_collection']['table'] = 'field_data_field_collection';
-  $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
-  $handler->display->display_options['fields']['field_collection']['settings'] = array(
-    'link' => 0,
-    'empty_fields_handler' => '',
-    'empty_fields_emptyfieldtext_empty_text' => '',
-  );
-  /* Field: Content: Identifications (field_identifications:delta) */
-  $handler->display->display_options['fields']['delta']['id'] = 'delta';
-  $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['fields']['delta']['field'] = 'delta';
-  $handler->display->display_options['fields']['delta']['label'] = 'Identifications';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -879,18 +879,18 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '50';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'field_main_image' => 'field_main_image',
+    'views_bulk_operations' => 'views_bulk_operations',
     'title' => 'title',
     'field_collector' => 'field_collector',
+    'field_count_observations' => 'field_count_observations',
+    'nid' => 'nid',
     'field_date_collected' => 'field_date_collected',
     'changed' => 'changed',
     'edit_node' => 'edit_node',
   );
   $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
-    'field_main_image' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
+    'views_bulk_operations' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -903,6 +903,20 @@ function views_content_administration_views_default_views() {
       'empty_column' => 0,
     ),
     'field_collector' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_count_observations' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -967,11 +981,6 @@ function views_content_administration_views_default_views() {
       ),
     ),
   );
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_main_image']['id'] = 'field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['table'] = 'field_data_field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['field'] = 'field_main_image';
-  $handler->display->display_options['fields']['field_main_image']['label'] = 'Preview image';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -982,6 +991,28 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_collector']['id'] = 'field_collector';
   $handler->display->display_options['fields']['field_collector']['table'] = 'field_data_field_collector';
   $handler->display->display_options['fields']['field_collector']['field'] = 'field_collector';
+  /* Field: Content: Number of observations */
+  $handler->display->display_options['fields']['field_count_observations']['id'] = 'field_count_observations';
+  $handler->display->display_options['fields']['field_count_observations']['table'] = 'field_data_field_count_observations';
+  $handler->display->display_options['fields']['field_count_observations']['field'] = 'field_count_observations';
+  $handler->display->display_options['fields']['field_count_observations']['label'] = 'Observations';
+  $handler->display->display_options['fields']['field_count_observations']['settings'] = array(
+    'link' => 0,
+    'link_class' => '',
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Content: Number of pictures */
+  $handler->display->display_options['fields']['field_count_pictures']['id'] = 'field_count_pictures';
+  $handler->display->display_options['fields']['field_count_pictures']['table'] = 'field_data_field_count_pictures';
+  $handler->display->display_options['fields']['field_count_pictures']['field'] = 'field_count_pictures';
+  $handler->display->display_options['fields']['field_count_pictures']['label'] = 'Pictures';
+  $handler->display->display_options['fields']['field_count_pictures']['settings'] = array(
+    'link' => 0,
+    'link_class' => '',
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: COUNT(Content: Nid) */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -1760,7 +1791,7 @@ function views_content_administration_views_default_views() {
     'description' => 'description',
     'tid' => 'tid',
   );
-  $handler->display->display_options['style_options']['default'] = 'name';
+  $handler->display->display_options['style_options']['default'] = 'tid_1';
   $handler->display->display_options['style_options']['info'] = array(
     'views_bulk_operations' => array(
       'align' => '',
@@ -1769,7 +1800,7 @@ function views_content_administration_views_default_views() {
     ),
     'tid_1' => array(
       'sortable' => 1,
-      'default_sort_order' => 'asc',
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,

@@ -35,14 +35,9 @@ function content_type_collection_field_default_field_instances() {
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
-        'weight' => 0,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
       ),
       'text' => array(
         'label' => 'above',
@@ -101,9 +96,13 @@ function content_type_collection_field_default_field_instances() {
         'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No collector named</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+        ),
+        'type' => 'text_default',
         'weight' => 4,
       ),
       'text' => array(
@@ -163,6 +162,164 @@ function content_type_collection_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-collection-field_count_observations'.
+  $field_instances['node-collection-field_count_observations'] = array(
+    'bundle' => 'collection',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+          'link_class' => '',
+          'plural' => '@count observations',
+          'singular' => '1 observation',
+        ),
+        'type' => 'entityreference_count_formatter_labeled_count',
+        'weight' => 6,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'inline',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Has no observations</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'link' => 0,
+          'link_class' => '',
+          'plural' => '@count observations',
+          'singular' => '1 observation',
+        ),
+        'type' => 'entityreference_count_formatter_labeled_count',
+        'weight' => 2,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_count_observations',
+    'label' => 'Number of observations',
+    'required' => 0,
+    'settings' => array(
+      'allowed_bundles' => array(
+        'observation' => 'observation',
+      ),
+      'count_only_published' => 1,
+      'counted_reference_fields' => array(
+        'field_collection' => 'field_collection',
+        'field_habitat' => 0,
+        'field_identifications' => 0,
+        'field_observation' => 0,
+        'field_observation_object' => 0,
+        'field_pictures_observation' => 0,
+        'field_representative_picture' => 0,
+        'field_source' => 0,
+        'field_threat_assessment' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'entityreference_count',
+      'settings' => array(),
+      'type' => 'entityreference_count_widget',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-collection-field_count_pictures'.
+  $field_instances['node-collection-field_count_pictures'] = array(
+    'bundle' => 'collection',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+          'link_class' => '',
+          'plural' => '@count pictures',
+          'singular' => '1 picture',
+        ),
+        'type' => 'entityreference_count_formatter_labeled_count',
+        'weight' => 7,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'inline',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No pictures</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'link' => 0,
+          'link_class' => '',
+          'plural' => '@count pictures',
+          'singular' => '1 picture',
+        ),
+        'type' => 'entityreference_count_formatter_labeled_count',
+        'weight' => 3,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_count_pictures',
+    'label' => 'Number of pictures',
+    'required' => 0,
+    'settings' => array(
+      'allowed_bundles' => array(
+        'picture' => 'picture',
+      ),
+      'count_only_published' => 1,
+      'counted_reference_fields' => array(
+        'field_collection' => 'field_collection',
+        'field_habitat' => 0,
+        'field_identifications' => 0,
+        'field_observation' => 0,
+        'field_observation_object' => 0,
+        'field_pictures_observation' => 0,
+        'field_representative_picture' => 0,
+        'field_source' => 0,
+        'field_threat_assessment' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'entityreference_count',
+      'settings' => array(),
+      'type' => 'entityreference_count_widget',
+      'weight' => 9,
+    ),
+  );
+
   // Exported field_instance: 'node-collection-field_date_collected'.
   $field_instances['node-collection-field_date_collected'] = array(
     'bundle' => 'collection',
@@ -195,17 +352,17 @@ function content_type_collection_field_default_field_instances() {
         'label' => 'inline',
         'module' => 'date',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No collection date</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'format_type' => 'medium',
           'fromto' => 'both',
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
-          'show_remaining_days' => FALSE,
+          'show_remaining_days' => 0,
         ),
         'type' => 'date_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'text' => array(
         'label' => 'above',
@@ -243,6 +400,70 @@ function content_type_collection_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-collection-field_featured_pictures'.
+  $field_instances['node-collection-field_featured_pictures'] = array(
+    'bundle' => 'collection',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'links' => 0,
+          'view_mode' => 'thumbnail',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 8,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No featured pictures</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'links' => 0,
+          'view_mode' => 'thumbnail',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 0,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_featured_pictures',
+    'label' => 'Featured pictures',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'node-collection-field_location'.
   $field_instances['node-collection-field_location'] = array(
     'bundle' => 'collection',
@@ -268,7 +489,6 @@ If the images were all taken in one place, use the <strong>point</strong> featur
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
           'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
-          'map_preset' => 'openlayers_geofield_map_geofield_formatter',
         ),
         'type' => 'openlayers_geofield',
         'weight' => 1,
@@ -280,10 +500,10 @@ If the images were all taken in one place, use the <strong>point</strong> featur
         'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'inline',
+        'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 7,
       ),
       'text' => array(
         'label' => 'above',
@@ -343,10 +563,10 @@ If the images were all taken in one place, use the <strong>point</strong> featur
         'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 5,
       ),
       'text' => array(
         'label' => 'above',
@@ -386,8 +606,11 @@ If the images were all taken in one place, use the <strong>point</strong> featur
   t('Any significant further information about this collection that might be of interest.');
   t('Collector');
   t('Date collected');
+  t('Featured pictures');
   t('If the pictures were taken over several days, provide the start and end date.');
   t('Location');
+  t('Number of observations');
+  t('Number of pictures');
   t('Representative picture');
   t('The <em>full name</em> of the person who recorded the observations; this is probably your full name.');
   t('The picture that best represents the content of this collection.');

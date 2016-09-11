@@ -45,17 +45,47 @@ function casabio_preprocess_html(&$variables, $hook) {
 // */
 
 /**
+ * Implements hook_preprocess_html().
+ */
+function casabio_preprocess_html(&$variables) {
+  // dpm($variables, 'variables');
+}
+
+/**
  * Implements hook_preprocess_page(). Overrides or inserts variables into the page templates.
  */
 function casabio_preprocess_page(&$variables, $hook) {
   // dpm($variables, 'variables');
   // dpm($variables['node'], 'node');
+  // dpm(current_path(), 'current_path()');
+  // dpm(request_path(), 'request_path()');
 
   // if (isset($variables['node']) {
   //   if ($variables['type'] == 'observation') {
   //     // $variables['title'] = '';
   //   }
   // }
+
+  $page_container_class = '';
+
+  switch (request_path()) {
+    case 'contribute/upload':
+    case 'user':
+      $page_container_class = 'page_width_regular';
+      break;
+
+    case 'contribute/request':
+    case 'contribute/locality':
+    case 'taxa/lookup-multiple':
+      $page_container_class = 'page_width_narrow';
+      break;
+
+    default:
+      # code...
+      break;
+  }
+
+  $variables['page_container_class'] = $page_container_class;
 }
 // */
 
@@ -417,3 +447,18 @@ function casabio_menu_local_tasks($variables) {
   }
   return $output;
 }
+
+
+// function casabio_link($variables) {
+//   // dpm($variables, '$variables');
+
+//   // // Allow links to contain HTML
+
+//   // $variables['options']['html'] = TRUE;
+
+//   // $href = check_plain(url($variables['path'], $variables['options']));
+//   // $attributes = drupal_attributes($variables['options']['attributes']);
+//   // $content = $variables['options']['html'] ? $variables['text'] : check_plain($variables['text']);
+
+//   // return '<a href="' . $href . '"' . $attributes . '>' . $content . '</a>';
+// }

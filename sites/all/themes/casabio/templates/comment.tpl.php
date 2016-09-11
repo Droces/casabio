@@ -7,7 +7,7 @@
  * @see https://drupal.org/node/1728216
  */
 ?>
-<article class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<article class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
   <section class="show">
       <p class="submitted">
@@ -44,7 +44,7 @@
     ?>
 
     <?php if ($signature): ?>
-      <footer class="user-signature clearfix">
+      <footer class="user-signature">
         <?php print $signature; ?>
       </footer>
     <?php endif; ?>

@@ -113,7 +113,7 @@ function get_upload_form_content() {
   // $collection = entity_create('node', $values);
 
   // module_load_include('inc', 'node', 'node.pages');
-  // $form = drupal_get_form('node_form', $collection, ['form_view_mode' => 'contribute']);
+  // $form = drupal_get_form('collection' . '_node_form', $collection, ['form_view_mode' => 'contribute']);
 
 
   $file_url = drupal_get_path('module', 'casa_upload') . '/intro.html';
@@ -148,6 +148,7 @@ function get_upload_form_content() {
       '#prefix' => '<label>1. Choose the collection</label>'
         . '<div id="collection_choice" class="cols choice-block">',
       '#suffix' => '</div>',
+
       'new' => array(
         '#prefix' => '<div data-option-id="new" aria-selected>',
         '#suffix' => '</div>',
@@ -160,15 +161,27 @@ function get_upload_form_content() {
             'checked' => 'checked',
           ),
         ),
-        'textfield' => array(
-          '#type' => 'textfield',
-          '#title' => t('Name the collection'),
-          '#title_display' => 'invisible',
+        'fields' => array(
+          '#type' => 'container',
+          'textfield' => array(
+            '#type' => 'textfield',
+            '#title' => t('Name the collection'),
+            '#title_display' => 'invisible',
+          ),
+          'accept' => array(
+            '#type' => 'submit',
+            '#value' => t('Create'),
+            '#title_display' => 'invisible',
+          ),
+          '#attributes' => array(
+            'class' => array('children-inline'),
+          ),
         ),
         '#attributes' => array (
           'class' => array('option-new'),
         ),
       ),
+
       'existing' => array(
         '#prefix' => '<div data-option-id="existing">',
         '#suffix' => '</div>',
@@ -328,9 +341,16 @@ function save_uploaded_file_callback() {
   $temp_name = $post['temp_name'];
   $file_name = $post['file_name'];
 
+  // $path = '/var/www/html' . base_path() . file_directory_temp() . '/' . $temp_name . '.tmp';
+  $path = DRUPAL_ROOT . '/' . file_directory_temp() . '/' . $temp_name . '.tmp';
+  // dpm($path, '$path');
+  $exif = exif_read_data($path);
+  dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+
   $temp_file = array(
     'tmppath' => 'temporary://' . $temp_name . '.tmp',
     'name' => $file_name,
+    'exif' => $exif,
   );
 
   $picture = _casa_upload_generate_entity($temp_file, $collection);
@@ -470,7 +490,7 @@ function save_uploaded_files($form, &$form_state, $collection) {
  */
 function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
   // dpm('Reached: _casa_upload_generate_entity');
-  // dpm($tmpfile, '$tmpfile');
+  // dpm($tmpfile, '$tmpfile'); // <====================== dpm
 
   // Most of this function's code was copied from the bulk_media_upload module
 
@@ -483,7 +503,8 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
 
   // Save media file.
   $save_media_file_result = save_media_file($tmpfile, $mediafield_info);
-  // dpm($save_media_file_result, '$save_media_file_result');
+  // dpm($save_media_file_result, '$save_media_file_result'); // <====================== dpm
+
   $file = $save_media_file_result[0];
   $uri = $save_media_file_result[1];
 
@@ -506,7 +527,12 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
     // dpm($picture -> nid -> value(), 'nid');
 
     $file_instance = file_stream_wrapper_get_instance_by_uri($uri);
-    $exif = exif_read_data($file_instance -> realpath());
+    // dpm($file_instance, '$file_instance'); // <====================== dpm
+
+    // dpm($file_instance -> realpath(), '$file_instance -> realpath()'); // <====================== dpm
+    // $exif = exif_read_data($file_instance -> realpath());
+    // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+    $exif = $tmpfile['exif'];
     // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
 
     // dpm($cause_error);
@@ -531,6 +557,8 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
 
     $picture -> field_collection -> set($collection);
 
+    $picture -> field_exif -> set(json_encode($exif));
+
     $picture -> save();
 
     entity_save($entity_type, $entity);
@@ -551,7 +579,9 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
 function save_media_file($tmpfile, $mediafield_info) {
   global $user;
   $scheme = variable_get('file_default_scheme', 'public') . '://';
+  // dpm($scheme, '$scheme');
   $source = $tmpfile['tmppath'];
+  // dpm($source, '$source');
 
   $directory = '';
   if(isset($mediafield_info['settings']['file_directory'])){
@@ -559,6 +589,8 @@ function save_media_file($tmpfile, $mediafield_info) {
 
     // If the directory isn't writable, or doesn't exist and can't be created, the upload will fail.
     $prepare_directory = file_stream_wrapper_uri_normalize($scheme . $directory);
+    // dpm($prepare_directory, '$prepare_directory');
+
     if (!file_prepare_directory($prepare_directory, FILE_CREATE_DIRECTORY)) {
       drupal_set_message(t('The file directory @dir does not exist or is not writable. Please contact an administrator.', array('@dir' => $prepare_directory)), 'error');
       return;
@@ -567,6 +599,7 @@ function save_media_file($tmpfile, $mediafield_info) {
 
   $destination = file_stream_wrapper_uri_normalize($scheme . $directory . $tmpfile['name']);
   // dpm($destination, 'destination');
+
   $destination = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
 
   // Create the file object.

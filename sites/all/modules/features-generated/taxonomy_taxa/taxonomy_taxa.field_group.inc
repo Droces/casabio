@@ -28,7 +28,7 @@ function taxonomy_taxa_field_group_info() {
       2 => 'field_scientific_name',
       3 => 'field_identifications_count',
       4 => 'field_range',
-      5 => 'description',
+      5 => 'field_description',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

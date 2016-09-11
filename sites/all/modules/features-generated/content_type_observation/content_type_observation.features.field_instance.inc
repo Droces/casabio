@@ -244,7 +244,7 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 9,
       ),
       'text' => array(
         'label' => 'above',
@@ -276,6 +276,88 @@ function content_type_observation_field_default_field_instances() {
       'settings' => array(),
       'type' => 'number',
       'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'node-observation-field_count_identifications'.
+  $field_instances['node-observation-field_count_identifications'] = array(
+    'bundle' => 'observation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => FALSE,
+          'link_class' => '',
+        ),
+        'type' => 'entityreference_count_formatter_default',
+        'weight' => 15,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'inline',
+        'module' => 'entityreference_count',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No identifications</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'link' => 0,
+          'link_class' => '',
+        ),
+        'type' => 'entityreference_count_formatter_default',
+        'weight' => 3,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_count_identifications',
+    'label' => 'Number of identifications',
+    'required' => 0,
+    'settings' => array(
+      'allowed_bundles' => array(
+        'identification' => 'identification',
+      ),
+      'count_only_published' => 1,
+      'counted_reference_fields' => array(
+        'field_collection' => 0,
+        'field_featured_pictures' => 0,
+        'field_habitat' => 0,
+        'field_identifications' => 0,
+        'field_observation' => 'field_observation',
+        'field_observation_object' => 0,
+        'field_pictures_observation' => 0,
+        'field_representative_picture' => 0,
+        'field_source' => 0,
+        'field_threat_assessment' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'entityreference_count',
+      'settings' => array(),
+      'type' => 'entityreference_count_widget',
+      'weight' => 7,
     ),
   );
 
@@ -343,8 +425,8 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'inline',
         'module' => 'date',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">Date observed unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'format_type' => 'short',
           'fromto' => 'both',
           'multiple_from' => '',
@@ -353,7 +435,7 @@ function content_type_observation_field_default_field_instances() {
           'show_remaining_days' => 0,
         ),
         'type' => 'date_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'text' => array(
         'label' => 'above',
@@ -444,7 +526,7 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 10,
       ),
       'text' => array(
         'label' => 'above',
@@ -618,7 +700,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 13,
+        'weight' => 11,
       ),
       'text' => array(
         'label' => 'above',
@@ -770,11 +852,11 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'label' => 'inline',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => 'Unknown',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">Observer unknown</em>',
           'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'text' => array(
         'label' => 'above',
@@ -867,7 +949,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '<div class="field-none">This observation has no pictures.</div>',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No pictures</em>',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
           'view_mode' => 'small',
@@ -977,7 +1059,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 14,
+        'weight' => 12,
       ),
       'text' => array(
         'label' => 'above',
@@ -1099,6 +1181,63 @@ NB. Widget type needs to be WKT for the API to function correctly.',
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-locality-field_range'.
+  $field_instances['taxonomy_term-locality-field_range'] = array(
+    'bundle' => 'locality',
+    'default_value' => array(
+      0 => array(
+        'dataType' => 'WKT',
+        'geom' => 'GEOMETRYCOLLECTION EMPTY',
+        'input_format' => 'wkt',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'geofield',
+        'settings' => array(
+          'data' => 'full',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'geofield_wkt',
+        'weight' => 0,
+      ),
+      'small' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_range',
+    'label' => 'Range',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'openlayers_geofield',
+      'settings' => array(
+        'allow_edit' => 1,
+        'data_storage' => 'single',
+        'feature_types' => array(
+          'path' => 0,
+          'point' => 0,
+          'polygon' => 'polygon',
+        ),
+        'openlayers_map' => 'openlayers_geofield_map_geofield_widget',
+        'showInputField' => 0,
+      ),
+      'type' => 'openlayers_geofield',
+      'weight' => 32,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Collection');
@@ -1113,8 +1252,10 @@ NB. Widget type needs to be WKT for the API to function correctly.',
   t('Locality');
   t('Location');
   t('Name of observer');
+  t('Number of identifications');
   t('Observation ID');
   t('Pictures in observation');
+  t('Range');
   t('Source');
   t('Specimen ID');
   t('The area of land that the observation was made within.');

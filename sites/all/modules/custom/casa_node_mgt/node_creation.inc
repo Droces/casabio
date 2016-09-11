@@ -25,6 +25,9 @@ function is_valid_eid($eid) {
 
 
 /**
+ * Saves a new interaction that references the specified 'Subject' observation.
+ * Also creates a new observation for the interaction's 'Object'.
+ *
  * @param $nid
  *   The nid of the observation that should be 'Subject' of the interaction.
  * @param $params
@@ -118,7 +121,7 @@ function duplicate_observation($observation) {
   $fields_to_keep = array (
     'field_observer_name',
     'field_date_observed',
-    'field_collection',
+    // 'field_collection',
     'field_location',
     'field_locality',
     'field_pictures_observation',

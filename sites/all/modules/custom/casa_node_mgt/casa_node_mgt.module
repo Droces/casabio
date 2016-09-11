@@ -548,6 +548,16 @@ function casa_node_mgt_preprocess_node(&$variables, $hook) {
     if (in_array($variables['node'] -> type, $types)) {
       $variables['title'] = '';
     }
+
+
+    // Don't display 'links' of the following node types
+    $types = array(
+      'picture'
+    );
+
+    if (in_array($variables['node'] -> type, $types)) {
+      $variables['content']['links'] = [];
+    }
   }
 
 
@@ -697,8 +707,9 @@ function _preprocess_identification_community(&$variables) {
 
       // Embed an identification form styled as "Agree?", with selection of certainty.
 
+      $bundle = 'identification';
       $values = array(
-        'type' =>     'identification',
+        'type' =>     $bundle,
         'status' =>   1,
         'comment' =>  0,
         'promote' =>  0,
@@ -706,7 +717,7 @@ function _preprocess_identification_community(&$variables) {
       $new_identification = entity_create('node', $values);
 
       module_load_include('inc', 'node', 'node.pages');
-      $agreement_form = drupal_get_form('node_form', $new_identification, ['form_view_mode' => 'agreement']);
+      $agreement_form = drupal_get_form($bundle . '_node_form', $new_identification, ['form_view_mode' => 'agreement']);
       // dpm($agreement_form, 'agreement_form');
 
       $current_identification_species = $species_data['taxonomy_term']->name;
@@ -836,16 +847,17 @@ function create_new_identification_form() {
 
 
 
-
+  $bundle = 'identification';
   $values = array(
-    'type' =>     'identification',
+    'type' =>     $bundle,
     'status' =>   1,
     'comment' =>  0,
     'promote' =>  0,
   );
   $new_identification = entity_create('node', $values);
 
-  $new_identification_form = drupal_get_form('node_form', $new_identification,
+  module_load_include('inc', 'node', 'node.pages');
+  $new_identification_form = drupal_get_form($bundle . '_node_form', $new_identification,
     ['form_view_mode' => 'contribute_new']);
   // dpm($new_identification_form, 'new_identification_form');
 
@@ -950,46 +962,13 @@ function casa_node_mgt_node_insert($node) {
 
   if ($node->type == 'identification') {
     $identification = entity_metadata_wrapper('node', $node);
-    global $user;
-
-    // ------------------------------------------------------------------------
-    // Find any matching identifications by user, and keep only one (delete others)
-    // Update the certainty of the one that is kept
-
-    $matching_identifications = get_identifications_refing_observation(
-      'identification',
-      $identification->field_observation->raw(), // nid
-      $identification->field_identified_species->raw(), // tid
-      $use->uid); // uid
-
-    if ($matching_identifications) {
-      // dpm($matching_identifications, '$matching_identifications');
-
-      foreach ($matching_identifications as $nid => $identification_raw) {
-        // If this isn't the identification being saved
-        if ($nid . '' !== $node->nid . '') {
-          node_delete($nid);
-        }
-      }
-    }
-
-    // ------------------------------------------------------------------------
-    // Create or update the matching community identification.
-
     $observation = $identification->field_observation->value();
-    $identified_species = $identification->field_identified_species->value();
 
-    // If the identification is missing an observation or identified_species
-    if (!($observation && $identified_species)) {
-      // throw new Exception("Saved identification does not reference an observation and a taxon.", 1);
-      return NULL;
-    }
+    filter_identifications_to_one($node);
 
-    $community_identification = update_community_identification(
-      $observation, $identified_species, $node);
+    $comm_identi = update_matching_comm_identi($node);
 
-    // update_users_reputations($community_identification); // @todo create this function
-
+    update_observation_title_from_identi($observation);
 
   }
 
@@ -998,6 +977,102 @@ function casa_node_mgt_node_insert($node) {
 
     save_locality_to_taxon($node->nid);
   }
+}
+
+
+
+/**
+ * Finds all matching identifications by user, and keeps only one (delete others).
+ *
+ * @param $node
+ *   The identification being saved.
+ */
+function filter_identifications_to_one($node) {
+  global $user;
+  $identification = entity_metadata_wrapper('node', $node);
+
+  $matching_identifications = get_identifications_refing_observation(
+    'identification',
+    $identification->field_observation->raw(), // nid
+    $identification->field_identified_species->raw(), // tid
+    $user->uid); // uid
+
+  if ($matching_identifications) {
+    // dpm($matching_identifications, '$matching_identifications');
+
+    foreach ($matching_identifications as $nid => $identification_raw) {
+      // If this isn't the identification being saved
+      if ($nid . '' !== $node->nid . '') {
+        node_delete($nid);
+      }
+    }
+  }
+}
+
+
+
+/**
+ * Creates or updates a community identification that matches an identification being saved.
+ *
+ * @param $node
+ *   The identification being saved.
+ */
+function update_matching_comm_identi($node) {
+  $identification = entity_metadata_wrapper('node', $node);
+  $observation = $identification->field_observation->value();
+  $identified_species = $identification->field_identified_species->value();
+
+  // If the identification is missing an observation or identified_species
+  if (!($observation && $identified_species)) {
+    // throw new Exception("Saved identification does not reference an observation and a taxon.", 1);
+    return NULL;
+  }
+
+  $community_identification = update_community_identification(
+    $observation, $identified_species, $node);
+
+  // update_users_reputations($community_identification); // @todo create this function
+
+  return $community_identification;
+}
+
+
+
+/**
+ * @param $node
+ *   A community identification that has just been updated.
+ */
+function update_observation_title_from_identi($observation) {
+  // dpm($observation, '$observation');
+
+  $comm_identis = get_identifications_refing_observation(
+    'identification_community',
+    $observation->nid);
+  // dpm($comm_identis, '$comm_identis');
+
+  $most_reliable_comm_identi = $comm_identis[0];
+  $highest_reliability = 0;
+
+  foreach ($comm_identis as $key => $comm_identi_raw) {
+    $comm_identi = entity_metadata_wrapper('node', $comm_identi_raw->nid);
+    $reliability = $comm_identi -> field_reliability -> value();
+
+    if ($reliability > $highest_reliability) {
+      $most_reliable_comm_identi = $comm_identi;
+      $highest_reliability = $reliability;
+    }
+  }
+  // dpm($most_reliable_comm_identi, '$most_reliable_comm_identi');
+  // dpm($highest_reliability, '$highest_reliability');
+
+  if ($highest_reliability <= 10) {
+    return NULL;
+  }
+
+  $observation -> title = $most_reliable_comm_identi -> label();
+  node_save($observation);
+
+  // drupal_goto('node/' . $observation -> getIdentifier());
 }
 
 
@@ -1138,27 +1213,30 @@ function update_community_identification($observation, $identified_species, $ide
  *
  * Basically, if contributor A has a reliability 1/8th of contributor B,
  * his certainty will affect the calculated reliability 1/8th as much.
+ *
+ * @param $identifications
+ *   Identifications (of one taxon) that reference one observation.
  */
-function calculate_identification_reliability($referencing_nids) {
+function calculate_identification_reliability($identifications) {
   // $identification = entity_metadata_wrapper('node', $identification_raw);
 
   $owners_reliabilities = [];
 
   $certainty_data = array();
 
-  foreach ($referencing_nids as $nid) {
-    $node = entity_metadata_wrapper('node', $nid);
-    // dpm($node->getPropertyInfo(), 'node');
+  foreach ($identifications as $nid) {
+    $identification = entity_metadata_wrapper('node', $nid);
+    // dpm($identification->getPropertyInfo(), 'node');
 
-    $certainty = $node -> field_certainty -> value() * 10; // * 10 because it is saved as a number between 0 and 10, not as a fraction.
+    $certainty = $identification -> field_certainty -> value() * 10; // * 10 because it is saved as a number between 0 and 10, not as a fraction.
     // dpm($certainty, 'certainty');
     $certainty_data[$nid]['certainty'] = $certainty;
 
 
     global $user;
     // If the $identification_raw has an owner (if it's not new), use it, otherwise use global $user.
-    $uid = $node->author->value()->uid ?
-      $node->author->value()->uid :
+    $uid = $identification->author->value()->uid ?
+      $identification->author->value()->uid :
       $user->uid;
     $owner_user = entity_metadata_wrapper('user', user_load($uid));
     // dpm($owner_user, 'owner_user');

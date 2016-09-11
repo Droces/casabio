@@ -52,7 +52,7 @@
 
 @mixin data-on-overlay {
   // display: none;
-  font-size: 0.85em;
+  font-size: 0.8em;
   font-weight: 600;
 
   // @extend %field-as-abbr;
@@ -63,12 +63,13 @@
   // }
   display: block;
   position: absolute;
-  top: 1em;
-  left: 3.3em;
-  width: 60%;
+  top: 3em;
+  left: 1.3em;
+  width: 80%;
   height: 76%;
   overflow: hidden;
   word-break: break-all;
+  line-height: 1.1;
 
   // An invisible layer that covers the field so that the text can't be
   // selected, which messes with the 'selectable'.
@@ -79,6 +80,11 @@
     left: 0;
     width: 100%;
     height: 100%;
+  }
+
+  span {
+    margin-bottom: 0.8em;
+    display: inline-block;
   }
 }
 
@@ -189,10 +195,17 @@ article.picture {
 
     // .views-field-nid,
     // .views-field-nid-group,
-    .property-nid {
+    .property-nid,
+    .views-field-created,
+    .views-field-field-date-taken {
       display: none;
     }
-
+    .views-field-field-date-taken {
+      display: block;
+      z-index: 100;
+      background: white;
+      position: absolute;
+    }
   }
 }
 
@@ -285,6 +298,17 @@ article.picture {
     &:not(:first-of-type) {
       margin-top: 0.5em;
     }
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Webforms
+*/
+.node-type-webform {
+  .submitted {
+    display: none;
   }
 }
 
@@ -612,13 +636,16 @@ article.picture {
     .show {
       width: 110px;
       max-width: 110px; // Needed so that the cell doesn't grow unexpectedly.
+      text-align: center;
+      @include border-radius($corner_radius-regular 0 0 $corner_radius-regular);
+    }
+    .field-name-field-reliability {
       background-color: #878a00; // green
       color: white;
-      text-align: center;
       font-size: 1.3em;
       // vertical-align: middle;
       // border-radius: 0.25em 0px 0px 0.25em;
-      @include border-radius($corner_radius-regular 0 0 $corner_radius-regular);
+      @include border-radius(0 0 0 $corner_radius-regular);
 
       img {
         @include border-radius($corner_radius-regular 0 0 0);
@@ -839,6 +866,10 @@ li.views-row-2 .node-identification {
     display: none;
   }
 }
+.field .no-value {
+  color: grey;
+  text-transform: italic;
+}
 
 
 
@@ -864,4 +895,13 @@ li.views-row-2 .node-identification {
   .plupload_filelist .plupload_file_name {
       width: auto;
   }
+}
+
+form [class*="field_taxon_rank_value"] {
+  select {
+    width: 8em;
+  }
+}
+.form-field-name-field-certainty select {
+  width: 10em;
 }

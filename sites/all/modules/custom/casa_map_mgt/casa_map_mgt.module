@@ -8,8 +8,8 @@
 
 /**
  * Implements hook_form_FORM_ID_alter().
- * 
- * Problem: Using exposed filters in a block on a page that isn't the view's page results in a page of AJAX code. 
+ *
+ * Problem: Using exposed filters in a block on a page that isn't the view's page results in a page of AJAX code.
  * Cause: the exposed filters form's #action was pointing to that feed's url, not the current page.
  * This solution: Sets the exposed filters' form's action (url) to the current page.
  */
@@ -47,7 +47,7 @@ function casa_map_mgt_openlayers_object_preprocess_alter(&$build, $context) {
   // Appends any current URL parameters to the OL source's URL
   // These parameters can then be used, for example, by Views as contextual filters.
 
-  // Without this, OL maps using Views GeoJSON feeds as a source 
+  // Without this, OL maps using Views GeoJSON feeds as a source
   // don't respect exposed filters in a block (they don't affect the map)
   // if ($context -> factory_service == 'openlayers.Source:GeoJSON') {
   if (get_class($context) == 'Drupal\openlayers\Plugin\Source\Vector\Vector') {
@@ -70,7 +70,7 @@ function casa_map_mgt_openlayers_object_preprocess_alter(&$build, $context) {
         // dpm($new_url, 'new_url');
         // $context -> setOption('url', $new_url);
       }
-    
+
       $context -> preprocess = TRUE; // Only process this once
     }
     // dpm($context -> getOption('url'), 'url');
@@ -87,7 +87,10 @@ function casa_map_mgt_form_node_form_alter(&$form, &$form_state, $form_id) {
   // dpm($form, 'form');
   // dpm($form_state, 'form_state');
 
-  $language = $form['language']['#value'];
+  $language = LANGUAGE_NONE; // 'und'
+  if (isset($form['language'])) {
+    $language = $form['language']['#value'];
+  }
 
   if (isset($form['field_location'])) {
     // Re-order the Openlayers map widget's elements

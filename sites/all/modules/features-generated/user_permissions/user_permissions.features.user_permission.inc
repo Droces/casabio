@@ -122,7 +122,6 @@ function user_permissions_user_default_permissions() {
     'name' => 'access devel information',
     'roles' => array(
       'Administrator' => 'Administrator',
-      'authenticated user' => 'authenticated user',
     ),
     'module' => 'devel',
   );
@@ -425,15 +424,6 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'media',
-  );
-
-  // Exported permission: 'administer media wysiwyg view mode'.
-  $permissions['administer media wysiwyg view mode'] = array(
-    'name' => 'administer media wysiwyg view mode',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'media_wysiwyg_view_mode',
   );
 
   // Exported permission: 'administer menu'.

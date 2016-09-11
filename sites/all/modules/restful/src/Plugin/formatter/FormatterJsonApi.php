@@ -193,12 +193,18 @@ class FormatterJsonApi extends Formatter implements FormatterInterface {
     }
 
     $input = $original_input = $request->getParsedInput();
+    unset($input['page']);
+    unset($input['range']);
+    unset($original_input['page']);
+    unset($original_input['range']);
+    $input['page'] = $request->getPagerInput();
+    $original_input['page'] = $request->getPagerInput();
 
     // Get self link.
     $options = $top_level ? array('query' => $input) : array();
     $data['links']['self'] = $resource->versionedUrl($path, $options);
 
-    $page = !empty($input['page']) ? $input['page'] : 1;
+    $page = $input['page']['number'];
 
     // We know that there are more pages if the total count is bigger than the
     // number of items of the current request plus the number of items in
@@ -206,21 +212,21 @@ class FormatterJsonApi extends Formatter implements FormatterInterface {
     $items_per_page = $this->calculateItemsPerPage($resource);
     if (isset($data['meta']['count']) && $data['meta']['count'] > $items_per_page) {
       $num_pages = ceil($data['meta']['count'] / $items_per_page);
-      unset($input['page']);
+      unset($input['page']['number']);
       $data['links']['first'] = $resource->getUrl(array('query' => $input), FALSE);
 
       if ($page > 1) {
         $input = $original_input;
-        $input['page'] = $page - 1;
+        $input['page']['number'] = $page - 1;
         $data['links']['previous'] = $resource->getUrl(array('query' => $input), FALSE);
       }
       if ($num_pages > 1) {
         $input = $original_input;
-        $input['page'] = $num_pages;
+        $input['page']['number'] = $num_pages;
         $data['links']['last'] = $resource->getUrl(array('query' => $input), FALSE);
         if ($page != $num_pages) {
           $input = $original_input;
-          $input['page'] = $page + 1;
+          $input['page']['number'] = $page + 1;
           $data['links']['next'] = $resource->getUrl(array('query' => $input), FALSE);
         }
       }
@@ -346,11 +352,11 @@ class FormatterJsonApi extends Formatter implements FormatterInterface {
           $new_includes_parents[] = $field_name;
           $included[$field_path][$include_key] = $this->renormalize($field_item, $included, $nested_allowed_fields, $new_includes_parents);
           $included[$field_path][$include_key] += $include_links ? array('links' => $include_links) : array();
-          $rel[] = $element;
+          $rel[$include_key] = $element;
         }
         // Only place the relationship info.
         $result['relationships'][$field_name] = array(
-          'data' => $single_item ? reset($rel) : $rel,
+          'data' => $single_item ? reset($rel) : array_values($rel),
         );
         if (!empty($relationship_links)) {
           $result['relationships'][$field_name]['links'] = $relationship_links;
@@ -416,6 +422,7 @@ class FormatterJsonApi extends Formatter implements FormatterInterface {
    *   The contents for the JSON API attribute or relationship.
    */
   protected function embedField(ResourceFieldInterface $resource_field, $parent_id, DataInterpreterInterface $interpreter, array &$parents, array &$parent_hashes) {
+    static $embedded_resources = array();
     // If the field points to a resource that can be included, include it
     // right away.
     if (!$resource_field instanceof ResourceFieldResourceInterface) {
@@ -444,17 +451,19 @@ class FormatterJsonApi extends Formatter implements FormatterInterface {
       return $empty_value + array('#resource_id' => $id);
     }, $ids);
     if ($this->needsIncluding($resource_field, $parents)) {
-      $value = $resource_field->render($interpreter);
-      if (
-        empty($value) ||
-        !static::isIterable($value)
-      ) {
-        return $value;
+      $cid = sprintf('%s:%d.%d--%s', $resource_info['name'], $resource_info['majorVersion'], $resource_info['minorVersion'], implode(',', $ids));
+      if (!isset($embedded_resources[$cid])) {
+        $result = $resource_field->render($interpreter);
+        if (empty($result) || !static::isIterable($result)) {
+          $embedded_resources[$cid] = $result;
+          return $result;
+        }
+        $new_parents = $parents;
+        $new_parents[] = $public_field_name;
+        $result = $this->extractFieldValues($result, $new_parents, $parent_hashes);
+        $embedded_resources[$cid] = $cardinality == 1 ? array($result) : $result;
       }
-      $new_parents = $parents;
-      $new_parents[] = $public_field_name;
-      $value = $this->extractFieldValues($value, $new_parents, $parent_hashes);
-      $value = $cardinality == 1 ? array($value) : $value;
+      $value = $embedded_resources[$cid];
     }
     // At this point we are dealing with an embed.
     $value = array_filter($value);

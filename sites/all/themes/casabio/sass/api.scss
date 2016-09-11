@@ -24,7 +24,7 @@
 
 /* HTML element (SMACSS base) rules */
 @import "base/normalize";
-@import "base/formalize";
+@import "base/form_elements";
 @import "base/html5boilerplate";
 @import "base/elements";
 
@@ -67,7 +67,7 @@ body > #header {
 			}
 			ul.endpoints li.endpoint ul.operations li.operation div.content div.sandbox_header input.submit {
 				@extend button.primary;
-			    padding: 0.9em 1.2em;
+		    padding: 0.9em 1.2em;
 				font-size: 1em;
 			}
 			a.toggleOperation {

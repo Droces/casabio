@@ -45,9 +45,9 @@ files[] = tests/RestfulViewEntityMultiLingualTestCase.test
 files[] = tests/RestfulViewEntityTestCase.test
 files[] = tests/RestfulViewModeAndFormatterTestCase.test
 
-; Information added by Drupal.org packaging script on 2016-04-28
-version = "7.x-2.9"
+; Information added by Drupal.org packaging script on 2016-06-16
+version = "7.x-2.11"
 core = "7.x"
 project = "restful"
-datestamp = "1461850431"
+datestamp = "1466059445"
 
