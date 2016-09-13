@@ -85,6 +85,10 @@ function casabio_preprocess_page(&$variables, $hook) {
       break;
   }
 
+  if (drupal_match_path(request_path(), 'search*')) {
+    $page_container_class = 'page_width_regular';
+  }
+
   $variables['page_container_class'] = $page_container_class;
 }
 // */
@@ -280,6 +284,21 @@ function casabio_preprocess_comment(&$variables, $hook) {
 function casabio_preprocess_search_result(&$variables) {
   // dpm($variables, '$variables');
   $variables['type'] = $variables['result']['type'];
+
+  $teaser = node_view($variables['result']['node'],'teaser');
+  $variables['result_rendered'] = drupal_render($teaser);
+
+  // $variables['theme_hook_suggestions'][] = 'search_result_wrapper';
+  $variables['theme_hook_suggestions'] = array('search_result_wrapper');
+}
+
+
+
+/**
+ * Override or insert variables into the search result template.
+ */
+function casabio_preprocess_search_results(&$variables) {
+  // dpm($variables, '$variables');
 }
 
 /**

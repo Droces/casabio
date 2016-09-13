@@ -979,11 +979,31 @@ ul.contextual-links {
 /* -----------------------------------------------------------------------------
                                                                 Search
 */
-.search-result {
-  h3 .type {
-    color: grey;
-  }
+.search-results {
+  padding: 0;
 }
+// .search-result {
+//   @extend .pane;
+//   @extend .pane.inline;
+//   @include group;
+//   position: relative;
+//   padding: 1em;
+//   margin-right: 20px;
+//   box-sizing: border-box;
+//   display: block;
+
+//   a:not([role="block"]) {
+//     position: relative;
+//   }
+
+//   h3 {
+//     margin-top: 0;
+
+//     .type {
+//       color: grey;
+//     }
+//   }
+// }
 
 
 
