@@ -90,7 +90,7 @@ class Interactions__0_1 extends ResourceNode implements ResourceInterface {
 
   public function bodyProcess($value) {
     // watchdog('Called: bodyProcess()', 'RESTful API; observations:0.1');
-    // watchdog('RESTful API', 'In observations:0.1 -> bodyProcess(): ' . json_encode($value));
+    // watchdog('RESTful API', 'In observations:0.1->bodyProcess(): ' . json_encode($value));
 
     return $value['value'];
   }

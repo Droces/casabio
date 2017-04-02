@@ -1,0 +1,219 @@
+/**
+ * @file
+ * 
+ */
+
+/*
+ * Contents
+
+  Taxa
+  Habitats
+  Taxa
+ */
+
+
+[data-view-mode="teaser"],
+[data-view-mode="small"],
+[data-view-mode="field_guide"] {
+  .show,
+  .tell,
+  .first,
+  .middle,
+  .last {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .show {
+    .field-type-image .field-item > img {
+      border-top-left-radius: $corner_radius-regular;
+    }
+  }
+  .tell {
+    padding: 0.3em 1.5em 1.2em 1.5em;
+  }
+  .tell a {
+    position: relative;
+    z-index: 20;
+  }
+}
+
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Taxa
+*/
+.taxonomy-term[data-vocabulary="taxa"] {
+  .ol-map {
+    width: 300px;
+    height: 300px;
+  }
+
+  label {
+    font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0.3em;
+  }
+
+  $field-guide-image-height: 130px;
+  $field-guide-grid-gutter: 2px;
+
+  &[data-view-mode="field_guide"] {
+    width: 940px;
+
+    .show {
+      width: $field-guide-image-height * 3 + ($field-guide-grid-gutter * 2);
+      padding-right: 2em;
+
+      & > * {
+        display: table-cell;
+        width: $field-guide-image-height;
+        height: $field-guide-image-height;
+        vertical-align: top;
+      }
+    }
+
+    h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+
+      div {
+        display: inline;
+      }
+    }
+
+    .content {
+      @include group;
+    }
+    .ol-map {
+      // @extend .left;
+      // width: $field-guide-image-height;
+      // height: $field-guide-image-height;
+
+      .ol-overlaycontainer-stopevent {
+        display: none;
+      }
+    }
+    .field-name-field-pictures,
+    .field-name-field-range,
+    .ol-map {
+      border-left: solid $field-guide-grid-gutter white;
+    }
+    .field-name-field-pictures {
+      @include group;
+      // padding-left: $field-guide-grid-gutter;
+
+      & > .field-items > .field-item {
+        width: ($field-guide-image-height - $field-guide-grid-gutter) / 2;
+        height: ($field-guide-image-height - $field-guide-grid-gutter) / 2;
+        float: left;
+
+        &:nth-child(n+3) {
+          margin-top: $field-guide-grid-gutter;
+        }
+        &:nth-child(2n) {
+          margin-left: $field-guide-grid-gutter;
+        }
+      }
+    }
+    .field-name-field-range {
+      // padding-left: $field-guide-grid-gutter;
+    }
+    .taxonomy-term-description {
+      font-size: 0.85em;
+
+      @include overflow_fade(white, 1.4em * 3, 3em, 1.4em);
+    }
+    .field-name-field-etymology {
+      font-size: 0.75em;
+      color: #5c5c5c;
+
+      @include overflow_fade(white, 1.4em * 2, 3em, 1.4em);
+    }
+    // .field-name-field-taxon-rank {
+    //   font-weight: normal;
+    //   font-style: italic;
+    //   color: grey;
+    //   font-size: 0.8em;
+    // }
+  }
+  &[data-view-mode="full"] {
+    .field-name-field-taxon-rank {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      color: grey;
+    }
+    .ol-map {
+      width: auto;
+      height: 500px;
+    }
+    .field-name-field-pictures {
+      & > .field-items {
+        @extend .cols-4;
+      }
+    }  
+  }
+}
+.taxa-tree {
+  ul {
+    margin: 0;
+    padding-left: 0.6em;
+
+    li {
+      list-style-type: disc;
+
+      & + li {
+        margin-top: 0;
+      }
+    }
+  }
+  ul.children {
+    font-size: 0.9em;
+  }
+  & > ul {
+    margin-left: 1em;
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Localities
+*/
+.taxonomy-term[data-vocabulary="locality"] {
+  &[data-view-mode="small"] {
+    width: 940px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+
+    .show {
+      width: 300px;
+      padding-right: 2em;
+    }
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Habitats
+*/
+.taxonomy-term.vocabulary-habitats {
+  &[data-view-mode="teaser"] {
+    .field {
+      @include column(2, $gutter-narrow);
+    }
+    .field-label,
+    .field-label + * {
+      display: table-cell;
+    }
+    .field-label {
+      width: 8em;
+    }
+  }
+}

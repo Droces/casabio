@@ -45,7 +45,14 @@ Drupal.form_prefiller = {
 
     // For each field in the block, find matching view result field, and use it's value
     $.each(form_fields, function( index, field ) {
-      Drupal.form_prefiller.clear_form_field(field);
+      // console.log('field: ', field);
+      if ($(field).attr('type') == 'text' && $(field).attr('data-default-value')) {
+        // console.log('default value: ', $(field).attr('data-default-value'));
+        $(field).val($(field).attr('data-default-value'));
+      }
+      else {
+        Drupal.form_prefiller.clear_form_field(field);
+      }
     });
   },
 
@@ -111,18 +118,18 @@ Drupal.form_prefiller = {
     // console.log('field_name: ', field_name);
 
     // Convert Drupal field name to API equivalent
-    if (Drupal.edit_selected.is_page('observation_info')) {
+    if (Drupal.contribute.is_page('observation_info')) {
       field_name = settings.API.observations_field_names_map[field_name];
     }
-    else if (Drupal.edit_selected.is_page('picture_info')
-      || Drupal.edit_selected.is_page('upload')) {
+    else if (Drupal.contribute.is_page('picture_info')
+      || Drupal.contribute.is_page('upload')) {
       field_name = settings.API.pictures_field_names_map[field_name];
     }
     // console.log('field_name: ', field_name);
 
 
     field_values = get_field_values(field_name, selectables_data, settings);
-    // console.log('field_values: ', field_values);
+    // console.log('field_values gotten: ', field_values);
 
     // Use the values
 
@@ -136,7 +143,9 @@ Drupal.form_prefiller = {
 
     // For mixed-values fields, display a message to notify the user
     if( field_values_mixed ) {
+      // console.log('field_values_mixed');
       field.attr( 'data-values-status', "mixed" );
+      field.filter('[type="checkbox"]').prop("indeterminate", true);
     }
 
     // For single-value fields, set the form item's value to the field value
@@ -181,6 +190,7 @@ function get_field_values(field_name, selectables_data, settings) {
 
     if (typeof selectable_data.attributes[field_name] != undefined) {
       var field_value = selectable_data.attributes[field_name];
+      // console.log('field_value: ', field_value);
 
       field_value = field_value == null ? '' : field_value; // If null, change to ''
 
@@ -202,25 +212,47 @@ function get_field_values(field_name, selectables_data, settings) {
  *
  * @param values
  *   array of field values to set. More than 1 value for selects & checkboxes.
- *
- * @param field_widget
- *   string representing the type of widget (eg. '.field-widget-[type]').
  */
-function set_field_value(field, value, field_widget) {
-  // console.log('field:', field);
-  // console.log('value:', value);
-  // console.log('field_widget: ', field_widget);
+function set_field_value(field, values) {
+  // console.log('field in:', field);
+  // console.log('values in:', values);
 
-  // Text field, Textarea, Select (dropdown)
-  field.filter( "input:not([type='checkbox']), textarea, select" ).val(value);
+  if (Array.isArray(values)) {
+    // Checkboxes - can have multiple values
+    $.each(values, function(index, value) {
+      // console.log('value: ', value);
 
-  // Checkboxes
-  var checkbox = "input[type='checkbox'][name*='" + value + "']";
-  field.filter(checkbox).prop('checked', true);
+      // Select, multiple
+      if (field.is( "select" )) {
+        field.val(values);
+      }
 
-  // Radios
-  var radio = "input[type='radio'][value='" + value + "']";
-  field.filter(radio).prop('checked', true);
+      var checkbox_selector = "input[type='checkbox'][name*='" + value + "']";
+      if (field.is( checkbox_selector )) {
+        field.prop('checked', true);
+      }
+    });
+  }
+  else {
+
+    // If field has a default value but no value provided, leave it as is
+    var default_value = field.attr('data-default-value');
+    if (default_value && ! values) {
+      return null;
+    }
+
+    // Text field, Textarea, Select (dropdown)
+    field.filter( "input:not([type='checkbox']), textarea" ).val(values);
+
+    // Select, single (dropdown) - can have only one value
+    if (field.is( "select" )) {
+      field.val(values);
+    }
+
+    // Radios
+    var radio = "input[type='radio'][value='" + values[0] + "']";
+    field.filter(radio).prop('checked', true);
+  }
 }
 
 

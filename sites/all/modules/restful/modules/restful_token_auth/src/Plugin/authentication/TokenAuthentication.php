@@ -19,8 +19,8 @@ use Drupal\restful\Plugin\authentication\Authentication;
  *   label = "Token based authentication",
  *   description = "Authenticate requests based on the token sent in the request.",
  *   options = {
- *     "paramName" = "access_token",
- *   },
+ *     "paramName" = "access_token"
+ *   }
  * )
  */
 class TokenAuthentication extends Authentication {
@@ -36,10 +36,12 @@ class TokenAuthentication extends Authentication {
    * {@inheritdoc}
    */
   public function authenticate(RequestInterface $request) {
+    // dpm('authenticate()');
     // Access token may be on the request, or in the headers.
     if (!$token = $this->extractToken($request)) {
       return NULL;
     }
+    // dpm('authenticate 1');
 
     // Check if there is a token that has not expired yet.
     $query = new \EntityFieldQuery();
@@ -49,12 +51,14 @@ class TokenAuthentication extends Authentication {
       ->propertyCondition('token', $token)
       ->range(0, 1)
       ->execute();
+    // dpm($result, '$result');
 
 
     if (empty($result['restful_token_auth'])) {
       // No token exists.
       return NULL;
     }
+    // dpm('token exists');
 
     $id = key($result['restful_token_auth']);
     $auth_token = entity_load_single('restful_token_auth', $id);
@@ -83,12 +87,14 @@ class TokenAuthentication extends Authentication {
    *   The extracted token.
    */
   protected function extractToken(RequestInterface $request) {
+    // dpm('extractToken()');
     $plugin_definition = $this->getPluginDefinition();
     $options = $plugin_definition['options'];
     $key_name = !empty($options['paramName']) ? $options['paramName'] : 'access_token';
 
     // Access token may be on the request, or in the headers.
     $input = $request->getParsedInput();
+    // dpm($input, '$input');
 
     // If we don't have a $key_name on either the URL or the in the headers,
     // then check again using a hyphen instead of an underscore. This is due to
@@ -96,7 +102,9 @@ class TokenAuthentication extends Authentication {
     if (empty($input[$key_name]) && !$request->getHeaders()->get($key_name)->getValueString()) {
       $key_name = str_replace('_', '-', $key_name);
     }
+    // dpm($key_name, '$key_name');
 
+    // dpm($request->getHeaders()->get($key_name)->getValueString(), '$request->getHeaders()->get($key_name)->getValueString()');
     return empty($input[$key_name]) ? $request->getHeaders()->get($key_name)->getValueString() : $input[$key_name];
   }
 

@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'sans serif';
+  font-size: 13px;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  width: 80px;
+}
+img + img {
+  margin-left: 2px;
+}
+div.contextual-links-wrapper {
+  display: none !important;
+}
+.node-observation.view-mode-teaser {
+  border: solid 1px grey;
+  border-radius: 3px;
+  margin: 1em;
+  padding: 1px;
+}
+p {
+  margin: 0;
+}
+.field {
+  border: solid 1px #ddd;
+  padding: 0.2em 0.5em;
+}
+.field:not(:first-child) {
+  border-top-width: 0;
+}
+.field .name {
+  font-weight: bold;
+}
+.field .value {}
+article {
+  width: 28em;
+  display: inline-block;
+  vertical-align: top;
+}

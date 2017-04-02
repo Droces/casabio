@@ -1,0 +1,419 @@
+/**
+ * @file
+ * Components that are interacted with when contributing (or maintaining) content.
+ */
+
+/**
+  CONTENTS
+
+  Toolbar
+  Text editors
+  Message popups
+  Toggle
+  Groupables
+  Selectables
+*/
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Toolbar
+*/
+$toolbar-height: 2.8em;
+
+[role="toolbar"] {
+  button {
+    margin: 0;
+  }
+  label {
+    font-size: 1em;
+    font-weight: 600;
+  }
+  select {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+
+  main & {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+}
+
+// The toolbar that slides down from the top of the viewport.
+[role="toolbar"][aria-label*="primary"] {
+  height: $toolbar-height;
+  background: $colour-selection;
+  color: white;
+  // @include background-image(linear-gradient(white, shade(white, 5%)));
+  box-shadow: 0px 0px 0.3em rgba(black, 0);
+  position: fixed;
+  z-index: 1050; // Above the admin menu.
+  width: 100%;
+  @include transition(all 0.3s ease 0s);
+  top: -3em;
+
+  &[aria-expanded="true"] {
+    top: 0em;
+    box-shadow: 0px 0px 0.3em rgba(black, 0.4);
+  }
+
+  .block,
+  .block > .content,
+  form,
+  button {
+    height: 100%;
+  }
+
+  .block {
+    margin: 0;
+  }
+
+  .right {
+    margin: 0;
+
+    & + .right {
+        border-right: 1px solid rgba(white, 0.3);
+    }
+  }
+
+  form {
+    display: block;
+  }
+
+  button {
+    background: none;
+    color: inherit;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    text-shadow: none;
+    float: left;
+
+    &:not(:last-child) {
+      border-right: 1px solid rgba(black, 0.24);
+    }
+    &:not(:first-child) {
+      border-left: 1px solid rgba(white, 0.24);
+    }
+    &:not(.right) {
+      float: left;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: rgba(black, 0.14);
+    }
+    &[disabled] {
+      color: rgba(white, 0.5);
+    }
+    &.right {
+      float: right;
+    }
+  }
+  & > span,
+  form > span {
+    padding: $pointer_target-padding;
+    height: 100%;
+    box-sizing: border-box;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Text editors
+*/
+.text-format-wrapper {
+  fieldset.filter-wrapper {
+    display: none;
+  }
+    .filter-wrapper {
+        .filter-help, // A link to more info
+        .form-type-select, // Text format selection
+        .filter-guidelines {
+            display: none;
+        }
+    }
+}
+.hidden + .grippie {
+  display: none;
+}
+.grippie {
+  box-sizing: border-box;
+  @include border-bottom-radius(3px);
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Message popups
+*/
+// Small text-based popups that indicate when an action has been performed.
+// These have an optional actions such as 'undo'.
+.message_popup {
+  position: fixed;
+  bottom: 2em;
+  left: 5%;
+  background: tint( black, 8% );
+  color: white;
+  padding: $pointer_target-padding;
+  padding-right: 0.8em;
+  border-radius: $corner_radius-small;
+  @include transition(all 0.3s ease-in);
+
+  &.hidden {
+    display: block !important;
+    bottom: -3em; // Just enough to hide it
+    @include transition(all 0.3s ease-out);
+  }
+
+  button {
+    position: static;
+    // padding: 0;
+    background: none;
+    margin: 0;
+    color: $colour-buttons;
+  }
+  button:first-of-type {
+    margin-left: 2em;
+  }
+  button.close {
+    float: right;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Toggle
+*/
+
+.toggleable {
+  cursor: pointer;
+}
+.toggle {
+  background: url('../images/menu.png');
+  width: 2.5em;
+  height: 2.5em;
+  overflow: hidden;
+  color: transparent;
+  float: right;
+  margin-top: 1.2em;
+  z-index: 100;
+  display: none;
+
+  @media all and (max-width: $w-narrow) {
+    display: block;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Selectables
+*/
+$img-max-width: 140px;
+$border-width: 2px;
+$selectable-padding: 0;
+$selectable-margin: /* 6px 2px 2px */ 0 7px 7px 0;
+$selectable-border-radius: 3px;
+.selectables {
+
+  #edit-select,
+  .vbo-select-all-markup {
+    display: none !important;
+  }
+
+  .selectable {
+    position: relative;
+    background-clip: padding-box;
+    padding: $selectable-padding;
+    // margin: $border-width / 2;
+    margin: $selectable-margin;
+    // float: left;
+    display: inline-block;
+    vertical-align: top;
+    // border: solid $border-width transparent;
+    border: none;
+
+    .selectable-target {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    [type="checkbox"],
+    .views-field-views-bulk-operations {
+      display: none;
+    }
+
+    .views-field-field-image,
+    .field.image {
+      background-color: white;
+      border-radius: $selectable-border-radius;
+    }
+
+    img {
+      box-sizing: border-box;
+      // border: 1px solid transparent;
+      // width: $img-max-width;
+      box-sizing: border-box;
+      // border: 1px solid rgba(white, 0.9);
+      border-radius: $selectable-border-radius;
+    }
+    &[data-is-match="true"] {
+      // &::before {
+      //   @extend %font-icon;
+      //   @extend .icon-check:before;
+      //   position: absolute;
+      //   top: 0.2em;
+      //   left: 0.6em;
+      //   color: black;
+      //   font-size: 1.6em;
+      // }
+      .views-field-field-image,
+      [class*='views-field-field-pictures'] {
+        img {
+          opacity: 0.4;
+        }
+      }
+      img[src*="/files/styles"] {
+        opacity: 0.4;
+      }
+    }
+    $highlight-padding: 0;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100% + 2 * $highlight-padding;
+      height: 100% + 2 * $highlight-padding;
+      top: -$border-width;
+      left: -$border-width;
+      border-radius: $border-width + 6px;
+      // box-sizing: border-box;
+
+      display: none;
+    }
+    &.selected {
+      // border-color: $colour-orange;
+      // background-color: rgba( $colour-orange, 0.15 );
+      // box-shadow: 1px 1px 4px rgba( black, 0.5 );
+      // border-color: $colour-orange;
+
+      &::before {
+        @extend .material-icon;
+        content: "check_circle";
+        position: absolute;
+        font-size: 24px;
+        top: 5px;
+        left: 5px;
+        color: white;
+        z-index: 100;
+      }
+      &::after {
+        display: block;
+        background: rgba( $colour-highlight, 0.4 );
+        border: solid $border-width $colour-highlight;
+      }
+      img {
+        border-color: rgba( black, 0.7 );
+      }
+    }
+
+    &.focussed {
+      &::after {
+        display: block;
+        border: solid $border-width $colour-green;
+      }
+    }
+  }
+
+  .group .selectable {
+    // margin-top: 2px;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Groupables
+*/
+.groupables {
+  $groupables-bg-colour: grey;
+  $groupables-border-colour: shade($groupables-bg-colour, 12%);
+  $groupables-border-size: 8px;
+  $groupables-gap: 3px;
+
+  ul.content {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background-color: $groupables-bg-colour;
+    border: 1px solid $groupables-border-colour;
+    border-radius: 0.4em;
+    padding: 0.5em;
+    @include group;
+  }
+
+  .view-content {
+    @include group;
+  }
+  .groupable {
+    display: block;
+    float: left;
+    border: solid ($groupables-border-size + $groupables-gap) $groupables-bg-colour;
+    margin: 0;
+  }
+  .group {
+    list-style: none;
+    background-color: rgba( white, 0.9 );
+    // border: 1px solid $groupables-border-colour;
+    border-radius: $groupables-border-size + 4px;
+    padding: $groupables-border-size;
+    box-sizing: border-box;
+    // margin-top: 10px;
+    // margin-bottom: 10px;
+    // margin-right: 6px;
+    margin: 0 $groupables-border-size 0 0;
+    border: solid $groupables-gap $groupables-bg-colour;
+    // display: inline-block;
+    float: left;
+
+    h3 {
+      margin-top: 0;
+    }
+    li {
+      float: left;
+      vertical-align: top;
+    }
+
+    &,
+    ul {
+      width: auto;
+    }
+
+    .groupable {
+      border: none;
+
+      &:not(:first-child) {
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .selectable {
+    &.selected {
+      &::after {
+        border-color: scale-lightness($colour-highlight, 40%);
+      }
+    }
+    &.focussed {
+      &::after {
+        border-color: scale-saturation( scale-lightness($colour-links, 40%), 50%);
+      }
+    }
+  }
+}

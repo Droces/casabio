@@ -1,7 +1,36 @@
 /**
  * @file
- * A JavaScript file for…
+ * Functions needed on all or most pages of CasaBio.
  */
+
+/**
+ * CONTENTS
+ *
+ * - variable declarations -
+ *
+ * Drupal.behaviors.casa_core.attach()
+ *
+ * Drupal.casa_core
+ *  .get_site_url()
+ *  .get_api_url()
+ *  .get_api_resource_url()
+ *  .fetch_token()
+ *  .get_token()
+ *  .set_up_keypress_mgmt()
+ *  .get_collection_nid()
+ *  .close_dialogs()
+ *  .get_values_from_ref_view()
+
+ *  .set_up_dialogs()
+ *  .add_listeners()
+ *  .submit_identification_agreement()
+ *  .submit_identification_contribute_new()
+ *  .submit_identification()
+ *  .set_up_toastr()
+ *  .//switch_background()
+ *  .set_up_userlink_hover_dialogs
+ */
+
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it with an "anonymous closure". See:
@@ -17,7 +46,9 @@ var site_url; // =                'http://localhost/Current/CasaBio/';
 // var api_url =                 site_url + 'api/v1.0'; // using Services module
 var api_url; // =                 site_url + 'services'; // using RESTful module
 
-var security_token =      '';
+var security_token =      null;
+
+var timers = {};
 
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
@@ -26,20 +57,36 @@ Drupal.behaviors.casa_core = {
     // console.log('settings: ', settings);
 
     if (! page_is_setup) {
+      // Drupal.casa_utilities.start_timer('casa_core');
 
       // console.log('settings["node_info"]["fields_info"]: ', settings['node_info']['fields_info']);
 
       site_url = settings.basePath;
+      if (! site_url) {
+        throw "site_url not found";
+      }
       api_url = site_url + 'services'; // using RESTful module
 
-      Drupal.casa_core.fetch_token();
-
-      set_up_pages(context);
-
-      set_up_toastr();
+      if (settings['user']['is_logged_in']) {
+        Drupal.casa_core.fetch_token();
+      }
 
       set_up_dialogs(context);
 
+      $('.views-exposed-form').tooltip();
+
+      set_up_toastr();
+
+      set_up_userlink_hover_dialogs(context);
+
+      $('a[disabled]').on('click', function(event) {
+        // Check if it still has the disabled attributed
+        if ($(this).attr('disabled')) {
+          event.preventDefault();
+        }
+      });
+
+      // Drupal.casa_utilities.end_timer('casa_core');
       page_is_setup = true;
     }
 
@@ -48,6 +95,13 @@ Drupal.behaviors.casa_core = {
   },
   weight: 1
 };
+
+
+
+function ParamException(message) {
+  this.message = message;
+  this.name = 'ParamException';
+}
 
 
 
@@ -78,7 +132,7 @@ Drupal.casa_core = {
   },
 
 
-  fetch_token: function() {
+  fetch_token: function(success_callbacks, always_callbacks) {
     var ajax_settings = {
       // type: "POST",
       type: "GET",
@@ -90,7 +144,7 @@ Drupal.casa_core = {
 
     jqxhr.fail(function( data ) {
       toastr.error('Sorry, there was a problem fetching the security token.');
-      console.log( "In fetch_token() jqxhr.fail(), data: ", data );
+      console.log( 'jqxhr: ', jqxhr);
     });
 
     jqxhr.done(function( data ) {
@@ -98,6 +152,8 @@ Drupal.casa_core = {
       // security_token = data['token'];
       security_token = data['access_token'];
       // console.log('security_token: ', security_token);
+
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
     });
 
     jqxhr.done(function( data ) {});
@@ -106,17 +162,6 @@ Drupal.casa_core = {
 
   get_token: function() {
     return security_token;
-  },
-
-
-  /**
-   * Converts an array to an object.
-   */
-  toObject: function(arr) {
-    var rv = {};
-    for (var i = 0; i < arr.length; ++i)
-      rv[i] = arr[i];
-    return rv;
   },
 
 
@@ -170,51 +215,71 @@ Drupal.casa_core = {
     // console.log('taxon_tid: ', taxon_tid);
 
     return [taxon_tid, taxon_name];
-  },
-
-
-  get_loader_markup: function() {
-    var markup =
-    '<div class="loader" id="floatingCirclesG">' +
-    '  <div class="f_circleG" id="frotateG_01"></div>' +
-    '  <div class="f_circleG" id="frotateG_02"></div>' +
-    '  <div class="f_circleG" id="frotateG_03"></div>' +
-    '  <div class="f_circleG" id="frotateG_04"></div>' +
-    '  <div class="f_circleG" id="frotateG_05"></div>' +
-    '  <div class="f_circleG" id="frotateG_06"></div>' +
-    '  <div class="f_circleG" id="frotateG_07"></div>' +
-    '  <div class="f_circleG" id="frotateG_08"></div>' +
-    '</div>';
-    return markup;
   }
 
 };
 
 
+function get_dialogs_position() {
+  return {
+    my: "center top",
+    at: "center top+45",
+    of: window,
+    collision: 'none' };
+}
 
-function set_up_pages(context) {
+
+function set_up_dialogs(context) {
 
   // Adds div element that will contain information about keyboard shortcuts.
   $( 'body', context).append("<div id='display-shortcuts' data-transform='to-dialog' style='display: none;' title='Keyboard Shortcuts'></div>");
 
   // Transform elements to dialogs.
   var to_dialog = $('[data-transform="to-dialog"]', context);
+
   to_dialog.each(function(index, element) {
+
     var width = $(this).attr('data-width');
-    // console.log('width: ', width);
     width = typeof width != 'undefined' ? width : 600;
+    // console.log('width: ', width);
+    
+    var is_modal = $(this).attr('data-is-modal');
+    is_modal = typeof is_modal != 'undefined' ? is_modal : true;
+
+    var is_resizable = $(this).attr('data-is-resizable');
+    is_resizable = typeof is_resizable != 'undefined' ? is_resizable : false;
+
 
     $(this).dialog({
-      modal: true,
+      modal: is_modal,
       autoOpen: false,
-      resizable: false,
-      width: width
+      resizable: is_resizable,
+      width: width,
+      position: get_dialogs_position(),
+      open: function( event, ui ) {
+        $(document).trigger('dialog_opened');
+      },
+      close: function( event, ui ) {
+        $(document).trigger('dialog_closed');
+      }
     });
     // $('[data-transform="to-dialog"]').dialog('open');
-});
+  });
 
-  // @todo Parse data-width="450" as the width of the dialog.
 
+  // Bind a click handler on the ctools modal dialog's backdrop that closes that modal.
+  $('#modalBackdrop', context).once('ctools-backdrop-close-modal')
+  .click(function() {
+    Drupal.CTools.Modal.dismiss();
+    return false;
+  });
+  $(document).on('dialog_opened', function(event) {
+    // Bind a click handler on the modal dialogs' backdrops that closes modals.
+    $('.ui-widget-overlay', context).once('backdrop-close-modal').click(function() {
+      // console.log('.ui-widget-overlay.click()');
+      to_dialog.dialog( "close" );
+    });
+  });
 }
 
 
@@ -240,22 +305,35 @@ function add_listeners(context, settings) {
       }
     }
 
+    if (target == '.edit_form_wrapper') {}
+      
     if (do_open) {
       $(target).dialog('open');
     }
   });
 
+  // Handle submission of 'identification agreement form'
   var id_agreement_form = $('.node-identification-form[data-view-mode="agreement"]', context);
   id_agreement_form.submit(function( event ) {
     // event.preventDefault();
-    submit_identification_agreement($(this));
-    return false; // return false to cancel form action
+    try {
+      submit_identification_agreement($(this));
+    }
+    catch (e) {
+      console.log('e: ', e);
+      toastr.error(e.message);
+    }
+    finally {
+      return false; // Cancels form action
+    }
   });
 
+  // Handle submission of 'add new identification form'
   var id_contribute_new_form = $('.node-identification-form[data-view-mode="contribute_new"]', context);
   id_contribute_new_form.submit(function( event ) {
     // event.preventDefault();
-    submit_identification_contribute_new($(this));
+    var identify_form_wrapper = $(this).parents('.identify_form_wrapper');
+    submit_identification_contribute_new(identify_form_wrapper);
     return false; // return false to cancel form action
   });
 }
@@ -266,8 +344,21 @@ function submit_identification_agreement(form) {
 
   var observation = form.parents('.node-observation').attr('data-nid');
   var species = form.find('[name="identified_species_nid"]').val();
-  var certainty = form.find('#edit-field-certainty-und option:checked').val();
-  var source = form.find('#edit-field-identification-source-und option:checked').val();
+  var certainty = form.find('[name="field_certainty[und]"] option:checked').val();
+  var source = form.find('[name="field_identification_source[und]"] option:checked').val();
+
+  if (! observation) {
+    throw new ParamException('Observation not valid.');
+  }
+  if (! species) {
+    throw new ParamException('Species not valid.');
+  }
+  if (! certainty) {
+    throw new ParamException('Please select how certain you are.');
+  }
+  if (! source) {
+    throw new ParamException('Source not valid.');
+  }
 
   var identification = {
     // label: "string",
@@ -282,22 +373,42 @@ function submit_identification_agreement(form) {
 }
 
 
+/**
+ * Manages the saving of a "Add identification" form from within a full-page observation.
+ * 
+ * @param form
+ *   An HTML wrapper containing the species chooser view and the simplified identification form.
+ */
 function submit_identification_contribute_new(form) {
   // console.log('form: ', form);
 
-  var taxon_values = Drupal.casa_core.get_values_from_ref_view(form.parents('.full-form'));
+  var taxon_values = Drupal.casa_core.get_values_from_ref_view(form);
+  // console.log('taxon_values: ', taxon_values);
   var taxon_tid = taxon_values[0];
   var taxon_name = taxon_values[1];
 
   if (!taxon_tid) {
-    toastr.warning('You need to select a taxon before saving.');
+    toastr.warning('You need to select a taxon before saving a new identification.');
     return null;
   }
 
   var observation = form.parents('.node-observation').attr('data-nid');
   var species = taxon_tid;
-  var certainty = form.find('#edit-field-certainty-und option:checked').val();
-  var source = form.find('#edit-field-identification-source-und option:checked').val();
+  var certainty = form.find('[name="field_certainty[und]"] option:checked').val();
+  var source = form.find('[name="field_identification_source[und]"] option:checked').val();
+
+  if (! observation) {
+    throw new ParamException('Observation not valid.');
+  }
+  if (! species) {
+    throw new ParamException('Please select a species.');
+  }
+  if (! certainty) {
+    throw new ParamException('Please select how certain you are.');
+  }
+  if (! source) {
+    throw new ParamException('Source not valid.');
+  }
 
   var identification = {
     label: taxon_name,
@@ -312,15 +423,18 @@ function submit_identification_contribute_new(form) {
 }
 
 
-function submit_identification(identification) {
-  // console.log('identification: ', identification);
+/**
+ * Manages "add identification" form submission from an Observation node page.
+ */
+function submit_identification(identification, success_callbacks, always_callbacks) {
+  console.log( 'identification for submission: ', identification);
 
   var request_params = {
     // url: form.attr('action'),
     type: 'POST',
     contentType: "application/json",
       headers: {
-        "access_token": Drupal.casa_core.get_token()
+        "access-token": Drupal.casa_core.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
       },
     url: Drupal.casa_core.get_api_resource_url('identification'),
@@ -339,6 +453,9 @@ function submit_identification(identification) {
 
   jqxhr.success(function(data) {
     toastr.success('Your identification has been saved successfully. Reloading in 3 seconds…');
+
+    Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
     var reload_timeout = window.setTimeout(function(){
       document.location.reload();
     }, 3000);
@@ -346,17 +463,7 @@ function submit_identification(identification) {
 
   jqxhr.always(function( data ) {
     toastr_info.remove();
-  });
-}
-
-
-
-function set_up_dialogs(context) {
-  // Bind a click handler on the ctools modal dialog's backdrop that closes that modal.
-  $('#modalBackdrop', context).once('ctools-backdrop-close-modal')
-  .click(function() {
-    Drupal.CTools.Modal.dismiss();
-    return false;
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 
@@ -375,39 +482,122 @@ function set_up_toastr() {
 }
 
 
+// /**
+//  * Creates JCarousel for background images.
+//  */
+// function switch_background(carousel_item_selector) {
+
+//   var stay_duration = 5 * 1000; // 5 seconds in milliseconds.
+//   var animation_speed = 'slow';
+
+//   var carousel_item = $(carousel_item_selector);
+//   var carousel_length = carousel_item.length; // How many items (li).
+//   var current_item = carousel_length;
+
+//   var change_item = function () { // Changes the background image.
+
+//     carousel_item.eq(current_item-1).fadeOut(animation_speed , function () {
+
+//       carousel_item.eq(current_item-1).css("z-index","-2") // Send to back .
+//       carousel_item.eq(current_item-1).show(); // Show item again , after is has faded.
+
+//       current_item -= 1; // Decrement for next item.
+
+//       if (current_item == 0) { // If no more items.
+//         current_item = carousel_length;  //reset current_item.
+//       }
+
+//       if (current_item == carousel_length) { // If carousel has reached end.
+//         carousel_item.css("z-index","-1") // Bring all forward.
+//       }
+
+//     });
+//   };
+
+//   setInterval( change_item, stay_duration ); // Interval between changes.
+// }
+
+
+
+function set_up_userlink_hover_dialogs(context) {
+  // var user_links = $('main a[href*="/user/"], main a[href*="/users/"]', context);
+  var user_links = $('main a.user-link', context);
+
+  user_links.each(function() {
+    var href = $(this).attr('href');
+    var username = href.substring(href.lastIndexOf('/') + 1);
+    // console.log('username: ', username);
+
+    // $(this).append('-');
+
+    $(this).attr('data-username', username);
+
+    var dialog_element = $('.user-dialog[data-username="' + username + '"]');
+    // console.log('.user-dialog[data-username="' + username + '"].length: ', dialog_element.length);
+
+    if (dialog_element.length < 1) { // If it doesn't exist yet
+      var dialog = $('<div class="user-dialog" data-username="' + username + '">Loading…</div>');
+      $(this).after(dialog);
+      
+      dialog.dialog({
+        autoOpen: false,
+        width: 450,
+        position: get_dialogs_position()
+      }); 
+    }
+  });
+
+  // $('.user-dialog').each(function{
+  // });
+
+  // When a link to a user is hovered, show a dialog displaying user info
+  user_links.on('mouseenter', function() {
+    // console.log('User linked hovered');
+
+    var link = this;
+
+    // show_userlink_hover_dialog(this);
+
+    var user_link_delay = 0.8; // In seconds
+    setTimeout(function(){
+        show_userlink_hover_dialog(link);
+    }, user_link_delay * 1000);
+  });
+
+  $('a[href*="/user/"], a[href*="/users/"]').on('mouseleave', function() {
+    var username = $(this).attr('data-username');
+    var dialog_element = $('.user-dialog[data-username="' + username + '"]');
+    dialog_element.dialog( "close" );
+  });
+
+  page_is_setup = true;
+}
+
 /**
- * Creates JCarousel for background images.
+ * Creates a dialog used to alert of ungrouped pictures when moving to next phase.
  */
-function switch_background(carousel_item_selector) {
+Drupal.theme.group_individuals_dialog = function () {
+}
 
-  var stay_duration = 5 * 1000; // 5 seconds in milliseconds.
-  var animation_speed = 'slow';
 
-  var carousel_item = $(carousel_item_selector);
-  var carousel_length = carousel_item.length; // How many items (li).
-  var current_item = carousel_length;
+function show_userlink_hover_dialog(link) {
+    var username = $(link).attr('data-username');
+    // console.log('username: ', username);
+    var dialog_element = $('.user-dialog[data-username="' + username + '"]');
+    // console.log('dialog_element.length: ', dialog_element.length);
 
-  var change_item = function () { // Changes the background image.
+    if (! dialog_element.hasClass('dialog-fetched')) {
+      var username = dialog_element.attr('data-username');
+      var url = Drupal.casa_core.get_site_url() + '/user/tooltip/' + username;
 
-    carousel_item.eq(current_item-1).fadeOut(animation_speed , function () {
+      dialog_element.load(url, function(){
+        // console.log('opened');
+        dialog_element.dialog( "open" );
+      });
+      dialog_element.addClass('dialog-fetched');
+    }
 
-      carousel_item.eq(current_item-1).css("z-index","-2") // Send to back .
-      carousel_item.eq(current_item-1).show(); // Show item again , after is has faded.
-
-      current_item -= 1; // Decrement for next item.
-
-      if (current_item == 0) { // If no more items.
-        current_item = carousel_length;  //reset current_item.
-      }
-
-      if (current_item == carousel_length) { // If carousel has reached end.
-        carousel_item.css("z-index","-1") // Bring all forward.
-      }
-
-    });
-  };
-
-  setInterval( change_item, stay_duration ); // Interval between changes.
+    dialog_element.dialog( "open" );
 }
 
 

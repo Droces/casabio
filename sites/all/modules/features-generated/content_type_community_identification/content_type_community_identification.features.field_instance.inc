@@ -50,7 +50,7 @@ function content_type_community_identification_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 3,
       ),
       'text' => array(
         'label' => 'above',
@@ -125,6 +125,7 @@ function content_type_community_identification_field_default_field_instances() {
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
           'links' => 0,
+          'use_content_language' => 1,
           'view_mode' => 'text',
         ),
         'type' => 'entityreference_entity_view',
@@ -156,8 +157,9 @@ function content_type_community_identification_field_default_field_instances() {
       'settings' => array(
         'fields' => array(),
         'type_settings' => array(
-          'allow_existing' => 1,
-          'allow_new' => 1,
+          'allow_clone' => 0,
+          'allow_existing' => 0,
+          'allow_new' => 0,
           'delete_references' => 0,
           'label_plural' => 'nodes',
           'label_singular' => 'node',
@@ -288,7 +290,7 @@ function content_type_community_identification_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'text' => array(
         'label' => 'above',

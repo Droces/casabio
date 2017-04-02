@@ -13,6 +13,7 @@
 /* -----------------------------------------------------------------------------
                                                                 Views
 */
+
 $zen-column-count: 4; // views are within #content, which has 4 columns
 
 .view {
@@ -48,10 +49,6 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
       display: inline;
       vertical-align: top;
     }
-  }
-  .views-row {
-    display: inline;
-    vertical-align: top;
   }
 
   &.grid-2 {
@@ -139,39 +136,67 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
 
 
 
+/* -----------------------------------------------------------------------------
+                                                            Exposed filters
+*/
 // The exposed form may be in a block and not inside the actual view
 .views-exposed-form {
   text-align: center;
+  margin: 0px;
+
+  * + & {
+    margin-top: 1.8em;
+  }
+    
+  body.page-views main & {
+    background: #f0f0f0;
+    border: solid 1px #d4d4d4;
+    border-radius: $corner_radius-regular;
+    padding: 1.5em;
+    font-size: 0.8em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    label {
+      margin-bottom: 0.2em;
+    }
+    input.form-autocomplete,
+    input.form-text,
+    select.form-select {
+      width: 16em;
+    }
+  }
 
   .views-exposed-widgets {
-    @include display(flex);
+    // @include display(flex);
   }
-  .views-exposed-widget {
+  .views-exposed-widget { // Doesn't have unnecessary specificity
     float: none;
-    @include flex(1 1 auto);
+    // @include flex(1 1 auto);
     // padding: 0 /* 0.5em 1em 0px 0px */;
     // vertical-align: bottom;
-  }
-  main & {
-    label {
-        margin-bottom: 0.2em;
+
+    display: inline-block;
+    text-align: left;
+    vertical-align: top;
+
+    &.views-widget-filter-has_identifications {
+      width: 11em;
     }
-    input.form-autocomplete {
-      width: 22em;
-    }
   }
-}
-.views-exposed-widgets {
-  // background: rgba(black, 0.03);
-  // border: solid 1px $colour-dividers;
-  // border-radius: $corner_radius-regular;
-  margin: 1.8em 0px;
-  font-size: 0.9em;
-}
-.views-exposed-widget { // Doesn't have unnecessary specificity
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
+
+  label[title] {
+    border-bottom: none;
+  }
+
+  // label[title]::after,
+  .description {
+    @extend .tooltip_q;
+    float: right;
+  }
+  div.description {
+    display: none;
+  }
 }
 
 

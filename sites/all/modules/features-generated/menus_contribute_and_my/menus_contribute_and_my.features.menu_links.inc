@@ -10,6 +10,66 @@
 function menus_contribute_and_my_menu_default_menu_links() {
   $menu_links = array();
 
+  // Exported menu link: menu-contribute-stages_group:contribute/multiple-observations/group.
+  $menu_links['menu-contribute-stages_group:contribute/multiple-observations/group'] = array(
+    'menu_name' => 'menu-contribute-stages',
+    'link_path' => 'contribute/multiple-observations/group',
+    'router_path' => 'contribute/multiple-observations/group',
+    'link_title' => 'Group',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Group pictures into observations',
+      ),
+      'identifier' => 'menu-contribute-stages_group:contribute/multiple-observations/group',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -48,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-contribute-stages_upload:contribute/upload.
+  $menu_links['menu-contribute-stages_upload:contribute/upload'] = array(
+    'menu_name' => 'menu-contribute-stages',
+    'link_path' => 'contribute/upload',
+    'router_path' => 'contribute/upload',
+    'link_title' => 'Upload',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Submit multiple images to CasaBio.',
+      ),
+      'identifier' => 'menu-contribute-stages_upload:contribute/upload',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-contribute_request:node/73552.
+  $menu_links['menu-contribute_request:node/73552'] = array(
+    'menu_name' => 'menu-contribute',
+    'link_path' => 'node/73552',
+    'router_path' => 'node/%',
+    'link_title' => 'Request',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-contribute_request:node/73552',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+  );
   // Exported menu link: menu-contribute_span-class-icon-addcirclespan-other:node/62095.
   $menu_links['menu-contribute_span-class-icon-addcirclespan-other:node/62095'] = array(
     'menu_name' => 'menu-contribute',
@@ -17,9 +77,7 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'router_path' => 'node/%',
     'link_title' => '<span class=" icon-add_circle"></span> Other',
     'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
+      'attributes' => array(),
       'html' => 1,
       'identifier' => 'menu-contribute_span-class-icon-addcirclespan-other:node/62095',
     ),
@@ -29,27 +87,6 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'has_children' => 0,
     'expanded' => 0,
     'weight' => -48,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-contribute_span-class-icon-helpspan-request:node/14.
-  $menu_links['menu-contribute_span-class-icon-helpspan-request:node/14'] = array(
-    'menu_name' => 'menu-contribute',
-    'link_path' => 'node/14',
-    'router_path' => 'node/%',
-    'link_title' => '<span class=" icon-help"></span> Request',
-    'options' => array(
-      'attributes' => array(
-        'title' => 'Request Addition or Alteration',
-      ),
-      'html' => 1,
-      'identifier' => 'menu-contribute_span-class-icon-helpspan-request:node/14',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
     'customized' => 1,
   );
   // Exported menu link: menu-contribute_span-classicon-imagespan-an-observation:contribute/observation.
@@ -73,17 +110,18 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
   );
-  // Exported menu link: menu-my_home:my-home.
-  $menu_links['menu-my_home:my-home'] = array(
-    'menu_name' => 'menu-my',
-    'link_path' => 'my-home',
-    'router_path' => 'my-home',
-    'link_title' => 'Home',
+  // Exported menu link: menu-contribute_span-classicon-photolibraryspan-observations:contribute/upload.
+  $menu_links['menu-contribute_span-classicon-photolibraryspan-observations:contribute/upload'] = array(
+    'menu_name' => 'menu-contribute',
+    'link_path' => 'contribute/upload',
+    'router_path' => 'contribute/upload',
+    'link_title' => '<span class="icon-photo_library"></span> Observations',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'menu-my_home:my-home',
+      'html' => 1,
+      'identifier' => 'menu-contribute_span-classicon-photolibraryspan-observations:contribute/upload',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -115,36 +153,16 @@ function menus_contribute_and_my_menu_default_menu_links() {
     'weight' => -48,
     'customized' => 1,
   );
-  // Exported menu link: menu-my_span-classicon-assessmentspan-contributions:node/7.
-  $menu_links['menu-my_span-classicon-assessmentspan-contributions:node/7'] = array(
-    'menu_name' => 'menu-my',
-    'link_path' => 'node/7',
-    'router_path' => 'node/%',
-    'link_title' => '<span class="icon-assessment"></span> Contributions',
-    'options' => array(
-      'attributes' => array(
-        'title' => 'Everything you have contributed to CasaBio',
-      ),
-      'html' => 1,
-      'identifier' => 'menu-my_span-classicon-assessmentspan-contributions:node/7',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -49,
-    'customized' => 1,
-  );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('<span class=" icon-add_circle"></span> Other');
-  t('<span class=" icon-help"></span> Request');
-  t('<span class="icon-assessment"></span> Contributions');
   t('<span class="icon-image"></span> An observation');
-  t('Home');
+  t('<span class="icon-photo_library"></span> Observations');
+  t('Group');
   t('Profile');
+  t('Request');
+  t('Upload');
 
   return $menu_links;
 }

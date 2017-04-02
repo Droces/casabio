@@ -384,10 +384,12 @@ class Request implements RequestInterface {
    *   The headers.
    */
   protected static function parseHeadersFromGlobals() {
+    // dpm('parseHeadersFromGlobals()');
     $bag = new HttpHeaderBag();
     $headers = array();
     if (function_exists('apache_request_headers')) {
       $headers = apache_request_headers();
+      // dpm($headers, '$headers from Apache');
     }
     else {
       $content_header_keys = array('CONTENT_TYPE', 'CONTENT_LENGTH');
@@ -406,6 +408,7 @@ class Request implements RequestInterface {
     }
     // Iterate over the headers and bag them.
     foreach ($headers as $name => $value) {
+      // dpm('header ' . $name . ': ' . $value);
       $bag->add(HttpHeader::create($name, $value));
     }
     return $bag;

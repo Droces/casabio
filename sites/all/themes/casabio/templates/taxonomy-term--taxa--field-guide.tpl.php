@@ -41,18 +41,28 @@
  * @ingroup themeable
  */
 ?>
-<div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>">
+<div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>" data-vocabulary="<?php print $term->vocabulary_machine_name; ?>" data-view-mode="<?php print $view_mode; ?>">
 
   <?php if (isset($content['term_block_link'])): ?>
     <?php print render($content['term_block_link']); ?>
   <?php endif; ?>
 
   <?php if (!$page): ?>
-    <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a>
-    <?php if (isset($content['field_common_names'])) {
-      print '(' . render($content['field_common_names']) . ')';
-    } ?>
-    <?php print render($content['field_taxon_rank']); ?></h2>
+    <h2><a href="<?php print $term_url; ?>">
+      <!-- Prefix: Rank -->
+      <?php if (isset($content['field_taxon_rank'])) {
+        print '<span class="prefix">' . render($content['field_taxon_rank']) . '</span>';
+      } ?>
+
+      <!-- Title -->
+      <?php print $term_name; ?>
+
+      <!-- Suffix: Common names -->
+      <?php if (isset($content['field_common_names'])) {
+        print '<span class="suffix">(' . render($content['field_common_names'][0]) . ')</span>';
+      } ?>
+      <?php /*print render($content['field_taxon_rank']);*/ ?>
+    </a></h2>
   <?php endif; ?>
 
   <div class="col-container">
@@ -77,7 +87,8 @@
 
     <section class="tell">
 
-      <div class="content">
+      <div class="content" role="presentation">
+        <?php hide($content['field_common_names']); ?>
         <?php print render($content); ?>
       </div>
 

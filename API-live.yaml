@@ -1,0 +1,1021 @@
+swagger: "2.0"
+
+###############################################################################
+#                              API Information                                #
+###############################################################################
+info:
+  title: CasaBio API
+  description:
+  version: "0.1"
+  # termsOfService: http://helloreverb.com/terms/
+  contact:
+    name: touchdreams.co.za
+  # license:
+  #   name: Apache 2.0
+  #   url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: casabio.org
+# basePath: /api/v1.0
+host: casabio.org
+basePath: /services
+schemes:
+  - http
+produces:
+  - application/vnd.api+json
+
+
+
+
+###############################################################################
+#                                   Parameters                                #
+###############################################################################
+parameters:
+  # ---------------- Authentication
+  # Session-id:
+  #   in: header
+  #   name: Cookie
+  #   description: Session id. This is required; although a browser will save and submit it automatically. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+  #   required: false
+  #   type: string
+  X-CSRF-Token:
+    in: header
+    name: X-CSRF-Token
+    description: Session token. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+    required: true
+    type: string
+  Access token:
+    in: header
+    name: access-token
+    description: Session token. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+    required: true
+    type: string
+
+
+  # ---------------- Nodes
+  id:
+    name: id
+    in: path
+    description: "The resource's identifier number"
+    type: number
+    required: true
+
+  Picture:
+    name: Picture
+    in: body
+    description: "The picture's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/Picture-for-submission"
+
+  Observation:
+    name: Observation
+    in: body
+    description: "The observation's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/Observation-for-submission"
+
+  Collection:
+    name: Collection
+    in: body
+    description: "The collection's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/Collection-for-submission"
+
+  Identification:
+    name: Identification
+    in: body
+    description: "The identification's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/Identification-for-submission"
+
+  Interaction:
+    name: Interaction
+    in: body
+    description: "The interaction's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/Interaction-for-submission"
+
+
+  # ---------------- Filters, sorting, pagination
+  Pagination:
+    name: "page"
+    in: query
+    description: ""
+    type: integer
+    format: int32
+    required: false
+  Offset:
+    name: "offset"
+    in: query
+    description: ""
+    type: integer
+    format: int32
+    required: false
+  Range:
+    name: "range"
+    in: query
+    description: ""
+    type: integer
+    format: int32
+    required: false
+
+  Filter-label:
+    name: "filter[label]"
+    in: query
+    description: ""
+    type: string
+    required: false
+  Filter-picture-subject:
+    name: "filter[subject]"
+    in: query
+    description: ""
+    type: number
+    required: false
+  Filter-collection:
+    name: "filter[collection]"
+    in: query
+    description: ""
+    type: string
+    required: false
+
+
+
+###############################################################################
+#                                   Paths                                     #
+###############################################################################
+paths:
+
+  # ==========================================================================#
+  #                                                   AJAX                    #
+  # --------------------------------------------------------------------------#
+  /ajax/observations/create-blank: # casa_node_mgt_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Creates observations that don't have pictures. __ DEV __
+      parameters:
+        # - $ref: '#/parameters/nid'
+      responses:
+        200:
+          description: OK
+          # schema:
+          #   $ref: "#/definitions/Identification"
+
+  /ajax/images/rotate: # casa_node_mgt_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Rotates images. __ DEV __
+      parameters:
+        - name: Ids
+          in: body
+          description: The ids of the pictures that reference the images to be rotated.
+          required: true
+          type: integer
+          format: int32
+        - name: Degrees
+          in: body
+          description: The amount that the image should be rotated, in degrees.
+          required: true
+          type: integer
+          format: int32
+          # schema:
+          #   $ref: '#/definitions/User'
+      responses:
+        200:
+          description: OK
+          # schema:
+          #   $ref: "#/definitions/Identification"
+
+  /ajax/pictures/auto_group/{collection}/{max_time_gap}: # auto_group_nodes_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+      responses:
+        200:
+          description: OK
+
+  /ajax/taxa/get-children/{tid}: # casa_taxa_mgt_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+      responses:
+        200:
+          description: OK
+
+  /ajax/contribute/save-uploaded: # casa_upload_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+        - name: Collection
+          in: body
+          required: true
+          type: integer
+          format: int32
+        - name: Temp name
+          in: body
+          required: true
+          type: string
+        - name: File name
+          in: body
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /ajax/number_specimens: # edit_selected_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+        - name: Ids
+          in: body
+          required: true
+          type: array
+        - name: Method
+          in: body
+          required: true
+          type: string
+          description: "Either 'increment' or 'append'."
+        - name: Starting number
+          in: body
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+
+  /ajax/collections/{collection}/group_pictures_into_observations: # group_selected_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+        - name: Collection
+          in: path
+          required: true
+          type: integer
+          format: int32
+        - name: Ids
+          in: body
+          required: true
+          type: array
+      responses:
+        200:
+          description: OK
+
+  /ajax/collections/{uid}: # casa_taxa_mgt_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      description: "Provides all collections contributed by user."
+      parameters:
+        - name: User
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+
+  /ajax/popular_taxa_form/{ID}: # maintain_menu()
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+
+  /ajax/remote_status:
+    post:
+      tags:
+        - AJAX
+      summary: Desc. __ DEV __
+      parameters:
+      responses:
+        200:
+          description: OK
+
+
+  # ==========================================================================#
+  #                                                   All endpoints           #
+  # --------------------------------------------------------------------------#
+  /:
+    get:
+      summary: View all API endpoints
+      description: "View a list of all API endpoints and their schemas."
+      responses:
+        200:
+          description: "Successful"
+
+  /example:
+    get:
+      summary: "Example custom resource"
+      description: "A resource that serves as an example of a custom RESTful resource."
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Authentication          #
+  # --------------------------------------------------------------------------#
+  /session/token:
+    get:
+      tags:
+        - Authentication
+      summary: "Provides X-CSRF token"
+      description: "Provides CSRF token for cookie authentication."
+      responses:
+        200:
+          description: "Successful"
+  /login:
+    get:
+      tags:
+        - Authentication
+      summary: "Login a user"
+      description: "Login a user and return a JSON along with the authentication cookie."
+      responses:
+        200:
+          description: "Successful"
+
+  /login-token:
+    get:
+      tags:
+        - Authentication
+      summary: "Provides access_ token"
+      description: "Provides access-token for token authentication."
+      responses:
+        200:
+          description: "Successful"
+
+  /refresh-token:
+    post:
+      tags:
+        - Authentication
+      summary: "Refreshes access_ token"
+      description: "Refreshes access-token for token authentication."
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Users                   #
+  # --------------------------------------------------------------------------#
+  /v1.0/users:
+    get:
+      summary: "View a list of registered users."
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+      description: "View a list of users registered in CasaBio. Requires authentication."
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Example sub-module      #
+  # --------------------------------------------------------------------------#
+  # /v1.0/variables:
+  #   get:
+  #     summary: "View a list of all variables."
+  #     description: "View a list of all variables in CasaBio."
+  #     responses:
+  #       200:
+  #         description: "Successful"
+
+  # /v2.1/articles:
+  #   get:
+  #     summary: "View a list of all articles."
+  #     description: "View a list of all articles."
+  #     responses:
+  #       200:
+  #         description: "Successful"
+
+  # /v1.0/tags:
+  #   get:
+  #     summary: "View a list of all tags."
+  #     description: "View a list of all tags."
+  #     responses:
+  #       200:
+  #         description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Files                   #
+  # --------------------------------------------------------------------------#
+  /file-upload:
+    post:
+      summary: ""
+      description: ""
+      parameters:
+        - $ref: '#/parameters/X-CSRF-Token'
+        # - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Picture'
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Pictures                #
+  # --------------------------------------------------------------------------#
+  /v0.1/pictures:
+    get:
+      tags:
+        - Pictures
+      summary: "View a list of pictures"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+        - $ref: '#/parameters/Filter-label'
+        - $ref: '#/parameters/Filter-collection'
+        - $ref: '#/parameters/Filter-picture-subject'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+        # 401:
+        #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
+        404:
+          description: "Page not found."
+
+    post:
+      tags:
+        - Pictures
+      summary: "Create a new picture"
+      description: "Create a new picture."
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Picture'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
+    options:
+      tags:
+        - Pictures
+      summary: "View a list of picture schemas"
+      description: ""
+      parameters:
+      responses:
+        200:
+          description: "Successful"
+
+  /v0.1/pictures/{id}:
+    get:
+      tags:
+        - Pictures
+      summary: "View a picture"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
+    put:
+      tags:
+        - Pictures
+      summary: "Replace a picture"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Picture'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
+    patch:
+      tags:
+        - Pictures
+      summary: "Update a picture"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Picture'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
+    delete:
+      tags:
+        - Pictures
+      summary: "Delete a picture"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Observations            #
+  # --------------------------------------------------------------------------#
+  /v0.1/observations:
+    get:
+      tags:
+        - Observations
+      summary: "View a list of observations"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+        - $ref: '#/parameters/Filter-label'
+        - $ref: '#/parameters/Filter-collection'
+        # - $ref: '#/parameters/Filter-picture-subject'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
+        # 401:
+        #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
+        404:
+          description: "Page not found."
+
+  /v0.1/observations/{id}:
+    get:
+      tags:
+        - Observations
+      summary: "View an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
+
+    put:
+      tags:
+        - Observations
+      summary: "Replace an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Observation'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
+
+    patch:
+      tags:
+        - Observations
+      summary: "Update an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Observation'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
+
+    delete:
+      tags:
+        - Observations
+      summary: "Delete an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/Access token'
+      responses:
+        200:
+          description: "Successful"
+
+  # ==========================================================================#
+  #                                                   Collections             #
+  # --------------------------------------------------------------------------#
+  /v0.1/collections:
+    get:
+      tags:
+        - Collections
+      summary: "View a list of pictures"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+        - $ref: '#/parameters/Filter-label'
+        - $ref: '#/parameters/Filter-collection'
+        - $ref: '#/parameters/Filter-picture-subject'
+      responses:
+        200:
+          description: "Successful"
+          # schema:
+          #   $ref: "#/definitions/Picture"
+        # 401:
+        #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
+        404:
+          description: "Page not found."
+
+    post:
+      tags:
+        - Collections
+      summary: "Create a new collection"
+      description: "Create a new collection."
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Collection'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Collection"
+
+  # ==========================================================================#
+  #                                                   Identifications         #
+  # --------------------------------------------------------------------------#
+  /v0.1/identifications:
+    get:
+      tags:
+        - Identifications
+      summary: "View a list of identifications"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+        - $ref: '#/parameters/Filter-label'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Identification"
+        # 401:
+        #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
+        404:
+          description: "Page not found."
+
+    post:
+      tags:
+        - Identifications
+      summary: "Create a new identification"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Identification'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Identification"
+
+  # ==========================================================================#
+  #                                                   Interactions            #
+  # --------------------------------------------------------------------------#
+  /v0.1/interactions:
+    get:
+      tags:
+        - Interactions
+      summary: "View a list of interactions"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Pagination'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Range'
+        - $ref: '#/parameters/Filter-label'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Interaction"
+        # 401:
+        #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
+        404:
+          description: "Page not found."
+
+    post:
+      tags:
+        - Interactions
+      summary: "Create a new interaction"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Identification'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Interactions"
+
+
+
+###############################################################################
+#                                   Security                                  #
+###############################################################################
+securityDefinitions:
+  token:
+    type: apiKey
+    name: token
+    in: header
+    # description: Session token. typically looks like: SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
+
+security:
+  - token: []
+
+
+
+###############################################################################
+#                                   Resources                                 #
+###############################################################################
+definitions:
+
+  Node_response:
+    properties:
+      nid:
+        type: integer
+        format: int64
+      uri:
+        type: string
+
+  Picture:
+    properties:
+      type:
+        type: string
+        example: 'picture'
+      id:
+        type: integer
+        format: int64
+        example: 42
+      attributes:
+        type: object
+        properties:
+          label:
+            type: string
+            example: 'aloe.jpg'
+          self:
+            type: string
+            description: "The API URL at which this picture can be retrieved."
+            example: 'http://localhost/Current/CasaBio/services/v0.1/pictures/42'
+          location:
+            type: string
+            example: {
+              "longitude": 18.4241,
+              "latitude": 33.9249}
+
+  Picture-for-submission:
+    properties:
+      label:
+        type: string
+        example: 'aloe.jpg'
+      location:
+        type: string
+        example: {
+          "longitude": 0,
+          "latitude": 0}
+
+  Observation:
+    properties:
+      type:
+        type: string
+        example: 'observation'
+      id:
+        type: integer
+        format: int64
+      attributes:
+        type: object
+        properties:
+          label:
+            type: string
+            example: 'aloe beside rock'
+          self:
+            type: string
+            description: "The API URL at which this picture can be retrieved."
+          author:
+            type: integer
+            format: int64
+          collection:
+            type: integer
+            format: int64
+          description:
+            type: string
+          observerName:
+            type: string
+          dateObserved:
+            type: integer
+            format: int64
+          count:
+            type: integer
+            format: int32
+          locality:
+            type: string
+          picturesInObservation:
+            type: integer
+            format: int64
+          source:
+            type: string
+          externalId:
+            type: string
+          location:
+            type: string
+            example: {
+              "longitude": 0,
+              "latitude": 0}
+
+  Observation-for-submission:
+    properties:
+      label:
+        type: string
+      author:
+        type: integer
+        format: int64
+      description:
+        type: object
+        properties:
+          value:
+            type: string
+      collection:
+        type: integer
+        format: int64
+      observerName:
+        type: string
+      dateObserved:
+        type: integer
+        format: int64
+      count:
+        type: integer
+        format: int32
+      locality:
+        type: string
+      picturesInObservation:
+        type: integer
+        format: int64
+      source:
+        type: string
+      externalId:
+        type: string
+      location:
+        type: string
+        example: {
+          "longitude": 0,
+          "latitude": 0}
+
+  # Collection:
+
+  Collection-for-submission:
+    properties:
+      label:
+        type: string
+      author:
+        type: integer
+        format: int64
+      description:
+        type: string
+        properties:
+          value:
+            type: string
+      collector:
+        type: string
+      observerName:
+        type: string
+      dateCollected:
+        type: integer
+        format: int64
+      # picture:
+      location:
+        type: string
+        example: {
+          "longitude": 0,
+          "latitude": 0}
+
+  Identification:
+    properties:
+      type:
+        type: string
+      id:
+        type: integer
+        format: int64
+      attributes:
+        type: object
+        properties:
+          label:
+            type: string
+          author:
+            type: integer
+            format: int64
+          description:
+            type: string
+          observation:
+            type: integer
+            format: int64
+          identifiedSpecies:
+            type: integer
+            format: int64
+          certainty:
+            type: integer
+            format: int32
+          identificationSource:
+            type: string
+
+  Identification-for-submission:
+    properties:
+      label:
+        type: string
+      author:
+        type: integer
+        format: int64
+      description:
+        type: string
+        properties:
+          value:
+            type: string
+      observation:
+        type: integer
+        format: int64
+      identifiedSpecies:
+        type: integer
+        format: int64
+      certainty:
+        type: integer
+        format: int32
+      identificationSource:
+        type: string
+
+  Interaction:
+    properties:
+      type:
+        type: string
+      id:
+        type: integer
+        format: int64
+      attributes:
+        type: object
+        properties:
+          label:
+            type: string
+          author:
+            type: integer
+            format: int64
+          description:
+            type: string
+          observation:
+            type: integer
+            format: int64
+          interactionActivity:
+            type: string
+          observationObject:
+            type: integer
+            format: int64
+
+  Interaction-for-submission:
+    properties:
+      label:
+        type: string
+      author:
+        type: integer
+        format: int64
+      description:
+        type: string
+        properties:
+          value:
+            type: string
+      observation:
+        type: integer
+        format: int64
+      interactionActivity:
+        type: string
+      observationObject:
+        type: integer
+        format: int64

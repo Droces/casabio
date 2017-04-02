@@ -67,13 +67,13 @@ class Collections__0_1 extends ResourceNode implements ResourceInterface {
         // 'sub_property' => '',
       ),
 
-      'location' => array(
-        'property' => 'field_location',
-        'class' => '\Drupal\casa_rest\Plugin\resource\fields\ResourceFieldEntityGeofield',
-        'process_callbacks' => array(
-          array($this, 'locationProcess'),
-        ),
-      ),
+      // 'location' => array(
+      //   'property' => 'field_location',
+      //   'class' => '\Drupal\casa_rest\Plugin\resource\fields\ResourceFieldEntityGeofield',
+      //   'process_callbacks' => array(
+      //     array($this, 'locationProcess'),
+      //   ),
+      // ),
     );
 
     $fields = array_merge($fields, $collection_fields);
@@ -83,22 +83,22 @@ class Collections__0_1 extends ResourceNode implements ResourceInterface {
 
 
 
-  /**
-   * Process callback. Removes Drupal-specific items from a location field array.
-   *
-   * @param array $value
-   *   An array of properties and fields.
-   *
-   * @return array
-   *   A cleaned array.
-   */
-  public function locationProcess($value) {
-    // dpm($value, 'locationProcess() $value');
+  // /**
+  //  * Process callback. Removes Drupal-specific items from a location field array.
+  //  *
+  //  * @param array $value
+  //  *   An array of properties and fields.
+  //  *
+  //  * @return array
+  //  *   A cleaned array.
+  //  */
+  // public function locationProcess($value) {
+  //   // dpm($value, 'locationProcess() $value');
 
-    return array(
-      'longitude' => $value['lon'],
-      'latitude' => $value['lat'],
-    );
-    return $value;
-  }
+  //   return array(
+  //     'longitude' => $value['lon'],
+  //     'latitude' => $value['lat'],
+  //   );
+  //   return $value;
+  // }
 }

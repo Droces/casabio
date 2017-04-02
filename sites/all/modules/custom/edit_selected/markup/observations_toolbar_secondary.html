@@ -54,12 +54,17 @@
 <!-- Show fields radios form -->
 <div role="toolbar">
   <h3 for="show-fields-radios" class="inline" title="Display information that you've added.">Show: </h3>
+
+  <span class="description tooltip_q" title="Use these buttons to see which information the observations already have.">
+    ?<span>Use these buttons to see which information the observations already have.</span>
+  </span>
+
   <form>
   <div id="show-fields-radios" class="radios inline">
     <input type="radio" name="show-fields" id="show-no_fields" value="no_fields" checked>
       <label for="show-no_fields">No fields</label>
-    <input type="radio" name="show-fields" id="show-label" value="label"/>
-      <label for="show-label">Name</label>
+    <!-- <input type="radio" name="show-fields" id="show-label" value="label"/>
+      <label for="show-label">Name</label> -->
     <!-- <input type="radio" name="show-fields" id="show-count" value="count"/>
       <label for="show-count">Count</label> -->
     <input type="radio" name="show-fields" id="show-observerName" value="observerName"/>
@@ -69,11 +74,11 @@
     <input type="radio" name="show-fields" id="show-description" value="description"/>
       <label for="show-description">Description</label>
     <input type="radio" name="show-fields" id="show-location" value="location"/>
-      <label for="show-location">Location</label>
+      <label for="show-location">Coordinates</label>
     <input type="radio" name="show-fields" id="show-locality" value="locality"/>
       <label for="show-locality">Locality</label>
     <input type="radio" name="show-fields" id="show-specimenId" value="specimenId"/>
-      <label for="show-specimenId">Specimen ID</label>
+      <label for="show-specimenId">Specimen number</label>
     <input type="radio" name="show-fields" id="show-identifications" value="identifications"/>
       <label for="show-identifications">Identifications</label>
     <input type="radio" name="show-fields" id="show-interactions" value="interactions"/>

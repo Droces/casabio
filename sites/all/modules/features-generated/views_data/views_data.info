@@ -1,0 +1,13 @@
+name = Views: Data
+description = Views that provide data to be processed, rather than being displayed to users
+core = 7.x
+package = Features: Views
+version = 7.x-1.0
+dependencies[] = views
+dependencies[] = views_geojson
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = data_collection_observations_locations
+features[views_view][] = data_taxon_observations_locations
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features-generated

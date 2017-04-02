@@ -12,7 +12,7 @@
 
 
 ?>
-<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?> data-type="<?php print $type; ?>" data-view-mode="<?php print $view_mode; ?>" data-nid="<?php print $node->nid; ?>" data-title="<?php print $node->title; ?>">
 
   <div class="col-container">
     <div class="col-1-2">
@@ -68,6 +68,7 @@
           hide($content['identifications_view']);
           hide($content['interactions_view']);
           hide($content['new_identification_form']);
+          hide($content['new_interaction_form']);
           hide($content['comments']);
         ?>
 
@@ -85,7 +86,7 @@
         <h2>Interactions</h2>
         <?php
           print render($content['interactions_view']);
-          // print render($content['add_interaction_form']);
+          print render($content['new_interaction_form']);
         ?>
       </section>
       <section class="field-group">

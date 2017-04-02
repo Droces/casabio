@@ -18,7 +18,7 @@ use Drupal\restful\RestfulManager;
  * @Authentication(
  *   id = "cookie",
  *   label = "Cookie based authentication",
- *   description = "Authenticate requests based on the user cookie.",
+ *   description = "Authenticate requests based on the user cookie."
  * )
  */
 class CookieAuthentication extends Authentication {

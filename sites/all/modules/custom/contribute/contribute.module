@@ -29,6 +29,9 @@
 
   create_nav_button()
   get_contribute_mo_finish_content()
+
+  contribute_locality_page_callback()
+  is_page()
 */
 
 
@@ -50,13 +53,17 @@
  * Implements hook_menu().
  */
 function contribute_menu() {
-  $items['contribute/observation'] = array(
-    'title'             => 'Contribute Observation',
-    'page callback'     => 'contribute_observation_page',
+
+  $items['contribute/upload'] = array(
+    'title'             => 'Contribute Multiple Observations', // Because this is the first step, this needs to be clear. The steps block shows it's the upload page.
+    'page callback'     => 'get_upload_form_content',
     'access callback'   => 'user_access',
     'access arguments'  => array('can contribute content'),
     'type'              => MENU_NORMAL_ITEM,
+    // 'menu_name'         => 'menu-contribute',
   );
+
+  // Last step of the Contribute MO process.
   $items['contribute/finished/%'] = array(
     'title'             => 'Contribution Complete',
     'page callback'     => 'get_contribute_mo_finish_content',
@@ -65,15 +72,62 @@ function contribute_menu() {
     'access arguments'  => array('can contribute content'),
     'type'              => MENU_NORMAL_ITEM,
   );
+
+  $items['contribute/observation'] = array(
+    'title'             => 'Contribute Observation',
+    'page callback'     => 'contribute_observation_page',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+    // 'menu_name'         => 'menu-contribute',
+  );
+
+  // Now a webform.
+  // $items['contribute/request'] = array();
+
+  // Catch-all page for contributions that don't show in the Contribute menu.
+  $items['contribute/other'] = array(
+    'title'             => 'Contribute to CasaBio',
+    'page callback'     => 'contribute_other_page_callback',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+    'menu_name'         => 'menu-contribute',
+  );
+
+  $items['contribute/habitat'] = array(
+    'title'             => 'Contribute Habitat',
+    'page callback'     => 'contribute_habitat_page_callback',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
   $items['contribute/locality'] = array(
     'title'             => 'Add a Locality',
     'page callback'     => 'contribute_locality_page_callback',
-    'access callback'   => 'user_has_roles',
-    'access arguments'  => array(array('Maintainer', 'Administrator')),
-    // 'access callback'   => 'user_access',
-    // 'access arguments'  => array('can contribute content'),
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
     'type'              => MENU_NORMAL_ITEM,
   );
+
+  $items['contribute/taxon'] = array(
+    'title'             => 'Add a Taxon',
+    'page callback'     => 'contribute_taxon_page_callback',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['contribute/taxon/etymology/%'] = array(
+    'title'             => 'Contribute Etymology',
+    'page callback'     => 'contribute_taxon_etymology_page_callback',
+    'page arguments'    => array(3),
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
@@ -110,12 +164,36 @@ function user_has_roles($roles) {
 function contribute_init() {
 
   $js_files = array();
+  $css_files = array();
+
+  // Add a JS setting variable: current_page
+
+  $known_pages = array('upload', 'group', 'picture_info', 'observation_info');
+
+  // Pass current page as '' to js in case it is not known.
+  drupal_add_js(array('contribute' => array('current_page' => '')), 'setting');
+
+  // If current page is known, pass its name to js.
+  foreach ($known_pages as $page_name) {
+    if (is_page($page_name)) {
+      // dpm($page_name, 'is $page_name');
+      drupal_add_js(array('contribute' =>
+        array('current_page' => $page_name)), 'setting');
+    }
+  }
+
 
   // All Contribute pages
   if (drupal_match_path(current_path(), 'contribute*')) {
     $js_files += array(
       drupal_get_path('module', 'contribute') . '/scripts/contribute.js',
     );
+    $css_files += array(
+      libraries_get_path('lightbox') . '/dist/css/lightbox.css',
+    );
+
+    $js_files_footer = libraries_get_path('lightbox') . '/dist/js/lightbox.js';
+    drupal_add_js($js_files_footer, array('scope' => 'footer'));
   }
 
   // Upload page
@@ -143,7 +221,7 @@ function contribute_init() {
         array('current_path' => $active_path)), 'setting');
 
       $js_files += array(
-        libraries_get_path('openlayers3') . '/build/ol.js',
+        libraries_get_path('openlayers3') . '/build/ol-debug.js',
         drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
       );
       // dpm($js_files, 'js_files');
@@ -153,7 +231,7 @@ function contribute_init() {
   // Contribute observation page
   if (drupal_match_path(current_path(), 'contribute/observation')) {
     $js_files += array(
-      libraries_get_path('openlayers3') . '/build/ol.js',
+      libraries_get_path('openlayers3') . '/build/ol-debug.js',
       drupal_get_path('module', 'contribute') . '/scripts/contribute_maps.js',
     );
   }
@@ -161,6 +239,9 @@ function contribute_init() {
   // dpm($js_files, '$js_files');
   foreach ($js_files as $path) {
     drupal_add_js($path);
+  }
+  foreach ($css_files as $path) {
+    drupal_add_css($path);
   }
 }
 
@@ -179,6 +260,59 @@ function contribute_permission() {
       'description' => t('Can create and edit own content of standard types'),
     ),
   );
+}
+
+
+
+
+
+// =======================================================================================
+/**
+ * Callback for contribute/observation page that displays its content.
+ */
+function contribute_other_page_callback() {
+
+  $content = array(
+    '#markup' =>
+        '<p>' . l('Contribute a Habitat', 'contribute/habitat')
+      . ' &nbsp;&nbsp;(learn about ' . l('habitats', 'help') . ')</p>'
+
+      . '<p>' . l('Contribute a Locality', 'contribute/locality')
+      . ' &nbsp;&nbsp;(learn about ' . l('localities', 'help') . ')</p>'
+
+      . '<p>' . l('Contribute an Observation', 'contribute/observation')
+      . ' &nbsp;&nbsp;(learn about ' . l('observations', 'help') . ')</p>'
+
+      . '<p>' . '<del>Contribute a CREW Species Observation</del>' . '</p>'
+
+      . '<p><em>Collections</em> and <em>Pictures</em> can only be added '
+      . 'in the Contribute Observations process.</p>'
+
+      . '<p><em>Identifictions</em> and <em>Interactions</em> cannot be added on their own;'
+      . ' they must be added to an observation.</p>'
+
+      . '<p><em>Taxa</em>  can only be added by maintainers.</p>'
+    ,
+  );
+
+
+  global $user;
+  // If administrator, add Maintainer options.
+  if (in_array('Administrator', $user->roles) || in_array('Maintainer', $user->roles)) {
+    $content['#markup'] .= '<h2>Maintainer Tools</h2>'
+
+      . '<p>' . l('Add a Taxon (species, genus, etc.)', 'contribute/taxon')
+      . ' &nbsp;&nbsp;(learn about ' . l('taxa', 'help') . ')</p>'
+
+      . '<p>' . l('Add multiple Taxa', 'taxa/lookup-multiple') .'</p>'
+
+      . '<p>' . l('Maintain most popular Taxa', 'maintain/taxa/most-popular') .'</p>'
+
+      . '<p>' . l('Import etymologies', 'taxa/import/etymologies') .'</p>'
+    ;
+  }
+
+  return $content;
 }
 
 
@@ -248,12 +382,15 @@ function pass_collection_info_to_js() {
 
     $collection_raw = node_load($nid);
     $collection = entity_metadata_wrapper('node', $collection_raw);
-    $location = $collection->field_location->value();
 
-    $collection_location = json_encode($location);
-    $module_js_settings = array(
-      'collection_location' => $collection_location,);
-    drupal_add_js(array('edit_selected' => $module_js_settings), 'setting');
+    if (isset($collection->field_location)) {
+      $location = $collection->field_location->value();
+
+      $collection_location = json_encode($location);
+      $module_js_settings = array(
+        'collection_location' => $collection_location,);
+      drupal_add_js(array('edit_selected' => $module_js_settings), 'setting');
+    }
   }
 }
 
@@ -324,17 +461,17 @@ function steps_block_view() {
     //   'classes' => ''),
     array(
       'location_path' => 'contribute/upload',
-      'link_content' => '<span class="icon-file_upload"></span> Upload pictures',
+      'link_content' => '<span class="icon-file_upload"></span> 1. Upload pictures',
       'keep_suffix' => TRUE,
       'step_classes' => '',),
     array(
       'location_path' => 'contribute/multiple-observations/group*',
-      'link_content' => 'Group',
+      'link_content' => '2. Group',
       'keep_suffix' => TRUE,
       'step_classes' => '',),
     array(
       'location_path' => 'contribute/multiple-observations/observation-info*',
-      'link_content' => 'Observation info',
+      'link_content' => '3. Observation info',
       'keep_suffix' => TRUE,
       'step_classes' => '',),
     // array(
@@ -399,16 +536,22 @@ function create_nav_button($links, $direction) {
   $attributes = array(
     'class' => 'button',
   );
+  $query = [];
 
+  if ($direction == 'prev' || $direction == 'next') {
+    $attributes['class'] .= ' raised';
+  }
   if ($direction == 'prev') {
     $increment = -1;
     $link_content = '« Previous';
     $attributes['rel'] = 'prev';
+    $attributes['class'] .= ' pointing-left';
   }
   elseif ($direction == 'next') {
     $increment = 1;
     $link_content = 'Continue »';
     $attributes['rel'] = 'next';
+    $attributes['class'] .= ' pointing-right';
   }
 
   // dpm($links, '$links');
@@ -420,8 +563,10 @@ function create_nav_button($links, $direction) {
 
       $path_wild_pos = strpos($links[$i]['location_path'], '*');
       $suffix = substr(current_path(), $path_wild_pos);
+      $suffix = str_replace('/', '', $suffix); // Remove leading '/'.
+      // dpm($suffix, '$suffix');
 
-      // If current step is the first step, and if this is the previous button
+      // If current step is 'upload', and if this is the previous button
       if ($i == 0 && $direction == 'prev') {
         return '';
       }
@@ -429,23 +574,28 @@ function create_nav_button($links, $direction) {
         $attributes['disabled'] = 'true';
         $suffix = '';
       }
-      // If current step is the second step, and if this is the previous button (Can't go to first)
+      // If current step is 'group', and if this is the previous button (Can't go to first)
       if ($i == 1 && $direction == 'prev') {
-        return '<a class="button" disabled>' . $link_content . '</a>';
+        // return '<a class="' . $attributes['class'] . '" disabled>' . $link_content . '</a>';
+        $path = str_replace("*", "", $links[$i + $increment]['location_path']);
+        $query['collection'] = $suffix;
       }
-      // If current step is the last step and this is the next button (Finish)
+      // If current step is 'observation info' and this is the next button (Finish)
       elseif ($i == sizeof($links) - 1 && $direction == 'next') {
         $link_content = 'Finish »';
 
-        $path = 'contribute/finished' . $suffix;
+        $path = 'contribute/finished/' . $suffix;
       }
       else {
-        $path = str_replace("*", "", $links[$i + $increment]['location_path']) . $suffix;
+        $path = str_replace("*", "", $links[$i + $increment]['location_path']) . '/' . $suffix;
       }
       // dpm($suffix, 'suffix');
 
       // $buttons = '<a class="button" href="' . $url . '">' . $links[$i]['content'] . '</a>';
-      $buttons = l($link_content, $path, array('attributes' => $attributes));
+      $buttons = l($link_content, $path, array(
+        'attributes' => $attributes,
+        'query' => $query,
+      ));
       // @todo use Drupal's native l() instead.
     }
   }
@@ -497,4 +647,48 @@ function contribute_locality_page_callback() {
   $taxonomy_form = drupal_get_form('taxonomy_form_term', $edit, $vocabulary, ['form_view_mode' => 'contribute']);
 
   return drupal_render($taxonomy_form);
+}
+
+
+
+function contribute_taxon_page_callback() {
+  $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+
+  if (! $vocabulary) {
+    return '';
+  }
+
+  module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+  $edit = array();
+  $taxonomy_form = drupal_get_form('taxonomy_form_term', $edit, $vocabulary, ['form_view_mode' => 'contribute']);
+
+  return drupal_render($taxonomy_form);
+}
+
+
+
+
+
+/**
+ * Determines if the current page is the specified page.
+ * 
+ * @param string $name
+ *   Internal name of page, such as 'picture_info'.
+ */
+function is_page($name) {
+  $casa_paths = array(
+    'upload' =>           'contribute/upload',
+    'group' =>            'contribute/multiple-observations/group*',
+    'picture_info' =>     'contribute/multiple-observations/picture-info*',
+    'observation_info' => 'contribute/multiple-observations/observation-info*',
+  );
+
+  // If any contribute page
+  if ($name == 'contribute*') {
+    // Can be extended to match Contribute pages that don't start with 'contribute/'
+    return drupal_match_path(current_path(), 'contribute*');
+  }
+  else {
+    return drupal_match_path(current_path(), $casa_paths[$name]);
+  }
 }

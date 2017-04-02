@@ -12,18 +12,42 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
+// var is_mouse_down = false;
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.casabio = {
   attach: function(context, settings) {
+    // console.log('Called: Drupal.behaviors.casabio.attach()');
+    // console.log('context: ', context);
+    // console.log('settings: ', settings);
 
-  set_up_pages(context);
+    // Drupal.casa_core.start_timer('casabio_theme');
 
-  add_listeners(context);
+    // $(document).mousedown(function() {
+    //   is_mouse_down = true;
+    // }).mouseup(function() {
+    //   is_mouse_down = false;  
+    // });
 
-  // set_up_masonry();
+    set_up_pages(context);
 
-  // set_up_jCarousel();
+    add_listeners(context);
+
+    // set_up_masonry();
+
+    // Highlight 'Drop to upload'
+    // $('.plupload_droptext').on('mouseenter', function() {
+    //   if (is_mouse_down) {
+    //     $(this).addClass('mouseOver');
+    //   }
+    // })
+    // .on('mouseleave', function() {
+    //   $(this).removeClass('mouseOver');
+    // });
+
+    // Drupal.casa_core.end_timer('casabio_theme');
+
+    // animate_teaser_transforms();
 
   },
   weight: 0
@@ -68,10 +92,10 @@ function set_up_pages(context) {
   // $('fieldset.collapse-on-load', context).addClass('collapsed');
 
   // Set the HTML5 required attribute for form fields that are required.
-  $('form .required').attr('required', true);
+  $('form .required', context).attr('required', true);
 
   // Choice-block
-  var choice_blocks = $('.choice-block');
+  var choice_blocks = $('.choice-block', context);
   choice_blocks.children().on('click', function() {
     $(this).siblings().attr('aria-selected', null);
     $(this).siblings().find('input[type="checkbox"]').prop('checked', false);
@@ -90,7 +114,8 @@ function set_up_pages(context) {
  */
 function add_listeners(context) {
 
-  $('.messages [data-action="remove"]').on('click', function() {
+  // console.log('close buttons count: ', $('.messages [data-action="remove"]', context).length);
+  $('.messages [data-action="remove"]', context).on('click', function() {
     if($(this).parent().is('li:first-child:last-child')) {
       $(this).parents('.messages').remove(); // Also removes $(this)
     }
@@ -100,7 +125,7 @@ function add_listeners(context) {
   });
 
   // Tabs
-  $('[role="tab"]').on('click', function() {
+  $('[role="tab"]', context).on('click', function() {
     $(this).parent().find('[role="tab"][aria-selected]')
       .attr('aria-selected', null);
     $(this).parent().siblings('[role="tabpanel"][aria-selected]')
@@ -113,8 +138,25 @@ function add_listeners(context) {
 
   // Views with bulk operations
   // Clicking on a row selects the item
-  $('.view form table').find('tr').on('click', function() {
+  $('.view form table', context).find('tr').on('click', function() {
     $(this).find('input[type="radio"]').prop( "checked", true );
+  });
+
+  $('.expandable').find('[role="expand"]').on('click', function() {
+    var container = $(this).parents('.expandable');
+
+    if (container.attr('data-expanded') == 'true') {
+      console.log('contracting');
+      $(this).parents('.expandable').animate({height: 250}, 'slow');
+      container.attr('data-expanded', 'false');
+    }
+    else {
+      console.log('expanding');
+      var height = container.children().height();
+      console.log('height: ', height);
+      $(this).parents('.expandable').animate({height: height}, 'slow');
+      container.attr('data-expanded', 'true');
+    }
   });
 }
 
@@ -149,40 +191,62 @@ function add_listeners(context) {
 // }
 
 
+/**
+ * Experimental: Community identification teasers
+ * On click: Animate to / from shown 'as text'
+ */
+function animate_teaser_transforms() {
+
+  $('[data-type="identification_community"]').on('click', function() {
+    $(this).toggleClass('as-text');
+
+    var rectObject = $(this)[0].getBoundingClientRect();
+    console.log('rectObject: ', rectObject);
+
+    var wrapper = $('<div></div>')
+      .css('display',   'block')
+      .css('width',     $(this).width())
+      .css('height',    $(this).height())
+      .css('background', 'red')
+    ;
+    $(this)
+      .wrap(wrapper)
+      .css('position',  'fixed')
+      .css('left', rectObject.x)
+      .css('top', rectObject.y)
+    ;
+    $(this).animate({
+        left: '200px',
+        top: '200px'
+      },
+      500,
+      function() {
+        // Animation complete.
+    });
+
+  });
+}
+
 
 /**
- * Enables the jCarousel layout library to be used.
+ * Calculates the position of a given element within the viewport
+ *
+ * @param {string} obj jQuery object of the dom element to be monitored
+ * @return {array} An array containing both X and Y positions as a number
+ * ranging from 0 (under/right of viewport) to 1 (above/left of viewport)
  */
-// function set_up_jCarousel() {
-//  $('.jcarousel')
-//    .on('jcarousel:create jcarousel:reload', function() {
-//      var element = $(this),
-//        width = element.innerWidth();
+function visibility(obj) {
+    var winw = jQuery(window).width(), winh = jQuery(window).height(),
+        elw = obj.width(), elh = obj.height(),
+        o = obj[0].getBoundingClientRect(),
+        x1 = o.left - winw, x2 = o.left + elw,
+        y1 = o.top - winh, y2 = o.top + elh;
 
-//      // This shows 1 item at a time.
-//      // Divide `width` to the number of items you want to display,
-//      // eg. `width = width / 3` to display 3 items at a time.
-//      element.jcarousel('items').css('width', width + 'px');
-//    })
-//    .jcarousel({
-//      // Configuration goes here
-//      wrap: 'both',
-//    })
-//    .jcarouselAutoscroll({
-//      interval: 3000,
-//      target: '+=1',
-//      autostart: true
-//    })
-//  ;
-
-//  $('.jcarousel-prev').jcarouselControl({
-//    target: '-=1'
-//  });
-
-//  $('.jcarousel-next').jcarouselControl({
-//    target: '+=1'
-//  });
-// }
+    return [
+        Math.max(0, Math.min((0 - x1) / (x2 - x1), 1)),
+        Math.max(0, Math.min((0 - y1) / (y2 - y1), 1))
+    ];
+}
 
 
 })(jQuery, Drupal, this, this.document);

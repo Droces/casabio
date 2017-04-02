@@ -1,0 +1,104 @@
+/* -----------------------------------------------------------------------------
+                                                                Carousel (slideshow)
+*/
+.view-home-page-slideshow {
+  position: relative;
+
+  &,
+  * {
+    max-width: 100%;
+  }
+
+  .field-content > img {
+    display: block;
+  }
+  p {
+    text-align: inherit;
+  }
+}
+.widget_pager {
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+  // display: table;
+  height: 100%;
+  background-color: rgba( black, 0.5 );
+  z-index: 20;
+  color: #FFF;
+  max-width: 50%;
+
+  .views-slideshow-pager-field-item {
+    // display: table-row;
+    padding: 0.8em 1.2em;
+    // cursor: pointer;
+    @include transition( all 0.6s ease-in-out 0s );
+    background-color: rgba( black, 0 );
+
+    &:hover {
+    }
+    &.active {
+      background-color: rgba( black, 0.4 );
+
+      .views-field-field-description {
+        max-height: 1000px;
+      }
+      .views-field-title {
+        font-weight: bold;
+      }
+    }
+  }
+  .views-field-title {
+    @extend h3;
+    margin: 0 0 0.3em;
+    color: inherit;
+  }
+  .views-field-field-description {
+    overflow: hidden;
+    @include transition( all 0.6s ease-in-out 0s );
+    max-height: 0;
+  }
+}
+
+
+/* -----------------------------------------------------------------------------
+                                                                Species selector
+*/
+
+.view-species-reference-selector-widget {
+  .views-table {
+    border-bottom: 1px solid #ccc;
+  }
+  td {
+    border-top: 0;
+    border-bottom: 0;
+  }
+  td.views-field-field-representative-picture {
+    padding: 2px 0.5em;
+  }
+  .node-picture, // Needed for views, that can't add attributes
+  [data-type="picture"] {
+    margin-right: 1.8em; // Space for lightbox link
+    img {
+      width: 60px;
+      border-top-right-radius: 0;
+    }
+    a[data-lightbox],
+    a.colorbox,
+    a.colorbox-inline {
+      right: auto;
+      left: 100%;
+      border-bottom-right-radius: 0.25em;
+    }
+  }
+  .form-actions {
+    display: none;
+  }
+
+  .views-exposed-widgets {
+    .views-widget-filter-combine_1,
+    .views-widget-filter-name {
+      width: 14em;
+    }
+  }
+}

@@ -20,6 +20,7 @@
  * Drupal.behaviors.selection.attach()
  *
  * Drupal.edit_selected
+ *  .find_selectables()
  *  .get_selecteds_indexes()
  *  .are_selecteds()
  *  .set_selecteds_indexes()
@@ -61,12 +62,7 @@ Drupal.behaviors.selection = {
 
     if (! page_is_setup) {
 
-      // // Disable firefox's 'image drag' feature, which messes with our ‘drag-select’
-      // $(document).on("dragstart", function(event) {
-      //   // event.preventDefault();
-      //   // console.log('On: dragstart');
-      //   // return false;
-      // });
+      // disable_image_drag(); // Not needed anymore.
 
       Drupal.selection.find_selectables();
 
@@ -304,22 +300,33 @@ Drupal.selection = {
 
 /* CONTENTS
 
-  set_up_page
-  register_selection
-  register_focus
-  toggle_selected_element
-  adjust_buttons
+  disable_image_drag()
+  set_up_page()
+  register_selection()
+  register_focus()
+  toggle_selected_element()
+  adjust_buttons()
 
-  set_up_keypress_mgmt
-  handle_keypress_see_shortcuts
-  handle_keypress_select
-  handle_keypress_prev
-  get_focussed_prev
-  handle_keypress_next
-  get_focussed_next
-  handle_keypress_group
+  set_up_keypress_mgmt()
+  handle_keypress_see_shortcuts()
+  handle_keypress_select()
+  handle_keypress_prev()
+  get_focussed_prev()
+  handle_keypress_next()
+  get_focussed_next()
+  handle_keypress_group()
 */
 
+
+
+function disable_image_drag() {
+  // Disable firefox's 'image drag' feature, which messes with our ‘drag-select’
+  $(document).on("dragstart", function(event) {
+    event.preventDefault();
+    // console.log('On: dragstart');
+    return false;
+  });
+}
 
 
 function set_up_page(context) {

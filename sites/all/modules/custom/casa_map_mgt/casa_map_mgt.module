@@ -7,6 +7,46 @@
 
 
 /**
+  CONTENTS
+
+  casa_map_mgt_init()
+  casa_map_mgt_form_views_exposed_form_alter()
+  casa_map_mgt_openlayers_object_preprocess_alter()
+  casa_map_mgt_form_node_form_alter()
+  setup_QDS_map_container()
+
+  convert_points_to_qdss()
+  convert_qdss_to_polygons()
+  convert_qds_to_polygon()
+  determine_QDS()
+  determine_points_from_QDS()
+  convert_QDS_to_WKT()
+  create_point_collection()
+ */
+
+
+/**
+ * Implements hook_init(). Primarily includes needed libraries and files.
+ */
+function casa_map_mgt_init() {
+
+  if (is_page('observation_info')) {
+
+    // Include required JavaScript files and libraries
+    $js_files = array(
+      drupal_get_path('module', 'casa_map_mgt') . '/scripts/widget_map.js',
+    );
+
+    foreach ($js_files as $path) {
+      drupal_add_js($path);
+    }
+
+  }
+}
+
+
+
+/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Problem: Using exposed filters in a block on a page that isn't the view's page results in a page of AJAX code.
@@ -49,11 +89,11 @@ function casa_map_mgt_openlayers_object_preprocess_alter(&$build, $context) {
 
   // Without this, OL maps using Views GeoJSON feeds as a source
   // don't respect exposed filters in a block (they don't affect the map)
-  // if ($context -> factory_service == 'openlayers.Source:GeoJSON') {
+  // if ($context->factory_service == 'openlayers.Source:GeoJSON') {
   if (get_class($context) == 'Drupal\openlayers\Plugin\Source\Vector\Vector') {
     // dpm($context, 'context');
 
-    if (!isset($context -> preprocess)) {
+    if (!isset($context->preprocess)) {
       $query_params = drupal_get_query_parameters();
       // dpm($query_params, 'query_params');
 
@@ -66,14 +106,14 @@ function casa_map_mgt_openlayers_object_preprocess_alter(&$build, $context) {
           }
         }
 
-        $new_url = $context -> getOption('url') . $param_string;
+        $new_url = $context->getOption('url') . $param_string;
         // dpm($new_url, 'new_url');
-        // $context -> setOption('url', $new_url);
+        // $context->setOption('url', $new_url);
       }
 
-      $context -> preprocess = TRUE; // Only process this once
+      $context->preprocess = TRUE; // Only process this once
     }
-    // dpm($context -> getOption('url'), 'url');
+    // dpm($context->getOption('url'), 'url');
     // dpm($context, 'context, after');
   }
 }
@@ -114,4 +154,300 @@ function casa_map_mgt_form_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   // dpm($form, 'form');
+}
+
+
+/**
+ * @param $locations
+ *   An array in the format of an unencoded GeoJSON feature collection. The
+ *   ‘features’ item must contain an array of point features, each of which
+ *   must have a longitude and a latitude.
+ * @param $eid
+ *   The id of the entity that will be shown on the map.
+ * @param $attributes
+ *   (optional) An associative array of attributes that should be added to the map container element.
+ */
+function setup_QDS_map_container($locations, $eid, $attributes = []) {
+  // dpm($locations, '$locations');
+  // dpm($eid, '$eid');
+  // dpm($attributes, '$attributes');
+
+  // Convert points to QDS's, for all points
+  $QDSs = convert_points_to_qdss($locations);
+
+  // Create a (rectangle) polygon feature for each QDS
+  $qds_locations = convert_qdss_to_polygons($QDSs);
+
+  $map_attributes = array(
+    'class="hidden ol-map field"',
+    'data-transform="to-map"',
+  );
+
+  if (array_key_exists('gbif', $attributes)) {
+    $map_attributes[] = 'data-gbif-key="' . $attributes['gbif']['key'] . '"';
+  }
+  // dpm($map_attributes, '$map_attributes');
+
+  $locations_JSON = json_encode($qds_locations);
+  // dpm($locations_JSON,'$locations_JSON');
+
+  // Insert the location data into the term's content as hidden markup
+  $map_renderable = array(
+    '#type' => 'markup',
+    '#markup' => '<p id="ol-map-' . $eid . '" ' . implode(' ', $map_attributes) . '>' . $locations_JSON . '</p>',
+    '#weight' => '10',
+  );
+  // dpm($map_renderable, '$map_renderable');
+
+
+  // Include the Openlayers JavaScript to render a map, and CSS to style it.
+  $openlayers_js_path = libraries_get_path('openlayers3') . '/build/ol.js';
+  drupal_add_js($openlayers_js_path, 'file');
+  $openlayers_css_path = libraries_get_path('openlayers3') . '/css/ol.css';
+  drupal_add_css($openlayers_css_path, 'file');
+
+  return $map_renderable;
+}
+
+
+
+/**
+ * @param $locations_data
+ *   An array in the format of an unencoded GeoJSON feature collection. The
+ *   ‘features’ item must contain an array of point features, each of which
+ *   must have a longitude and a latitude.
+ *
+ * @return
+ *   An array of strings in format: 'S17E019CD'.
+ */
+function convert_points_to_qdss($locations_data) {
+  $QDSs = [];
+
+  if (! isset($locations_data->features)) {
+    throw new UnexpectedValueException("Parameter ‘locations_data’ is not valid.", 1);
+  }
+
+  foreach ($locations_data->features as $key => $feature) {
+    $qds = determine_QDS(
+      $feature->geometry->coordinates[0],
+      $feature->geometry->coordinates[1]
+    );
+    // dpm($qds, 'QDS');
+
+    if (isset($QDSs[$qds])) {
+      $QDSs[$qds] ++;
+    }
+    else {
+      $QDSs[$qds] = 1;
+    }
+  }
+  // dpm($QDSs, 'QDSs');
+  return $QDSs;
+}
+
+
+
+/**
+ * @param $QDSs
+ *   An array of strings in format: 'S17E019CD'.
+ *
+ * @return
+ *   An array in the format of an unencoded GeoJSON feature collection. The
+ *   ‘features’ item will contain an array of polygon features, each of which
+ *   will have four points.
+ */
+function convert_qdss_to_polygons($QDSs) {
+  $locations = array(
+    'type' => 'FeatureCollection',
+    'features' => [],
+  );
+
+  foreach ($QDSs as $QDS => $count) {
+    $location = convert_qds_to_polygon($QDS);
+    $location["properties"] = [
+      "count" => $count
+    ];
+    $locations['features'][] = $location;
+  }
+  // dpm($locations, 'locations');
+  return $locations;
+}
+
+
+
+/**
+ * @param $QDS
+ *   An string in format: 'S17E019CD'.
+ */
+function convert_qds_to_polygon($QDS) {
+  // dpm($QDS, 'QDS');
+  $points = determine_points_from_QDS($QDS);
+  // dpm($points, 'points');
+
+  $location = [
+    "type" => "Feature",
+    "geometry" => [
+      "type" => "Polygon",
+      "coordinates" => [[
+        [$points[0], $points[1]],
+        [$points[2], $points[3]],
+        [$points[4], $points[5]],
+        [$points[6], $points[7]],
+      ],
+    ]],
+  ];
+
+  return $location;
+}
+
+
+
+/**
+ * Determines the code of the QDS for a given point.
+ *
+ * See https://en.wikipedia.org/wiki/QDGC
+ * or www.birding.co.za/challenge/standards.doc
+ * or http://www.birding.co.za/challenge/grids.htm
+ *
+ * @return
+ *   A string representing the QDS in format: 'S17E019CD'.
+ */
+function determine_QDS($lon, $lat) {
+  // dpm($lon, 'lon');
+  // dpm($lat, 'lat');
+
+  // @todo Check lon is float between -180 and 180.
+  if (!isset($lon) || $lon < -180 || $lon > 180) {
+    throw new InvalidArgumentException("Longitude is not valid; " . $lon . " given.", 1);
+  }
+  // @todo Check lat is float between -90 and 90.
+  if (!isset($lat) || $lat < -90 || $lat > 90) {
+    throw new InvalidArgumentException("Latitude is not valid; " . $lat . " given.", 1);
+  }
+
+  $whole_x = floor($lon);      // eg. 1
+  // dpm($whole_x, 'whole_x');
+  $fraction_x = $lon - $whole_x; // eg. .25
+  // dpm($fraction_x, 'fraction_x');
+
+  $whole_y = floor($lat);      // eg. 1
+  // dpm($whole_y, 'whole_y');
+  $fraction_y = $lat - $whole_y; // eg. .25
+  // dpm($fraction_y, 'fraction_y');
+
+  // Format lon of '-5' as 'W005'.
+  $lon_string = ($whole_x > 0) ?
+    'E' . str_pad($whole_x, 3, "0", STR_PAD_LEFT) :
+    'W' . str_pad(0 - $whole_x, 3, "0", STR_PAD_LEFT);
+  // Format lat of '-5' as 'S05'.
+  $lat_string = ($whole_y > 0) ?
+    'N' . str_pad($whole_y, 2, "0", STR_PAD_LEFT) :
+    'S' . str_pad(0 - $whole_y, 2, "0", STR_PAD_LEFT);
+
+  // Determine the possible cells for the large square
+  $l_x = ($fraction_x > 0 && $fraction_x < 0.5) ? ['A', 'C'] : ['B', 'D'];
+  $l_y = ($fraction_y > 0 && $fraction_y < 0.5) ? ['A', 'B'] : ['C', 'D'];
+  $intersection = array_intersect($l_x, $l_y);
+  $large = reset($intersection);
+
+  // To determine small square, fractions should be within first large square;
+  // so take 0.5 off fractions larger than 0.5.
+  $fraction_x_s = $fraction_x > 0.5 ? $fraction_x - 0.5 : $fraction_x;
+  $fraction_y_s = $fraction_y > 0.5 ? $fraction_y - 0.5 : $fraction_y;
+
+  // Determine the possible cells for the small square
+  $s_x = ($fraction_x_s > 0 && $fraction_x_s < 0.25) ? ['A', 'C'] : ['B', 'D'];
+  $s_y = ($fraction_y_s > 0 && $fraction_y_s < 0.25) ? ['A', 'B'] : ['C', 'D'];
+  $intersection = array_intersect($s_x, $s_y);
+  $small = reset($intersection);
+
+  $qds = $lat_string . $lon_string . $large . $small;
+
+  return $qds;
+}
+
+
+
+/**
+ * Calculates the coordinates of the 4 points of the bounding box of a QDS.
+ *
+ * @param $qds
+ *   A string representing the QDGS in format: 'S17E019CD'.
+ *
+ * @return
+ *   An array of the four points of the QDS in the form '[0, 0, 0, 0, 0, 0, 0, 0]'.
+ */
+function determine_points_from_QDS($qds) {
+  // dpm($qds, 'qds');
+
+  $whole_x = floor(floatval(substr($qds, 4, 3)));
+  $whole_x = substr($qds, 3, 1) == 'W' ? ($whole_x * -1) : $whole_x;
+  // dpm($whole_x, 'whole_x');
+
+  $whole_y = floor(floatval(substr($qds, 1, 2)));
+  $whole_y = substr($qds, 0, 1) == 'S' ? ($whole_y * -1) : $whole_y;
+  // dpm($whole_y, 'whole_y');
+
+  // The two 'cell' identifiers
+  $c1 = substr($qds, 7, 1); // Eg. 'C'
+  $c2 = substr($qds, 8, 1); // Eg. 'D'
+  // dpm($c1 . '; ' . $c2, 'c1; c2');
+
+  // Determine the x and y values of the first point
+  $point1_x = $whole_x
+    + (($c1 == 'B' || $c1 == 'D') ? 0.50 : 0)
+    + (($c2 == 'B' || $c2 == 'D') ? 0.25 : 0);
+
+  $point1_y = $whole_y
+    + (($c1 == 'C' || $c1 == 'D') ? 0.50 : 0)
+    + (($c2 == 'C' || $c2 == 'D') ? 0.25 : 0);
+
+  // In a clock-wise order: T-L, T-R, B-R, B-L.
+  $points = array(
+    $point1_x, $point1_y,
+    $point1_x + 0.25, $point1_y,
+    $point1_x + 0.25, $point1_y - 0.25,
+    $point1_x, $point1_y - 0.25,
+  );
+
+  // dpm($points, 'points');
+  return $points;
+}
+
+
+
+function convert_QDS_to_WKT($qds) {
+  $points = determine_points_from_QDS($qds);
+  return 'POLYGON (('
+    . $points[0] . ' ' . $points[1] . ', '
+    . $points[2] . ' ' . $points[3] . ', '
+    . $points[4] . ' ' . $points[5] . ', '
+    . $points[6] . ' ' . $points[7]
+    . '))';
+}
+
+
+
+/**
+ * @return
+ *   An object in the format of an unencoded GeoJSON feature collection. The
+ *   ‘features’ property contains an array of 1 point feature.
+ */
+function create_point_collection($lon, $lat) {
+  $locations = (object) array(
+    'type' => 'FeatureCollection',
+    'features' => array(
+      (object) array(
+        'type' => 'Feature',
+        'geometry' => (object) array(
+          'type' => 'Point',
+          'coordinates' => array(
+            $lon,
+            $lat,
+          ),
+        ),
+      ),
+    ),
+  );
+  return $locations;
 }

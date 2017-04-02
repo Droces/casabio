@@ -18,7 +18,7 @@ use Drupal\restful\Http\RequestInterface;
  * @Authentication(
  *   id = "basic_auth",
  *   label = "Basic authentication",
- *   description = "Authenticate requests based on basic auth.",
+ *   description = "Authenticate requests based on basic auth."
  * )
  */
 class BasicAuthentication extends Authentication {

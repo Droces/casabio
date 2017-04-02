@@ -142,15 +142,15 @@ function casabio_preprocess_node(&$variables, $hook) {
 
     $variables['submitted'] = "by " . $variables['name'] . ", " . ago($variables['created']);
 
-    // Display a 'content type' label inside these node teasers
-    $node_types_with_pretitle = array(
-      'observation',
-      'identification',
-      'interaction',
-    );
-    if (in_array($variables['type'], $node_types_with_pretitle)) {
-      $variables['pretitle'] = $variables['type'];
-    }
+    // // Display a 'content type' label inside these node teasers
+    // $node_types_with_pretitle = array(
+    //   'observation',
+    //   'identification',
+    //   'interaction',
+    // );
+    // if (in_array($variables['type'], $node_types_with_pretitle)) {
+    //   $variables['pretitle'] = $variables['type'];
+    // }
 
   }
 
@@ -183,8 +183,12 @@ function casabio_preprocess_user_profile(&$variables, $hook) {
   // 'field_reliability'
   // 'summary'
 
+  global $user;
+  // dpm($user, '$user');
+
   $variables['user_profile']['edit_url'] = array(
-    '#markup' => url('user/' . $variables['id'] . '/edit'),
+    // '#markup' => url('user/' . $variables['id'] . '/edit'),
+    '#markup' => url('user/' . $user->uid . '/edit'),
   );
   $variables['user_profile']['username'] = array(
     '#markup' => $variables['user']->name,
@@ -285,8 +289,12 @@ function casabio_preprocess_search_result(&$variables) {
   // dpm($variables, '$variables');
   $variables['type'] = $variables['result']['type'];
 
-  $teaser = node_view($variables['result']['node'],'teaser');
-  $variables['result_rendered'] = drupal_render($teaser);
+  // If this search result is a node
+  if (array_key_exists('node', $variables['result'])) {
+    // Get the node rendered as a teaser
+    $teaser = node_view($variables['result']['node'], 'teaser');
+    // $variables['result_rendered'] = drupal_render($teaser);
+  }
 
   // $variables['theme_hook_suggestions'][] = 'search_result_wrapper';
   $variables['theme_hook_suggestions'] = array('search_result_wrapper');
@@ -409,6 +417,26 @@ function casabio_status_messages($variables) {
     $output .= "</div>\n";
   }
   return $output;
+}
+
+
+
+/**
+ * Implements theme_link().
+ */
+function casabio_link($variables) {
+  // dpm($variables, '$variables');
+
+  // If path matches 'user/digits' exactly
+  if (preg_match('/^user\/[0-9]+$/', $variables['path'])) {
+    // dpm($variables, '$variables');
+    $variables['options']['attributes']['class'][] = 'user-link';
+  }
+
+  $path = check_plain(url($variables['path'], $variables['options']));
+  $attributes = drupal_attributes($variables['options']['attributes']);
+  $html = ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text']));
+  return '<a href="' . $path . '"' . $attributes . '>' . $html . '</a>';
 }
 
 

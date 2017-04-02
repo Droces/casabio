@@ -27,13 +27,14 @@
  *  .get_selectables_map()
  *  .get_selectable_from_nid()
  *  .get_selectables_from_nids()
+ *  .set_identifications_data()
+ *  .identifications_data_append()
  *  .refresh_current_field_indicator()
  *  // .get_selectable_field_value()
  *
  * misc_page_set_up()
  * add_listeners()
  *
- * set_up_dialogs()
  * dialog_close_handler()
  * expand_empty_reference_fields()  // @deprecated
  * adjust_buttons()
@@ -52,22 +53,22 @@
  * handle_keypress_identify()
  */
 
-var page_is_setup = false;
-var settings_of_setup;
-var page_setup_loadings = [];
-var page_setup_loadings_message;
+var page_is_setup = false,
+    settings_of_setup,
+    page_setup_loadings = [],
+    page_setup_loadings_message;
 
-var edit_form;
-var identify_form;
-var interaction_form;
-var toolbar;
+var edit_form,
+    identify_form,
+    interaction_form,
+    toolbar;
 
-var current_page;
+// var current_page;
 var page_has_map;
 
-var map_layer_all_locations;
-var standard_feature_style;
-var selected_feature_style;
+var map_layer_all_locations,
+    standard_feature_style,
+    selected_feature_style;
 
 var fields_altered_names = [];
 
@@ -88,8 +89,9 @@ var interactions_map = {}; // Maps selectable's nid: list of positions of intera
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.edit_selected = {
   attach: function(context, settings) {
+    // console.log('context: ', context);
     // console.log('settings: ', settings);
-
+    
     if (! page_is_setup) {
       // console.log('edit_selected_behaviors');
 
@@ -98,14 +100,20 @@ Drupal.behaviors.edit_selected = {
       page_setup_loadings_message = toastr.info('Page setup loading…');
 
       // fetch_selectables_data
-      if (Drupal.edit_selected.is_page('observation_info') || Drupal.edit_selected.is_page('picture_info')) {
+      if (Drupal.contribute.is_page('picture_info')) {
         // console.log('Calling fetch_selectables_data()');
         page_setup_loadings.push('fetch_selectables_data');
-        Drupal.es_api_interactions.fetch_selectables_data(false);
+        Drupal.es_api_interactions.fetch_selectables_data(null, 'picture', false,
+          [[Drupal.edit_selected.refresh_current_field_indicator, this, []]]);
       }
-      if (Drupal.edit_selected.is_page('observation_info')) {
+      if (Drupal.contribute.is_page('observation_info')) {
+        page_setup_loadings.push('fetch_selectables_data');
+        Drupal.es_api_interactions.fetch_selectables_data(null, 'observation', false,
+          [[Drupal.edit_selected.refresh_current_field_indicator, this, []]]);
+
         page_setup_loadings.push('fetch_identifications_data');
         Drupal.es_api_interactions.fetch_identifications_data(false);
+
         page_setup_loadings.push('fetch_interactions_data');
         Drupal.es_api_interactions.fetch_interactions_data(false);
       }
@@ -117,8 +125,6 @@ Drupal.behaviors.edit_selected = {
 
       // Page setup
 
-      set_up_dialogs(context);
-
       misc_page_set_up(context, settings);
 
       adjust_buttons(context);
@@ -129,19 +135,22 @@ Drupal.behaviors.edit_selected = {
 
       add_listeners(context, settings);
 
+
+      // After setup (non-destructive)
+
       page_is_setup = true;
     }
 
   },
-  weight: 6
+  weight: 7
 };
 
 
 Drupal.edit_selected = {
 
-  is_page: function(page) {
-    return current_page == page;
-  },
+  // is_page: function(page) {
+  //   return current_page == page;
+  // },
 
 
   is_page_setup_complete: function() {
@@ -227,7 +236,25 @@ Drupal.edit_selected = {
   },
 
   identifications_data_append: function(identification_in) {
-    identifications_data.push(identification_in);
+    // Check if an identification of this observation with this species already exists
+    var matching_id_index = null;
+
+    $.each(identifications_data, function(index, identification) {
+      if ((identification_in['attributes']['observation'] == identification['attributes']['observation'])
+        && (identification_in['attributes']['identifiedSpecies'] == identification['attributes']['identifiedSpecies'])) {
+        // console.log('index: ', index);
+        matching_id_index = index
+      }
+    });
+
+    // If one exists, replace it
+    if (matching_id_index) {
+      identifications_data[matching_id_index] = identification_in;
+    }
+    // otherwise add this new identification.
+    else {
+      identifications_data.push(identification_in);
+    }
   },
 
   /**
@@ -284,8 +311,10 @@ Drupal.edit_selected = {
 
 
   refresh_current_field_indicator: function(context) {
+    // console.log('refresh_current_field_indicator()');
     var field_shown = null;
     var radio_selected = $('#show-fields-radios input[type="radio"]:checked', context);
+    // console.log('radio_selected: ', radio_selected);
     field_shown = show_field_indicators(context, field_shown, radio_selected);
   },
 
@@ -410,7 +439,7 @@ Drupal.edit_selected = {
 function define_variables(context, settings) {
   settings_of_setup = settings;
 
-  current_page = settings.edit_selected.current_page;
+  // current_page = settings.edit_selected.current_page;
   // console.log('current_page: ', current_page);
 
   edit_form =         $('.edit_form_wrapper', context);
@@ -421,7 +450,7 @@ function define_variables(context, settings) {
   selectables =       $('.selectable', context);
   // console.log('selectables: ', selectables);
 
-  if (Drupal.edit_selected.is_page('observation_info')) {
+  if (Drupal.contribute.is_page('observation_info')) {
     page_has_map = true;
   }
   else {
@@ -519,6 +548,10 @@ function add_listeners(context, settings) {
     delete_selected_observations(context);
   });
 
+  $(document).on('dialog_closed', function(event) {
+    dialog_close_handler();
+  });
+
 
 
 
@@ -586,7 +619,6 @@ function add_listeners(context, settings) {
 
     // Manage fields that need special formatting for the API
     node = reformat_fields_for_API(node);
-
     // console.log('node: ', node);
 
     // --------------------------------
@@ -594,13 +626,13 @@ function add_listeners(context, settings) {
 
     var nids = Drupal.selection.get_selected_nids();
 
-    if (Drupal.edit_selected.is_page('observation_info')) {
+    if (Drupal.contribute.is_page('observation_info')) {
       // node['type'] = "observation";
       var type = "observation";
       Drupal.es_api_interactions.update_nodes(node, type, nids, context);
     }
-    else if (Drupal.edit_selected.is_page('picture_info')
-      || Drupal.edit_selected.is_page('upload')) {
+    else if (Drupal.contribute.is_page('picture_info')
+      || Drupal.contribute.is_page('upload')) {
       var type = "picture";
       Drupal.es_api_interactions.update_nodes(node, type, nids, context);
     }
@@ -608,10 +640,10 @@ function add_listeners(context, settings) {
     // --------------------------------
     // Close dialog, show loading indicators
 
-    var dialog = $(this).parents('.ui-dialog-content');
-    dialog.dialog('close');
+    // var dialog = $(this).parents('.ui-dialog-content');
+    edit_form.dialog('close');
 
-    var loader = Drupal.casa_core.get_loader_markup();
+    var loader = Drupal.casa_utilities.get_loader_markup();
     $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
       selectable.append(loader);
     });
@@ -633,6 +665,9 @@ function add_listeners(context, settings) {
 
     var identification_nid = Drupal.es_api_interactions
       .save_identification_from_form(identify_form, context); // Uses AJAX
+    
+    Drupal.selection.deselect_all();
+    Drupal.casa_core.close_dialogs();
   });
 
 
@@ -648,6 +683,9 @@ function add_listeners(context, settings) {
 
     var interaction = Drupal.es_api_interactions
       .save_interaction_from_form(interaction_form, context);
+    
+    Drupal.selection.deselect_all();
+    Drupal.casa_core.close_dialogs();
   });
 
 
@@ -752,6 +790,8 @@ function add_observations_to_map() {
   map_layer_all_locations = Drupal.casa_map_mgt.create_vector_layer();
   // console.log('map_layer_all_locations: ', map_layer_all_locations.getSource().getFeatures());
 
+  Drupal.casa_map_mgt.get_map(); // Ensures map is defined.
+
   Drupal.casa_map_mgt.add_layer(map_layer_all_locations);
 
   // console.log('selectables_data: ', selectables_data);
@@ -787,6 +827,11 @@ function add_observation_to_map(selectable_data, style) {
   var coordinates = selectable_data.attributes[field_name];
   // console.log('coordinates: ', coordinates);
 
+  if (! coordinates.longitude || ! coordinates.longitude) {
+    // console.log('Observation does not have valid coordinates.');
+    return null;
+  }
+
   // feature = Drupal.casa_map_mgt.create_feature_from_JSON(feature_data);
   feature = Drupal.casa_map_mgt.create_point_feature_from_lon_lat(
     parseFloat(coordinates.longitude),
@@ -810,50 +855,8 @@ function add_observation_to_map(selectable_data, style) {
 
 
 
-
-
-
-
-
-function set_up_dialogs(context) {
-  // console.log('Called: set_up_dialogs()');
-
-  // Transform the edit form into a dialog
-  edit_form.dialog({
-    modal: true,
-    autoOpen: false,
-    resizable: false,
-    width: 800,
-    title: 'Edit observations',
-    open: function( event, ui ) {
-      $(document).trigger('edit_form_dialog-created');
-    },
-    close: dialog_close_handler
-  });
-
-  // Transform the identify form into a dialog
-  identify_form.dialog({
-    modal: true,
-    autoOpen: false,
-    resizable: false,
-    width: 800,
-    title: 'Identify observations',
-    close: dialog_close_handler
-  });
-
-  // Transform the interaction form into a dialog
-  interaction_form.dialog({
-    modal: true,
-    autoOpen: false,
-    resizable: false,
-    width: 800,
-    title: 'Add interaction',
-    close: dialog_close_handler
-  });
-}
-
-
 function dialog_close_handler() {
+  // console.log('Called: dialog_close_handler()');
   fields_altered_names = [];
 }
 
@@ -893,11 +896,9 @@ function adjust_buttons(context) {
   if (num_selected == 0) {
     toolbar.find('button#edit, button#identify').prop( "disabled", true );
   }
-  else if (num_selected == 1) {
+  // Enable buttons if there are any selections
+  else if (num_selected >= 1) {
     toolbar.find('button#edit, button#identify').prop( "disabled", false );
-  }
-  else if (num_selected > 1) {
-    toolbar.find('#identify').prop( "disabled", true );
   }
 }
 
@@ -989,17 +990,22 @@ function rotate_selected(button) {
     // If counter-clockwise
     if (button.attr('id') == 'rotate-ccw') rotation_params['degrees'] = '-90';
 
-    var rotate_result = $.post(url, rotation_params, function(data, textStatus, xhr) {
+    var jqxhr = $.post(url, rotation_params, function(data, textStatus, xhr) {
       // console.log('Rotate POST request completed…');
     });
 
-    rotate_result.fail(function( data ) {
-      toastr_info.remove();
-      toastr.error('Sorry; there was a problem rotating the pictures.');
-      console.log( "In rotate_result.fail(), Reason: " + data['reason'] );
+    jqxhr.fail(function( data ) {
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr_info.remove();
+        toastr.error('Sorry; there was a problem rotating the pictures.');
+        console.log( "In jqxhr.fail(), Reason: " + data['reason'] );
+      }
     });
 
-    rotate_result.done(function( data ) {
+    jqxhr.done(function( data ) {
       toastr_info.remove();
       var result = data['result'];
       // console.log( "Result: ", result );
@@ -1015,7 +1021,7 @@ function rotate_selected(button) {
 
       } else {
         toastr.error('Sorry; there was a problem rotating the pictures.');
-        // console.log( "In rotate_result.done(), data: ", data );
+        // console.log( "In jqxhr.done(), data: ", data );
       }
       // console.log('data: ', data);
     });
@@ -1041,14 +1047,14 @@ function rotate_picture_elements(nids, degrees) {
 
 
 
-function manage_form_number_specimens(form) {
+function manage_form_number_specimens(form, success_callbacks, always_callbacks) {
   // console.log('form.serialize(): ', form.serialize());
   // var are_selecteds = Drupal.selection.are_selecteds();
   // console.log('are_selecteds: ', are_selecteds);
 
   // Disable buttons if there are no selections
   if (! Drupal.selection.are_selecteds()) {
-    toastr.error('You need to select an observation.');
+    toastr.error('You need to select an observation before numbering specimens.');
     return false;
   }
 
@@ -1070,6 +1076,9 @@ function manage_form_number_specimens(form) {
   });
 
   jqxhr.success(function(data) {
+
+    Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+    
     toastr.success('Observations have been numbered successfully. Reloading in 3 seconds…');
     var reload_timeout = window.setTimeout(function(){
       document.location.reload();
@@ -1078,13 +1087,14 @@ function manage_form_number_specimens(form) {
 
   jqxhr.always(function( data ) {
     toastr_info.remove();
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 
 
 
 
-function manage_form_add_blank_obs(form) {
+function manage_form_add_blank_obs(form, success_callbacks, always_callbacks) {
   // console.log('form.serialize(): ', form.serialize());
 
   form.find('#collection-id').val(Drupal.casa_core.get_collection_nid());
@@ -1107,6 +1117,9 @@ function manage_form_add_blank_obs(form) {
   });
 
   jqxhr.success(function(data) {
+
+    Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
     toastr.success('Picture-less observations have been created successfully. Reloading in 3 seconds…');
     var reload_timeout = window.setTimeout(function(){
       document.location.reload();
@@ -1115,6 +1128,7 @@ function manage_form_add_blank_obs(form) {
 
   jqxhr.always(function( data ) {
     toastr_info.remove();
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 
@@ -1290,6 +1304,32 @@ function show_field_indicators(context, field_shown, button) {
 
 
 
+      // Geofields
+      else if (field_name == 'location') {
+        // console.log('selectable_data: ', selectable_data);
+
+        field_data = selectable_data.attributes[field_name];
+
+        if (! field_data) {
+          return null;
+        }
+        var decimal_places = 3,
+          lon = parseFloat(field_data.longitude),
+          lat = parseFloat(field_data.latitude);
+        if (! lon && ! lat) {
+          return null;
+        }
+        // console.log('field_data: ', field_data);
+
+        // Displayed latitude first, longitude second (simply by convention)
+        field_data = 
+          lat.toFixed(decimal_places) + '&deg;N, <br>' +
+          lon.toFixed(decimal_places) + '&deg;E';
+        // console.log('field_data: ', field_data);
+      }
+
+
+
       // Most ordinary fields
       else if (selectable_prop_has_val) {
         // console.log('selectable_data: ', selectable_data);
@@ -1338,8 +1378,8 @@ function set_up_keypress_mgmt(context) {
 
   $(document, context).bind('keydown', 'e',         handle_keypress_edit);
 
-  if (Drupal.edit_selected.is_page('picture_info')
-    || Drupal.edit_selected.is_page('upload')) {
+  if (Drupal.contribute.is_page('picture_info')
+    || Drupal.contribute.is_page('upload')) {
     Drupal.casabio.add_keypress_info(
       "<tr><td><strong>left</strong> : </td><td>Previous picture</td></tr>"
       + "<tr><td><strong>right</strong> : </td><td>Next picture</td></tr>"
@@ -1349,7 +1389,7 @@ function set_up_keypress_mgmt(context) {
     );
   }
 
-  if (Drupal.edit_selected.is_page('observation_info')) {
+  if (Drupal.contribute.is_page('observation_info')) {
     Drupal.casabio.add_keypress_info(
       "<tr><td><strong>left</strong> : </td><td>Previous observation</td></tr>"
       + "<tr><td><strong>right</strong> : </td><td>Next observation</td></tr>"
@@ -1367,15 +1407,33 @@ function set_up_keypress_mgmt(context) {
 }
 
 function handle_keypress_edit() {
-  edit_form.dialog('open');
+  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
+  if (! is_a_selected) {
+    edit_form.dialog('open');
+  }
+  else {
+    toastr.warning('Select at least one');
+  }
 }
 
 function handle_keypress_identify() {
-  identify_form.dialog('open');
+  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
+  if (! is_a_selected) {
+    identify_form.dialog('open');
+  }
+  else {
+    toastr.warning('Select at least one');
+  }
 }
 
 function handle_keypress_interaction() {
-  interaction_form.dialog('open');
+  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
+  if (! is_a_selected) {
+    interaction_form.dialog('open');
+  }
+  else {
+    toastr.warning('Select at least one');
+  }
 }
 
 // Not needed; jQuery ui Dialogs close with 'esc' automatically.

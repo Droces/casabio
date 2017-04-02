@@ -20,7 +20,9 @@
 
 
 /* Import Sass mixins, variables, Compass modules, etc. */
-@import "init/init";
+@import "init/variables";
+@import "init/libraries";
+@import "init/mixins";
 
 /* HTML element (SMACSS base) rules */
 @import "base/normalize";

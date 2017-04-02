@@ -13,34 +13,6 @@ function content_type_picture_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
-  $field_group->identifier = 'group_description|node|picture|form';
-  $field_group->group_name = 'group_description';
-  $field_group->entity_type = 'node';
-  $field_group->bundle = 'picture';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_sections';
-  $field_group->data = array(
-    'label' => 'Description',
-    'weight' => '4',
-    'children' => array(
-      0 => 'body',
-    ),
-    'format_type' => 'htab',
-    'format_settings' => array(
-      'formatter' => 'closed',
-      'instance_settings' => array(
-        'description' => '',
-        'classes' => '',
-        'required_fields' => 1,
-        'id' => '',
-      ),
-    ),
-  );
-  $field_groups['group_description|node|picture|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
   $field_group->identifier = 'group_info|node|picture|form';
   $field_group->group_name = 'group_info';
   $field_group->entity_type = 'node';
@@ -49,7 +21,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Basic info',
-    'weight' => '3',
+    'weight' => '5',
     'children' => array(
       0 => 'field_image',
       1 => 'field_collection',
@@ -67,36 +39,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_info|node|picture|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_interaction|node|picture|form';
-  $field_group->group_name = 'group_interaction';
-  $field_group->entity_type = 'node';
-  $field_group->bundle = 'picture';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_sections';
-  $field_group->data = array(
-    'label' => 'Interaction',
-    'weight' => '7',
-    'children' => array(
-      0 => 'field_interaction_subject',
-      1 => 'field_interaction_activity',
-    ),
-    'format_type' => 'htab',
-    'format_settings' => array(
-      'formatter' => 'closed',
-      'instance_settings' => array(
-        'description' => '',
-        'classes' => '',
-        'required_fields' => 1,
-        'id' => '',
-      ),
-    ),
-  );
-  $field_groups['group_interaction|node|picture|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -124,7 +67,34 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_location|node|picture|form'] = $field_group;
+  $field_groups[''] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_metadata|node|picture|form';
+  $field_group->group_name = 'group_metadata';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'picture';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_sections';
+  $field_group->data = array(
+    'label' => 'Metadata',
+    'weight' => '7',
+    'children' => array(
+      0 => 'field_exif',
+    ),
+    'format_type' => 'htab',
+    'format_settings' => array(
+      'formatter' => 'closed',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-metadata field-group-htab',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -139,10 +109,10 @@ function content_type_picture_field_group_info() {
     'label' => 'Sections',
     'weight' => '0',
     'children' => array(
-      0 => 'group_description',
-      1 => 'group_info',
-      2 => 'group_tags',
-      3 => 'group_location',
+      0 => 'group_info',
+      1 => 'group_tags',
+      2 => 'group_location',
+      3 => 'group_metadata',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(
@@ -152,7 +122,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_sections|node|picture|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -165,7 +135,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Tags',
-    'weight' => '5',
+    'weight' => '4',
     'children' => array(
       0 => 'field_beauty',
       1 => 'field_usefulness',
@@ -183,14 +153,13 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_tags|node|picture|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Basic info');
-  t('Description');
-  t('Interaction');
   t('Location');
+  t('Metadata');
   t('Sections');
   t('Tags');
 

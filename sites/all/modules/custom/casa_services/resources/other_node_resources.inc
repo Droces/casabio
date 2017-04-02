@@ -296,7 +296,7 @@ function _collections_resource_observations($nid) {
 
     $ids = get_identifications_refing_observation('identification', $key);
     foreach ($ids as $nid => $identification_summary) {
-      $observations[$key] -> identifications[$nid] = create_id_representation($nid);
+      $observations[$key]->identifications[$nid] = create_id_representation($nid);
     }
     // $observations[$key]->identifications = $ids;
 
@@ -306,7 +306,7 @@ function _collections_resource_observations($nid) {
     // $observations[$key]->community_identifications = $comm_ids;
 
     foreach ($comm_ids as $nid => $comm_id_summary) {
-      $observations[$key] -> community_identifications[$nid] = create_comm_id_representation($nid);
+      $observations[$key]->community_identifications[$nid] = create_comm_id_representation($nid);
     }
 
     // Interactions
@@ -319,7 +319,7 @@ function _collections_resource_observations($nid) {
     // $observations[$key]->interactions = $interactions;
 
     foreach ($interactions as $nid => $interaction_summary) {
-      $observations[$key] -> interactions[$nid] = $interaction_summary;
+      $observations[$key]->interactions[$nid] = $interaction_summary;
     }
   }
 
@@ -378,7 +378,7 @@ function _collections_resource_pictures($nid) {
 
   //   $ids = get_identifications_refing_observation('identification', $key);
   //   foreach ($ids as $nid => $identification_summary) {
-  //     $pictures[$key] -> identifications[$nid] = create_id_representation($nid);
+  //     $pictures[$key]->identifications[$nid] = create_id_representation($nid);
   //   }
   //   // $pictures[$key]->identifications = $ids;
 
@@ -388,7 +388,7 @@ function _collections_resource_pictures($nid) {
   //   // $pictures[$key]->community_identifications = $comm_ids;
 
   //   foreach ($comm_ids as $nid => $comm_id_summary) {
-  //     $pictures[$key] -> community_identifications[$nid] = create_comm_id_representation($nid);
+  //     $pictures[$key]->community_identifications[$nid] = create_comm_id_representation($nid);
   //   }
   // }
 

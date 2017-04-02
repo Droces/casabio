@@ -1,0 +1,39 @@
+<?php
+
+/*
+ * This file is part of PHPExifTool.
+ *
+ * (c) 2012 Romain Neutron <imprec@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PHPExiftool\Driver\Tag\FlashPix;
+
+use PHPExiftool\Driver\AbstractTag;
+
+class SubimageTileCount extends AbstractTag
+{
+
+    protected $Id = 3;
+
+    protected $Name = 'SubimageTileCount';
+
+    protected $FullName = 'FlashPix::SubimageHdr';
+
+    protected $GroupName = 'FlashPix';
+
+    protected $g0 = 'FlashPix';
+
+    protected $g1 = 'FlashPix';
+
+    protected $g2 = 'Other';
+
+    protected $Type = 'int32u';
+
+    protected $Writable = false;
+
+    protected $Description = 'Subimage Tile Count';
+
+}

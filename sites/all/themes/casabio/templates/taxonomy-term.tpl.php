@@ -41,7 +41,7 @@
  * @ingroup themeable
  */
 ?>
-<div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>">
+<div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>" data-vocabulary="<?php print $term->vocabulary_machine_name; ?>" data-view-mode="<?php print $view_mode; ?>">
 
   <?php if (isset($content['term_block_link'])): ?>
     <?php print render($content['term_block_link']); ?>
@@ -51,7 +51,7 @@
     <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a></h2>
   <?php endif; ?>
 
-  <div class="content">
+  <div class="content" role="presentation">
     <?php print render($content); ?>
   </div>
 

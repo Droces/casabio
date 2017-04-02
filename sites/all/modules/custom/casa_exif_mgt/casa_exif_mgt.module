@@ -10,9 +10,10 @@
 
 /**
  * Creates a DateTime object from EXIF data.
+ * Relies on using PHP's exif_read_data().
  * @see https://www.media.mit.edu/pia/Research/deepview/exif.html for Exif details.
  */
-function get_date_time($exif) {
+function get_date_time_old($exif) {
   $date_time = NULL;
   $date_time_string = '';
 
@@ -24,11 +25,9 @@ function get_date_time($exif) {
   elseif (isset($exif['DateTime'])) { // 0x0132
     $date_time_string = $exif['DateTime'];
   }
-  // DON'T USE THIS - it's related to when the files were last modified
-  // // Date/Time of image was last modified. Format is
-  // elseif (isset($exif['FileDateTime'])) { // 0x0132
-  //   $date_time = date_create_from_format('U', $exif['FileDateTime']);
-  // }
+  // DON'T USE $exif['FileDateTime']
+  // It's when the files were last modified
+  
   // Date and time information relative to UTC.
   elseif (isset($exif['GPSDateStamp']) && isset($exif['GPSTimeStamp'])) { // 0x001d
     // dpm($exif['GPSDateStamp'], 'GPSDateStamp');
@@ -41,6 +40,34 @@ function get_date_time($exif) {
     // dpm($time, 'time');
     $date_time_string = $exif['GPSDateStamp'] . ' ' . implode(':', $time);
     // dpm($date_time_string, 'date_time_string');
+  }
+
+  if ($date_time_string) {
+    $date_time = date_create_from_format('Y:m:d G:i:s', $date_time_string);
+  }
+  return $date_time;
+}
+
+/**
+ * Creates a DateTime object from EXIF data.
+ * Relies on usage of ExifTool.
+ * @see https://www.media.mit.edu/pia/Research/deepview/exif.html for Exif details.
+ */
+function get_date_time($exif) {
+  $date_time = NULL;
+  $date_time_string = '';
+
+  // Date / Time of original image taken. Format is "YYYY:MM:DD HH:MM:SS".
+  if (isset($exif['ExifIFD:DateTimeOriginal'])) { // 0x9003
+    $date_time_string = $exif['ExifIFD:DateTimeOriginal'];
+  }
+  // Date/Time of image was first created. Format is "YYYY:MM:DD HH:MM:SS".
+  elseif (isset($exif['ExifIFD:CreateDate'])) { // 0x0132
+    $date_time_string = $exif['ExifIFD:CreateDate'];
+  }
+  // Date/Time of image was last modified. Format is "YYYY:MM:DD HH:MM:SS".
+  elseif (isset($exif['Composite:GPSDateTime'])) { // 0x0132
+    $date_time_string = $exif['Composite:GPSDateTime'];
   }
 
   if ($date_time_string) {
@@ -112,4 +139,81 @@ function stringFractionToFloat($fraction) {
     return $parts[0];
 
   return floatval($parts[0]) / floatval($parts[1]);
+}
+
+
+
+/**
+ * Uses the PHP Exif Library (PEL) to parse a file's exif data an return it.
+ */
+function pel_get_exif($file) {
+
+  /* Make PEL speak the users language, if it is available. */
+  // setlocale(LC_ALL, '');
+
+  // require_once 'pel/autoload.php';
+  // require_once libraries_get_path('pel') . '/autoload.php';
+  // use lsolesen\pel\PelDataWindow;
+  // use lsolesen\pel\PelJpeg;
+  // use lsolesen\pel\PelTiff;
+
+  require_once libraries_get_path('pel') . '/src/PelDataWindow.php';
+  require_once libraries_get_path('pel') . '/src/PelJpeg.php';
+  require_once libraries_get_path('pel') . '/src/PelTiff.php';
+
+  $prog = array_shift($argv);
+
+  while (! empty($argv)) {
+      switch ($argv[0]) {
+          case '-d':
+              Pel::setDebug(true);
+              break;
+          case '-s':
+              Pel::setStrictParsing(true);
+              break;
+          default:
+              $file = $argv[0];
+              break;
+      }
+      array_shift($argv);
+  }
+
+  if (empty($file)) {
+    return
+      "Usage: " . $prog . " [-d] [-s] <filename>\n"
+      . "Optional arguments:\n"
+      . "  -d        turn debug output on.\n"
+      . "  -s        turn strict parsing on (halt on errors).\n"
+      . "Mandatory arguments:\n"
+      . "  filename  a JPEG or TIFF image.\n";
+      // exit(1);
+  }
+
+  if (! is_readable($file)) {
+      return "Unable to read %s!\n";
+      // exit(1);
+  }
+
+  /*
+   * We typically need lots of RAM to parse TIFF images since they tend
+   * to be big and uncompressed.
+   */
+  // ini_set('memory_limit', '32M');
+
+  $data = new lsolesen\pel\PelDataWindow(file_get_contents($file));
+
+  if (lsolesen\pel\PelJpeg::isValid($data)) {
+      $img = new lsolesen\pel\PelJpeg();
+  // } elseif (PelTiff::isValid($data)) {
+  //     $img = new PelTiff();
+  } else {
+      return "Unrecognized image format! The first 16 bytes follow:\n";
+      // PelConvert::bytesToDump($data->getBytes(0, 16));
+      // exit(1);
+  }
+
+  /* Try loading the data. */
+  $img->load($data);
+
+  return $img;
 }

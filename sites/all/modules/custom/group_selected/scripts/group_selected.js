@@ -26,7 +26,11 @@
 /**
  * CONTENTS
  *
- * - variable declarations -
+ * - variable declarations
+      
+      // Finds all matching identifications by user, keeps only one.
+      filter_identifications_to_one($node);
+      // dpm('Finished filter_identifications_to_one()'); -
  *
  * Drupal.behaviors.edit_selected.attach()
  *
@@ -72,7 +76,11 @@ const SAVED_STATUS_SAVED =    'saved'; // Saved and not changed.
 // The last property, pictures, is an array of picture nids in that group
 var groups =          [];
 
-// Maps group's id: its position in the groups array
+var selectables,
+    groupables,
+    group_elements;
+
+// Maps group's id to its position in the groups array
 // Makes it easy to retrieve a specfic group by its nid
 var groups_map =      {}; // Nothing to do with location and geographic maps
 
@@ -84,29 +92,44 @@ var save_groups_url;
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.group_selected = {
   attach: function(context, settings) {
+    // console.log('context: ', context);
+    // console.log('settings: ', settings);
 
+    // Assignments
+
+    // The following assignments do not use the context, because all matching 
+    // elements on entire page should be selected.
+
+    selectables = $('.selectable');
+    groupables = $('.groupable');
+    group_elements = $('.group');
+    // var toolbar = $('[role="toolbar"][aria-label*="primary"]');
+    save_groups_url = Drupal.settings.basePath + 'ajax/collections/%/group_pictures';
+
+    // Functions that should only happen once per page load
     if (! page_is_setup) {
-      fetch_groups();
-      populate_groups_map();
 
-      save_groups_url = Drupal.settings.basePath + 'ajax/collections/%/group_pictures';
+      // Fetches
+
+      fetch_groups();
 
       alter_page(context);
 
-      add_listeners(context);
+      set_up_keypress_mgmt();
+      
+      add_page_listeners(context);
+    }
 
-      $('.groupable').each(function() {
-        var group_date_added = $(this).find('.views-field-created .field-content').html();
-        $(this).attr('data-date-added', group_date_added);
-        var group_date_taken = $(this).find('.views-field-field-date-taken .date-display-single').html();
-        $(this).attr('data-date-taken', group_date_taken);
-      });
+    // @todo Functions that should be re-written to be able to run on every attachBehaviors().
+    if (! page_is_setup) {
+
+      add_listeners(context);
 
       display_groups();
 
-      set_up_keypress_mgmt(context);
-
       page_is_setup = true;
+
+      // Drupal.attachBehaviors('body'); // For testing only
     }
 
   },
@@ -114,10 +137,10 @@ Drupal.behaviors.group_selected = {
 };
 
 
-// Used like: $("#notAnElement").exists();
-$.fn.exists = function () {
-  return this.length !== 0;
-}
+// // Used like: $("#notAnElement").exists();
+// $.fn.exists = function () {
+//   return this.length !== 0;
+// }
 
 
 
@@ -153,7 +176,7 @@ function populate_groups_map() {
 // =============================================================================
 //                                              Local functions
 
-function fetch_groups() {
+function fetch_groups(success_callbacks, always_callbacks) {
   var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
   var collection_nid = Drupal.contribute.get_collection_nid();
   // console.log('collection_nid: ', collection_nid);
@@ -164,8 +187,13 @@ function fetch_groups() {
   var jqxhr = $.get(url);
 
   jqxhr.fail(function( data ) {
-    toastr.error('Sorry, there was a problem loading the observations.');
-    console.log( "In fetch_selectables_data() jqxhr.fail(), data: ", data );
+    if(jqxhr.readyState < 4)  {
+      // toastr.warning('Request was not completed.');
+    }
+    else {
+      toastr.error('Sorry, there was a problem loading the observations.');
+      console.log( "In fetch_selectables_data() jqxhr.fail(), data: ", data );
+    }
   });
 
   jqxhr.done(function( data ) {
@@ -182,6 +210,7 @@ function fetch_groups() {
 
   jqxhr.always(function( data ) {
     toastr_info.remove();
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 
@@ -203,13 +232,28 @@ function parse_groups(observations) {
   });
   // console.log('groups: ', groups);
 
+  sort_groups_array();
   populate_groups_map();
 }
 
 
 
 function alter_page(context) {
-  var toolbar = $('[role="toolbar"][aria-label*="primary"]', context);
+
+  // Add attributes to groupables
+
+  groupables.each(function() {
+    // Find date added
+    var group_date_added = $(this).find('.views-field-created .field-content').html();
+    // Add date as attribute
+    $(this).attr('data-date-added', group_date_added);
+    // Find date taken
+    var group_date_taken = $(this).find('.views-field-field-date-taken .date-display-single').html();
+    // Add date as attribute
+    $(this).attr('data-date-taken', group_date_taken);
+  });
+
+  // Add listeners to buttons
 
   $( '#auto-group', context ).click( function(event) {
     call_auto_group();
@@ -229,30 +273,114 @@ function alter_page(context) {
   $( '#group_individuals', context ).click( function() {
     group_individuals();
   });
+
+  var dialog = Drupal.theme('group_individuals_dialog');
+  dialog.appendTo('body');
 }
 
+/**
+ * Creates a dialog used to alert of ungrouped pictures when moving to next phase.
+ */
+Drupal.theme.group_individuals_dialog = function () {
+  var dialog = $( '<div id="group-individuals-dialog" class="dialog">'
+    + 'Some of your pictures are not grouped. Pictures need to be grouped to be shown as observations on the next page. Would you like to all pictures that arent part of a group to be grouped?'
+    + '</div>' );
+  return dialog;
+};
 
 
-function add_listeners(context) {
 
-  $('.selectable', context).on('selection:select', function(event) {
-    adjust_buttons();
-  });
+function add_page_listeners(context) {
 
-  $(window).on('selection:deselect_all', function(event) {
+  $(document).on('selection:deselect_all', function(event) {
     adjust_buttons();
   });
 
   // $(document, context).on('groups_fetched', function() {
   // });
 
-  $(document, context).on('selecteds_grouped', function(event) {
+  $(document).on('selecteds_grouped', function(event) {
     save_groups(groups, true);
   });
 
   $(document).on('groups_saved', function(event) {
     // update_saved_groups();
   });
+
+  
+
+  // When the 'Next' button is clicked
+  $('#block-contribute-steps a[rel="next"]', context).on('click', function(event) {
+    var link = $(this);
+    // console.log('clicked');
+
+
+    if (! link.hasClass('no-dialog')) {
+      var do_click = display_message_ungrouped_individuals(link);
+      return do_click;
+    }
+  });
+}
+
+
+
+function add_listeners(context) {
+
+  selectables.on('selection:select', function(event) {
+    adjust_buttons();
+  });
+}
+
+
+
+function display_message_ungrouped_individuals(next_link) {
+  var num_ungrouped = 0;
+  selectables.each(function() {
+    if (get_group($(this)).length == 0) {
+      num_ungrouped ++;
+    }
+  });
+  // console.log('num_ungrouped', num_ungrouped);
+  if (num_ungrouped == 0) {
+    return true;
+  }
+
+  // Display dialog asking if individual pictures should be grouped.
+  $( "#group-individuals-dialog" ).dialog({
+    dialogClass: "no-close",
+    width: 500,
+    title: 'Group individual pictures?',
+    modal: true,
+    buttons: [
+      {
+        text: "Don't group",
+        click: function() {
+          next_link.addClass('no-dialog');
+          next_link[0].click();
+        }
+      },
+      {
+        text: "Cancel",
+        click: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      {
+        text: "Group individuals",
+        class: "primary",
+        click: function() {
+          next_link.addClass('no-dialog');
+
+          $(document).on('groups_saved', function(event) {
+            next_link[0].click();
+          });
+
+          group_individuals();
+        }
+      }
+    ]
+  });
+  return false;
 }
 
 
@@ -262,19 +390,14 @@ function add_listeners(context) {
  * This works if the selectables are already sorted by their observations.
  */
 function display_groups() {
-
-  var selectables = $( ".selectable" );
   // var groups = [];
   var this_group_nid = null;
 
-
-
+  // Add 'data-group-nid' attribute to each
   selectables.each(function() {
     var group_nid = $(this).find(".field.nid-observation .field-content" ).html();
     $(this).attr('data-group-nid', group_nid);
   });
-
-
 
   // For each selectable that has a group
   selectables.filter('[data-group-nid]').each(function() {
@@ -353,38 +476,36 @@ function call_auto_group() {
     + '/' + $('#auto-group-num').val();
   // console.log( "url: ", url );
 
-  var posting = $.post(url);
-  // console.log( "posting: ", posting );
+  var jqxhr = $.post(url);
+  // console.log( "jqxhr: ", jqxhr );
 
-  posting.fail(function( data ) {
-    toastr_info.remove();
-    toastr.error('Sorry; there was a problem auto-grouping the pictures.');
-    console.log( "Response: ", data);
-  });
-
-  posting.done(function( data ) {
-    // console.log( "Called: posting.done()");
+  jqxhr.done(function( data ) {
+    // console.log( "Called: jqxhr.done()");
 
     var result = data['result'];
     // console.log( "Result: " + result );
 
     if (result == "success") {
-      toastr_info.remove();
       toastr.success('Pictures have been auto-grouped successfully. Reloading in 3 seconds…');
       var reload_timeout = window.setTimeout(function(){
         document.location.reload();
       }, 3000);
     } else {
-      toastr_info.remove();
       toastr.error('Sorry; there was a problem auto-grouping the pictures.');
-      console.log( "Response: ", data);
+      console.log( "Response data: ", data);
     }
 
     // window.location.href = Drupal.settings.basePath + 'node/104';
   });
-  posting.fail(function( data ) {
+
+  jqxhr.fail(function( data ) {
     toastr.error('Sorry; there was a problem auto-grouping the pictures.');
-  })
+    console.log( 'jqxhr: ', jqxhr);
+  });
+
+  jqxhr.always(function( data ) {
+    toastr_info.remove();
+  });
 }
 
 
@@ -408,9 +529,6 @@ function call_auto_group() {
 function group(group_nid, saved_status, show_message) {
   // console.log("Called: group()");
   // console.log('saved_status: ', saved_status);
-
-
-  // var ;s_new: null,
 
   // -----------------------------------------------------------------
   // Manage parameters
@@ -455,6 +573,8 @@ function group(group_nid, saved_status, show_message) {
 
   add_selected_to_groups_array(saved_status, group_nid);
 
+  sort_groups_array();
+
   // -----------------------------------------------------------------
   // Add upload date/time as attribute on group.
 
@@ -464,6 +584,7 @@ function group(group_nid, saved_status, show_message) {
 
   var group_date_added = group.children().first().find('.views-field-created .field-content').html();
   group.attr('data-date-added', group_date_added);
+
   var group_date_taken = group.children().first().find('.views-field-field-date-taken .date-display-single').html();
   group.attr('data-date-taken', group_date_taken);
 
@@ -571,6 +692,8 @@ function add_selected_to_groups_array(saved_status, group_nid) {
       pictures: selected_nids
     });
     // console.log('groups: ', groups);
+
+    sort_groups_array();
     populate_groups_map();
   }
   else if (saved_status == SAVED_STATUS_ALTERED) {
@@ -579,6 +702,8 @@ function add_selected_to_groups_array(saved_status, group_nid) {
     // console.log('group_pics: ', group_pics);
     groups[groups_map[group_nid]].pictures = group_pics;
     groups[groups_map[group_nid]].status = SAVED_STATUS_ALTERED;
+
+    // Since neither the number nor order of groups don't change, don't re-populate map
   }
 }
 
@@ -770,6 +895,7 @@ function eject_all_from_group(group_obj) {
  */
 function ungroup_all() {
 
+  sort_groups_array();
   populate_groups_map();
 
   // Get all groups' nids
@@ -780,10 +906,16 @@ function ungroup_all() {
 
 
 
-function group_individuals() {
+/**
+ * @param callback
+ *   A function to be called once the rest of the function has completed.
+ */
+function group_individuals(callback) {
+  // console.log('callback: ', callback);
+
   Drupal.selection.deselect_all();
 
-  var indiv_selectables = $(".selectable").not(".group .selectable");
+  var indiv_selectables = selectables.not(".group .selectable");
 
   indiv_selectables.each(function( index, selectable ) {
     var index = Drupal.selection.get_index($(selectable));
@@ -804,7 +936,7 @@ function group_individuals() {
  * @param groups
  *   A subset of the groups array; an array of 'group' objects.
  */
-function save_groups(groups_in, message) {
+function save_groups(groups_in, message, success_callbacks, always_callbacks) {
   // console.log('groups_in: ', groups_in);
   // console.log('groups: ', groups);
 
@@ -838,7 +970,7 @@ function save_groups(groups_in, message) {
   var ajax_settings = {
     type: "POST",
     contentType: "application/json",
-    data: JSON.stringify(Drupal.casa_core.toObject(groups_in), null, 2),
+    data: JSON.stringify(Drupal.casa_utilities.toObject(groups_in), null, 2),
     // data: groups_in,
     url: url, // api_url + '/login-token'
   }
@@ -852,9 +984,14 @@ function save_groups(groups_in, message) {
   // --------------------------------
   // Manage responses
 
-  jqxhr.fail(function( data ) {
-    toastr.error('Sorry; there was a problem saving the pictures.');
-    console.log( "In jqxhr.fail(), data: ", data);
+  jqxhr.fail(function( data, textStatus, errorThrown ) {
+    if(jqxhr.readyState < 4)  {
+      // toastr.warning('Saving the pictures was not completed.');
+    }
+    else {
+      toastr.error('Sorry; there was a problem saving the pictures.');
+      console.log( "In jqxhr.fail(), data: ", data);
+    }
 
     // @todo Update group.status to indicate 'failed'? To retry?
   });
@@ -866,7 +1003,7 @@ function save_groups(groups_in, message) {
 
     if (result == "success") {
       if (message) {
-        toastr.success('Pictures saved successfully.');
+        toastr.success('Group saved successfully.');
       }
       // console.log( "data: ", data);
     }
@@ -885,6 +1022,8 @@ function save_groups(groups_in, message) {
     // console.log( 'groups: ', groups );
     // console.log( 'groups_map: ', groups_map );
 
+    Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
     $(document).trigger('groups_saved');
   });
 
@@ -892,6 +1031,7 @@ function save_groups(groups_in, message) {
     if (message) {
       toastr_info.remove();
     }
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 
@@ -933,7 +1073,7 @@ function update_temp_ids(nodes_in) {
     }
 
     // Change 'id' attribute of group element
-    $('.group#' + node.temp_id).attr('id', node.id);
+    group_elements.filter('#' + node.temp_id).attr('id', node.id);
 
     // Update data in groups array
     groups[groups_map[node.temp_id]].id = node.id;
@@ -943,6 +1083,7 @@ function update_temp_ids(nodes_in) {
     delete temp_ids[temp_ids.indexOf(node.temp_id)];
   });
 
+  sort_groups_array();
   populate_groups_map();
 }
 
@@ -975,6 +1116,7 @@ function update_saved_groups(nodes_in) {
     }
   });
 
+  sort_groups_array();
   populate_groups_map();
   // console.log('groups: ', groups);
 }
@@ -1036,25 +1178,49 @@ function sort_groupables(container, order) {
 
     if (container.is($('.groupables ul.content'))) {
       // Sort all groupables within each group
-      $('.group').each(function() {
+      group_elements.each(function() {
         tinysort($(this).children('.groupable').toArray(), {
           attr: sort_attr,
           order: order
         });
       });
     }
-});
+  });
 }
 
 
 
-function set_up_keypress_mgmt(context) {
-  Drupal.casabio.add_keypress_info(
-    "<tr><td><strong>g</strong> : </td><td>Group selected pictures</td></tr>"
-    + "<tr><td><strong>u</strong> : </td><td>Un-group selected pictures</td></tr>");
+function sort_groups_array() {
+  // console.log('groups: ', groups);
+  var new_groups = [];
 
-  $(document, context).bind('keydown', 'g',         handle_keypress_group);
-  $(document, context).bind('keydown', 'u',         handle_keypress_ungroup);
+  // Move empty groups to the beginning of the array
+
+  groups.forEach(function callback(group, index, array) {
+    // console.log('group: ', group);
+
+    // If the group has no pictures (will be deleted)
+    if (! group.pictures) {
+      // Add group to beginning
+      new_groups.unshift(group);
+    }
+    else {
+      new_groups.push(group);
+    }
+  }, groups);
+  // console.log('new_groups: ', new_groups);
+  groups = new_groups;
+}
+
+
+
+function set_up_keypress_mgmt() {
+  Drupal.casabio.add_keypress_info(
+    '<tr><td><strong>g</strong> : </td><td>Group selected pictures</td></tr>'
+    + '<tr><td><strong>u</strong> : </td><td>Un-group selected pictures</td></tr>');
+
+  $(document).bind('keydown', 'g',         handle_keypress_group);
+  $(document).bind('keydown', 'u',         handle_keypress_ungroup);
 }
 
 function handle_keypress_group() {

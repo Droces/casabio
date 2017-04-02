@@ -20,26 +20,25 @@
  *  .attach()
  *
  * Drupal.casa_map_mgt
- *  .get_map()
- *  .get_ol_maps()
- *  .create_feature_from_JSON()
- *  .create_vector_layer()
- *  .add_feature_to_vector_layer()
- *  .add_layer()
- *  .get_feature_from_settings()
- *  .make_widget_map()
- *    .remove_interaction()
- *  .center_map()
- *  .create_style()
+ *   .get_map()
+ *   .get_ol_maps()
+ *   .create_feature_from_JSON()
+ *   .create_vector_layer()
+ *   .add_feature_to_vector_layer()
+ *   .add_layer()
+ *   .get_feature_from_settings()
+ *   .remove_interaction()
+ *   .center_map()
+ *   .create_style()
+ *   
+ *   .make_map_source()
+ *   .make_map_tile_layer()
  *
  * add_collection_to_map()
- * add_draw_interaction()
  *
  * create_feature_geometry()
- * fix_layer_ordering()
  * transform_geometry_to_4326()
  * transform_geometry_from_4326()
- * get_style()
  */
 
 
@@ -53,17 +52,12 @@ var draw_source;
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.casa_map_mgt = {
   attach: function(context, settings) {
+    // console.log('context: ', context);
+    // console.log('settings: ', settings);
 
     if (! page_is_setup) {
-
-      // Convert location fields with a textarea into a map
-
-      var map_field = $('.form-field-name-field-location .form-type-textarea', context);
-      // console.log('map_field.length: ', map_field.length);
-      if (map_field.length > 0) {
-        map = Drupal.casa_map_mgt.make_widget_map(settings);
-      }
-
+      // console.log('Page being set up...');
+      // Drupal.casa_utilities.start_timer('casa_map_mgt');
 
       // Listener: When a tab is clicked, updateSize of any maps within it.
       $('.horizontal-tab-button a', context).on('click', function( event, ui ) {
@@ -74,8 +68,14 @@ Drupal.behaviors.casa_map_mgt = {
           // console.log('map: ', map);
           map.updateSize();
         }
+        // else {
+        //   throw "casa_map_mgt.js: " + "Drupal.openlayers is undefined.";
+        // }
       });
 
+      Drupal.casa_map_mgt.transform_placeholders_to_maps(context);
+
+      // Drupal.casa_utilities.end_timer('casa_map_mgt');
       page_is_setup = true;
     }
 
@@ -88,14 +88,15 @@ Drupal.casa_map_mgt = {
 
 
   get_map: function(settings) {
-    // Has custom map
-    if (typeof(map) !== 'undefined') {
-      return map;
+    if (typeof(map) === 'undefined') {
+      Drupal.casa_map_mgt.setup_map(settings);
     }
+    return map;
+
     // Has has OL module map
-    else if (typeof(Drupal.openlayers) !== 'undefined') {
-      return get_ol_maps(settings);
-    }
+    // else if (typeof(Drupal.openlayers) !== 'undefined') {
+    //   return get_ol_maps(settings);
+    // }
   },
 
 
@@ -120,6 +121,89 @@ Drupal.casa_map_mgt = {
     });
 
     return map;
+  },
+
+
+
+  setup_map: function(settings) {
+    var map_field = $('.form-field-name-field-location');
+    // console.log('map_field.length: ', map_field.length);
+    if (map_field.length > 0) {
+      map = Drupal.map_widget_maker.make_widget_map(settings);
+      // console.log('map: ', map);
+    }
+    else {
+      throw "casa_map_mgt.js: " + "There is no textarea for the map";
+    }
+  },
+
+
+
+  /**
+   * Converts map containers that contain location data into OpenLayers maps.
+   */
+  transform_placeholders_to_maps: function(context) {
+
+    $('[data-transform="to-map"]', context).each(function(index, el) {
+
+      var map_container = $(this);
+      var map_id = $(this).attr('id');
+      var gbif_key = $(this).attr('data-gbif-key');
+      // console.log('map_id: ', map_id);
+
+      map_container.removeClass('hidden');
+
+      // Create the layers.
+
+      var tile_layer = Drupal.casa_map_mgt.make_map_tile_layer('Bing');
+
+      if (gbif_key) {
+        // console.log('gbif_key: ', gbif_key);
+        var tile_layer2 = Drupal.casa_map_mgt.make_map_tile_layer('gbif', [gbif_key]);
+      }
+
+      var vector_source = new ol.source.Vector();
+      var vector_layer = new ol.layer.Vector({
+        source: vector_source
+      });
+
+
+      // Add location features
+      var projection = tile_layer.getSource().getProjection();
+
+      var features = create_features_from_geojson(map_container.html(), projection);
+      // console.log('features: ', features);
+
+      map_container.html('');
+
+      $.each(features, function(index, feature) {
+        vector_source.addFeature(feature);
+      });
+
+
+      // Create the OpenLayers map.
+      var map = new ol.Map({
+        target: map_id,
+
+        layers: [tile_layer, tile_layer2], // vector_layer
+
+        view: new ol.View({
+          center: ol.proj.fromLonLat([0, 0]),
+          zoom: 4
+        })
+      });
+
+      // If features were found
+      if (features.length > 0) {
+        // Zoom to and center on vector layer.
+        // map.getView().fit(vector_layer.getSource().getExtent(), map.getSize());
+      }
+      else {
+        map.getView().setZoom(0);
+      }
+      map.getView().setZoom(0);
+
+    });
   },
 
 
@@ -150,13 +234,13 @@ Drupal.casa_map_mgt = {
     var featureGeometry = create_feature_geometry(coordinates_string, feature_data.geo_type);
     // console.log('featureGeometry: ', featureGeometry);
 
-    var projection = map_tile_layer.getSource().getProjection();
-    // console.log('projection: ', projection);
+    var tile_layer_projection = map_tile_layer.getSource().getProjection();
+    // console.log('tile_layer_projection: ', tile_layer_projection);
 
     // Transform this to match the projection of the map tile layer that will be used
     featureGeometry.transform(
       new ol.proj.Projection({code: "EPSG:4326"}), // source: EPSG:4326 (WGS84 geographic coordinates)
-      projection // destination: EPSG:3857 (Web or Spherical Mercator, as used for example by Bing Maps or OpenStreetMap)
+      tile_layer_projection // destination: EPSG:3857 (Web or Spherical Mercator, as used for example by Bing Maps or OpenStreetMap)
     );
     // console.log('featureGeometry coords after transform: ', featureGeometry.getCoordinates());
 
@@ -238,141 +322,12 @@ Drupal.casa_map_mgt = {
 
 
 
+  get_map_tile_layer: function() {
+    return map_tile_layer;
+  },
 
-
-  /*
-   * Creates an OpenLayers 3 map, with a draw point interaction, and the collection's location.
-   */
-  make_widget_map: function(settings) {
-
-
-    // =========================================================================
-    // Create map with tile layer
-
-    $('.form-field-name-field-location').append('<div id="map" class="map"></div>');
-
-    // Create the map object.
-    map = new ol.Map({ });
-
-    // Set the map's target HTML element.
-    map.setTarget('map');
-
-    // Set the map's view.
-    // [lon, lat], or [x, y]
-    var view = new ol.View({
-      center: [0, 0],
-      zoom: 1
-    })
-    map.setView(view);
-
-    // Add a tile layer (MapQuest OSM).
-    // map_tile_layer = new ol.layer.Tile({
-    //   source: new ol.source.MapQuest({layer: 'osm'})
-    // })
-
-    // BingMaps types -------------
-    // Aerial             Aerial
-    // AerialWithLabels   Aerial with labels
-    // Road               Road
-    // collinsBart        Collins Basrt
-    // ordnanceSurvey     Ordnance Survey
-
-    // Add a tile layer (Bing AerialWithLabels).
-    map_tile_layer = new ol.layer.Tile({
-      source: new ol.source.BingMaps({
-        imagerySet: 'AerialWithLabels',
-        key: 'Alv8UVrw4GpMxdqDyfVK8js_wa56fdUPFhZF7eUPSTiPVsry3kdyIQcr-U5upHIN'
-      })
-    });
-    // console.log('map_tile_layer: ', map_tile_layer);
-
-    // var projection = ol.proj.get('EPSG:3857');
-
-    map.addLayer(map_tile_layer);
-
-    // Set the zoom level.
-    map.getView().setZoom(2);
-
-    // Remove an interaction.
-
-    var interactions = map.getInteractions();
-
-    function remove_interaction(interaction, index, array) {
-      var is_mouseWheelZoom = interaction instanceof ol.interaction.MouseWheelZoom;
-
-      if (is_mouseWheelZoom) {
-        map.removeInteraction(interaction);
-      }
-    }
-
-    interactions.forEach(remove_interaction);
-
-
-    // =========================================================================
-    // Add draw interaction
-
-    add_draw_interaction();
-
-
-
-    // =========================================================================
-    // Add draw event management
-
-    // Used to determine if the field has a value yet.
-    var has_location = false;
-
-    // draw.on('drawend', function (event) {
-    //   // console.log('event: draw, on drawend: ', event);
-    // });
-
-    draw_source.on('change', function (event) {
-      // console.log('event: draw_source, on change: ', event);
-
-      var last_feature;
-      var features = draw_source.getFeatures();
-      // console.log('features: ', features);
-
-      if (!has_location || features.length > 1) {
-        has_location = true;
-
-        // Remove all but the last (most recently-added) feature
-        last_feature = features[features.length - 1];
-        draw_source.clear();
-        draw_source.addFeature(last_feature);
-
-        // Get coordinates
-        var features = draw_source.getFeatures();
-
-        // Call the transform function on the features.
-        // features.forEach(transform_geometry);
-
-        var point = features[0];
-
-        // Transform to get correct coordinates (in degrees)
-        Drupal.casa_map_mgt.transform_geometry_to_4326(point, map_tile_layer);
-        var coords = point.getGeometry().getCoordinates();
-        // console.log('coords: ', coords);
-
-        // transform back to display corrently on the map
-        Drupal.casa_map_mgt.transform_geometry_from_4326(point, map_tile_layer);
-
-        // // Set field value type
-        // var input = $('[name="field_location[und][0][dataType]"]');
-        // input.val('wkt');
-        // This isn't used (it gets overridden).
-
-        // Set field value
-        var input = $('[name="field_location[und][0][geom]"]');
-        input.val(coords.join(', '));
-        Drupal.edit_selected.trigger_manage_field_change( input );
-      }
-
-    });
-
-
-   // add_collection_location(settings);
-
-    return map;
+  set_map_tile_layer: function(map_tile_layer_in) {
+    map_tile_layer = map_tile_layer_in;
   },
 
 
@@ -400,8 +355,15 @@ Drupal.casa_map_mgt = {
 
   create_style: function(geo_type, radius, fill_colour, stroke_colour) {
 
-    // if (geo_type = 'linestring') {}
-    // else if (geo_type = 'point') {}
+    // switch (geo_type) {
+    //   case 'linestring':
+    //     //
+    //     break;
+    //   case 'point':
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     if (typeof radius == undefined) {
       radius = 3;
@@ -429,10 +391,12 @@ Drupal.casa_map_mgt = {
 
 
 
-  // Write the tranform function.
+  /**
+   * Transforms a feature from a layer's projection to EPSG:4326.
+   */
   transform_geometry_to_4326: function(feature, layer) {
 
-    if (typeof layer == 'undefined') {
+    if (typeof layer === 'undefined') {
       layer = map_tile_layer;
     }
 
@@ -445,10 +409,12 @@ Drupal.casa_map_mgt = {
 
 
 
-  // Write the tranform function.
+  /**
+   * Transforms a feature from EPSG:4326 to a layer's projection.
+   */
   transform_geometry_from_4326: function(feature, layer) {
 
-    if (typeof layer == 'undefined') {
+    if (typeof layer === 'undefined') {
       layer = map_tile_layer;
     }
 
@@ -457,9 +423,223 @@ Drupal.casa_map_mgt = {
     // console.log('new_projection: ', new_projection);
 
     feature.getGeometry().transform(current_projection, new_projection);
+  },
+
+
+  make_map_source: function(type, parameters) {
+    // console.log('type: ', type);
+    switch (type) {
+      case 'OSM':
+        // MapQuest Open Street Maps
+        return new ol.source.MapQuest({layer: 'osm'});
+        break;
+
+      case 'Bing':
+        // BingMaps
+
+        // TYPES ________________________________
+        // Aerial             Aerial
+        // AerialWithLabels   Aerial with labels
+        // Road               Road
+        // collinsBart        Collins Bart
+        // ordnanceSurvey     Ordnance Survey
+
+        return new ol.source.BingMaps({
+          imagerySet: 'AerialWithLabels', // EPSG:3857
+          key: 'Alv8UVrw4GpMxdqDyfVK8js_wa56fdUPFhZF7eUPSTiPVsry3kdyIQcr-U5upHIN'
+        });
+        break;
+
+      case 'gbif':
+        // return new ol.source.TileImage({
+        //   tileUrlFunction: function(coordinate) {
+        //     var map_url = 'http://api.gbif.org/v1/map/density/tile'
+        //       + '?x=' + coordinate[0]
+        //       + '&y=' + coordinate[1]
+        //       + '&z=' + coordinate[2]
+        //       + '&type=' + 'TAXON'
+        //       + '&key=' + '3152198'
+        //       + '&resolution=' + '2'
+        //       // + '&palette=' + 'yellows_reds'
+        //     ;
+        //     console.log('map_url: ', map_url);
+        //     return map_url;
+        //   }
+        // });
+        return new ol.source.XYZ({
+          url: 'http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}'
+            + '&type=' + 'TAXON'
+            + '&key=' + parameters[0]
+            + '&resolution=' + '2'
+            // + '&palette=' + 'yellows_reds'
+        });
+
+      default:
+        break;
+    }
+  },
+
+  make_map_tile_layer: function(source_type, parameters) {
+    var tile_source = Drupal.casa_map_mgt.make_map_source(source_type, parameters);
+    // console.log('tile_source.getProjection(): ', tile_source.getProjection());
+
+    var map_tile_layer = new ol.layer.Tile({
+      source: tile_source
+    });
+    return map_tile_layer;
   }
 
 };
+
+function isOdd(num) { return num % 2;}
+
+
+
+/**
+ * @param crs
+ *   ol.proj.Projection object for the coordinate reference system that the new 
+ *   features should use. eg. ol.proj.Projection({code: "EPSG:3857"})
+ */
+function create_features_from_geojson(json, crs) {
+  var features_data = $.parseJSON(json).features;
+  var features = [];
+
+  $.each(features_data, function(index, feature_data) {
+    // console.log('index: ', index);
+    // console.log('feature_data: ', feature_data);
+
+    var feature = create_feature_from_geometry(feature_data.geometry);
+
+    // Transform the feature's projection.
+    feature.getGeometry().transform(
+      new ol.proj.Projection({code: "EPSG:4326"}), // source: EPSG:4326 (WGS84 geographic coordinates)
+      crs // destination: EPSG:3857 (Web or Spherical Mercator, as used for example by Bing Maps or OpenStreetMap)
+    );
+
+    // Style it according to it's geometry type.
+
+    // Point
+    if (feature.getGeometry().getType() == 'Point') {
+      var style = new ol.style.Style({
+        // Small red dot
+        image: new ol.style.Circle({
+          radius: 3,
+          fill: new ol.style.Fill({color: 'red'}),
+        })
+      });
+    }
+    // Polygon (representing a QDS)
+    else if (feature.getGeometry().getType() == 'Polygon') {
+      // Set the feature's style (based on its count).
+      var count = parseInt(feature_data.properties.count);
+      var colour = get_qds_count_colour(count);
+      var style = create_qds_style(colour);
+      feature.setStyle(style);
+    }
+
+    features.push(feature);
+  });
+
+  return features;
+}
+
+
+
+/**
+ * @param geometry
+ *   A GeoJSON geometry object.
+ */
+function create_feature_from_geometry(geometry) {
+  var feature_geometry;
+
+  // Point
+  if (geometry.type == 'Point') {
+    var feature_geometry = new ol.geom.Point([
+      parseFloat(geometry.coordinates[0]),
+      parseFloat(geometry.coordinates[1])
+    ]);
+  }
+  // Polygon (representing a QDS)
+  else if (geometry.type == 'Polygon') {
+    var feature_geometry = new ol.geom.Polygon([[
+      [parseFloat(geometry.coordinates[0][0][0]),
+       parseFloat(geometry.coordinates[0][0][1])],
+      [parseFloat(geometry.coordinates[0][1][0]),
+       parseFloat(geometry.coordinates[0][1][1])],
+      [parseFloat(geometry.coordinates[0][2][0]),
+       parseFloat(geometry.coordinates[0][2][1])],
+      [parseFloat(geometry.coordinates[0][3][0]),
+       parseFloat(geometry.coordinates[0][3][1])]
+    ]]);
+    // console.log('polygon: ', polygon);
+  }
+
+  var feature = new ol.Feature({
+    geometry: feature_geometry
+  });
+
+  // console.log('feature: ', feature);
+  return feature;
+}
+
+
+
+function get_qds_count_colour(count) {
+  var colour = 'black';
+
+  // Validation.
+  // if (typeof count !==
+
+  var categories = {
+    1: {
+      'min': 0, 'max': 1,
+      'colour': [255, 234, 000, 1] // yellow
+    },
+    2: {
+      'min': 1, 'max': 4,
+      'colour': [255, 120, 000, 1] // orange
+    },
+    3: {
+      'min': 4, 'max': 10,
+      'colour': [255, 000, 000, 1] // red
+    },
+    4: {
+      'min': 10, 'max': 16,
+      'colour': [255, 000, 180, 1] // pink
+    },
+    5: {
+      'min': 16, 'max': 100,
+      'colour': [195, 000, 255, 1] // purple
+    },
+  };
+
+  $.each(categories, function(index, category) {
+    if(count > category.min && count <= category.max) {
+      colour = category.colour; // yellow
+    }
+  });
+
+  return colour;
+}
+
+
+
+function create_qds_style(colour) {
+  var stroke = new ol.style.Stroke({
+    color: colour,
+    width: 1
+  });
+  colour[3] = 0.6;
+  var fill = new ol.style.Fill({
+    color: colour
+  });
+  var style = new ol.style.Style({
+    fill: fill,
+    stroke: stroke
+  });
+
+  return style;
+}
 
 
 /**
@@ -473,8 +653,8 @@ function add_collection_to_map() {
 
   var feature = Drupal.casa_map_mgt.create_feature_from_JSON(feature_data);
 
-  // var style = create_style(feature_data.geo_type);
-  // feature.setStyle(style);
+  var style = create_style(feature_data.geo_type);
+  feature.setStyle(style);
 
   Drupal.casa_map_mgt.add_feature_to_vector_layer(feature);
 
@@ -482,32 +662,6 @@ function add_collection_to_map() {
   map.addLayer(map_vector_layer);
 
   Drupal.casa_map_mgt.center_map();
-}
-
-
-/**
- * Called by Drupal.casa_map_mgt.make_widget_map()
- */
-function add_draw_interaction() {
-
-  var draw_collection = new ol.Collection();
-  draw_source = new ol.source.Vector();
-
-  var style = get_style('draw');
-
-  var draw_vector_layer = new ol.layer.Vector({
-    source: draw_source,
-    style: style
-  });
-
-  map.addLayer(draw_vector_layer);
-
-  var draw = new ol.interaction.Draw({
-    features: draw_collection,
-    source: draw_source,
-    type: 'Point'
-  });
-  map.addInteraction(draw);
 }
 
 
@@ -540,75 +694,6 @@ function create_feature_geometry(coordinates_string, geo_type) {
   }
 
   return featureGeometry;
-}
-
-
-
-function fix_layer_ordering(map) {
-  var map_layers = map.getLayers();
-
-  for (var i = 0; i < map_layers.getLength(); i++) {
-    // console.log('layer, ZIndex: ' + i + ': ' + map_layers.item(i).getZIndex());
-
-    if (map_layers.item(i) instanceof ol.layer.Vector) {}
-    if (map_layers.item(i) instanceof ol.layer.Tile) {
-      map_layers.item(i).setZIndex(-1);
-    }
-  };
-}
-
-
-
-function get_style(type) {
-  var default_style = new ol.style.Style({});
-
-  var draw_style = new ol.style.Style({
-    fill: new ol.style.Fill({
-      color: 'rgba(255, 255, 255, 0.2)'
-    }),
-    stroke: new ol.style.Stroke({
-      color: '#ffcc33',
-      width: 2
-    }),
-    image: new ol.style.Circle({
-      radius: 7,
-      fill: new ol.style.Fill({
-        color: '#ffcc33'
-      })
-    })
-  });
-
-  switch (type) {
-    case 'draw':
-      return draw_style;
-      break;
-
-    default:
-      return default_style;
-      break;
-  }
-}
-
-
-function add_collection_location(settings) {
-
-  // =========================================================================
-  // Add collection's location as a vector layer
-
-  // If this is one of the 'Edit selected' pages
-  if (typeof settings.edit_selected != 'undefined') {
-
-    // Get the collection's location as a vector layer
-    feature_data = Drupal.casa_map_mgt.get_feature_from_settings(settings);
-    // console.log('feature_data: ', feature_data);
-
-    if (typeof feature_data != 'undefined') {
-      if (feature_data != null && feature_data['geom'] != 'GEOMETRYCOLLECTION EMPTY') {
-        add_collection_to_map(feature_data);
-      }
-    }
-
-  }
 }
 
 

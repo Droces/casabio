@@ -1,0 +1,740 @@
+/**
+ * @file
+ * 
+ */
+
+/**
+  CONTENTS
+
+  Mixins & helper functions
+  Multiple Content types
+  
+  Nodes
+  Webforms
+  Collections
+  Observations
+  Pictures
+  Habitat record
+  Identifications
+  Interaction
+
+  Users
+  Comment
+ */
+
+/* -----------------------------------------------------------------------------
+                                          Mixins & helper functions
+*/
+
+// Some node info shown as text over a whitened node that is small,
+// (eg. selectables) like on the Contribute MO pages.
+@mixin data-on-overlay {
+  // display: none;
+  font-size: 0.8em;
+  font-weight: 600;
+
+  // @extend %field-as-abbr;
+  display: none;
+
+  // &[aria-hidden="true"] {
+  //  display: none;
+  // }
+  display: block;
+  position: absolute;
+  top: 3em;
+  left: 1.3em;
+  width: 80%;
+  height: 76%;
+  overflow: hidden;
+  word-break: break-all;
+  line-height: 1.1;
+
+  // An invisible layer that covers the field so that the text can't be
+  // selected, which messes with the 'selectable'.
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  span {
+    margin-bottom: 0.8em;
+    display: inline-block;
+  }
+}
+
+// Displays a block as a column within a node (typically a teaser)
+@mixin node-column($is-picture: false) {
+  display: table-cell;
+  vertical-align: top;
+
+  @if ($is-picture == true) {
+    padding: 0;
+  }
+}
+
+// Displays a block as a column within a node (typically a teaser)
+@mixin node-columns($is-picture: false) {
+  @include display(flexbox);
+  vertical-align: top;
+
+  .show,
+  .tell {
+    @include flex(1 1 0);
+  }
+
+  @if ($is-picture == true) {
+    padding: 0;
+  }
+}
+
+main .node-form {
+  // // Same styling as fieldset
+ //  padding: $data-field-padding /* !important */;
+ //  margin-top: 2em;
+ //  margin-bottom: 1em;
+ //  border-radius: $corner-radius-large;
+ //  background-color: rgba(black, 0.03);
+ //  border: solid 1px #c0c0c0;
+ //  position: relative;
+
+ //  width: 60em;
+
+
+  & > div > h2 {
+    font-size: 1em;
+  background: #dadada;
+  padding: 0.3em 0.6em;
+  display: inline-block;
+  margin-top: 0px;
+  position: absolute;
+  top: -0.9em;
+  border: 1px solid #c0c0c0;
+  border-radius: $corner-radius-regular;
+  }
+}
+
+[data-view-mode="teaser"] .node-form {
+  padding: 0 /* !important */;
+  margin-top: 0;
+  margin-bottom: 0;
+  background: none;
+  border: none;
+  position: static;
+
+  width: auto;
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Multiple Content types
+*/
+
+// Everything that should be displayed as a pane;
+// Nodes
+[data-view-mode="teaser"]:not([data-type="picture"]),
+[data-type="observation"].selectable,
+[data-type="identification_community"][data-view-mode="text"],
+// Terms
+.taxonomy-term[data-vocabulary="locality"][data-view-mode="small"],
+.taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] {
+  @extend .pane;
+  @extend .pane.inline;
+  @include group;
+  position: relative;
+  padding: 0.6em;
+  width: 600px;
+  margin-right: 20px;
+  box-sizing: border-box;
+
+  h2 a {
+    @include overflow_fade(white, 1.15em);
+  }
+}
+
+article,
+.taxonomy-term {
+
+  // Block links cover the entire background of a block element such as these nodes.
+  & > a.block,
+  & > a[role="block"] {
+    @include link_as_block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    z-index: 1;
+
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 0.1em rgba(0, 0, 0, 0.5);
+    }
+  }
+  a {
+    position: relative;
+  }
+}
+
+
+
+.node {
+  &.view-mode-full {
+    & > .field-name-field-image {
+      @extend .right;
+
+      img {
+        display: block;
+      }
+    }
+  }
+}
+.selectable {
+  // fields that aren't of type 'image'
+  .field:not([class*="image"]) {
+    display: none;
+  }
+}
+
+.node-picture, // Needed for views, that can't add attributes
+[data-type="picture"],
+.node-observation, // Needed for views, that can't add attributes
+[data-type="observation"],
+article.picture,
+.node-picture {
+  &.selectable {
+
+    img {
+      @include transition(transform 0.3s ease);
+    }
+
+    .field.image {
+      @include field-on-overlay;
+      display: block;
+    }
+    .field-data {
+      @include data-on-overlay;
+    }
+
+    // .views-field-nid,
+    // .views-field-nid-group,
+    .property-nid,
+    .views-field-created,
+    .views-field-field-date-taken {
+      display: none;
+    }
+    // .views-field-field-date-taken {
+    //   display: block;
+    //   z-index: 100;
+    //   background: white;
+    //   position: absolute;
+    // }
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Nodes
+*/
+.node {
+  .user-picture img {
+    max-width: 24px;
+    border: 1px solid rgba(black, 0.14);
+  }
+}
+
+[data-view-mode="teaser"] {
+  position: relative;
+
+  .show {
+    .field-none {
+      margin: 0.5em 0px 0.5em 0.5em;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+  }
+  .pretitle,
+  section > p:first-child { // A sort of 'label' that displays the name of the content type
+    margin-top: 0px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    // text-align: right;
+    float: right;
+    color: rgb(176, 176, 176);
+    margin-top: -0.4em;
+  }
+  h3 {
+    margin-top: 0.4em;
+  }
+}
+
+.page-node {}
+[data-view-mode="text"] {
+  .field {
+    display: inline-block;
+
+    &:not(:first-of-type) {
+      margin-top: 0.5em;
+    }
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Webforms
+*/
+[data-type="webform"] {
+  .submitted {
+    display: none;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Collections
+*/
+[data-type="collection"] {
+  &[data-view-mode="full"] {
+    h1 {
+      text-align: left;
+    }
+    .field.ol-map {
+      height: 500px;
+    }
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Observations
+*/
+.observation {
+  &.displayed-as-group {
+    header {
+      display: none;
+    }
+  }
+}
+.node-observation, // Needed for views, that can't add attributes
+[data-type="observation"] {
+  &[data-view-mode="full"] {
+    h1 {
+      text-align: left;
+    }
+  }
+
+  // ---------------------------------------------------------
+  &.selectable {
+    width: 160px;
+    height: 160px + 2px + 79px;
+    margin-bottom: 3.3em;
+
+    border: none;
+    padding: 0;
+    // background: none;
+
+    .fields {
+      @extend .non-list;
+
+      li {
+        display: inline-block;
+        float: none;
+      }
+    }
+    .views-field:first-child {
+      &,
+      img {
+        border-radius: $corner_radius-large $corner_radius-large 0 0;
+      }
+    }
+    .views-field-field-pictures-observation-1,
+    .views-field-field-pictures-observation,
+    .views-field-field-image {
+      display: block;
+
+      .field-content {
+        display: inline;
+      }
+    }
+    .views-field-field-pictures-observation-1 {
+      margin-bottom: 2px;
+    }
+    .views-field-field-pictures-observation {
+      height: 85px;
+      overflow: hidden;
+
+      & > .field-content > article {
+        @include column (2, $gutter-narrow);
+      }
+      .node {
+        display: inline-block;
+      }
+      // .field-name-body { // This shouldn't be displaying anyway!
+      //  display: none;
+      // }
+      article {
+        &:first-child img {
+          border-radius: 0 0 0 $corner_radius-large;
+        }
+        &:last-child img {
+          border-radius: 0 0 $corner_radius-large 0;
+        }
+      }
+    }
+    .views-field-field-image {
+      display: block;
+
+      img {
+        width: 70px;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------
+  &[data-view-mode="teaser"] {
+    vertical-align: top;
+    padding: 0;
+
+    h2 {
+      font-size: 1.2em;
+    }
+
+    .show {
+      width: 140px;
+
+      .field-item {
+        margin-top: 0;
+      }
+      .others {
+        margin-top: 2px;
+      }
+    }
+    .tell {
+      padding: 0.3em 1.5em 1.2em 1.5em;
+
+      .field {
+        font-size: 0.85em;
+      }
+    }
+    .field-name-field-image {
+      img {
+        border-radius: $corner_radius-regular 0 0 $corner_radius-regular;
+      }
+    }
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Pictures
+*/
+.node-picture, // Needed for views, that can't add attributes
+[data-type="picture"],
+article.picture {
+  display: inline-block;
+
+  &[data-view-mode="full"] {
+    .field-label {
+      min-width: 8em;
+    }
+  }
+  &[data-view-mode="teaser"] {
+    .node-title {
+      display: none; // @todo should be removed in template or preprocess fn
+    }
+  }
+  // Used in Contribute: Group
+  &.selectable {
+  // &.size-medium {
+    position: relative;
+    height: 140px;
+    width: 140px;
+    background: #eaeaea;
+
+    // .views-field-title,
+    .views-field-field-image {
+      display: block;
+
+      .field-content {
+        display: inline;
+      }
+    }
+    .views-field-field-identified-species {
+      // @extend %overlap-bottom;
+
+      a {
+        display: block;
+        background-color: rgba( black, 0.4 );
+        color: white;
+        padding: 0.1em 0.3em;
+        font-size: 0.9em;
+        // font-weight: normal;
+      }
+    }
+  }
+  .size-medium,
+  &[data-view-mode="medium"],
+  .view-mode-thumbnail,
+  &[data-view-mode="thumbnail"] {
+    .field-name-field-image {
+      img {
+        border-radius: $corner_radius-regular;
+      }
+    }
+    a[data-lightbox] {
+      border-top-right-radius: $corner_radius-regular;
+    }
+  }
+
+  &[data-view-mode="thumbnail"] {
+    // display: inline-block;
+
+    * + & {
+      margin-left: 0.5em;
+    }
+  }
+}
+// #picture-node-form {
+//   .form-field-name-field-subject {
+//     .form-checkboxes {
+//       @extend .cols-3;
+//     }
+//   }
+// }
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Habitat record (node)
+*/
+.node-habitat-record {
+  &[data-view-mode="teaser"] {
+    padding: 0.6em;
+
+    .field {
+      @include column(2, $gutter-narrow);
+    }
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Identifications
+*/
+[data-type="identification_community"] {
+  @include node-columns;
+
+  &[data-view-mode="text"], {
+    h2 {
+      font-size: 1em;
+    }
+  }
+  &[data-view-mode="teaser"] {
+    // display: table;
+    // width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+
+    .show,
+    .tell {
+      // @include node-column;
+    }
+    .show {
+      width: 110px;
+      max-width: 110px; // Needed so that the cell doesn't grow unexpectedly.
+      text-align: center;
+      border-radius: $corner_radius-regular 0 0 $corner_radius-regular;
+
+      overflow: hidden;
+      @include transition(width 0.5s ease);
+    }
+    section > button {
+      // margin-left: 0;
+      // margin-right: 0;
+      margin: 0;
+      height: auto;
+    }
+    .field-name-field-reliability {
+      background-color: #878a00; // green
+      color: white;
+      font-size: 1.3em;
+      padding: 0.3em 0;
+      // vertical-align: middle;
+      // border-radius: 0.25em 0px 0px 0.25em;
+      border-radius: 0 0 0 $corner_radius-regular;
+
+      img {
+        border-radius: $corner_radius-regular 0 0 0;
+        margin-bottom: 0.6em;
+      }
+      // img + .field {
+      // }
+    }
+    .tell {
+      padding: 1em;
+
+      @include transition(padding 0.5s ease);
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.2em;
+      @include transition(font-size 0.5s ease);
+    }
+    .submitted {
+      margin-top: 0.3em;
+    }
+
+    .field-name-field-identified-species {}
+
+    form {
+      margin-top: 0.4em;
+      margin-bottom: 0px;
+    }
+  }
+
+
+  // Experimental; animated to / from shown 'as text'
+
+  &[data-view-mode="teaser"] {
+    overflow: hidden;
+    height: 150px;
+    margin: 0;
+    @include transition(
+      width 0.5s ease,
+      height 0.5s ease,
+      left 0.5s ease,
+      top 0.5s ease
+    );
+
+    &.as-text {
+      height: 18px;
+      width: 300px;
+      padding-right: 1em; // Provides an area to click on to expand back
+
+      // Shown in final state
+      h2 {
+        font-size: inherit;
+      }
+      .tell {
+        padding: 0;
+      }
+
+      // Not shown in final state
+      .show {
+        width: 0px;
+        font-size: 0;
+
+        img {
+          display: none;
+        }
+      }
+    }
+  }
+
+
+}
+li.views-row-2 .node-identification {
+  &[data-view-mode="teaser"] {
+    .show {
+      background-color: #aeaeae;
+    }
+  }
+}
+
+
+
+
+/* -----------------------------------------------------------------------------
+                                                            Interaction
+*/
+.node-interaction{
+  padding: 0;
+
+  &[data-view-mode="teaser"] {
+    .field-name-field-observation {
+      text-align: left;
+    }
+    .field-name-field-observation-object {
+      text-align: right;
+    }
+  }
+  .first,
+  .last {
+    width: 150px;
+  }
+  .middle {
+    padding: 1em;
+    text-align: center;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Users
+*/
+.profile {
+  display: table;
+  width: 100%;
+
+  .show,
+  .tell {
+    display: table-cell;
+    vertical-align: top;
+  }
+  .show {
+    width: 300px;
+  }
+  .user-picture {
+    float: none;
+    margin: 0 0 1em;
+    display: inline-block;
+  }
+  [role="button"].edit {
+    float: right;
+    margin-left: 1em;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Comment
+*/
+.comment {
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+
+  .show {
+    width: 110px;
+    max-width: 110px; // Needed so that the cell doesn't grow unexpectedly.
+    text-align: center;
+  }
+  .tell {
+    padding: 0 0 0 2em;
+  }
+
+  .user-picture img {
+    max-width: 100%;
+  }
+}

@@ -89,9 +89,9 @@ function get_identify_selected_form() {
     // Message the error to the user
     // Shouldn't actually message the error to the user; developer must fix.
     drupal_set_message(get_class($e) .
-      ' caught: ' . $e -> getMessage() .
-      ' in ' . $e -> getFile() .
-      ' on line ' . $e -> getLine(), "error");
+      ' caught: ' . $e->getMessage() .
+      ' in ' . $e->getFile() .
+      ' on line ' . $e->getLine(), "error");
 
     // return message in lieu of expected content
     // return "<p>The form could not be created</p>";

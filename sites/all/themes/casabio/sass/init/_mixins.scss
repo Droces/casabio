@@ -61,6 +61,26 @@
   overflow: hidden;
 }
 
+@mixin overflow_fade($background-color: white, $height: $line-height * 1em, $fade-length: 2em, $fade-height: $line-height * 1em) {
+  overflow: hidden;
+  width: 100%;
+  height: $height;
+  display: block;
+  word-break: break-all;
+  position: relative;
+
+  // The 'fade out' gradient at the end of the text
+  &::after {
+    content: '';
+    position: absolute;
+    height: $fade-height;
+    width: $fade-length;
+    bottom: 0;
+    right: 0;
+    @include background-image(linear-gradient(to right, rgba($background-color, 0), rgba($background-color, 1)));
+  }
+}
+
 // Column
 // An element that is in a row with other elements, with a gap between the elements.
 @mixin column ($cols: 2, $gutter-width: $gutter-wide, $float-dir: left) {
@@ -89,27 +109,28 @@
     }
 }
 
-// Navigation
-@mixin menu-vertical {
-  li {
-    display: block;
+// // Navigation
+// @mixin menu-vertical {
+//   li {
+//     display: block;
 
-    a {
-      text-align: left;
-    }
-  }
-}
-@mixin menu-horizontal {
-  @include display(flex);
-  li {
-    // display: table-cell;
-    @include flex(1 1 auto);
+//     a {
+//       text-align: left;
+//     }
+//   }
+// }
+// @mixin menu-horizontal {
+//   @include display(flex);
+      
+//   li {
+//     // display: table-cell;
+//     @include flex(1 1 auto);
 
-    a {
-      text-align: center;
-    }
-  }
-}
+//     a {
+//       text-align: center;
+//     }
+//   }
+// }
 
 
 // Flexbox

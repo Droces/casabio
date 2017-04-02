@@ -10,27 +10,6 @@
 function menu_admin_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: management_add:node/add.
-  $menu_links['management_add:node/add'] = array(
-    'menu_name' => 'management',
-    'link_path' => 'node/add',
-    'router_path' => 'node/add',
-    'link_title' => 'Add',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'management_add:node/add',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
-    'expanded' => 0,
-    'weight' => -49,
-    'customized' => 1,
-    'parent_identifier' => 'management_administration:admin',
-  );
   // Exported menu link: management_admin:<front>.
   $menu_links['management_admin:<front>'] = array(
     'menu_name' => 'management',
@@ -48,9 +27,9 @@ function menu_admin_menu_default_menu_links() {
     'external' => 1,
     'has_children' => 1,
     'expanded' => 1,
-    'weight' => -47,
+    'weight' => -49,
     'customized' => 1,
-    'parent_identifier' => 'management_administration:admin',
+    'parent_identifier' => 'management_content:admin/content',
   );
   // Exported menu link: management_collections:admin/collections.
   $menu_links['management_collections:admin/collections'] = array(
@@ -113,7 +92,7 @@ function menu_admin_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 1,
-    'parent_identifier' => 'management_add:node/add',
+    'parent_identifier' => 'management_add-terms:node',
   );
   // Exported menu link: management_identifications:admin/identifications.
   $menu_links['management_identifications:admin/identifications'] = array(
@@ -155,7 +134,7 @@ function menu_admin_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 1,
-    'parent_identifier' => 'management_add:node/add',
+    'parent_identifier' => 'management_add-terms:node',
   );
   // Exported menu link: management_observations:admin/observations.
   $menu_links['management_observations:admin/observations'] = array(
@@ -260,12 +239,11 @@ function menu_admin_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'management_add:node/add',
+    'parent_identifier' => 'management_add-terms:node',
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Add');
   t('Admin');
   t('Collections');
   t('Feeds log');

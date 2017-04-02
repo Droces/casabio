@@ -1,10 +1,10 @@
-name = 			Toastr
-machine name = 	toastr
-description = 	Provides an interface to the Toastr library. See https://github.com/CodeSeven/toastr.
-version = 		2.1.2
+name =              Toastr
+machine name =      toastr
+description =       Provides an interface to the Toastr library. See https://github.com/CodeSeven/toastr.
+version =           2.1.2
 
-; files[php][] = 	customlibrary.inc.php
-files[css][] = 	toastr.css
-files[js][] = 	toastr.js
-; files[css][] = 	toastr.min.css
-; files[js][] = 	toastr.min.css
+; files[php][] =    customlibrary.inc.php
+files[css][] =      toastr.css
+files[js][] =       toastr.js
+; files[css][] =    toastr.min.css
+; files[js][] =     toastr.min.css

@@ -1,0 +1,14 @@
+name = Views: Latest contributions
+description = The views enabling the Latest section of the website
+core = 7.x
+package = Features: Views
+version = 7.x-1.0
+dependencies[] = entity
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = latest_collections
+features[views_view][] = latest_identified_observations
+features[views_view][] = latest_unidentified_observations
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features-generated

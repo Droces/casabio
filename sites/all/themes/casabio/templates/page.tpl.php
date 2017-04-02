@@ -16,7 +16,7 @@
 
   <div id="page">
 
-    <header class="header" id="header" role="banner"><div class="content">
+    <header class="header" id="header" role="banner"><div class="content" role="presentation">
 
       <?php if ($logo): ?>
         <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" class="header__logo" id="logo"><img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" class="header__logo-image" /></a>
@@ -62,7 +62,7 @@
     </div></header>
 
 
-    <div id="navigation"><div class="content">
+    <div id="navigation"><div class="content" role="presentation">
 
       <?php if ($main_menu): ?>
         <nav id="main-menu" role="navigation" tabindex="-1">
@@ -90,7 +90,7 @@
     </div></div>
 
 
-    <div id="main"><div class="content contextual-links-region">
+    <div id="main"><div class="content contextual-links-region" role="presentation">
 
       <?php
         // Render the sidebars to see if there's anything in them.
@@ -113,7 +113,7 @@
           <h1 class="page__title title" id="page-title"><?php print $title; ?></h1>
         <?php endif; ?>
         <?php print render($title_suffix); ?>
-        <?php print $messages; ?>
+        <div class="message-container"><?php print $messages; ?></div>
         <?php print render($tabs); ?>
         <?php print render($page['help']); ?>
         <?php if ($action_links): ?>

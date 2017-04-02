@@ -12,7 +12,7 @@
 
 
 ?>
-<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?> data-type="<?php print $type; ?>" data-view-mode="<?php print $view_mode; ?>" data-nid="<?php print $node->nid; ?>" data-title="<?php print $node->title; ?>">
 
   <!-- <a href="<?php print $node_url; ?>" class="block"></a> -->
   <?php print render($content['node_block_link']); ?>

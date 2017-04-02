@@ -11,6 +11,87 @@ function views_browse_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'browse_collections_list';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Browse Collections List';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Browse Collections Table';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '30';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['style_options']['class'] = 'non-list';
+  $handler->display->display_options['style_options']['wrapper_class'] = '';
+  $handler->display->display_options['row_plugin'] = 'entity';
+  $handler->display->display_options['row_options']['view_mode'] = 'teaser';
+  /* Relationship: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['ui_name'] = 'Author';
+  $handler->display->display_options['relationships']['uid']['label'] = 'Author';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Contributor';
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'Contributed date';
+  $handler->display->display_options['fields']['created']['date_format'] = 'raw time ago';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
+  /* Field: Content: Edit link */
+  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
+  $handler->display->display_options['fields']['edit_node']['label'] = 'Edit';
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'collection' => 'collection',
+  );
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'browse/collections/list';
+  $export['browse_collections_list'] = $view;
+
+  $view = new view();
   $view->name = 'browse_collections_table';
   $view->description = '';
   $view->tag = 'default';
@@ -117,306 +198,6 @@ function views_browse_views_default_views() {
   $export['browse_collections_table'] = $view;
 
   $view = new view();
-  $view->name = 'browse_example_latest_identified_observations';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'node';
-  $view->human_name = 'Browse Example: Latest identified observations';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Latest identified observations';
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['style_options']['row_class'] = 'inline';
-  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'entity';
-  $handler->display->display_options['row_options']['view_mode'] = 'teaser';
-  /* Footer: Global: Text area */
-  $handler->display->display_options['footer']['area']['id'] = 'area';
-  $handler->display->display_options['footer']['area']['table'] = 'views';
-  $handler->display->display_options['footer']['area']['field'] = 'area';
-  $handler->display->display_options['footer']['area']['label'] = 'See more';
-  $handler->display->display_options['footer']['area']['content'] = '<a class="more" rel="more" href="http://localhost/Current/CasaBio/browse/observations/list?has_identifications=1">See more identified observations</a>';
-  $handler->display->display_options['footer']['area']['format'] = 'full_html';
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No observations found.';
-  $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Relationship: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['ui_name'] = 'Author';
-  $handler->display->display_options['relationships']['uid']['label'] = 'Author';
-  /* Field: Content: Pictures in observation */
-  $handler->display->display_options['fields']['field_pictures_observation']['id'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['table'] = 'field_data_field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['field'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['label'] = 'Picture';
-  $handler->display->display_options['fields']['field_pictures_observation']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_pictures_observation']['settings'] = array(
-    'view_mode' => 'thumbnail',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_offset'] = '0';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'users';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
-  /* Field: Content: Post date */
-  $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'node';
-  $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['label'] = 'Contributed date';
-  $handler->display->display_options['fields']['created']['date_format'] = 'time ago';
-  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
-  /* Field: Content: Identifications */
-  $handler->display->display_options['fields']['field_identifications']['id'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['field'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_identifications']['settings'] = array(
-    'view_mode' => 'text',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_identifications']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_identifications']['separator'] = '';
-  /* Field: Content: Edit link */
-  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['label'] = 'Edit';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'observation' => 'observation',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Identifications (field_identifications) */
-  $handler->display->display_options['filters']['field_identifications_target_id']['id'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['filters']['field_identifications_target_id']['field'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['operator'] = 'not empty';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator_id'] = 'field_identifications_target_id_op';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['label'] = 'Identifications (field_identifications)';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator'] = 'field_identifications_target_id_op';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['identifier'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['label'] = 'Is identified';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['identifier'] = 'has_identifications';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['group_items'] = array(
-    1 => array(
-      'title' => 'Identified',
-      'operator' => 'not empty',
-      'value' => array(
-        'value' => '.',
-        'min' => '',
-        'max' => '',
-      ),
-    ),
-    2 => array(
-      'title' => 'No identifications',
-      'operator' => 'empty',
-      'value' => array(
-        'value' => '.',
-        'min' => '',
-        'max' => '',
-      ),
-    ),
-  );
-
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'block_1');
-  $export['browse_example_latest_identified_observations'] = $view;
-
-  $view = new view();
-  $view->name = 'browse_example_latest_unidentified_observations';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'node';
-  $view->human_name = 'Browse Example: Latest unidentified observations';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Latest unidentified observations';
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '6';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['style_options']['row_class'] = 'inline';
-  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'entity';
-  $handler->display->display_options['row_options']['view_mode'] = 'teaser';
-  /* Footer: Global: Text area */
-  $handler->display->display_options['footer']['area']['id'] = 'area';
-  $handler->display->display_options['footer']['area']['table'] = 'views';
-  $handler->display->display_options['footer']['area']['field'] = 'area';
-  $handler->display->display_options['footer']['area']['label'] = 'See more';
-  $handler->display->display_options['footer']['area']['content'] = '<a class="more" rel="more" href="http://localhost/Current/CasaBio/browse/observations/list?has_identifications=2">See more unidentified observations</a>';
-  $handler->display->display_options['footer']['area']['format'] = 'full_html';
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No observations found.';
-  $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Relationship: Author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['ui_name'] = 'Author';
-  $handler->display->display_options['relationships']['uid']['label'] = 'Author';
-  /* Field: Content: Pictures in observation */
-  $handler->display->display_options['fields']['field_pictures_observation']['id'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['table'] = 'field_data_field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['field'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['label'] = 'Picture';
-  $handler->display->display_options['fields']['field_pictures_observation']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_pictures_observation']['settings'] = array(
-    'view_mode' => 'thumbnail',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_offset'] = '0';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'users';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
-  /* Field: Content: Post date */
-  $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'node';
-  $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['label'] = 'Contributed date';
-  $handler->display->display_options['fields']['created']['date_format'] = 'time ago';
-  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
-  /* Field: Content: Identifications */
-  $handler->display->display_options['fields']['field_identifications']['id'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['field'] = 'field_identifications';
-  $handler->display->display_options['fields']['field_identifications']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_identifications']['settings'] = array(
-    'view_mode' => 'text',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_identifications']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_identifications']['separator'] = '';
-  /* Field: Content: Edit link */
-  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['label'] = 'Edit';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'observation' => 'observation',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Identifications (field_identifications) */
-  $handler->display->display_options['filters']['field_identifications_target_id']['id'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['filters']['field_identifications_target_id']['field'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['operator'] = 'empty';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator_id'] = 'field_identifications_target_id_op';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['label'] = 'Identifications (field_identifications)';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['operator'] = 'field_identifications_target_id_op';
-  $handler->display->display_options['filters']['field_identifications_target_id']['expose']['identifier'] = 'field_identifications_target_id';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['label'] = 'Is identified';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['identifier'] = 'has_identifications';
-  $handler->display->display_options['filters']['field_identifications_target_id']['group_info']['group_items'] = array(
-    1 => array(
-      'title' => 'Identified',
-      'operator' => 'not empty',
-      'value' => array(
-        'value' => '.',
-        'min' => '',
-        'max' => '',
-      ),
-    ),
-    2 => array(
-      'title' => 'No identifications',
-      'operator' => 'empty',
-      'value' => array(
-        'value' => '.',
-        'min' => '',
-        'max' => '',
-      ),
-    ),
-  );
-
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'block_1');
-  $export['browse_example_latest_unidentified_observations'] = $view;
-
-  $view = new view();
   $view->name = 'browse_interactions_list';
   $view->description = '';
   $view->tag = 'default';
@@ -487,6 +268,63 @@ function views_browse_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'browse/interactions/list';
   $export['browse_interactions_list'] = $view;
+
+  $view = new view();
+  $view->name = 'browse_localities_table';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'Browse Localities Table';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Browse Localities Table';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['style_plugin'] = 'table';
+  /* Field: Taxonomy term: Term ID */
+  $handler->display->display_options['fields']['tid']['id'] = 'tid';
+  $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['tid']['field'] = 'tid';
+  $handler->display->display_options['fields']['tid']['label'] = 'ID';
+  $handler->display->display_options['fields']['tid']['separator'] = '';
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
+  /* Field: Taxonomy term: Range */
+  $handler->display->display_options['fields']['field_range']['id'] = 'field_range';
+  $handler->display->display_options['fields']['field_range']['table'] = 'field_data_field_range';
+  $handler->display->display_options['fields']['field_range']['field'] = 'field_range';
+  $handler->display->display_options['fields']['field_range']['click_sort_column'] = 'geom';
+  $handler->display->display_options['fields']['field_range']['settings'] = array(
+    'data' => 'full',
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'locality' => 'locality',
+  );
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'browse/localities/table';
+  $export['browse_localities_table'] = $view;
 
   $view = new view();
   $view->name = 'browse_observations_list';
@@ -593,12 +431,6 @@ function views_browse_views_default_views() {
     'observation' => 'observation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Location (field_location:geom) */
-  $handler->display->display_options['filters']['field_location_geom']['id'] = 'field_location_geom';
-  $handler->display->display_options['filters']['field_location_geom']['table'] = 'field_data_field_location';
-  $handler->display->display_options['filters']['field_location_geom']['field'] = 'field_location_geom';
-  $handler->display->display_options['filters']['field_location_geom']['operator'] = 'not empty';
-  $handler->display->display_options['filters']['field_location_geom']['group'] = 1;
   /* Filter criterion: Content: Post date */
   $handler->display->display_options['filters']['created']['id'] = 'created';
   $handler->display->display_options['filters']['created']['table'] = 'node';
@@ -655,6 +487,38 @@ function views_browse_views_default_views() {
     4 => 0,
     5 => 0,
     3 => 0,
+  );
+  /* Filter criterion: Content: Number of identifications (field_count_identifications) */
+  $handler->display->display_options['filters']['field_count_identifications_count']['id'] = 'field_count_identifications_count';
+  $handler->display->display_options['filters']['field_count_identifications_count']['table'] = 'field_data_field_count_identifications';
+  $handler->display->display_options['filters']['field_count_identifications_count']['field'] = 'field_count_identifications_count';
+  $handler->display->display_options['filters']['field_count_identifications_count']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_count_identifications_count']['expose']['operator_id'] = 'field_count_identifications_count_op';
+  $handler->display->display_options['filters']['field_count_identifications_count']['expose']['label'] = 'Number of identifications (field_count_identifications)';
+  $handler->display->display_options['filters']['field_count_identifications_count']['expose']['operator'] = 'field_count_identifications_count_op';
+  $handler->display->display_options['filters']['field_count_identifications_count']['expose']['identifier'] = 'field_count_identifications_count';
+  $handler->display->display_options['filters']['field_count_identifications_count']['is_grouped'] = TRUE;
+  $handler->display->display_options['filters']['field_count_identifications_count']['group_info']['label'] = 'Identified';
+  $handler->display->display_options['filters']['field_count_identifications_count']['group_info']['identifier'] = 'has_identifications';
+  $handler->display->display_options['filters']['field_count_identifications_count']['group_info']['group_items'] = array(
+    1 => array(
+      'title' => 'Has identifications',
+      'operator' => '>=',
+      'value' => array(
+        'value' => '1',
+        'min' => '',
+        'max' => '',
+      ),
+    ),
+    2 => array(
+      'title' => 'Not identified',
+      'operator' => '=',
+      'value' => array(
+        'value' => '0',
+        'min' => '',
+        'max' => '',
+      ),
+    ),
   );
 
   /* Display: Page */
@@ -1274,206 +1138,6 @@ function views_browse_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'browse/observations/table';
   $export['browse_observations_table'] = $view;
-
-  $view = new view();
-  $view->name = 'clone_of_browse_observations_map';
-  $view->description = '';
-  $view->tag = 'default';
-  $view->base_table = 'node';
-  $view->human_name = 'Clone of Browse Observations Map';
-  $view->core = 7;
-  $view->api_version = '3.0';
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Browse Pictures';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'table';
-  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['style_options']['columns'] = array(
-    'title' => 'title',
-    'field_location' => 'field_location',
-    'field_pictures_observation' => 'field_pictures_observation',
-  );
-  $handler->display->display_options['style_options']['default'] = '-1';
-  $handler->display->display_options['style_options']['info'] = array(
-    'title' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_location' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_pictures_observation' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-  );
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No observations found.';
-  $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Relationship: Identifications */
-  $handler->display->display_options['relationships']['field_identifications_target_id']['id'] = 'field_identifications_target_id';
-  $handler->display->display_options['relationships']['field_identifications_target_id']['table'] = 'field_data_field_identifications';
-  $handler->display->display_options['relationships']['field_identifications_target_id']['field'] = 'field_identifications_target_id';
-  $handler->display->display_options['relationships']['field_identifications_target_id']['ui_name'] = 'Identifications';
-  $handler->display->display_options['relationships']['field_identifications_target_id']['label'] = 'Identifications';
-  /* Relationship: Identified species */
-  $handler->display->display_options['relationships']['field_identified_species_tid']['id'] = 'field_identified_species_tid';
-  $handler->display->display_options['relationships']['field_identified_species_tid']['table'] = 'field_data_field_identified_species';
-  $handler->display->display_options['relationships']['field_identified_species_tid']['field'] = 'field_identified_species_tid';
-  $handler->display->display_options['relationships']['field_identified_species_tid']['relationship'] = 'field_identifications_target_id';
-  $handler->display->display_options['relationships']['field_identified_species_tid']['ui_name'] = 'Identified species';
-  $handler->display->display_options['relationships']['field_identified_species_tid']['label'] = 'Identified species';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Location */
-  $handler->display->display_options['fields']['field_location']['id'] = 'field_location';
-  $handler->display->display_options['fields']['field_location']['table'] = 'field_data_field_location';
-  $handler->display->display_options['fields']['field_location']['field'] = 'field_location';
-  $handler->display->display_options['fields']['field_location']['click_sort_column'] = 'geom';
-  $handler->display->display_options['fields']['field_location']['type'] = 'geofield_geojson';
-  $handler->display->display_options['fields']['field_location']['settings'] = array(
-    'data' => 'full',
-  );
-  /* Field: Content: Pictures in observation */
-  $handler->display->display_options['fields']['field_pictures_observation']['id'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['table'] = 'field_data_field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['field'] = 'field_pictures_observation';
-  $handler->display->display_options['fields']['field_pictures_observation']['label'] = 'Pictures';
-  $handler->display->display_options['fields']['field_pictures_observation']['type'] = 'entityreference_entity_view';
-  $handler->display->display_options['fields']['field_pictures_observation']['settings'] = array(
-    'view_mode' => 'thumbnail',
-    'links' => 0,
-  );
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_limit'] = '1';
-  $handler->display->display_options['fields']['field_pictures_observation']['delta_offset'] = '0';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'observation' => 'observation',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Location (field_location:geom) */
-  $handler->display->display_options['filters']['field_location_geom']['id'] = 'field_location_geom';
-  $handler->display->display_options['filters']['field_location_geom']['table'] = 'field_data_field_location';
-  $handler->display->display_options['filters']['field_location_geom']['field'] = 'field_location_geom';
-  $handler->display->display_options['filters']['field_location_geom']['operator'] = 'not empty';
-  $handler->display->display_options['filters']['field_location_geom']['group'] = 1;
-  /* Filter criterion: Content: Title */
-  $handler->display->display_options['filters']['title']['id'] = 'title';
-  $handler->display->display_options['filters']['title']['table'] = 'node';
-  $handler->display->display_options['filters']['title']['field'] = 'title';
-  $handler->display->display_options['filters']['title']['operator'] = 'contains';
-  $handler->display->display_options['filters']['title']['group'] = 1;
-  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['label'] = 'Title contains';
-  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
-  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    4 => 0,
-    5 => 0,
-    3 => 0,
-  );
-  /* Filter criterion: Content: Post date */
-  $handler->display->display_options['filters']['created']['id'] = 'created';
-  $handler->display->display_options['filters']['created']['table'] = 'node';
-  $handler->display->display_options['filters']['created']['field'] = 'created';
-  $handler->display->display_options['filters']['created']['operator'] = '>';
-  $handler->display->display_options['filters']['created']['value']['type'] = 'offset';
-  $handler->display->display_options['filters']['created']['group'] = 1;
-  $handler->display->display_options['filters']['created']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['created']['expose']['operator_id'] = 'created_op';
-  $handler->display->display_options['filters']['created']['expose']['label'] = 'Date contributed';
-  $handler->display->display_options['filters']['created']['expose']['description'] = 'An offset from the current date, such as "-2 weeks"';
-  $handler->display->display_options['filters']['created']['expose']['operator'] = 'created_op';
-  $handler->display->display_options['filters']['created']['expose']['identifier'] = 'created';
-  $handler->display->display_options['filters']['created']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    4 => 0,
-    5 => 0,
-    3 => 0,
-  );
-
-  /* Display: Feed */
-  $handler = $view->new_display('feed', 'Feed', 'feed_1');
-  $handler->display->display_options['enabled'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'none';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'views_geojson_feed';
-  $handler->display->display_options['style_options']['data_source']['value'] = 'geofield';
-  $handler->display->display_options['style_options']['data_source']['latitude'] = 'title';
-  $handler->display->display_options['style_options']['data_source']['longitude'] = 'title';
-  $handler->display->display_options['style_options']['data_source']['geofield'] = 'field_location';
-  $handler->display->display_options['style_options']['data_source']['wkt'] = 'title';
-  $handler->display->display_options['style_options']['data_source']['name_field'] = 'title';
-  $handler->display->display_options['style_options']['data_source']['description_field'] = 'field_pictures_observation';
-  $handler->display->display_options['style_options']['jsonp_prefix'] = '';
-  $handler->display->display_options['exposed_block'] = TRUE;
-  $handler->display->display_options['path'] = 'browse/observations/feed.geojson';
-  $handler->display->display_options['sitename_title'] = 0;
-
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'block_1');
-  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'leaflet';
-  $handler->display->display_options['style_options']['data_source'] = 'field_location';
-  $handler->display->display_options['style_options']['name_field'] = 'title';
-  $handler->display->display_options['style_options']['map'] = 'OSM Mapnik';
-  $handler->display->display_options['style_options']['hide_empty'] = 1;
-  $handler->display->display_options['style_options']['zoom']['initialZoom'] = '-1';
-  $handler->display->display_options['style_options']['zoom']['minZoom'] = '0';
-  $handler->display->display_options['style_options']['zoom']['maxZoom'] = '18';
-  $handler->display->display_options['style_options']['vector_display']['stroke'] = 0;
-  $handler->display->display_options['style_options']['vector_display']['fill'] = 0;
-  $handler->display->display_options['style_options']['vector_display']['clickable'] = 0;
-  $handler->display->display_options['defaults']['style_options'] = FALSE;
-  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['defaults']['row_options'] = FALSE;
-  $export['clone_of_browse_observations_map'] = $view;
 
   $view = new view();
   $view->name = 'pictures_map';

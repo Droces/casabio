@@ -193,6 +193,10 @@ function group_pictures_callback($collection) {
   // dpm($collection, '$collection');
   // dpm($_POST, '_POST');
 
+  // For development only:
+  // sleep (5);
+  // throw new Exception("Error Processing Request", 1); 
+
   // $nids = $_POST;
 
   $request_body = file_get_contents("php://input");
@@ -226,11 +230,6 @@ function group_pictures($collection, $groups) {
     'new_nodes' => [],
     'altered_nodes' => [],
   );
-
-  // // Delete all groups from this collection.
-  // // Assumes that all desired groupings will be provided in $groups.
-  // // If $_POST is empty, it is assumed that no groups are desired.
-  // delete_referring_nodes('observation', $collection);
 
 
   // Create new groups
@@ -290,18 +289,18 @@ function group_pictures($collection, $groups) {
         );
       }
 
-      $observation -> save();
+      $observation->save();
       // dpm($observation, 'observation');
 
       if ($status == 'new') {
         $result['new_nodes'][] = array(
           'temp_id' => $nid,
-          'id' => $observation -> getIdentifier(),
+          'id' => $observation->getIdentifier(),
         );
       }
       else if ($status == 'altered') {
         $result['altered_nodes'][] = array(
-          'id' => $observation -> getIdentifier(),
+          'id' => $observation->getIdentifier(),
         );
       }
     }
@@ -392,36 +391,63 @@ function secondary_toolbar_block_content() {
  *   The nid of the collection that this observation should be part of.
  */
 function set_observation_fields(&$observation, $picture_nids, $collection) {
+  // dpm($picture_nids, '$picture_nids');
 
   $first_of_group = entity_metadata_wrapper('node', node_load($picture_nids[0]));
 
-  $location = $first_of_group -> field_location ->  value();
+  $location = $first_of_group->field_location-> value();
   // dpm($location, 'location');
-  $date = $first_of_group ->  field_date_taken ->   value();
+  $date = $first_of_group-> field_date_taken->  value();
   // dpm($date, 'date');
 
-  $observation -> field_count ->                set(1);
-  $observation -> field_pictures_observation -> set($picture_nids);
-  $observation -> field_location ->             set($location);
-  $observation -> field_date_observed ->        set($date); // Taken from first picture
-  $observation -> field_collection ->           set($collection);
-  $observation -> save();
+  $filenames = [];
+  $taxon = NULL;
+  foreach ($picture_nids as $nid) {
+    $picture = entity_metadata_wrapper('node', node_load($nid));
 
-  // Create idenfitication based on file name.
+    $filename = $picture->field_image->value()['filename'];
+    // dpm($filename, '$filename');
+
+    $filenames[] = $filename;
+
+    if ($filename) {
+      $taxon_found = get_taxon_from_filename($filename); // From group_selected.module
+      if ($taxon_found) {
+        $taxon = $taxon_found;
+        // dpm($taxon, '$taxon');
+      }
+    }
+  }
+
+  $filenames_string = implode(', ', $filenames);
+  $observation->field_filenames->           set($filenames_string);
+
+  $observation->field_count->               set(1);
+  $observation->field_pictures_observation->set($picture_nids);
+  $observation->field_location->            set($location);
+  $observation->field_date_observed->       set($date); // Taken from first picture
+  $observation->field_collection->          set($collection);
+
+  $observation->save();
+
+
+
+  // Create identification based on file name.
+
 
   // $filename = 'IMG_1278 Acanthopsis disperma.jpg';
-  $filename = $first_of_group -> field_image -> value()['filename'];
+  // $filename = $first_of_group->field_image->value()['filename'];
   // dpm($filename, '$filename');
 
-  $taxon = get_taxon_from_filename($filename); // From group_selected.module
+  // $taxon = get_taxon_from_filename($filename); // From group_selected.module
   // dpm($taxon, $filename);
 
   if ($taxon) {
     $taxon_loaded = taxonomy_term_load($taxon);
     // dpm($taxon_loaded, '$taxon_loaded');
-    $taxon_name = $taxon_loaded -> name;
-    $observation -> title -> set($taxon_name);
-    $observation -> save();
+    $taxon_name = $taxon_loaded->name;
+    $observation->title->set($taxon_name);
+    $observation->save();
 
     global $user;
 
@@ -436,12 +462,12 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
     $identification_raw = entity_create('node', $values);
     $identification = entity_metadata_wrapper('node', $identification_raw);
 
-    $identification -> title ->                     set($taxon_name);
-    $identification -> field_observation ->         set($observation -> getIdentifier());
-    $identification -> field_identified_species ->  set($taxon);
-    $identification -> field_certainty ->           set(8); // Highly likely
-    $identification -> save();
-    // dpm($identification -> field_observation -> value(), '$identification observation');
+    $identification->title->                    set($taxon_name);
+    $identification->field_observation->        set($observation->getIdentifier());
+    $identification->field_identified_species-> set($taxon);
+    $identification->field_certainty->          set(8); // Highly likely
+    $identification->save();
+    // dpm($identification->field_observation->value(), '$identification observation');
     // dpm($identification, 'identification');
   }
 }

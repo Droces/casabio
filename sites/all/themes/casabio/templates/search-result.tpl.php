@@ -12,7 +12,7 @@
  * @ingroup themeable
  */
 ?>
-<li class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<li class="<?php print $classes; ?><?php if (isset($result_rendered)) {print ' pre-rendered';} ?>"<?php print $attributes; ?>>
 
   <?php if (isset($result_rendered)):
     print $result_rendered;

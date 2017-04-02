@@ -414,6 +414,7 @@ function content_type_collection_field_default_field_instances() {
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'thumbnail',
         ),
         'type' => 'entityreference_entity_view',
@@ -432,6 +433,7 @@ function content_type_collection_field_default_field_instances() {
           'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No featured pictures</em>',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'thumbnail',
         ),
         'type' => 'entityreference_entity_view',
@@ -461,80 +463,6 @@ function content_type_collection_field_default_field_instances() {
       ),
       'type' => 'entityreference_autocomplete',
       'weight' => 8,
-    ),
-  );
-
-  // Exported field_instance: 'node-collection-field_location'.
-  $field_instances['node-collection-field_location'] = array(
-    'bundle' => 'collection',
-    'default_value' => array(
-      0 => array(
-        'dataType' => 'WKT',
-        'geom' => 'GEOMETRYCOLLECTION EMPTY',
-        'input_format' => 'wkt',
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '<p>Where the pictures were taken. Adding this now will help in later steps, because the map will be zoomed in on what you add here.</p>
-<p>Click once to add a point, and double-click to finish.<br />
-If the pictures were taken along a route, use the <strong>path</strong> feature (recommended).<br />
-For an area, use the <strong>polygon</strong> (defined by multiple points) feature.<br />
-If the images were all taken in one place, use the <strong>point</strong> feature.</p>',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'openlayers_geofield',
-        'settings' => array(
-          'data' => 'full',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
-        ),
-        'type' => 'openlayers_geofield',
-        'weight' => 1,
-      ),
-      'inline' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 7,
-      ),
-      'text' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_location',
-    'label' => 'Location',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'openlayers_geofield',
-      'settings' => array(
-        'allow_edit' => 1,
-        'data_storage' => 'single',
-        'feature_types' => array(
-          'path' => 'path',
-          'point' => 'point',
-          'polygon' => 'polygon',
-        ),
-        'openlayers_map' => 'contribute_mo_collection_geofield_widget',
-        'showInputField' => 0,
-      ),
-      'type' => 'openlayers_geofield',
-      'weight' => 4,
     ),
   );
 
@@ -597,18 +525,12 @@ If the images were all taken in one place, use the <strong>point</strong> featur
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('<p>Where the pictures were taken. Adding this now will help in later steps, because the map will be zoomed in on what you add here.</p>
-<p>Click once to add a point, and double-click to finish.<br />
-If the pictures were taken along a route, use the <strong>path</strong> feature (recommended).<br />
-For an area, use the <strong>polygon</strong> (defined by multiple points) feature.<br />
-If the images were all taken in one place, use the <strong>point</strong> feature.</p>');
   t('Additional information');
   t('Any significant further information about this collection that might be of interest.');
   t('Collector');
   t('Date collected');
   t('Featured pictures');
   t('If the pictures were taken over several days, provide the start and end date.');
-  t('Location');
   t('Number of observations');
   t('Number of pictures');
   t('Representative picture');

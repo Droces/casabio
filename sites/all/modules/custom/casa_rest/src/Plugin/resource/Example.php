@@ -94,7 +94,7 @@ class Example extends Resource implements ResourceInterface {
    * {@inheritdoc}
    */
   public function doPost(array $parsed_body) {
-    dpm('Called: doPost()');
+    // dpm('Called: doPost()');
 
     return $this->doWrite(RequestInterface::METHOD_POST, '', $parsed_body);
   }

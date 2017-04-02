@@ -43,6 +43,7 @@ class Pictures__0_1 extends ResourceNode implements ResourceInterface {
     'author' =>               'author',
     'comment' =>              'commentsMode',
     'body' =>                 'description',
+    'field_exif' =>           'exif',
     'field_image' =>          'image',
     'field_subject' =>        'subject',
     'field_tags' =>           'tags',
@@ -100,6 +101,10 @@ class Pictures__0_1 extends ResourceNode implements ResourceInterface {
         'process_callbacks' => array(
           array($this, 'bodyProcess'),
         ),
+      ),
+
+      self::$field_names_map['field_exif'] => array(
+        'property' => 'field_exif',
       ),
 
       self::$field_names_map['field_image'] => array(
@@ -201,7 +206,7 @@ class Pictures__0_1 extends ResourceNode implements ResourceInterface {
 
   public function bodyProcess($value) {
     // watchdog('Called: bodyProcess()', 'RESTful API; observations:0.1');
-    // watchdog('RESTful API', 'In observations:0.1 -> bodyProcess(): ' . json_encode($value));
+    // watchdog('RESTful API', 'In observations:0.1->bodyProcess(): ' . json_encode($value));
 
     return $value['value'];
   }

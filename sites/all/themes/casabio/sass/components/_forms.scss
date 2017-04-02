@@ -6,8 +6,8 @@
  * Created by		Touchdreams
  */
 
-/*
- * Contents
+/**
+  CONTENTS
 
 	Forms
 */
@@ -90,19 +90,22 @@ form {
 			display: table-cell;
 			padding: 0.3em 0.7em;
 			background-color: rgba(black, 0.06);
+			background-color: #dadada;
+			@include background-image(linear-gradient(white, #dbdbdb));
 
 			&:not(:first-of-type) {
 				border-left-width: 0;
 			}
 			&:first-of-type {
-				@include border-radius($corner_radius-regular 0 0 $corner_radius-regular);
+				border-radius: $corner_radius-regular 0 0 $corner_radius-regular;
 			}
 			&:last-of-type {
-				@include border-radius(0 $corner_radius-regular $corner_radius-regular 0);
+				border-radius: 0 $corner_radius-regular $corner_radius-regular 0;
 			}
 		}
 		:checked + label {
 			background: grey;
+			@include background-image(linear-gradient(#5c5c5c, grey));
 			color: white;
 		}
 	}
@@ -171,6 +174,10 @@ form {
 		margin-bottom: $form-item-spacing;
 	}
 
+	.tabledrag-toggle-weight {
+		display: none;
+	}
+
 	.description {
 		color: scale-lightness( $colour-text, 20% );
 		font-size: 0.85em;
@@ -202,7 +209,7 @@ form {
 				font-size: 0.9em;
 				border: 1px solid $colour-selectable-input;
 				padding: $pointer_target-padding;
-				// @include border-radius( $corner_radius-small );
+				// border-radius: $corner_radius-small;
 				margin-right: 0;
 			}
 			input {
@@ -227,23 +234,33 @@ form {
 }
 
 
-form#views-form-species-reference-selector-widget-default {
-	.form-actions {
-		display: none;
+.node-observation-form {
+	.map {
+		height: 400px;
 	}
 }
 
 
+aside {	
+	input[type="password"] {
+		width: 100%;
+	}
+	.password-strength {
+		float: none;
+	}
+}
 
+.confirm-parent,
+.password-parent {
+	width: auto;
+}
+div.password-confirm {
+	width: auto;
+	float: none;
+	display: none;
+  margin: 0.5em 0;
 
-
-
-
-
-
-
-.node-observation-form {
-	.map {
-		height: 400px;
+	&[style*="visibility: visible;"] {
+		display: block;
 	}
 }

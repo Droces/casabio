@@ -5,6 +5,11 @@
  */
 
 /**
+ * @mainpage
+ * @link /api/casa_documentation CasaBio @endlink CasaCore module.
+ */
+
+/**
  * CONTENTS
  *
  * casa_core_init()
@@ -13,26 +18,25 @@
  * home_page_callback()
  * signup_login_section()
  * latest_section()
- * my_home_page_callback()
+ * latest_page_callback()
  *
  * casa_core_user_login()
  * casa_core_form_user_register_form_alter()
  * casa_core_form_user_profile_form_alter()
  * casa_core_admin_paths_alter()
  * casa_core_js_alter()
- * ajax_deliver_html()
- *
- * // casa_core_preprocess_views_view()
- * // casa_core_field_views_data_alter()
- * // casa_core_field_display_alter()
+ * deliver_raw_html()
+ * calculate_users_reliability()
+ * calculate_user_reliability()
+ * casa_core_views_ajax_data_alter()
+ * user_has_min_role()
+ * user_tooltip_callback()
+ * demos_teasers_page_callback()
+ * demos_evm_page_callback()
+ * once_record_observations_localities_to_taxa()
  */
 
-
-
-// =============================================================================
-// Error reporting displayed on the screen
-// ini_set('error_reporting', E_ALL);
-// ini_set('display_errors', 'On');
+module_load_include('inc', 'casa_core', 'other_queries');
 
 
 
@@ -42,108 +46,114 @@
 function casa_core_init() {
   // dpm('Call: casa_core_init');
 
+  // add $settings['user']['is_logged_in'] = true; for logged-in users
+  drupal_add_js(array('user' => array('is_logged_in' => user_is_logged_in())), 'setting');
+
+  // Add core JS libraries
+  drupal_add_library('system', 'ui.dialog', TRUE);
+  drupal_add_library('system', 'ui.tooltip', TRUE);
+
+  // Add other libraries
   libraries_load('toastr');
-  // Try to load the library and check if that worked.
+  libraries_load('lightbox');
+
+  // Check that the libraries have been loaded
   if (!(($library = libraries_load('toastr')) && !empty($library['loaded']))) {
     drupal_set_message(t('Library ‘Toastr’ not loaded.'), 'error', FALSE);
   }
 
-  drupal_add_library('system', 'ui.dialog', TRUE);
-  // Check that the library has been loaded…
+  // Load footer js files
+  $js_files_footer = libraries_get_path('lightbox') . '/dist/js/lightbox.js';
+  drupal_add_js($js_files_footer, array('scope' => 'footer'));
 
+  // Add JS settings
   drupal_add_js(array('API_path' => 'services'), 'setting');
 
-  // calculate_user_reliability();
 
-  // import_etymologies();
-}
+  // // Include required JavaScript files and libraries
+  // $js_files = array(
+  //   drupal_get_path('module', 'edit_selected') . '/scripts/es_api_interactions.js',
+  // );
+  // foreach ($js_files as $path) {
+  //   drupal_add_js($path);
+  // }
 
 
+  // calculate_users_reliability();
 
-function import_etymologies() {
-  dpm('Importing etymologies...');
-
-  $file_url = drupal_get_path('module', 'casa_core') . '/taxa_etymologies.json';
-  $file_contents = file_get_contents($file_url);
-  // dpm($file_contents, '$file_contents');
-  $etymology_data = json_decode($file_contents);
-  // dpm($etymology_data, '$etymology_data');
-
-  $etymology_data = array_slice($etymology_data, 1200, 400);
-  // dpm($etymology_data, '$etymology_data');
-
-  $count_changed = 0;
-  $count_skipped = 0;
-
-  // $etymology_data = [];
-
-  foreach ($etymology_data as $index => $term_data) {
-    $taxa = get_taxa_with_name($term_data -> name);
-    // dpm($taxa, '$taxa');
-
-    foreach ($taxa as $nid => $node) {
-      $taxon = entity_metadata_wrapper('taxonomy_term', $nid);
-      // dpm($taxon->raw(), '$taxon');
-
-      if ($taxon -> field_etymology -> value()) {
-        $count_skipped ++;
-        continue;
-      }
-
-      $taxon -> field_etymology -> set($term_data -> etymology);
-      $taxon -> save();
-      $count_changed ++;
-    }
-  }
-  dpm($count_changed, '$count_changed');
-  dpm($count_skipped, '$count_skipped');
+  // once_record_observations_localities_to_taxa();
 }
 
 
 
 
 
-// =============================================================================
 /**
  * Implements hook_menu().
  */
 function casa_core_menu() {
   $items['home'] = array(
     // 'title' => 'Home', // This page shouldn't display a title.
-    'page callback'   => 'home_page_callback',
-    'access callback' => TRUE,
-    'type'            => MENU_NORMAL_ITEM,
+    'page callback'     => 'home_page_callback',
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
   );
 
-  $items['my/home'] = array(
-    'title'           => 'Home',
-    'page callback'   => 'my_home_page_callback',
-    'access callback' => TRUE,
-    'type'            => MENU_NORMAL_ITEM,
-    'menu_name'       => 'menu-my',
+  $items['latest'] = array(
+    'title'             => 'Latest',
+    'page callback'     => 'latest_page_callback',
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+    'menu_name'         => 'main-menu',
   );
 
   $items['my/contributions'] = array(
-    'title'           => 'Contributions',
-    'page callback'   => 'my_contributions_page_callback',
-    'access callback' => TRUE,
-    'type'            => MENU_NORMAL_ITEM,
-    'menu_name'       => 'menu-my',
+    'title'             => 'Contributions',
+    'page callback'     => 'my_contributions_page_callback',
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+    'menu_name'         => 'menu-my',
   );
 
-  // $items['contribute/request'] = array(
-  //   'title'           => 'Request',
-  //   'page callback'   => 'contribute_request_page_callback',
-  //   'access callback' => TRUE,
-  //   'type'            => MENU_NORMAL_ITEM,
-  //   'menu_name'       => 'menu-contribute',
-  // );
+  $items['my/herbarium_labels/%'] = array(
+    'title'             => 'Herbarium Labels',
+    'page callback'     => 'herbarium_labels_callback',
+    'page arguments'    => array(2),
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+  );
 
-  $items['dev/teasers'] = array(
-    'title'           => 'Entity Teasers',
-    'page callback'   => 'teasers_callback',
-    'access callback' => TRUE,
-    'type'            => MENU_NORMAL_ITEM,
+  $items['my/herbarium_labels/%/printable'] = array(
+    'title'             => 'Herbarium Labels Printable',
+    'page callback'     => 'herbarium_labels_printable_callback',
+    'page arguments'    => array(2),
+    'access callback'   => TRUE,
+    'delivery callback' => 'deliver_raw_html',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['user/tooltip/%'] = array(
+    'title'             => 'User tooltip',
+    'page callback'     => 'user_tooltip_callback',
+    'page arguments'    => array(2),
+    'access callback'   => TRUE,
+    'delivery callback' => 'deliver_raw_html',
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['demos/teasers'] = array(
+    'title'             => 'Teaser Demonstrations',
+    'page callback'     => 'demos_teasers_page_callback',
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
+  $items['demos/entity_view_modes/%/%'] = array(
+    'title'             => 'Entity View Modes Demonstrations',
+    'page callback'     => 'demos_evm_page_callback',
+    'page arguments'    => array(2, 3),
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
   );
 
   return $items;
@@ -151,9 +161,18 @@ function casa_core_menu() {
 
 
 
+/**
+ * Implements hook_menu_alter().
+ */
+// function casa_core_menu_alter(&$items) {
+//   dpm('casa_core_menu_alter()');
+//   dpm($items, '$items');
+// }
 
 
-// =============================================================================
+
+
+
 /**
  *
  */
@@ -181,8 +200,8 @@ function home_page_callback() {
 function signup_login_section() {
 
   $tabs = array(
-    '#prefix' => '<div class="tabs">',
-    '#suffix' => '</div>',
+    '#prefix' => '<aside class="tabs">',
+    '#suffix' => '</aside>',
     '#tree' => TRUE,
   );
 
@@ -248,13 +267,24 @@ function latest_section() {
 
 
 
-function my_home_page_callback() {
+function latest_page_callback() {
   $content = array(
-    'comm_contribs' => array(
-      'title' => 'Latest Community Contributions',
-      '#markup' => '<h2>Latest Community Contributions</h2>'
+    'latest_unidentified_observations' => array(
+      '#markup' => '<h2>Unidentified Observations</h2>'
         . views_embed_view(
-          'browse_example_latest_unidentified_observations',
+          'latest_unidentified_observations',
+          'default'),
+    ),
+    'latest_identified_observations' => array(
+      '#markup' => '<h2>Identified Observations</h2>'
+        . views_embed_view(
+          'latest_identified_observations',
+          'default'),
+    ),
+    'latest_collections' => array(
+      '#markup' => '<h2>Collections</h2>'
+        . views_embed_view(
+          'latest_collections',
           'default'),
     ),
     'new_contrib_ways' => array(
@@ -263,11 +293,18 @@ function my_home_page_callback() {
         . '  <li><a class="pane" href="' . base_path() . 'contribute/upload">Contribute observations</a></li>'
         . '  <li><span class="pane">Identify new observations</span></li>'
         . '  <li><span class="pane">Add species interactions</span></li>'
-        . '  <li><span class="pane">(Maintainers) Patrol recent contributions</span></li>'
-        . '</ul>'
+        // . '  <li><span class="pane">(Maintainers) Patrol recent contributions</span></li>'
+        // . '</ul>'
       ,
     ),
   );
+
+  global $user;
+  if (user_has_min_role($user, 'Maintainer')) {
+    $content['new_contrib_ways']['#markup'] .= 
+      '  <li><span class="pane">Patrol recent contributions (<em>Maintainers</em>)</span></li>';
+  }
+  $content['new_contrib_ways']['#markup'] .= '</ul>';
 
   return $content;
 }
@@ -286,76 +323,112 @@ function contribute_request_page_callback() {
 
 
 
-/**
- * A page showing one of each type of node and taxonomy term
- */
-function teasers_callback() {
+function herbarium_labels_callback($collection_nid = '') {
+  if (! $collection_nid) {
+    return NULL;
+  }
 
-  $content = array(
-    'teasers' => array(/*'#markup' => array()*/),
-  );
+  $link_to_printable = '<p>' . l(
+    'View printable version', current_path() . '/printable') . '</p>';
 
-  $entities_info = entity_get_info();
-  // dpm($entities_info, '$entities_info');
+  return $link_to_printable . herbarium_labels_render($collection_nid);
+}
 
-  // Or hard-code the ones we want to show
-  $entities_info = array(
-    'node' => array(
-      'bundles' => array(
-        'collection' => [],
-        'identification_community' => [],
-        'habitat_record' => [],
-        'interaction' => [],
-        'observation' => [],
-        'picture' => [],
-      ),
-    ),
-    'taxonomy_term' => array(
-      'bundles' => array(
-        'taxa' => [],
-        'habitats' => [],
-      ),
-    ),
-  );
 
-  foreach ($entities_info as $entity_type => $entity_type_info) {
 
-    if ($entity_type === 'node' || $entity_type === 'taxonomy_term') {
+function herbarium_labels_printable_callback($collection_nid = '') {
+  if (! $collection_nid) {
+    return NULL;
+  }
 
-      foreach ($entity_type_info['bundles'] as $bundle => $bundle_info) {
+  $print_css = drupal_get_path('module', 'casa_core') . '/print.css';
+  $print_css_tag = '<link rel="stylesheet" type="text/css" href="' . base_path() . $print_css . '"></link>';
 
-        $type_name = $entity_type . '-' . $bundle;
+  return $print_css_tag . herbarium_labels_render($collection_nid);
+}
 
-        $content['teasers'][$type_name] = array(
-          array('#markup' => '<div class="heading">' . $bundle . '</div>'),
-        );
 
-        // Get one node / entity using EntityFieldQuery
 
-        $query = new EntityFieldQuery();
-        $query
-          -> entityCondition('entity_type', $entity_type)
-          -> entityCondition('bundle', $bundle)
-          -> range(0, 1) // Fetch just one
-          -> addMetaData('account', user_load(1)); // Run the query as user 1.
+function herbarium_labels_render($collection_nid) {
+  $content = '';
 
-        $result = $query -> execute();
+  global $user;
+  // $collection_nid = '72953';
+  $range_max = 5000;
 
-        // If one was found
-        if (isset($result[$entity_type])) {
-          $eid = array_keys($result[$entity_type])[0];
+  $collection = entity_metadata_wrapper('node', $collection_nid);
+  if (! $user->uid === $collection->author->uid->value()) {
+    drupal_set_message(t("You may only view your own collections"), 'error', FALSE);
+  }
 
-          // Add the rendered node / entity to the output
-          if ($entity_type === 'node') {
-            $content['teasers'][$type_name][] = node_view((node_load($eid)), 'teaser');
-          }
-          elseif ($entity_type === 'taxonomy_term') {
-            $content['teasers'][$type_name][] = taxonomy_term_view((taxonomy_term_load($eid)), 'teaser');
-          }
-        }
+  $observations = get_observations_by_user($user->uid, $collection_nid, $range_max);
+  // dpm($observations, '$observations');
 
-      }
+  function field($label, $value) {
+    return '<p class="field">' . label($label) . ': ' . value($value) .'</p>';
+  }
+
+  function label($text) {
+    return '<span class="name" contenteditable="true">' . $text . '</span>';
+  }
+
+  function value($text) {
+    if (! $text) {
+      $text = '[no value]';
     }
+    return '<span class="value" contenteditable="true">' . $text . '</span>';
+  }
+
+  foreach ($observations as $observation_representation) {
+    $observation = entity_metadata_wrapper('node', $observation_representation->nid);
+
+    $content .= '<article class="node-observation view-mode-teaser">';
+
+    $content .= field('Title', '');
+    $content .= field('Provisional species name', $observation->label()); // eg. Family Genus species
+
+    $content .= field('Collector (aka. Legit)', $user->name);
+
+    $observation_id = $observation->field_observation_id->value();
+    $content .= field('Collector number', $observation_id);
+
+    $localities = $observation->field_locality->value();
+    $location_text = '';
+    foreach ($localities as $locality) {
+      $location_text .= $locality->name . ', ';
+    }
+    $content .= field('Location', $location_text); // eg. South Africa, W. Cape, Cape Town, Rondebosch Common
+
+    $location = $observation->field_location->value();
+    $coordinates = $location['lon'] . ', ' . $location['lat'];
+    $coordinates = $coordinates === ', ' ? '' : $coordinates;
+    $content .= field('Coordinates', $coordinates); // eg. (decimal degrees)
+    
+    // $content .= field('Altitude', '');
+
+    $body = $observation->body->value()['value'];
+    $content .= field('Description / notes', $body);
+    $content .= field('Filenames', $observation->field_filenames->value());
+
+    $pictures_markup = '';
+    $pictures = $observation->field_pictures_observation->value();
+    foreach ($pictures as $picture_raw) {
+      $picture = entity_metadata_wrapper('node', $picture_raw);
+      $image = $picture->field_image->value();
+      // dpm($image, '$image');
+      $picture_renderable = theme('image_style', array(
+        'style_name' =>'thumbnail',
+        'path' => $image['uri'],
+      ));
+      // dpm($picture_renderable, '$picture_renderable');
+      $pictures_markup .= $picture_renderable;
+    }
+    $content .= field('', $pictures_markup);
+
+    // $content .= field('Habitat info', '');
+    $content .= field('CasaBio number', $observation->getIdentifier());
+
+    $content .= '</article>';
   }
 
   return $content;
@@ -367,6 +440,16 @@ function teasers_callback() {
  * Implements hook_user_login().
  */
 function casa_core_user_login(&$edit, $account) {
+  // dpm($edit, '$edit');
+  // dpm($account, '$account');
+
+  // Make sure the password reset functionality is not impaired.
+  if (isset($_POST['form_id'])) {
+    if ($_POST['form_id'] === 'user_pass_reset') {
+      return NULL;
+    }
+  }
+
   $is_first_login = $account->access == 0;
   if ($is_first_login) {
     drupal_set_message(t("Welcome to CasaBio! This is your personal home page."), 'status', FALSE);
@@ -374,7 +457,25 @@ function casa_core_user_login(&$edit, $account) {
   else {
     drupal_set_message(t("Welcome back."), 'status', FALSE);
   }
-  drupal_goto('my/home');
+  drupal_goto('latest');
+}
+
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function casa_core_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, '$form');
+
+  // // Make all form action buttons 'raised'
+  // foreach ($form['actions'] as $key => $action_button) {
+  //   if ($action_button['#type'] == 'submit') {
+  //     $action_button['actions'][$key]['#attributes'] = array(
+  //       'class' => array('raised'),
+  //     );
+  //   }
+  // }
 }
 
 
@@ -388,6 +489,13 @@ function casa_core_form_user_register_form_alter(&$form, &$form_state, $form_id)
 
   // Move the 'account' fields (username and email address) out of their fieldset.
   unset($form['#group_children']['account']);
+
+  $form['field_bio']['#access'] = FALSE;
+  $form['mollom']['#access'] = FALSE;
+  $form['timezone']['#access'] = FALSE;
+  $form['overlay_control']['#access'] = FALSE;
+  $form['contact']['#access'] = FALSE;
+  $form['wysiwyg']['#access'] = FALSE;
 }
 
 
@@ -446,7 +554,7 @@ function casa_core_js_alter(&$javascript) {
  *
  * This is a Custom implimentation of drupal_deliver_html_page(), but specifically for AJAX use.
  */
-function ajax_deliver_html($page_callback_result) {
+function deliver_raw_html($page_callback_result) {
   // Emit the correct charset HTTP header, but not if the page callback
   // result is NULL, since that likely indicates that it printed something
   // in which case, no further headers may be sent, and not if code running
@@ -463,7 +571,7 @@ function ajax_deliver_html($page_callback_result) {
     print render($page_callback_result);
   }
   else {
-    watchdog('Error in ajax_deliver_html()', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+    watchdog('Error in deliver_raw_html()', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
     throw new Exception("Something went wrong retriving the markup", 1);
   }
 }
@@ -481,13 +589,34 @@ function ajax_deliver_html($page_callback_result) {
 
 
 
-function calculate_user_reliability() {
+function calculate_users_reliability() {
+  // return NULL;
+
   global $user;
+  // dpm($user, '$user');
+
+  $users = get_users();
+  dpm($users, '$users');
+
+  foreach ($users as $uid => $user_representation) {
+    $user = user_load($uid);
+    if ($user) {
+      // dpm($uid, '$uid');
+      calculate_user_reliability($user, '$user');
+    }
+  }
+}
+
+
+
+
+function calculate_user_reliability($user) {
   // dpm($user, '$user');
 
   // Get identifications and community identifications
 
-  $identifications_basic = get_identifications_by_user($user -> uid, 100);
+  // Fetch user's 40 most recent identifications
+  $identifications_basic = get_identifications_by_user($user->uid, 40);
   // dpm($identifications_basic, '$identifications_basic');
 
   // return null;
@@ -498,29 +627,56 @@ function calculate_user_reliability() {
   $identifications_nids = array_keys($identifications_basic);
   // dpm($identifications_nids, '$identifications_nids');
 
+  // Get the community identification for each identification
+
   $comm_ids_nids = [];
   foreach ($identifications_nids as $nid) {
     $comm_id_basic = get_comm_id_refing_identification($nid);
     // dpm($comm_id_basic, '$comm_id_basic');
-    $comm_ids_nids[] = $comm_id_basic -> nid;
+    if ($comm_id_basic) {
+      $comm_ids_nids[] = $comm_id_basic->nid;
+    }
+    else {
+      // This identification doesn't have a comm_id for some reason
+      $comm_ids_nids[] = NULL;
+    }
   }
   // dpm($comm_ids_nids, '$comm_ids_nids');
-
 
   // Calculate difference score for each identification
 
   $scores = [];
   foreach ($identifications_nids as $key => $identifications_nid) {
+    // If this identification doesn't have a comm_id
+    if (! $comm_ids_nids[$key]) {
+      continue;
+    }
+
     $identification = entity_metadata_wrapper('node', $identifications_nid);
+    // dpm($identification->raw(), '$identification');
+
     $comm_id = entity_metadata_wrapper('node', $comm_ids_nids[$key]);
+    // dpm($comm_id->raw(), '$comm_id');
 
-    // dpm($identification -> field_certainty -> value(), 'certainty');
-    // dpm($comm_id -> field_reliability -> value(), 'reliability');
+    // Ensure that the comm_id has at least 1 other user's identification.
 
-    $certainty = $identification -> field_certainty -> value()/* * 10*/; // User
+    $identifications_count = $comm_id->field_identifications->count();
+    // dpm($identifications_count, '$identifications_count');
+    if ($identifications_count <= 1) {
+      continue;
+    }
+
+    // Compare certainty with reliability to calculate score
+
+    $certainty = $identification->field_certainty->value() * 10; // User
     // dpm($certainty, '$certainty');
-    $reliability = $comm_id -> field_reliability -> value(); // Community
+    $reliability = $comm_id->field_reliability->value(); // Community
     // dpm($reliability, '$reliability');
+
+    // If either the certainty or reliability score is zero
+    if (! ($certainty && $reliability)) {
+      continue;
+    }
 
     $scores[$key] = ($certainty - $reliability);
     $scores[$key] = $scores[$key] < 0 ? -1 * $scores[$key] : $scores[$key]; // Make it positive
@@ -529,12 +685,14 @@ function calculate_user_reliability() {
 
   // 100- because the scores indicate how far off each certainty is on average
   $user_reliability = 100 - (array_sum($scores) / count($scores));
-  dpm($user_reliability, '$user_reliability');
+  // dpm($user_reliability, '$user_reliability');
 
-  $user_loaded = entity_metadata_wrapper('user', $user -> uid);
+  $user_loaded = entity_metadata_wrapper('user', $user->uid);
   // dpm($user_loaded->raw(), '$user_loaded');
-  // $user_loaded -> field_reliability -> set($user_reliability);
-  // $user_loaded -> save();
+  // $user_loaded->field_reliability->set($user_reliability);
+  // $user_loaded->save();
+
+  // return $user_reliability;
 }
 
 
@@ -545,7 +703,7 @@ function calculate_user_reliability() {
 function casa_core_views_ajax_data_alter(&$commands, $view) {
   // dpm($commands, '$commands');
   // dpm($view, '$view');
-  if ($view -> name == 'species_reference_selector_widget') {
+  if ($view->name == 'species_reference_selector_widget') {
 
     // View used to by 'Identify observation'
     // Remove the view's actions (like the Save button)
@@ -558,4 +716,323 @@ function casa_core_views_ajax_data_alter(&$commands, $view) {
       }
     }
   }
+}
+
+
+
+function user_has_min_role($user, $role_name) {
+  switch ($role_name) {
+    case 'Maintainer':
+      return in_array('Maintainer', $user->roles) || in_array('Administrator', $user->roles);
+      break;
+    
+    default:
+      return TRUE;
+      break;
+  }
+}
+
+
+
+function user_tooltip_callback($username = '') {
+  if (! $username) {
+    return NULL;
+  }
+
+  $user_renderable = user_view(user_load_by_name($username), 'full');
+
+  return $user_renderable;
+}
+
+
+
+function demos_teasers_page_callback() {
+
+  $content = array(
+    'teasers' => array(/*'#markup' => array()*/),
+  );
+
+  $entities_info = entity_get_info();
+  // dpm($entities_info, '$entities_info');
+
+  // Or hard-code the ones we want to show
+  $entities_info = array(
+    'node' => array(
+      'bundles' => array(
+        'collection' => [],
+        'identification_community' => [],
+        'habitat_record' => [],
+        'interaction' => [],
+        'observation' => [],
+        'picture' => [],
+      ),
+    ),
+    'taxonomy_term' => array(
+      'bundles' => array(
+        'taxa' => [],
+        'habitats' => [],
+        'locality' => [],
+      ),
+    ),
+  );
+
+  foreach ($entities_info as $entity_type => $entity_type_info) {
+
+    if ($entity_type !== 'node' && $entity_type !== 'taxonomy_term') {
+      continue;
+    }
+
+    foreach ($entity_type_info['bundles'] as $bundle => $bundle_info) {
+
+      $type_name = $entity_type . '-' . $bundle;
+
+      $content['teasers'][$type_name] = array(
+        array('#markup' => '<div class="heading">' . $bundle . '</div>'),
+      );
+
+      // Get one node / entity using EntityFieldQuery
+
+      $result = get_one_entity($entity_type, $bundle);
+      // dpm($result, '$result');
+
+      // If one was found
+      if (! $result) {
+        continue;
+      }
+
+      // Add the rendered node / entity to the output
+      if ($entity_type === 'node') {
+        $eid = $result->nid;
+        $content['teasers'][$type_name][] = node_view((node_load($eid)), 'teaser');
+      }
+      elseif ($entity_type === 'taxonomy_term') {
+        $eid = $result->tid;
+        $term = (taxonomy_term_load($eid));
+        $content['teasers'][$type_name][] = taxonomy_term_view($term, 'teaser');
+      }
+
+    }
+  }
+
+  // dpm($content, '$content');
+  return $content;
+}
+
+
+
+function demos_evm_page_callback($entity_type, $bundle) {
+
+  $content = array(
+    'view_modes' => array(/*'#markup' => array()*/),
+  );
+
+  $view_modes = field_view_mode_settings($entity_type, $bundle);
+  // dpm($view_modes, '$view_modes');
+
+  foreach (array_keys($view_modes) as $view_mode) {
+    if (! $view_modes[$view_mode]['custom_settings']) {
+      unset($view_modes[$view_mode]);
+    }
+  }
+  // dpm($view_modes, '$view_modes');
+
+  foreach (array_keys($view_modes) as $view_mode) {
+    // dpm($view_mode, '$view_mode');
+
+    if ($entity_type !== 'node' && $entity_type !== 'taxonomy_term') {
+      continue;
+    }
+
+    $content['view_modes'][$view_mode] = array(
+      array('#markup' => '<div class="heading">' . $view_mode . '</div>'),
+    );
+
+    // Get one node / entity using EntityFieldQuery
+
+    $result = get_one_entity('node', $bundle);
+    // dpm($result, '$result');
+
+    // If one was found
+    if (! $result) {
+      continue;
+    }
+
+    // Add the rendered node / entity to the output
+    if ($entity_type === 'node') {
+      $eid = $result->nid;
+      $content['view_modes'][$view_mode][] = node_view((node_load($eid)), $view_mode);
+    }
+    elseif ($entity_type === 'taxonomy_term') {
+      $eid = $result->tid;
+      $term = taxonomy_term_load($eid);
+      $content['view_modes'][$view_mode][] = taxonomy_term_view($term, $view_mode);
+    }
+  }
+
+  // dpm($content, '$content');
+  return $content;
+}
+
+
+
+function once_record_observations_localities_to_taxa() {
+  // Fetch all observations with a locality
+  $observations = get_observations_with_localities(5);
+  // dpm($observations, '$observations');
+  // return null;
+
+  $count_observations_altered = 0;
+  $count_observations_alter_failures = 0;
+
+  foreach ($observations as $nid => $observation_representation) {
+    $is_success = record_observation_localities_to_taxa($nid);
+    if ($is_success) {
+      $count_observations_altered++;
+    }
+    else {
+      $count_observations_alter_failures++;
+    }
+  }
+  drupal_set_message(t($count_observations_altered . ' observations altered.'), 'status', FALSE);
+  if ($count_observations_alter_failures) {
+    drupal_set_message(t($count_observations_alter_failures . ' observations not altered.'), 'error', FALSE);
+  }
+}
+
+
+/**
+ * Determines if a given entity id is a valid integer.
+ *
+ * @param $eid
+ *   The entity ID to test.
+ *
+ * @return
+ *   TRUE if a valid entity ID, FALSE otherwise.
+ */
+function is_valid_eid($eid) {
+  // Test if it is numeric
+  if (! is_numeric($eid)) {
+    return FALSE;
+  }
+
+  // Test if it is an integer and greater than 0
+  if (! intval($eid) > 0 ) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+
+/**
+ * Determines if a given entity is a valid Drupal entity object.
+ *
+ * @param string $entity_type
+ *   The type of entity to test for.
+ * @param $entity
+ *   The entity to test. Should be an object (stdClass) as created by entity_create().
+ *
+ * @return
+ *   TRUE if a valid Drupal entity, FALSE otherwise.
+ */
+function is_valid_entity(string $entity_type, $entity) {
+
+  // Test if 
+  if (! gettype($entity) === 'object') {
+    return FALSE;
+  }
+
+  // TYPES (in Drupal 7 core)
+  // 1. Nodes (content)
+  // 2. Comments
+  // 3. Files
+  // 4. Taxonomy terms
+  // 5. Taxonomy vocabularies
+  // 6. Users
+
+  switch ($entity_type) {
+    case 'node':
+      if (! (
+        property_exists($entity, 'nid') && 
+        property_exists($entity, 'title') && 
+        property_exists($entity, 'type'))) {
+        return FALSE;
+      }
+      break;
+
+    case 'taxonomy_term':
+      if (! (
+        property_exists($entity, 'tid') && 
+        property_exists($entity, 'name'))) {
+        return FALSE;
+      }
+      break;
+
+    case 'user':
+      if (! (
+        property_exists($entity, 'uid') && 
+        property_exists($entity, 'name'))) {
+        return FALSE;
+      }
+      break;
+    
+    default:
+      throw new Exception("Entity type not recognised", 1);
+      break;
+  }
+
+  return TRUE;
+}
+
+
+
+/**
+ * Implements hook_block_info().
+ */
+function casa_core_block_info() {
+  $blocks = array();
+
+  $blocks['site_stats'] = array(
+    'info' => t('Site stats'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+/**
+ * Implements hook_block_view().
+ */
+function casa_core_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'site_stats':
+      $block['subject'] = t('Site Stats');
+      $block['content'] = site_stats_block_view();
+      break;
+  }
+
+  return $block;
+}
+
+
+
+function site_stats_block_view() {
+  $content = '';
+
+  determine_site_stats();
+
+  $iois = get_site_stats_iois();
+
+  $content .= '<ul class="non-list cols-4">';
+  foreach ($iois as $name => $info) {
+    $val = variable_get('count_' . $name);
+    $content .= '<li><strong>' . $info['label'] . '</strong>: ' . $val . '</li>';
+  }
+  $content .= '</ul>';
+  return $content;
 }

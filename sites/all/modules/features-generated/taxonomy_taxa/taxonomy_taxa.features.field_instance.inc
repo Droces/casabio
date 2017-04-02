@@ -21,18 +21,18 @@ function taxonomy_taxa_field_default_field_instances() {
         'label' => 'inline',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => 'No common names',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Unknown</em>',
           'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">No common names</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
         'weight' => 4,
@@ -72,65 +72,6 @@ function taxonomy_taxa_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-taxa-field_description'.
-  $field_instances['taxonomy_term-taxa-field_description'] = array(
-    'bundle' => 'taxa',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'type' => 'text_default',
-        'weight' => 4,
-      ),
-      'field_guide' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'trim_length' => 200,
-        ),
-        'type' => 'text_trimmed',
-        'weight' => 5,
-      ),
-      'small' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_description',
-    'label' => 'Description',
-    'required' => 0,
-    'settings' => array(
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 9,
-    ),
-  );
-
   // Exported field_instance: 'taxonomy_term-taxa-field_etymology'.
   $field_instances['taxonomy_term-taxa-field_etymology'] = array(
     'bundle' => 'taxa',
@@ -139,24 +80,24 @@ function taxonomy_taxa_field_default_field_instances() {
     'description' => 'Eg. From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 5,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No known etymology</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 5,
       ),
       'small' => array(
         'label' => 'above',
@@ -182,39 +123,35 @@ function taxonomy_taxa_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 60,
+        'rows' => 3,
       ),
-      'type' => 'text_textfield',
+      'type' => 'text_textarea',
       'weight' => 34,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-taxa-field_identifications_count'.
-  $field_instances['taxonomy_term-taxa-field_identifications_count'] = array(
+  // Exported field_instance: 'taxonomy_term-taxa-field_external_references'.
+  $field_instances['taxonomy_term-taxa-field_external_references'] = array(
     'bundle' => 'taxa',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The number of observations that have been identified as being this species.',
+    'description' => 'JSON in the format: {source_id: {key: value, }, ...}',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
-        'module' => 'number',
+        'label' => 'above',
+        'module' => 'text',
         'settings' => array(
-          'decimal_separator' => '.',
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
-          'prefix_suffix' => 1,
-          'scale' => 0,
-          'thousand_separator' => '',
         ),
-        'type' => 'number_integer',
-        'weight' => 5,
+        'type' => 'text_default',
+        'weight' => 10,
       ),
       'field_guide' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 0,
       ),
       'small' => array(
         'label' => 'above',
@@ -224,22 +161,26 @@ function taxonomy_taxa_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_identifications_count',
-    'label' => 'Number of identifications',
+    'field_name' => 'field_external_references',
+    'label' => 'External resource references',
     'required' => 0,
     'settings' => array(
-      'max' => 1000000,
-      'min' => 0,
-      'prefix' => '',
-      'suffix' => '',
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number',
-      'weight' => 7,
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 41,
     ),
   );
 
@@ -251,20 +192,20 @@ function taxonomy_taxa_field_default_field_instances() {
     'description' => 'The areas in which this taxon occurs.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 9,
+        'weight' => 4,
       ),
       'field_guide' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 9,
       ),
       'small' => array(
         'label' => 'above',
@@ -288,7 +229,7 @@ function taxonomy_taxa_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -304,11 +245,11 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'label' => 'inline',
         'module' => 'text',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => 'Unknown',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'field_guide' => array(
         'label' => 'inline',
@@ -355,23 +296,26 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'link' => FALSE,
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Illustrative pictures not set</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'links' => 0,
+          'use_content_language' => 1,
+          'view_mode' => 'thumbnail',
         ),
-        'type' => 'entityreference_label',
-        'weight' => 7,
+        'type' => 'entityreference_entity_view',
+        'weight' => 1,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">No pictures</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => 1,
           'view_mode' => 'thumbnail',
         ),
         'type' => 'entityreference_entity_view',
@@ -420,21 +364,22 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'geofield',
+        'module' => 'openlayers_geofield',
         'settings' => array(
           'data' => 'full',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
         ),
-        'type' => 'geofield_wkt',
+        'type' => 'openlayers_geofield',
         'weight' => 6,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'leaflet',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">No observations</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'height' => 130,
           'icon' => array(
             'html' => '',
@@ -512,11 +457,11 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
           'point' => 0,
           'polygon' => 'polygon',
         ),
-        'openlayers_map' => 'openlayers_geofield_map_geofield_widget',
+        'openlayers_map' => 'map_widget_single_point',
         'showInputField' => 0,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 6,
+      'weight' => 4,
     ),
   );
 
@@ -531,21 +476,23 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Representative picture not set</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
-          'view_mode' => 'small',
+          'use_content_language' => 1,
+          'view_mode' => 'medium',
         ),
         'type' => 'entityreference_entity_view',
-        'weight' => 3,
+        'weight' => 0,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'entityreference',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => ' <em class="no-value">No representative picture</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => 1,
           'view_mode' => 'small',
         ),
         'type' => 'entityreference_entity_view',
@@ -599,7 +546,7 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 9,
       ),
       'field_guide' => array(
         'label' => 'hidden',
@@ -651,20 +598,16 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'list',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => 'Unknown rank',
-          'empty_fields_handler' => 'EmptyFieldText',
-        ),
-        'type' => 'list_default',
-        'weight' => 0,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 8,
       ),
       'field_guide' => array(
         'label' => 'hidden',
         'module' => 'list',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">Taxonomic rank unknown</em>',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'list_default',
         'weight' => 3,
@@ -699,12 +642,12 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
   t('A Life Science IDentifier (LSID) is the globally-unique code that is a reference to an authoritative source of information on this taxon. 
 It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[version].');
   t('Common names');
-  t('Description');
   t('Eg. From the Greek ‘cymbi’ / ‘kymbe’ meaning ‘boat’; and the Latin ‘formis’ / ‘formis’ meaning ‘in the form of’.');
   t('Etymology');
+  t('External resource references');
+  t('JSON in the format: {source_id: {key: value, }, ...}');
   t('LSID');
   t('Localities');
-  t('Number of identifications');
   t('Pictures');
   t('Range');
   t('Rank');
@@ -712,7 +655,6 @@ It should be written in the form: urn:lsid:<authority>:<namespace>:<ObjectID>:[v
   t('Scientific name');
   t('The areas in which this taxon occurs.');
   t('The non-scientific names that people typically call this species / taxon. There may be several names in different languages.');
-  t('The number of observations that have been identified as being this species.');
 
   return $field_instances;
 }

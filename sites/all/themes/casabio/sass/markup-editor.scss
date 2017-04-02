@@ -3,7 +3,9 @@ Filename    Markup Editor styles
 Usage       provides styles to be used exclusively by the on-site WYSiWYG editor
 */
 
-@import "init/init";
+@import "init/variables";
+@import "init/libraries";
+@import "init/mixins";
 @import "base/normalize";
 
 

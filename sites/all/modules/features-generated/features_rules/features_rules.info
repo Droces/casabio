@@ -1,0 +1,10 @@
+name = Rules
+description = All rules: User-defined 'actions' triggered by 'events' under certain 'conditions'.
+core = 7.x
+package = Features: Configuration
+version = 7.x-1.0
+dependencies[] = entity
+dependencies[] = rules
+features[features_api][] = api:2
+features[rules_config][] = rules_assign_new_users_contributor_role
+project path = sites/all/modules/features-generated

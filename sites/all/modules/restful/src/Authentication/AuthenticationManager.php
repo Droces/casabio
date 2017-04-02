@@ -101,6 +101,7 @@ class AuthenticationManager implements AuthenticationManagerInterface {
    */
   public function getAccount(RequestInterface $request, $cache = TRUE) {
     global $user;
+    // dpm($user, '$user in getAccount()');
     // Return the previously resolved user, if any.
     if (!empty($this->account)) {
       return $this->account;
@@ -108,14 +109,23 @@ class AuthenticationManager implements AuthenticationManagerInterface {
     // Resolve the user based on the providers in the manager.
     $account = NULL;
     foreach ($this->plugins as $provider) {
+      // dpm($provider->getName(), 'auth provider name');
+      // dpm($provider, 'auth provider');
+      $account = $provider->authenticate($request);
+      // dpm($account, '$account from authenticate()');
+
+
+
       /* @var \Drupal\restful\Plugin\authentication\AuthenticationInterface $provider */
       if ($provider->applies($request) && ($account = $provider->authenticate($request)) && $account->uid) {
         // The account has been loaded, we can stop looking.
         break;
       }
     }
+    // dpm($account, '$account 1');
 
     if (empty($account->uid)) {
+      // dpm('Doesnt have uid');
 
       if (RestfulManager::isRestfulPath($request) && $this->plugins->count() && !$this->getIsOptional()) {
         // Allow caching pages for anonymous users.
@@ -124,18 +134,24 @@ class AuthenticationManager implements AuthenticationManagerInterface {
         // User didn't authenticate against any provider, so we throw an error.
         throw new UnauthorizedException('Bad credentials. Anonymous user resolved for a resource that requires authentication.');
       }
+      // dpm('test 1');
 
       // If the account could not be authenticated default to the global user.
       // Most of the cases the cookie provider will do this for us.
       $account = drupal_anonymous_user();
+      // dpm($account, '$account test 1');
 
       if (!$request->isViaRouter()) {
+        // dpm($account, 'request is not via router()');
         // If we are using the API from within Drupal and we have not tried to
         // authenticate using the 'cookie' provider, then we expect to be logged
         // in using the cookie authentication as a last resort.
+        // dpm($account, '$account before');
         $account = $user->uid ? user_load($user->uid) : $account;
+        // dpm($account, '$account after');
       }
     }
+    // dpm($account, '$account 2');
     if ($cache) {
       $this->setAccount($account);
     }
@@ -148,6 +164,7 @@ class AuthenticationManager implements AuthenticationManagerInterface {
     // Record the access time of this request.
     $this->setAccessTime($account);
 
+    // dpm($account, '$account 3');
     return $account;
   }
 

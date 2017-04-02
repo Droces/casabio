@@ -1,0 +1,12 @@
+name = 			    Casa Term Management
+core = 			    7.x
+package = 		  Casabio
+
+description =   Provides functions that manage taxonomy terms. In particular, this module manages organism taxa (‘taxons’) that are unique to CasaBio.
+
+
+
+; ==============================================================================
+; 													SCRIPTS
+
+; scripts[] = scripts/___.js

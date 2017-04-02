@@ -302,6 +302,10 @@ function _pictures_resource_create($node) {
 function _pictures_resource_update($nid, $node) {
   // dpm($node, '$node');
   // dpm($nid, '$nid');
+  
+  if (! is_valid_eid($nid)) {
+    throw new InvalidArgumentException("Parameter $nid, " . $nid . ", needs to be a valid NID.", 1);
+  }
 
   // If the node isn't an picture
   if ($node['type'] != 'picture') {

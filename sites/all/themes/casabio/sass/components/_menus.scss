@@ -49,13 +49,16 @@
 }
 @mixin menu-horizontal {
 		padding: 0;
-		display: table;
 		width: 100%;
 		box-sizing: border-box;
+		// display: table;
+	 //  table-layout: auto;
+	 @include display(flex);
 
 		li {
-			display: table-cell;
 			text-align: center;
+			// display: table-cell;
+			@include flex(0 0 auto);
 
 			&::after {
 				// content: ">";

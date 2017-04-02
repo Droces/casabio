@@ -23,8 +23,8 @@ use Drupal\restful\Plugin\resource\Field\ResourceFieldResourceInterface;
  *   curie = {
  *     "name": "hal",
  *     "path": "doc/rels",
- *     "template": "/{rel}",
- *   },
+ *     "template": "/{rel}"
+ *   }
  * )
  */
 class FormatterHalJson extends Formatter implements FormatterInterface {

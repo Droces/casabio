@@ -42,33 +42,6 @@ function blocks_not_views_blocks_default_fe_block_settings() {
     'visibility' => 1,
   );
 
-  $export['browse-browse_choice'] = array(
-    'cache' => 8,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'browse_choice',
-    'module' => 'browse',
-    'node_types' => array(),
-    'pages' => 'browse',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -17,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '<none>',
-    'visibility' => 1,
-  );
-
   $export['browse-browse_chooser_form'] = array(
     'cache' => 8,
     'css_class' => '',
@@ -120,33 +93,6 @@ function blocks_not_views_blocks_default_fe_block_settings() {
       ),
     ),
     'title' => 'Add a Habitat Record',
-    'visibility' => 1,
-  );
-
-  $export['casa_taxa_mgt-taxa_browser'] = array(
-    'cache' => 8,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'taxa_browser',
-    'module' => 'casa_taxa_mgt',
-    'node_types' => array(),
-    'pages' => 'browse/taxa',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -26,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '<none>',
     'visibility' => 1,
   );
 
@@ -358,6 +304,33 @@ contribute/multiple-observations/observation-info*',
         'status' => 1,
         'theme' => 'casabio',
         'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
+  $export['group_selected-group_selected_secondary_toolbar'] = array(
+    'cache' => 8,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => 'group_selected_secondary_toolbar',
+    'module' => 'group_selected',
+    'node_types' => array(),
+    'pages' => 'contribute/multiple-observations/group*',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'casabio',
+        'weight' => -33,
       ),
       'petal' => array(
         'region' => '',
@@ -645,6 +618,33 @@ contribute/multiple-observations/*',
     'visibility' => 0,
   );
 
+  $export['openlayers_block-10cd987e_mapblock'] = array(
+    'cache' => 1,
+    'css_class' => '',
+    'custom' => 0,
+    'delta' => '10cd987e_mapblock',
+    'module' => 'openlayers_block',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'casabio' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'casabio',
+        'weight' => 0,
+      ),
+      'petal' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'petal',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 0,
+  );
+
   $export['openlayers_block-1f40eca1_mapblock'] = array(
     'cache' => 1,
     'css_class' => '',
@@ -666,33 +666,6 @@ contribute/multiple-observations/*',
         'status' => 0,
         'theme' => 'petal',
         'weight' => -1,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 0,
-  );
-
-  $export['openlayers_block-2b2e2cfb_mapblock'] = array(
-    'cache' => 1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => '2b2e2cfb_mapblock',
-    'module' => 'openlayers_block',
-    'node_types' => array(),
-    'pages' => '',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'casabio',
-        'weight' => 0,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
       ),
     ),
     'title' => '',
@@ -724,87 +697,6 @@ contribute/multiple-observations/*',
     ),
     'title' => '',
     'visibility' => 0,
-  );
-
-  $export['openlayers_block-b9337d7c_mapblock'] = array(
-    'cache' => 1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'b9337d7c_mapblock',
-    'module' => 'openlayers_block',
-    'node_types' => array(),
-    'pages' => 'browse/observations/map',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'casabio',
-        'weight' => -13,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '<none>',
-    'visibility' => 1,
-  );
-
-  $export['openlayers_block-bc163690_mapblock'] = array(
-    'cache' => 1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'bc163690_mapblock',
-    'module' => 'openlayers_block',
-    'node_types' => array(),
-    'pages' => 'browse/pictures/map',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
-        'theme' => 'casabio',
-        'weight' => -27,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '<none>',
-    'visibility' => 1,
-  );
-
-  $export['openlayers_block-ecb2bab1_mapblock'] = array(
-    'cache' => 1,
-    'css_class' => '',
-    'custom' => 0,
-    'delta' => 'ecb2bab1_mapblock',
-    'module' => 'openlayers_block',
-    'node_types' => array(),
-    'pages' => 'openlayers-examples',
-    'roles' => array(),
-    'themes' => array(
-      'casabio' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'casabio',
-        'weight' => 0,
-      ),
-      'petal' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'petal',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 1,
   );
 
   $export['search-form'] = array(

@@ -13,11 +13,13 @@ casa_file_mgt                     -
 casa_map_mgt                      Y           2
 casa_node_mgt                     -
 casa_taxa_mgt                     Y           -
-casa_upload                       -
-contribute_maps					  Y			  11
+casa_upload                       -           10
+contribute                        Y           3
+  contribute_maps                 Y           11
 crew_observations                 -
 ctb_observation                   -
-edit_selected                     Y           6
-  es_maps              Y           10
+edit_selected                     Y           7
+  es_api_interactions             Y           6
+  es_maps                         Y           10
 group_selected                    Y           5
 selection                         Y           3

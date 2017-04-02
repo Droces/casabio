@@ -6,8 +6,8 @@ description =   Provides functions that CasaBio modules use.
 
 
 
-; ==============================================================================
-;                           SCRIPTS
+; SCRIPTS
 
 scripts[] =     scripts/casa_core.js
+scripts[] =     scripts/casa_utilities.js
 ; scripts[] =     scripts/casa_dialogs.js

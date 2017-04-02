@@ -10,98 +10,6 @@
 function content_type_picture_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-picture-body'.
-  $field_instances['node-picture-body'] = array(
-    'bundle' => 'picture',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'entityreference_view_widget' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 2,
-      ),
-      'featured' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'inline' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
-      ),
-      'medium' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 1,
-      ),
-      'small' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 1,
-      ),
-      'text' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'thumbnail' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 2,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'body',
-    'label' => 'Description',
-    'required' => 0,
-    'settings' => array(
-      'display_summary' => 0,
-      'linkit' => array(
-        'button_text' => 'Search',
-        'enable' => 0,
-        'profile' => '',
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-        'summary_rows' => 5,
-      ),
-      'type' => 'text_textarea_with_summary',
-      'weight' => 4,
-    ),
-  );
-
   // Exported field_instance: 'node-picture-field_beauty'.
   $field_instances['node-picture-field_beauty'] = array(
     'bundle' => 'picture',
@@ -141,7 +49,7 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 4,
       ),
       'text' => array(
         'label' => 'above',
@@ -210,10 +118,15 @@ function content_type_picture_field_default_field_instances() {
         'weight' => 7,
       ),
       'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 3,
       ),
       'text' => array(
         'label' => 'above',
@@ -291,10 +204,20 @@ function content_type_picture_field_default_field_instances() {
         'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'format_type' => 'short',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => 0,
+        ),
+        'type' => 'date_default',
+        'weight' => 2,
       ),
       'text' => array(
         'label' => 'above',
@@ -377,7 +300,7 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 8,
       ),
       'text' => array(
         'label' => 'above',
@@ -412,7 +335,7 @@ function content_type_picture_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 1,
+      'weight' => 3,
     ),
   );
 
@@ -459,7 +382,7 @@ function content_type_picture_field_default_field_instances() {
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
-          'image_link' => 'content',
+          'image_link' => '',
           'image_style' => 'tiny',
         ),
         'type' => 'image',
@@ -469,9 +392,9 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'image',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'image_link' => 'file',
+          'empty_fields_emptyfieldtext_empty_text' => 'No image',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'image_link' => '',
           'image_style' => 'very_large_cropped',
         ),
         'type' => 'image',
@@ -496,7 +419,7 @@ function content_type_picture_field_default_field_instances() {
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
           'image_link' => 'content',
-          'image_style' => 'medium',
+          'image_style' => 'medium_square',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -511,8 +434,8 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'image',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'No image',
+          'empty_fields_handler' => 'EmptyFieldText',
           'image_link' => '',
           'image_style' => 'thumbnail_square',
         ),
@@ -558,7 +481,13 @@ function content_type_picture_field_default_field_instances() {
   // Exported field_instance: 'node-picture-field_location'.
   $field_instances['node-picture-field_location'] = array(
     'bundle' => 'picture',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'dataType' => 'WKT',
+        'geom' => 'GEOMETRYCOLLECTION EMPTY',
+        'input_format' => 'wkt',
+      ),
+    ),
     'deleted' => 0,
     'description' => 'The place where this picture was taken. This overrides the location of the observation, since it is more specific.',
     'display' => array(
@@ -596,7 +525,7 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 7,
       ),
       'text' => array(
         'label' => 'above',
@@ -629,7 +558,7 @@ function content_type_picture_field_default_field_instances() {
           'point' => 'point',
           'polygon' => 0,
         ),
-        'openlayers_map' => 'openlayers_geofield_map_geofield_widget',
+        'openlayers_map' => 'map_widget_single_point',
         'showInputField' => 0,
       ),
       'type' => 'openlayers_geofield',
@@ -676,7 +605,7 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 6,
       ),
       'text' => array(
         'label' => 'above',
@@ -743,10 +672,14 @@ function content_type_picture_field_default_field_instances() {
         'weight' => 4,
       ),
       'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 1,
       ),
       'text' => array(
         'label' => 'above',
@@ -819,7 +752,7 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 5,
       ),
       'text' => array(
         'label' => 'above',
@@ -856,7 +789,6 @@ function content_type_picture_field_default_field_instances() {
   t('Beauty');
   t('Collection');
   t('Date taken');
-  t('Description');
   t('Exif');
   t('How attractive is the photo?');
   t('Image');

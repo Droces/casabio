@@ -5,24 +5,6 @@
  */
 
 
-/**
- * Determines if a given entity id is a valid integer.
- */
-function is_valid_eid($eid) {
-  // Test if it is numeric
-  if (!is_numeric($eid)) {
-    return FALSE;
-  }
-
-  // Test if it is an integer and greater than 0
-  if (! intval($eid) > 0 ) {
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-
 
 /**
  * Saves a new interaction that references the specified 'Subject' observation.
@@ -41,6 +23,13 @@ function observation_add_interaction($nid, $params) {
   // dpm($nid, '$nid');
   // dpm($params, '$params');
 
+  if (! is_valid_eid($nid)) {
+    throw new InvalidArgumentException("Parameter $nid, " . $nid . ", needs to be a valid NID.", 1);
+  }
+  if (gettype($params) !== 'array') {
+    throw new InvalidArgumentException("Parameter $params, " . $params . ", is not an array.", 1);
+  }
+
   $observation_raw = node_load($nid);
   $language = 'und';
 
@@ -53,8 +42,7 @@ function observation_add_interaction($nid, $params) {
   // If a value in $params isn't valid
   $tid = $params['identifiedSpecies'];
   if (!is_valid_eid($tid)) {
-    throw new Exception("Value of field_identified_species, " . $tid . ", is not a valid tid.", 1);
-    return NULL;
+    throw new Exception("Value of field_identified_species, " . $tid . ", needs to be a valid tid.", 1);
   }
 
   global $user;
@@ -73,7 +61,7 @@ function observation_add_interaction($nid, $params) {
   $values = array(
     'uid' => $user->uid,
     'species_tid' => $tid,
-    'observation_subj_nid' => $observation_subj -> nid,
+    'observation_subj_nid' => $observation_subj->nid,
     'certainty' => $params['certainty'],
   );
 
@@ -89,7 +77,7 @@ function observation_add_interaction($nid, $params) {
     'field_interaction_activity' =>
       $params['interactionActivity'],
     'field_observation_object' =>
-      $observation_subj -> nid,
+      $observation_subj->nid,
     'body' => array(
       'value' => $params['body'],
       'format' => $params['body'],
@@ -113,7 +101,7 @@ function duplicate_observation($observation) {
   $observation_new = entity_create('node', array(
     'type' => 'observation',
     'title' => '',
-    'uid' => $observation -> uid,
+    'uid' => $observation->uid,
     'status' => 1, // published
   ));
 
@@ -129,8 +117,8 @@ function duplicate_observation($observation) {
   // Not keeping: title, body, count, any id fields, identifications.
 
   foreach ($fields_to_keep as $field_name) {
-    // dpm($observation -> $field_name, $field_name . ' value');
-    $observation_new -> $field_name = $observation -> $field_name;
+    // dpm($observation->$field_name, $field_name . ' value');
+    $observation_new->$field_name = $observation->$field_name;
   }
 
   node_save($observation_new);
@@ -158,27 +146,27 @@ function create_interaction($values) {
 
   $interaction = entity_metadata_wrapper('node', $interaction_raw);
 
-  $interaction -> field_observation -> set(
+  $interaction->field_observation->set(
     $values['field_observation']);
 
-  $interaction -> field_interaction_activity -> set(
+  $interaction->field_interaction_activity->set(
     $values['field_interaction_activity']);
 
-  $interaction -> field_observation_object -> set(
+  $interaction->field_observation_object->set(
     $values['field_observation_object']);
 
-  $interaction -> body -> set(
+  $interaction->body->set(
     $values['body']);
 
-  $interaction -> title -> set(
+  $interaction->title->set(
     $values['field_observation']
-      . ' ' . $interaction -> field_interaction_activity -> value()
-      . ' ' . $interaction -> field_observation_object -> raw()
+      . ' ' . $interaction->field_interaction_activity->value()
+      . ' ' . $interaction->field_observation_object->raw()
   );
 
-  $interaction -> save();
+  $interaction->save();
 
-  return $interaction -> value();
+  return $interaction->value();
 }
 
 
@@ -191,9 +179,9 @@ function create_interaction($values) {
 function create_identification($values) {
 
   $identification_raw = entity_create('node', array(
-    'type' => 'identification',
-    'title' => '',
-    'uid' => $values['uid'],
+    'type' =>   'identification',
+    'title' =>  '',
+    'uid' =>    $values['uid'],
     'status' => 1, // published
   ));
 
@@ -208,15 +196,15 @@ function create_identification($values) {
     throw new Exception("Tid, " . $values['species_tid'] . ", is not the tid of a taxon.", 1);
   }
 
-  $identification -> title -> set(
-    $taxon -> name);
-  $identification -> field_observation -> set(
+  $identification->title->set(
+    $taxon->name);
+  $identification->field_observation->set(
     $values['observation_subj_nid']);
-  $identification -> field_identified_species -> set(
+  $identification->field_identified_species->set(
     $taxon);
-  $identification -> field_certainty -> set(
+  $identification->field_certainty->set(
     $values['certainty']);
-  $identification -> save();
+  $identification->save();
 
   return $identification;
 }

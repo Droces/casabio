@@ -1,0 +1,5 @@
+name =      CasaBio API Documenation
+core =      7.x
+package =   Casabio
+
+description =   Provides navigation for CasaBio's developer documentation.

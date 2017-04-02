@@ -92,7 +92,7 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
   $observations =         array();
 
   foreach ($nodes as $node) {
-    $timestamp = $node -> field_date_taken -> value();
+    $timestamp = $node->field_date_taken->value();
     // dpm($timestamp, 'timestamp');
 
     $time_gap = ($timestamp - $previous_timestamp);
@@ -125,11 +125,11 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
 
         $current_observation = entity_metadata_wrapper('node', $observation_raw);
 
-        // dpm($current_observation -> field_collection -> value(), 'observations’s collection val');
+        // dpm($current_observation->field_collection->value(), 'observations’s collection val');
       //
 
     }
-    $current_nids[] = $node -> nid -> value();
+    $current_nids[] = $node->nid->value();
     $previous_timestamp = $timestamp;
   }
 
@@ -159,6 +159,10 @@ function auto_group_pictures($collection, $max_time_gap = 30) {
  */
 function create_pictures_array($collection_nid) {
   // dpm($collection_nid, '$collection_nid');
+  
+  if (! is_valid_eid($collection_nid)) {
+    throw new InvalidArgumentException("Parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+  }
 
   $nids = array();
 

@@ -1,0 +1,288 @@
+/**
+ * @file
+ * 
+ */
+
+/**
+  CONTENTS
+
+  Mixins & helper functions
+  Field formatters
+  Field widgets
+ */
+
+/* -----------------------------------------------------------------------------
+                                          Mixins & helper functions
+*/
+
+@mixin field-on-overlay {
+  // display: none;
+  font-size: 0.85em;
+  font-weight: 600;
+
+  // @extend %field-as-abbr;
+  display: none;
+
+  // &[aria-hidden="true"] {
+  //  display: none;
+  // }
+  &[aria-hidden="false"] {
+    display: block;
+    position: absolute;
+    top: 1em;
+    left: 3.3em;
+    width: 60%;
+    height: 76%;
+    overflow: hidden;
+    word-break: break-all;
+
+    // An invisible layer that covers the field so that the text can't be
+    // selected, which messes with the 'selectable'.
+    &::after {
+      content: "";
+      position: absolute;;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+
+.field-none {
+  color: $colour-subtle;
+  font-style: italic;
+}
+
+$field-v-gap: 0.4em;
+
+%field-as-icon {
+  display: inline-block;
+
+  .field-content {
+    display: none;
+  }
+
+  .views-label {
+    display: inline-block;
+    background: black;
+    width: 1em;
+    height: 1em;
+    overflow: hidden;
+    padding-left: 1em;
+    box-sizing: border-box;
+    border-radius: 0.2em;
+  }
+}
+%field-as-abbr {
+  display: inline-block;
+
+  .field-content {
+    display: none;
+  }
+
+  .views-label {
+    @extend .label;
+    color: #F6F6F6;
+    display: inline-block;
+    // background: black;
+    width: 2em;
+    height: $line-height * 1em;
+    overflow: hidden;
+    // padding-left: 1em;
+    // box-sizing: border-box;
+    // border-radius: 0.2em;
+    font-size: 0.8em;
+  }
+
+  &[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Field formatters
+  Fields shown in entity display, not forms.
+*/
+.field {
+  &:not(:last-of-type) {
+    margin-bottom: 0.3em;
+  }
+  [data-view-mode="full"] &:not(:first-of-type) {
+    margin-top: 1em;
+  }
+}
+.field-name-field-user-photo img {
+  border-radius: 10em;
+}
+.field-name-field-pictures-observation {
+  @include group;
+
+  .others & > .field-items > .field-item {
+    @include column(3, $gutter-narrow);
+    margin-top: 0.5em;
+  }
+}
+.field-name-field-identifications {
+  [data-view-mode="teaser"] & {
+    & > .field-items {
+      @include group;
+
+      & > .field-item {
+        // @include column(2);
+        display: inline-block;
+        width: 11em;
+      }
+    }
+  }
+}
+.node .views-field.progress-container {
+  display: flex;
+
+  & > .views-label {
+    display: none;
+  }
+}
+.field .no-value {
+  color: grey;
+  text-transform: italic;
+}
+
+// Block-style fields
+.node,
+.taxonomy-term {
+  .field-name-field-representative-picture,
+  .field-name-field-pictures,
+  .ol-map,
+  .field-name-field-location.field-type-geofield {
+    background-color: rgba(black, 0.1);
+
+    .no-value {
+      margin: 0.5em;
+      display: inline-block;
+      font-size: 0.9em;
+    }
+  }
+}
+body.page-node {
+  .field-name-field-location {
+    &.field-type-geofield {
+      .no-value {
+        height: 200px;
+      }
+    }
+  }
+}
+.field-label-inline {
+  display: table-row;
+
+  div {
+    display: inline;
+  }
+
+  .field-label,
+  .field-items {
+    float: none;
+    display: table-cell;
+    padding-bottom: 0.3em;
+  }
+  .field-label {
+    padding-right: 0.8em;
+  }
+  .field-items > * + *::before {
+    content: ', ';
+  }
+}
+#autocomplete {
+  z-index: 10;
+  background: white;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                          Field widgets
+  Fields shown in forms.
+*/
+.field-group > h2 {
+  font-size: 1em;
+  font-weight: bold;
+  border-bottom: solid 1px $colour-dividers;
+  margin-top: 3em;
+  margin-bottom: 1em;
+  color: #838383;
+  padding-bottom: 0.4em;
+}
+.plupload_wrapper {
+    font: inherit;
+}
+.plupload {
+  .plupload_content {
+    font-size: 0.8em;
+  }
+  .plupload_droptext {
+    &.mouseOver {
+      background-color: $colour-links;
+    }
+  }
+  li {
+    max-width: none;
+    margin: 0;
+  }
+  li.plupload_droptext,
+  .plupload_filelist {
+    height: 12em;
+      overflow-y: auto;
+  }
+  .plupload_droptext {
+    // Huge and light grey
+    font-size: 3.5em;
+    color: #bfbfbf;
+  }
+  .plupload_filelist {
+    li {
+      background: #F5F5F5 url('images/backgrounds.gif') repeat-x 0 -156px;
+      border-bottom: 1px solid #DDD;
+      padding: 10px 8px;
+      background: #f6f6f6;
+    }
+    .plupload_file_name {
+      width: auto;
+    }
+  }
+  .plupload_buttons,
+  .plupload_upload_status {
+    display: inline-block !important;
+  }
+  .plupload_button {
+    &.plupload_start {
+      display: none;
+    }
+  }
+}
+
+form [class*="field_taxon_rank_value"] {
+  select {
+    width: 8em;
+  }
+}
+.form-field-name-field-certainty select {
+  width: 10em;
+}
+form .field-name-field-pictures {
+  .form-type-textfield {
+    display: inline-block;
+  }
+}
+
+.field.parent {
+  &[data-rank="family"],
+  &[data-rank="Family"] {
+    .field-item {
+      text-transform: uppercase;
+    }
+  }
+}

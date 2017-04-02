@@ -36,65 +36,7 @@ function content_type_observation_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_description|node|observation|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_habitat|node|observation|form';
-  $field_group->group_name = 'group_habitat';
-  $field_group->entity_type = 'node';
-  $field_group->bundle = 'observation';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_sections';
-  $field_group->data = array(
-    'label' => 'Habitat',
-    'weight' => '5',
-    'children' => array(
-      0 => 'field_habitat',
-    ),
-    'format_type' => 'htab',
-    'format_settings' => array(
-      'formatter' => 'closed',
-      'instance_settings' => array(
-        'description' => '',
-        'classes' => '',
-        'required_fields' => 1,
-        'id' => '',
-      ),
-    ),
-  );
-  $field_groups['group_habitat|node|observation|form'] = $field_group;
-
-  $field_group = new stdClass();
-  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
-  $field_group->api_version = 1;
-  $field_group->identifier = 'group_identifications|node|observation|form';
-  $field_group->group_name = 'group_identifications';
-  $field_group->entity_type = 'node';
-  $field_group->bundle = 'observation';
-  $field_group->mode = 'form';
-  $field_group->parent_name = 'group_sections';
-  $field_group->data = array(
-    'label' => 'Identifications',
-    'weight' => '7',
-    'children' => array(
-      0 => 'field_identifications',
-      1 => 'field_most_likely_species',
-      2 => 'field_mls_probability',
-    ),
-    'format_type' => 'htab',
-    'format_settings' => array(
-      'formatter' => 'closed',
-      'instance_settings' => array(
-        'description' => '',
-        'classes' => '',
-        'required_fields' => 1,
-        'id' => '',
-      ),
-    ),
-  );
-  $field_groups['group_identifications|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -129,7 +71,7 @@ function content_type_observation_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $field_groups['group_info|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -157,7 +99,7 @@ function content_type_observation_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $field_groups['group_location|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -185,7 +127,7 @@ function content_type_observation_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_pictures|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -214,7 +156,7 @@ function content_type_observation_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_reference|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -243,14 +185,12 @@ function content_type_observation_field_group_info() {
       ),
     ),
   );
-  $field_groups['group_sections|node|observation|form'] = $field_group;
+  $field_groups[''] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Basic info');
   t('Description');
-  t('Habitat');
-  t('Identifications');
   t('Location');
   t('Pictures');
   t('Reference');

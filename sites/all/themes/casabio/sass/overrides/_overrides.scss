@@ -1,0 +1,224 @@
+/**
+ * @file
+ * Styles that override generic styles on specific pages, in specific regions, for specific users, etc.
+ */
+
+/**
+ * CONTENTS
+
+  Home page
+  Unique pages
+  Region: highlighted
+  Developer documentation
+*/
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Home page
+*/
+
+[role="tablist"] {
+  // @include grey;
+  display: flex;
+  padding: 0 0.3em;
+  border-bottom: solid 1px grey;
+
+  [role="tab"] {
+    // background: #dedede;
+    // color: $colour-1-text;
+    display: inline-block;
+    padding: 0.7em 1.2em;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 0.2em 0.2em 0 0;
+    line-height: 1.1em;
+    border: solid 1px transparent;
+    font-size: 0.9em;
+    margin-bottom: -1px;
+
+    &[aria-selected] {
+      font-weight: bold;
+      border-color: grey;
+    }
+  }
+}
+
+[role="tabpanel"] {
+  display: none;
+
+  &[aria-selected] {
+    display: block;
+  }
+  div.vertical-tabs {
+    margin-left: 0;
+  }
+  .vertical-tabs ul.vertical-tabs-list {
+    margin-left: 0;
+    float: none;
+  }
+}
+
+body.page-home { /* the Home page */
+  #main > .content {
+    display: block;
+    max-width: none;
+    padding: 0px;
+  }
+  main {
+    padding: 0;
+    display: block;
+
+    h1 {
+      display: none;
+    }
+    h2 {
+      text-align: center;
+    }
+
+    .col {
+      text-align: center;
+      padding: 0 2em;
+    }
+  }
+  main > section,
+  main > .block {
+    padding: 3.4em 0;
+
+    h2 {
+      font-size: 2em;
+      margin-top: 0.8em;
+    }
+  }
+  section#signup_login {
+    @include group;
+    background-position: center center;
+    background-size: cover;
+    padding: 0;
+
+    [role="tablist"] {
+      [role="tab"] {
+        background: none;
+        color: inherit;
+        text-shadow: none;
+
+        &[aria-selected] {
+          background: white;
+        }
+      }
+    }
+
+    .tabs {
+      display: block;
+      min-height: 550px;
+      background: rgba(white, 0.6);
+      width: 350px;
+      float: right;
+      margin-right: 60px;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+  }
+  #browse-overview,
+  #how-it-works {
+    background: linear-gradient(30deg, #37b9b4, #1c56a1);
+    color: white;
+
+    h2, h3, h4 {
+      color: white;
+    }
+    h3 {
+      // color: rgb(132, 255, 221);
+    }
+  }
+  #how-it-works {
+    div {
+      @include group;
+      margin-top: 1em;
+
+      h2 {
+        margin-bottom: 1.3em;
+      }
+
+      h3,
+      p {
+        margin-top: 0;
+      }
+      h3 {
+        float: left;
+        margin-left: 15%;
+        width: 20%;
+        text-align: right;
+      }
+      p {
+        float: right;
+        margin-right: 15%;
+        width: 45%
+      }
+    }
+  }
+  #support-overview {
+    background-color: #B6EA9B;
+
+    .col {
+      position: relative;
+
+      a:hover {
+        background-color: rgba(156, 207, 57, 0.36);
+      }
+
+      & > a {
+        @include cover-whole;
+      }
+    }
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Unique pages
+*/
+%page-one-column {
+  display: block;
+  max-width: 60em;
+  margin-left: auto;
+  margin-right: auto;
+}
+body.page-contribute-observation {
+  main {
+    @extend %page-one-column;
+  }
+}
+
+.page-contribute-upload {
+
+  #main > .content {
+    // max-width: 1000px;
+  }
+  [aria-enabled="false"] {
+    display: none;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Region: highlighted
+*/
+.region.region-highlighted {
+  text-align: center;
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Developer documentation
+*/
+body.section-api {
+  .view {
+    table {
+      font-size: 0.8em;
+    }
+  }
+}

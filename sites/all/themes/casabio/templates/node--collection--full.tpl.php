@@ -12,7 +12,7 @@
 
 
 ?>
-<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?>>
+<article data-nid="<?php print $node->nid; ?>" class="node-<?php print $node->nid; ?> <?php print $classes; ?>"<?php print $attributes; ?> data-type="<?php print $type; ?>" data-view-mode="<?php print $view_mode; ?>" data-nid="<?php print $node->nid; ?>" data-title="<?php print $node->title; ?>">
 
   <?php
     // We hide the comments and links now so that we can render them later.
@@ -24,6 +24,7 @@
       <?php
         print render($content['field_main_image']);
         print render($content['field_location']);
+        print render($content['field_locations']);
       ?>
     </div>
     <div class="col-2-2">

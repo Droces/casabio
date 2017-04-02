@@ -31,12 +31,9 @@ Drupal.behaviors.browse = {
 
     if (! page_is_setup) {
 
-			// $( '#browse-chooser-form [value="collections"]', context ).change( function(event) {
-			// 	manage_change( $( this ));
+			// $( '#browse-chooser-form [name="entity"]', context ).change( function(event) {
+			// 	manage_browse_choice_change( $( this ));
 			// });
-			$( '#browse-chooser-form [name="entity"]', context ).change( function(event) {
-				manage_change( $( this ));
-			});
 
       page_is_setup = true;
 		}
@@ -45,9 +42,9 @@ Drupal.behaviors.browse = {
 };
 
 
-function manage_change (target) {
+function manage_browse_choice_change(target) {
 	var value = target.prop('value');
-	console.log('value: ' + value);
+	// console.log('value: ' + value);
 
 	$.each(collections_disabled_options, function(index, val) {
 		if (value == "collections") {

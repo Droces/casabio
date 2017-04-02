@@ -1,237 +1,411 @@
 <?php
-  /**
-   * @file
-   * Description…
-   */
-
-
-
-  // =============================================================================
-  /**
-   * Implements hook_help().
-   */
-  // function maintain_help($path, $arg) {}
+/**
+ * @file
+ * Description…
+ */
 
 
 
 
+// =============================================================================
+/* CONTENTS
 
-  // =============================================================================
-  /**
-   * Implements hook_menu().
-   */
-  function maintain_menu() {
-    $items['ajax/popular_taxa_form/%'] = array(
-      'page callback'     => 'maintain_popular_taxa_form_callback',
-      'page arguments'    => array(2),
-      'delivery callback' => 'ajax_deliver_html',
-      'access callback'   => 'user_access',
-      'access arguments'  => array('can contribute content'),
-      'type'              => MENU_CALLBACK,
-    );
+maintain_menu()
+maintain_init()
+maintain_permission()
+// maintain_block_info()
+// maintain_block_view()
+maintain_popular_taxa_form_callback()
+maintain_popular_taxa_get_form()
+maintain_popular_taxa_page()
+maintain_page()
+hook_views_pre_view()
+*/
 
-    $items['maintain/taxa/most-popular'] = array(
-      'title'             => 'Maintain Taxa',
-      'page callback'     => 'maintain_popular_taxa_page',
-      'access callback'   => 'user_access',
-      'access arguments'  => array('can contribute content'),
-      'type'              => MENU_NORMAL_ITEM,
-    );
 
-    return $items;
-  }
+
+// =============================================================================
+/**
+ * Implements hook_help().
+ */
+// function maintain_help($path, $arg) {}
 
 
 
 
 
-  /**
-   * Implements hook_init().
-   */
-  function maintain_init() {
+// =============================================================================
+/**
+ * Implements hook_menu().
+ */
+function maintain_menu() {
+  $items['ajax/popular_taxa_form/%'] = array(
+    'page callback'     => 'maintain_popular_taxa_form_callback',
+    'page arguments'    => array(2),
+    'delivery callback' => 'deliver_raw_html',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_CALLBACK,
+  );
 
-    if (drupal_match_path(current_path(), 'admin/taxa/most-popular*')) {
+  $items['maintain/taxa/most-popular'] = array(
+    'title'             => 'Maintain Taxa',
+    'page callback'     => 'maintain_popular_taxa_page',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
 
-      // Include required JavaScript files and libraries
-      $js_files = array(
-        drupal_get_path('module', 'maintain') . '/scripts/maintain.js',
-      );
+  $items['maintain'] = array(
+    'title'             => 'Maintain',
+    'page callback'     => 'maintain_page',
+    'access callback'   => 'user_access',
+    'access arguments'  => array('can contribute content'),
+    'type'              => MENU_NORMAL_ITEM,
+  );
 
-      foreach ($js_files as $path) {
-        drupal_add_js($path);
-      }
-    }
-  }
-
-
-
-
-
-  // =======================================================================================
-  /**
-   * Implements hook_permission().
-   */
-  function maintain_permission() {
-    return array(
-      'can maintain content' => array(
-        'title' => t('Can maintain content'),
-        'description' => t("Can edit other users' content of standard types"),
-      ),
-    );
-  }
+  return $items;
+}
 
 
 
 
 
-  // =======================================================================================
-  /**
-   * Implements hook_block_info().
-   */
-  // function maintain_block_info() {
-  //   // $blocks = array(
-  //   //   'maintain_popular_observations' => array(
-  //   //     'info' => t('Edit the observation'),
-  //   //     'cache' => DRUPAL_CACHE_GLOBAL,
-  //   //   ),
-  //   // );
+/**
+ * Implements hook_init().
+ */
+function maintain_init() {
 
-  //   // return $blocks;
+  // if (drupal_match_path(current_path(), 'maintain/*')) {
+
+  //   // Include required JavaScript files and libraries
+  //   $js_files = array(
+  //     drupal_get_path('module', 'maintain') . '/scripts/maintain.js',
+  //   );
+
+  //   foreach ($js_files as $path) {
+  //     drupal_add_js($path);
+  //   }
   // }
 
-
-
-
-
-  // =======================================================================================
-  /**
-   * Implements hook_block_view().
-   */
-  // function maintain_block_view($delta = '') {
-  //   // switch ($delta) {
-  //   //   case 'maintain_popular_observations':
-  //   //     $block['subject'] = t('Edit the observation');
-  //   //     $block['content'] = maintain_popular_observations_block_view();
-  //   //     break;
-  //   // }
-  // }
+  // populate_taxa_pictures();
+  // determine_site_stats();
+}
 
 
 
 
 
-  function maintain_popular_taxa_form_callback($nid) {
-    return maintain_popular_taxa_get_form($nid);
-  }
-
-
-  function maintain_popular_taxa_get_form($nid) {
-    $taxon = taxonomy_term_load($nid);
-    // dpm($taxon, 'taxon');
-    if ($taxon) {
-      module_load_include('inc', 'taxonomy', 'taxonomy.admin');
-      $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
-      $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
-    }
-    else {
-      // throw new Exception("Cannot load the observation", 1);
-      return null;
-    }
-
-    return $form;
-  }
+// =======================================================================================
+/**
+ * Implements hook_permission().
+ */
+function maintain_permission() {
+  return array(
+    'can maintain content' => array(
+      'title' => t('Can maintain content'),
+      'description' => t("Can edit other users' content of standard types"),
+    ),
+  );
+}
 
 
 
 
 
-  function maintain_popular_taxa_page() {
+// =======================================================================================
+/**
+ * Implements hook_block_info().
+ */
+// function maintain_block_info() {
+//   // $blocks = array(
+//   //   'maintain_popular_observations' => array(
+//   //     'info' => t('Edit the observation'),
+//   //     'cache' => DRUPAL_CACHE_GLOBAL,
+//   //   ),
+//   // );
 
-    $page_content = array();
+//   // return $blocks;
+// }
 
-    // Add view (rendered)
 
-    $view_name = 'most_popular_taxon';
-    $display_id = 'default';
-    $view = views_get_view($view_name);
-    if (!$view || !$view->access($display_id)) {
-      return;
-    }
 
-    $args = array();
-    $view_rendered = $view->preview($display_id, $args);
-    // dpm($view_rendered, 'view_rendered');
-    $page_content[$view_name] = array(
-      '#type' => 'markup',
-      '#markup' => $view_rendered
-    );
 
-    // Add form
 
-    $form;
-    $tid = $view->result[0]->tid/*102260*/;
-    $taxon = taxonomy_term_load($tid);
-    // dpm($taxon, 'taxon');
-    if (!$taxon) {
-      throw new Exception("Cannot load the observation", 1);
-    }
+// =======================================================================================
+/**
+ * Implements hook_block_view().
+ */
+// function maintain_block_view($delta = '') {
+//   // switch ($delta) {
+//   //   case 'maintain_popular_observations':
+//   //     $block['subject'] = t('Edit the observation');
+//   //     $block['content'] = maintain_popular_observations_block_view();
+//   //     break;
+//   // }
+// }
 
+
+
+
+
+function maintain_popular_taxa_form_callback($nid) {
+  return maintain_popular_taxa_get_form($nid);
+}
+
+
+function maintain_popular_taxa_get_form($nid) {
+  $taxon = taxonomy_term_load($nid);
+  // dpm($taxon, 'taxon');
+  if ($taxon) {
     module_load_include('inc', 'taxonomy', 'taxonomy.admin');
-    $form_id = 'taxonomy_form_term';
-    // $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
-    // $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
-
-
-    $form_state = array();
-    $form_state['build_info']['args'] = array($taxon);
-
-    // use form_load_include() and drupal_build_form() instead of drupal_get_form()
-    form_load_include($form_state, 'inc', 'taxonomy', 'taxonomy.admin');
-
-    $form = drupal_build_form($form_id, $form_state);
-    // $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
-
-    // // DPM the form.
-    // // Need to unset 'relations' value to dpm() the form; otherwise runs out of memory (lots of recursion?);
-    // $form_dup = $form;
-    // $form_dup['relations'] = '- UNSET -';
-    // dpm($form_dup, "form_dup");
-
-    // $page_content['maintain_form'] = $form;
-    $page_content['maintain_form'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Edit the taxon'),
-      // '#weight' => 5,
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
-      'form' => $form,
-    );
-
-    return array($page_content);
+    $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+    $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+  }
+  else {
+    // throw new Exception("Cannot load the observation", 1);
+    return null;
   }
 
+  return $form;
+}
 
 
-  function hook_views_pre_view(&$view, &$display_id, &$args) {
-    // dpm($view, 'view');
-    // dpm($display_id, 'display_id');
-    // dpm($args, 'args');
 
-    // switch ($view['name']) {
-    //   case 'image_of_taxon_reference_widget':
-    //     $view[args]
-    //     break;
-    // }
 
-    // $tid = $view->result[0]->tid/*102260*/;
-    // $taxon = taxonomy_term_load ($tid);
-    // if ($taxon) {
-    //   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
-    //   $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
-    //   $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
-    // }
-    // else {
-    //   throw new Exception("Cannot load the observation", 1);
-    // }
-    // $view->footer = $form;
+
+function maintain_popular_taxa_page() {
+
+  $page_content = array();
+
+  // Add 'Most Popular Taxon' view (rendered)
+
+  $view_name = 'most_popular_taxon';
+  $display_id = 'default';
+  $view = views_get_view($view_name);
+  if (!$view || !$view->access($display_id)) {
+    return;
   }
+
+  
+  // // Add view to page render array
+
+  // Need to render the view to get results from it.
+  $args = array();
+  $view_rendered = $view->preview($display_id, $args);
+  // // dpm($view_rendered, 'view_rendered');
+
+  // $page_content[$view_name] = array(
+  //   '#type' => 'markup',
+  //   '#markup' => $view_rendered
+  // );
+
+
+  // Get the term id from the view's first (and only) result
+  $tid = $view->result[0]->tid/*102260*/;
+  // dpm($tid, '$tid');
+
+
+
+  // Add form
+
+  $form;
+  // dpm($tid, 'tid');
+
+  $taxon = taxonomy_term_load($tid);
+  // dpm($taxon, 'taxon');
+  if (!$taxon) {
+    throw new Exception("Cannot load the observation", 1);
+  }
+
+  module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+  $form_id = 'taxonomy_form_term';
+  $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+  // $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+
+  $form = drupal_get_form($form_id, $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+  // dpm($form, 'form');
+
+  $page_content['descriptor'] = array(
+    '#markup' => 'You&rsquo;re editing '
+      . l($form['name']['#default_value'], 'taxonomy/term/' . $form['tid']['#value'], array(
+        'attributes' => array('target' => '_blank',),
+      )),
+    '#weight' => -5,
+  );
+  $page_content['skip_link'] = array(
+    '#markup' => l('skip', current_path(), array(
+        'attributes' => array('class' => array('button',),),
+      )),
+    '#weight' => -4,
+  );
+
+  // Add form to page render array
+  $page_content['maintain_form'] = $form;
+  // $page_content['maintain_form'] = array(
+  //   '#type' => 'fieldset',
+  //   '#title' => t('Edit the <a>taxon</a>'),
+  //   // '#weight' => 5,
+  //   '#collapsible' => TRUE,
+  //   '#collapsed' => FALSE,
+  //   'form' => $form,
+  // );
+  // dpm($page_content, 'page_content');
+
+  return array($page_content);
+}
+
+
+
+
+
+function maintain_page() {
+
+  $page_content = array(
+    '#type' => 'markup',
+    '#markup' => l('Maintain Taxa', 'maintain/taxa/most-popular'),
+  );
+
+  return $page_content;
+}
+
+
+
+function hook_views_pre_view(&$view, &$display_id, &$args) {
+  // dpm($view, 'view');
+  // dpm($display_id, 'display_id');
+  // dpm($args, 'args');
+
+  // switch ($view['name']) {
+  //   case 'image_of_taxon_reference_widget':
+  //     $view[args]
+  //     break;
+  // }
+
+  // $tid = $view->result[0]->tid/*102260*/;
+  // $taxon = taxonomy_term_load ($tid);
+  // if ($taxon) {
+  //   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+  //   $vocabulary = taxonomy_vocabulary_machine_name_load('taxa');
+  //   $form = drupal_get_form('taxonomy_form_term', $taxon, $vocabulary, ['form_view_mode' => 'maintain']);
+  // }
+  // else {
+  //   throw new Exception("Cannot load the observation", 1);
+  // }
+  // $view->footer = $form;
+}
+
+
+/**
+ * Finds taxa that whose 'pictures' field is empty and populates it.
+ * Should be called occasionally. Batch size determined by first view.
+ */
+function populate_taxa_pictures() {
+  // $num_taxa_to_update = 3;
+  // Loop through all taxa that don't have pictures
+  // $taxa = get_taxa_without_pictures($num_taxa_to_update);
+  // dpm($taxa, '$taxa');
+
+  $taxa = views_get_view_result('taxa_no_pictures_have_identifications', 'default');
+  dpm(count($taxa), 'Number of taxa updated: ');
+  // $taxa = [];
+
+  // foreach (array_keys($taxa) as $tid) {
+  foreach ($taxa as $key => $taxon) {
+    // dpm($taxon->tid, '$taxon->tid');
+    // Load the (wrapped) term
+    $term = entity_metadata_wrapper('taxonomy_term', $taxon->tid);
+    // dpm($term->raw(), '$term->raw()');
+
+    $current_pictures = $term->field_pictures->value();
+    // dpm($current_pictures, '$current_pictures');
+    // If the taxon has pictures already, ensure they don't get overwritten.
+    if ($current_pictures) {
+      continue;
+    }
+
+    // Get all pictures of a given taxon
+    $pictures = views_get_view_result('pictures_of_taxon', 'default', $taxon->tid);
+    // dpm($pictures, '$pictures');
+
+    $pictures_nids = [];
+    // Build an array of up to 5 picture nids
+    for ($i=0; ($i < 5) && ($i < count($pictures)); $i++) { 
+      $pictures_nids[] = $pictures[$i]->nid;
+    }
+    // dpm(implode(', ', $pictures_nids), '$pictures_nids');
+
+    // Set pictures to be the first 5 pictures found
+    $term->field_pictures->set($pictures_nids);
+    $term->save();
+  }
+}
+
+
+// function populate_taxa_distribution_image () {
+// }
+
+
+function determine_site_stats() {
+  $iois = get_site_stats_iois();
+
+  foreach ($iois as $name => $info) {
+    // variable_del('count_' . $name);
+    // $current_val = variable_get('count_' . $name);
+    // dpm($current_val, '$current_val');
+    $current_val = NULL;
+
+    if (! $current_val) {
+
+      $query = db_select($info['table'])
+        ->fields(NULL, array('field'))
+      ;
+
+      if ($info['conditions']) {
+        // dpm($info['conditions'], "info['conditions']");
+        foreach ($info['conditions'] as $key => $value) {
+          $query->condition($key, $value);
+        }
+      }
+
+      $result = $query->countQuery()->execute()->fetchField();
+
+      variable_set('count_' . $name, $result);
+      $current_val = $result;
+    }
+    // dpm($info['label'] . ': ' . $current_val);
+  }
+}
+
+function get_site_stats_iois() {
+  return array(
+    'users' => array(
+      'label' => 'Users',
+      'table' => 'users',
+      'conditions' => array(
+        'status' => 1,
+      ),
+    ),
+    'identifications' => array(
+      'label' => 'Identifications',
+      'table' => 'node',
+      'conditions' => array(
+        'status' => 1,
+        'type' => 'identification',
+      ),
+    ),
+    'observations' => array(
+      'label' => 'Observations',
+      'table' => 'node',
+      'conditions' => array(
+        'status' => 1,
+        'type' => 'observation',
+      ),
+    ),
+    'taxa' => array(
+      'label' => 'Taxa',
+      'table' => 'taxonomy_term_data',
+      'conditions' => array(),
+    ),
+  );
+}

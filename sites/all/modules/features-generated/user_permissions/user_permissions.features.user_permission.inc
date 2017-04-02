@@ -10,6 +10,15 @@
 function user_permissions_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'access API reference'.
+  $permissions['access API reference'] = array(
+    'name' => 'access API reference',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'api',
+  );
+
   // Exported permission: 'access administration menu'.
   $permissions['access administration menu'] = array(
     'name' => 'access administration menu',
@@ -237,6 +246,24 @@ function user_permissions_user_default_permissions() {
     'module' => 'media_internet',
   );
 
+  // Exported permission: 'admin node search exlusions'.
+  $permissions['admin node search exlusions'] = array(
+    'name' => 'admin node search exlusions',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'administer API reference'.
+  $permissions['administer API reference'] = array(
+    'name' => 'administer API reference',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'api',
+  );
+
   // Exported permission: 'administer actions'.
   $permissions['administer actions'] = array(
     'name' => 'administer actions',
@@ -372,6 +399,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'field_group',
   );
 
+  // Exported permission: 'administer fields'.
+  $permissions['administer fields'] = array(
+    'name' => 'administer fields',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'field',
+  );
+
   // Exported permission: 'administer file types'.
   $permissions['administer file types'] = array(
     'name' => 'administer file types',
@@ -397,6 +433,15 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'filter',
+  );
+
+  // Exported permission: 'administer google analytics'.
+  $permissions['administer google analytics'] = array(
+    'name' => 'administer google analytics',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'googleanalytics',
   );
 
   // Exported permission: 'administer image styles'.
@@ -604,6 +649,15 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'administer uuid'.
+  $permissions['administer uuid'] = array(
+    'name' => 'administer uuid',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'uuid',
   );
 
   // Exported permission: 'administer views'.
@@ -1318,15 +1372,6 @@ function user_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete terms in data_sources'.
-  $permissions['delete terms in data_sources'] = array(
-    'name' => 'delete terms in data_sources',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'delete terms in habitats'.
   $permissions['delete terms in habitats'] = array(
     'name' => 'delete terms in habitats',
@@ -1555,6 +1600,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any identification content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
     ),
     'module' => 'node',
   );
@@ -1564,6 +1610,7 @@ function user_permissions_user_default_permissions() {
     'name' => 'edit any identification_community content',
     'roles' => array(
       'Administrator' => 'Administrator',
+      'Contributor' => 'Contributor',
       'Maintainer' => 'Maintainer',
     ),
     'module' => 'node',
@@ -1874,15 +1921,6 @@ function user_permissions_user_default_permissions() {
     'module' => 'webform',
   );
 
-  // Exported permission: 'edit terms in data_sources'.
-  $permissions['edit terms in data_sources'] = array(
-    'name' => 'edit terms in data_sources',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'edit terms in habitats'.
   $permissions['edit terms in habitats'] = array(
     'name' => 'edit terms in habitats',
@@ -1959,6 +1997,24 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'devel',
+  );
+
+  // Exported permission: 'export nodes'.
+  $permissions['export nodes'] = array(
+    'name' => 'export nodes',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'node_export',
+  );
+
+  // Exported permission: 'export own nodes'.
+  $permissions['export own nodes'] = array(
+    'name' => 'export own nodes',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'node_export',
   );
 
   // Exported permission: 'flush caches'.
@@ -2069,6 +2125,15 @@ function user_permissions_user_default_permissions() {
     'module' => 'pathauto',
   );
 
+  // Exported permission: 'opt-in or out of tracking'.
+  $permissions['opt-in or out of tracking'] = array(
+    'name' => 'opt-in or out of tracking',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'googleanalytics',
+  );
+
   // Exported permission: 'perform backup'.
   $permissions['perform backup'] = array(
     'name' => 'perform backup',
@@ -2154,6 +2219,46 @@ function user_permissions_user_default_permissions() {
     'module' => 'services',
   );
 
+  // Exported permission: 'search all content'.
+  $permissions['search all content'] = array(
+    'name' => 'search all content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search all excluded entities'.
+  $permissions['search all excluded entities'] = array(
+    'name' => 'search all excluded entities',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search article content'.
+  $permissions['search article content'] = array(
+    'name' => 'search article content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search collection content'.
+  $permissions['search collection content'] = array(
+    'name' => 'search collection content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
   // Exported permission: 'search content'.
   $permissions['search content'] = array(
     'name' => 'search content',
@@ -2165,6 +2270,120 @@ function user_permissions_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'search',
+  );
+
+  // Exported permission: 'search crew_species_observation content'.
+  $permissions['search crew_species_observation content'] = array(
+    'name' => 'search crew_species_observation content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search habitat_record content'.
+  $permissions['search habitat_record content'] = array(
+    'name' => 'search habitat_record content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search identification content'.
+  $permissions['search identification content'] = array(
+    'name' => 'search identification content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search identification_community content'.
+  $permissions['search identification_community content'] = array(
+    'name' => 'search identification_community content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search interaction content'.
+  $permissions['search interaction content'] = array(
+    'name' => 'search interaction content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search observation content'.
+  $permissions['search observation content'] = array(
+    'name' => 'search observation content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search openlayers_example_content content'.
+  $permissions['search openlayers_example_content content'] = array(
+    'name' => 'search openlayers_example_content content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search page content'.
+  $permissions['search page content'] = array(
+    'name' => 'search page content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search picture content'.
+  $permissions['search picture content'] = array(
+    'name' => 'search picture content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search source content'.
+  $permissions['search source content'] = array(
+    'name' => 'search source content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search threat_assessment content'.
+  $permissions['search threat_assessment content'] = array(
+    'name' => 'search threat_assessment content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_config',
+  );
+
+  // Exported permission: 'search webform content'.
+  $permissions['search webform content'] = array(
+    'name' => 'search webform content',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'search_config',
   );
 
   // Exported permission: 'select account cancellation method'.
@@ -2301,6 +2520,24 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'feeds',
+  );
+
+  // Exported permission: 'use PHP for tracking visibility'.
+  $permissions['use PHP for tracking visibility'] = array(
+    'name' => 'use PHP for tracking visibility',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'googleanalytics',
+  );
+
+  // Exported permission: 'use PHP to import nodes'.
+  $permissions['use PHP to import nodes'] = array(
+    'name' => 'use PHP to import nodes',
+    'roles' => array(
+      'Administrator' => 'Administrator',
+    ),
+    'module' => 'node_export',
   );
 
   // Exported permission: 'use advanced search'.

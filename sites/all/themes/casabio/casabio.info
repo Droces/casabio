@@ -56,6 +56,8 @@ stylesheets[all][] = system.theme.css
 ; Then we add our own stylesheet.
 stylesheets[all][] = css/casabio.css
 ; stylesheets[all][] = https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css
+
+; stylesheets[all][] = https://fonts.googleapis.com/icon?family=Material+Icons
     
 
 

@@ -33,7 +33,7 @@
 
 // var page_is_setup = false;
 
-var security_token =      '';
+var security_token = '';
 
 // var api_url = site_url + 'api/v1.0'; // using Services module
 var api_url;
@@ -54,13 +54,14 @@ Drupal.behaviors.es_api_interactions = {
     // toastr.options = {
     //   "showDuration": "800"
     // }
-  }
+  },
+  weight: 6
 }
 
 
 Drupal.es_api_interactions = {
 
-  fetch_token: function(show_message) {
+  fetch_token: function(show_message, success_callbacks, always_callbacks) {
     // console.log('fetch_token()');
     if (typeof show_message === 'undefined') {
       show_message = true;
@@ -81,8 +82,13 @@ Drupal.es_api_interactions = {
     var jqxhr = $.ajax(ajax_settings);
 
     jqxhr.fail(function( data ) {
-      toastr.error('Sorry, there was a problem fetching the security token.');
-      console.log( "In fetch_token() jqxhr.fail(), data: ", data );
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem fetching the security token.');
+        console.log( "In fetch_token() jqxhr.fail(), data: ", data );
+      }
     });
 
     jqxhr.done(function( data ) {
@@ -90,6 +96,9 @@ Drupal.es_api_interactions = {
       // security_token = data['token'];
       security_token = data['access_token'];
       // console.log('security_token: ', security_token);
+
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
       $(document).trigger('token_fetched');
     });
 
@@ -97,6 +106,7 @@ Drupal.es_api_interactions = {
       if (show_message) {
         toastr_info.remove();
       }
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
   },
 
@@ -110,33 +120,47 @@ Drupal.es_api_interactions = {
   // =============================================================================
   //                                              Local functions
 
-  fetch_selectables_data: function(show_message) {
-    if (typeof show_message === 'undefined') {
-      show_message = true;
-    }
+  /**
+   * @param callbacks
+   *   (optional) An array of callback functions with arrays of parameters, in
+   *   the form [[callback => [args...]], ...]. Called on success.
+   */
+  fetch_selectables_data: function(collection_nid, type, show_message, success_callbacks, always_callbacks) {
+    // console.log('Drupal.es_api_interactions.fetch_selectables_data()');
+  
+    // Not PHP
+    // if (! is_valid_eid($collection_nid)) {
+    //   throw new InvalidArgumentException("Parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+    // }
+
+    show_message = (typeof show_message === 'undefined') ?  true : show_message;
 
     if (show_message) {
-      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+      var toastr_info = toastr.info('Loading…');
     }
 
-    var collection_nid = get_collection_nid();
+    if ((typeof collection_nid === 'undefined') || (! collection_nid)) {
+      collection_nid = get_collection_nid();
+      // console.log('collection_nid: ', collection_nid);
+    }
 
     var url;
-    if (Drupal.edit_selected.is_page('observation_info')) {
-      // var url = api_url + '/collections/' + collection_nid + '/observations';
-      var url = api_url + '/v0.1/observations?'
+    switch (type) {
+      case 'picture':
+        url = api_url + '/v0.1/pictures?'
         + 'filter[collection]=' + collection_nid
         + 'range=1000';
-    }
-    else if (Drupal.edit_selected.is_page('picture_info') ||
-      Drupal.edit_selected.is_page('upload')) {
-      // var url = api_url + '/collections/' + collection_nid + '/pictures';
-      var url = api_url + '/v0.1/pictures?'
+        break;
+
+      case 'observation':
+        url = api_url + '/v0.1/observations?'
         + 'filter[collection]=' + collection_nid
         + 'range=1000';
-    }
-    else {
-      throw 'current_page not recognised in ' + 'Drupal.es_api_interactions.fetch_selectables_data().';
+        break;
+
+      default:
+        throw 'Param "type" not valid in ' + 'Drupal.es_api_interactions.fetch_selectables_data().';
+        break;
     }
 
     // var jqxhr = $.get(url);
@@ -148,22 +172,25 @@ Drupal.es_api_interactions = {
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
-      toastr.error('Sorry, there was a problem loading the observations.');
-      console.log( "In fetch_selectables_data() jqxhr.fail(), data: ", data );
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem loading the observations.');
+        console.log( "In fetch_selectables_data() jqxhr.fail(), data: ", data );
+      }
     });
 
     jqxhr.done(function( data ) {
       // console.log( "In jqxhr.done(), data: ", data );
       // toastr.success('selectables_data loaded successfully.'); // Not needed.
       Drupal.edit_selected.set_selectables_data(data.data);
-      $(document).trigger('selectables_data_fetched');
 
-
-
-      // Create the elements (rather than using view)
+      // Create the elements directly
+      // @todo Switch to using this (rather than using view)
 
       // $.each(Drupal.edit_selected.get_selectables_data(), function(index, selectable_data) {
-      //   console.log('index: ', index);
+      //   // console.log('index: ', index);
 
       //   var new_selectable = Drupal.contribute.build_selectable_element(
       //     selectable_data, 'observation', index, settings);
@@ -173,7 +200,9 @@ Drupal.es_api_interactions = {
 
       // });
 
-
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+      
+      $(document).trigger('selectables_data_fetched', data);
 
     });
 
@@ -181,6 +210,7 @@ Drupal.es_api_interactions = {
       if (show_message) {
         toastr_info.remove();
       }
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
   },
 
@@ -189,7 +219,7 @@ Drupal.es_api_interactions = {
   // =============================================================================
   //                                              Local functions
 
-  fetch_identifications_data: function(show_message) {
+  fetch_identifications_data: function(show_message, success_callbacks, always_callbacks) {
     if (typeof show_message === 'undefined') {
       show_message = true;
     }
@@ -212,8 +242,13 @@ Drupal.es_api_interactions = {
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
-      toastr.error('Sorry, there was a problem loading the identifications.');
-      console.log( "In fetch_identifications_data() jqxhr.fail(), data: ", data );
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem loading the identifications.');
+        console.log( "In fetch_identifications_data() jqxhr.fail(), data: ", data );
+      }
     });
 
     jqxhr.done(function( data ) {
@@ -224,6 +259,8 @@ Drupal.es_api_interactions = {
       Drupal.edit_selected.populate_identifications_map();
       // console.log('data.data: ', data.data);
 
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
       $(document).trigger('identifications_data_fetched');
     });
 
@@ -231,12 +268,13 @@ Drupal.es_api_interactions = {
       if (show_message) {
         toastr_info.remove();
       }
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
   },
 
 
 
-  fetch_interactions_data: function(show_message) {
+  fetch_interactions_data: function(show_message, success_callbacks, always_callbacks) {
     if (typeof show_message === 'undefined') {
       show_message = true;
     }
@@ -259,8 +297,13 @@ Drupal.es_api_interactions = {
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
-      toastr.error('Sorry, there was a problem loading the interactions.');
-      console.log( "In fetch_interactions_data() jqxhr.fail(), data: ", data );
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem loading the interactions.');
+        console.log( "In fetch_interactions_data() jqxhr.fail(), data: ", data );
+      }
     });
 
     jqxhr.done(function( data ) {
@@ -271,6 +314,8 @@ Drupal.es_api_interactions = {
       Drupal.edit_selected.populate_interactions_map();
       // console.log('data.data: ', data.data);
 
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+
       $(document).trigger('interactions_data_fetched');
     });
 
@@ -278,12 +323,13 @@ Drupal.es_api_interactions = {
       if (show_message) {
         toastr_info.remove();
       }
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
   },
 
 
 
-  save_identification_from_form: function(form, context) {
+  save_identification_from_form: function(form, context, success_callbacks, always_callbacks) {
 
     var identification = create_identification_from_form(form);
     // console.log('identification: ', identification);
@@ -303,7 +349,7 @@ Drupal.es_api_interactions = {
       contentType: "application/json",
       data: JSON.stringify(identification, null, 2),
       headers: {
-        "access_token": Drupal.es_api_interactions.get_token()
+        "access-token": Drupal.es_api_interactions.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
       },
       url: url
@@ -312,8 +358,13 @@ Drupal.es_api_interactions = {
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
-      toastr.error('Sorry, there was a problem saving the identification.');
-      console.log( "In jqxhr.fail(), data: ", data );
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem saving the identification.');
+        console.log( "In jqxhr.fail(), data: ", data );
+      }
     });
 
     jqxhr.done(function( data ) {
@@ -328,10 +379,13 @@ Drupal.es_api_interactions = {
       Drupal.edit_selected.populate_identifications_map();
 
       Drupal.edit_selected.refresh_current_field_indicator(context);
+
+      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
     });
 
     jqxhr.always(function( data ) {
       toastr_info.remove();
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
 
     return identification_nid;
@@ -350,7 +404,7 @@ Drupal.es_api_interactions = {
     // console.log('taxon_name: ', taxon_name);
 
     if (!taxon_tid) {
-      toastr.warning('You need to select a taxon before saving.');
+      toastr.warning('You need to select a taxon before saving the interaction.');
       return null;
     }
 
@@ -378,7 +432,7 @@ Drupal.es_api_interactions = {
   /**
    * @returns true if successful, false otherwise.
    */
-  update_nodes: function(node_data, type, nids, context, attempt_num) {
+  update_nodes: function(node_data, type, nids, context, attempt_num, success_callbacks, always_callbacks) {
     // console.log('node_data: ', node_data);
     // console.log('nids: ', nids);
 
@@ -410,9 +464,14 @@ Drupal.es_api_interactions = {
       jqxhrs.push(jqxhr);
 
       jqxhr.fail(function( data ) {
-        console.log( "In jqxhr.fail(), data: ", data );
-        all_successful = false;
-        nids_failed.push(nid);
+        if(jqxhr.readyState < 4)  {
+          // toastr.warning('Request was not completed.');
+        }
+        else {
+          console.log( "In jqxhr.fail(), data: ", data );
+          all_successful = false;
+          nids_failed.push(nid);
+        }
       });
 
       jqxhr.done(function( data ) {
@@ -426,6 +485,8 @@ Drupal.es_api_interactions = {
         Drupal.edit_selected.refresh_current_field_indicator(context);
 
         Drupal.edit_selected.set_loads_finished([nid]);
+
+        Drupal.casa_utilities.invoke_callbacks(success_callbacks);
       });
 
       if (is_last) {
@@ -438,6 +499,7 @@ Drupal.es_api_interactions = {
           else {
             manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num);
           }
+          Drupal.casa_utilities.invoke_callbacks(always_callbacks);
         });
       }
 
@@ -450,6 +512,7 @@ Drupal.es_api_interactions = {
    * @returns true if successful, false otherwise.
    */
   update_node: function(data_object, type, nid) {
+    // console.log('update_node()');
 
     var method = "PATCH";
     var data = JSON.stringify(data_object, null, 2);
@@ -460,7 +523,7 @@ Drupal.es_api_interactions = {
       contentType: "application/json",
       data: data,
       headers: {
-        "access_token": Drupal.es_api_interactions.get_token()
+        "access-token": Drupal.es_api_interactions.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
       },
       url: url
@@ -476,7 +539,7 @@ Drupal.es_api_interactions = {
   /**
    * @returns true if successful, false otherwise.
    */
-  delete_nodes: function(type, nids, context) {
+  delete_nodes: function(type, nids, context, success_callbacks, always_callbacks) {
     // console.log('nids: ', nids);
 
     var toastr_info = toastr.info('Deleting…'); // @todo add an 'undo' button
@@ -492,8 +555,13 @@ Drupal.es_api_interactions = {
       // jqxhrs.push(jqxhr);
 
       jqxhr.fail(function( data ) {
-        console.log( "In jqxhr.fail(), data: ", data );
-        all_successful = false;
+        if(jqxhr.readyState < 4)  {
+          // toastr.warning('Request was not completed.');
+        }
+        else {
+          console.log( "In jqxhr.fail(), data: ", data );
+          all_successful = false;
+        }
       });
 
       jqxhr.done(function( data ) {
@@ -503,6 +571,8 @@ Drupal.es_api_interactions = {
         // Drupal.edit_selected.set_selectable(nid, data.data);
 
         // Drupal.edit_selected.update_feature(nid);
+
+        Drupal.casa_utilities.invoke_callbacks(success_callbacks);
       });
 
       if (is_last) {
@@ -522,6 +592,7 @@ Drupal.es_api_interactions = {
             toastr_info.remove();
             toastr.error('Sorry, there was a problem deleting the nodes.');
           }
+          Drupal.casa_utilities.invoke_callbacks(always_callbacks);
         });
       }
 
@@ -545,7 +616,7 @@ Drupal.es_api_interactions = {
       contentType: "application/json",
       data: data,
       headers: {
-        "access_token": Drupal.es_api_interactions.get_token()
+        "access-token": Drupal.es_api_interactions.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
       },
       url: url
@@ -562,7 +633,7 @@ Drupal.es_api_interactions = {
 function get_collection_nid() {
   var nid;
 
-  if (Drupal.edit_selected.is_page('upload')) {
+  if (Drupal.contribute.is_page('upload')) {
     return Drupal.casa_upload.get_collection_to_use();
   }
 
@@ -576,9 +647,10 @@ function get_collection_nid() {
 
 
 /**
- * Creates an identification object for sending as JSON to the API.
+ * Manages the saving of a "Add identification" form from the Contribute MO > Observation Info page.
  */
 function create_identification_from_form(form) {
+  // console.log('form: ', form);
 
   var taxon_values = Drupal.casa_core.get_values_from_ref_view(form);
   // console.log('taxon_values: ', taxon_values);
@@ -586,7 +658,7 @@ function create_identification_from_form(form) {
   var taxon_name = taxon_values[1];
 
   if (!taxon_tid) {
-    toastr.warning('You need to select a taxon before saving.');
+    toastr.warning('You need to select a taxon before saving the identification.');
     return null;
   }
 
@@ -597,10 +669,10 @@ function create_identification_from_form(form) {
   // var observation_reference = observation_name + " (" + observation_nid + ")";
   // console.log('observation_reference: ', observation_reference);
 
-  var language = 'und';
+  var language = 'und'; // LANGUAGE_NONE in PHP
 
   var title = taxon_name;
-  var certainty = form.find("#edit-field-certainty-und").val();
+  var certainty = form.find('[name="field_certainty[und]"]').val();
 
   var identification = create_identification_obj(title, observation_nid, taxon_tid, certainty);
   // console.log('identification: ', identification);
@@ -609,27 +681,12 @@ function create_identification_from_form(form) {
 }
 
 
-
+/**
+ * Creates an identification object for sending as JSON via the API.
+ * 
+ * Creates the identification in the (simplified) API node format.
+ */
 function create_identification_obj(title, observation, taxon_tid, certainty) {
-  // return {
-  //   "title": title,
-  //   "status": true,
-  //   "type": "identification",
-  //   "field_certainty": {
-  //     "und": certainty
-  //   },
-  //   "field_observation": {
-  //     "und": [
-  //       {"target_id": observation}
-  //     ]
-  //   },
-  //   "field_identified_species": {
-  //     "und": [
-  //       {"tid": taxon_tid}
-  //     ]
-  //   }
-  // };
-
   return {
     "label": title,
     // "status": true,
@@ -641,35 +698,12 @@ function create_identification_obj(title, observation, taxon_tid, certainty) {
 }
 
 
+/**
+ * Creates an interaction object for sending as JSON via the API.
+ * 
+ * Creates the interaction in the (simplified) API node format.
+ */
 function create_add_interaction_obj(title, body, interaction_activity, taxon_tid, certainty) {
-  // return {
-  //   "title": title,
-  //   "status": true,
-  //   "type": "interaction",
-  //   "body": {
-  //     "und": [
-  //       {
-  //         "value": body,
-  //         "format": "filtered_html"}
-  //     ]
-  //   },
-  //   "field_interaction_activity": {
-  //     "und": [
-  //       {"target_id": interaction_activity}
-  //     ]
-  //   },
-  //   "field_identified_species": {
-  //     "und": [
-  //       {"tid": taxon_tid}
-  //     ]
-  //   },
-  //   "field_certainty": {
-  //     "und": [
-  //       {"value": certainty}
-  //     ]
-  //   }
-  // };
-
   return {
     "label": title,
     // "status": true,
@@ -683,9 +717,10 @@ function create_add_interaction_obj(title, body, interaction_activity, taxon_tid
 
 
 /**
- * @returns true if successful, false otherwise.
+ * @return boolean
+ *   Returns true if successful, or false otherwise.
  */
-function save_add_interaction(params, nid, context) {
+function save_add_interaction(params, nid, context, success_callbacks, always_callbacks) {
   // console.log('params: ', params);
 
   var url = Drupal.casa_core.get_api_resource_url('interaction');
@@ -695,7 +730,7 @@ function save_add_interaction(params, nid, context) {
     contentType: "application/json",
     data: JSON.stringify(params, null, 2),
     headers: {
-      "access_token": Drupal.es_api_interactions.get_token()
+      "access-token": Drupal.es_api_interactions.get_token()
       // Session id header is not specified, because it's automatically added by browser (it's a cookie).
     },
     url: Drupal.casa_core.get_site_url() + 'ajax/observations/' + nid + '/add_interaction'
@@ -704,8 +739,13 @@ function save_add_interaction(params, nid, context) {
   var jqxhr = $.ajax(settings);
 
   jqxhr.fail(function( data ) {
-    toastr.error('Sorry, there was a problem adding the interaction.');
-    console.log( "In jqxhr.fail(), data: ", data );
+    if(jqxhr.readyState < 4)  {
+      // toastr.warning('Request was not completed.');
+    }
+    else {
+      toastr.error('Sorry, there was a problem adding the interaction.');
+      console.log( "In jqxhr.fail(), data: ", data );
+    }
   });
 
   jqxhr.done(function( data ) {
@@ -733,10 +773,13 @@ function save_add_interaction(params, nid, context) {
     Drupal.edit_selected.populate_interactions_map();
 
     Drupal.edit_selected.refresh_current_field_indicator(context);
+
+    Drupal.casa_utilities.invoke_callbacks(success_callbacks);
   });
 
   jqxhr.always(function( data ) {
     toastr_info.remove();
+    Drupal.casa_utilities.invoke_callbacks(always_callbacks);
   });
 }
 

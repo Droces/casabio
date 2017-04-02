@@ -152,6 +152,10 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['footer']['result']['id'] = 'result';
   $handler->display->display_options['footer']['result']['table'] = 'views';
   $handler->display->display_options['footer']['result']['field'] = 'result';
+  /* Footer: Global: Result summary */
+  $handler->display->display_options['footer']['result_1']['id'] = 'result_1';
+  $handler->display->display_options['footer']['result_1']['table'] = 'views';
+  $handler->display->display_options['footer']['result_1']['field'] = 'result';
   /* Relationship: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
@@ -1743,6 +1747,22 @@ function views_content_administration_views_default_views() {
     5 => 0,
     3 => 0,
   );
+  /* Filter criterion: Content: Observation (field_observation) */
+  $handler->display->display_options['filters']['field_observation_target_id']['id'] = 'field_observation_target_id';
+  $handler->display->display_options['filters']['field_observation_target_id']['table'] = 'field_data_field_observation';
+  $handler->display->display_options['filters']['field_observation_target_id']['field'] = 'field_observation_target_id';
+  $handler->display->display_options['filters']['field_observation_target_id']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_observation_target_id']['expose']['operator_id'] = 'field_observation_target_id_op';
+  $handler->display->display_options['filters']['field_observation_target_id']['expose']['label'] = 'Observation nid';
+  $handler->display->display_options['filters']['field_observation_target_id']['expose']['operator'] = 'field_observation_target_id_op';
+  $handler->display->display_options['filters']['field_observation_target_id']['expose']['identifier'] = 'field_observation_target_id';
+  $handler->display->display_options['filters']['field_observation_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    4 => 0,
+    5 => 0,
+    3 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -1953,6 +1973,16 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['description']['label'] = 'Description';
   $handler->display->display_options['fields']['description']['alter']['max_length'] = '60';
   $handler->display->display_options['fields']['description']['alter']['trim'] = TRUE;
+  /* Field: Taxonomy term: Etymology */
+  $handler->display->display_options['fields']['field_etymology']['id'] = 'field_etymology';
+  $handler->display->display_options['fields']['field_etymology']['table'] = 'field_data_field_etymology';
+  $handler->display->display_options['fields']['field_etymology']['field'] = 'field_etymology';
+  $handler->display->display_options['fields']['field_etymology']['alter']['max_length'] = '80';
+  $handler->display->display_options['fields']['field_etymology']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_etymology']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Taxonomy term: Term ID */
   $handler->display->display_options['fields']['tid']['id'] = 'tid';
   $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
@@ -2100,6 +2130,35 @@ function views_content_administration_views_default_views() {
       'title' => 'Does’t have a description',
       'operator' => 'empty',
       'value' => '.',
+    ),
+  );
+  /* Filter criterion: Taxonomy term: Etymology (field_etymology) */
+  $handler->display->display_options['filters']['field_etymology_value']['id'] = 'field_etymology_value';
+  $handler->display->display_options['filters']['field_etymology_value']['table'] = 'field_data_field_etymology';
+  $handler->display->display_options['filters']['field_etymology_value']['field'] = 'field_etymology_value';
+  $handler->display->display_options['filters']['field_etymology_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_etymology_value']['expose']['operator_id'] = 'field_etymology_value_op';
+  $handler->display->display_options['filters']['field_etymology_value']['expose']['label'] = 'Etymology (field_etymology)';
+  $handler->display->display_options['filters']['field_etymology_value']['expose']['operator'] = 'field_etymology_value_op';
+  $handler->display->display_options['filters']['field_etymology_value']['expose']['identifier'] = 'field_etymology_value';
+  $handler->display->display_options['filters']['field_etymology_value']['is_grouped'] = TRUE;
+  $handler->display->display_options['filters']['field_etymology_value']['group_info']['label'] = 'Etymology';
+  $handler->display->display_options['filters']['field_etymology_value']['group_info']['identifier'] = 'field_etymology_value';
+  $handler->display->display_options['filters']['field_etymology_value']['group_info']['group_items'] = array(
+    1 => array(
+      'title' => 'Has value',
+      'operator' => 'not empty',
+      'value' => '.',
+    ),
+    2 => array(
+      'title' => 'Has no value',
+      'operator' => 'empty',
+      'value' => '.',
+    ),
+    3 => array(
+      'title' => '',
+      'operator' => '=',
+      'value' => '',
     ),
   );
 
@@ -2285,6 +2344,7 @@ function views_content_administration_views_default_views() {
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['relationship'] = 'reverse_field_identified_species_node';
   $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_image']['settings'] = array(
     'image_style' => 'thumbnail',

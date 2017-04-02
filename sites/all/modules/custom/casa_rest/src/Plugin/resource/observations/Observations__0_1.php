@@ -50,6 +50,7 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
     'field_source' =>         'source',
     'field_external_id' =>    'externalId',
     'field_location' =>       'location',
+    'field_filenames' =>      'filenames',
   );
 
 
@@ -139,6 +140,11 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
           array($this, 'locationProcess'),
         ),
       ),
+
+      self::$field_names_map['field_filenames'] => array(
+        'property' => 'field_filenames',
+        // 'sub_property' => '',
+      ),
     );
 
     $fields = array_merge($fields, $observation_fields);
@@ -171,7 +177,7 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
   public function bodyProcess($value) {
     // watchdog('Called: bodyProcess()', 'RESTful API; observations:0.1');
-    // watchdog('RESTful API', 'In observations:0.1 -> bodyProcess(): ' . json_encode($value));
+    // watchdog('RESTful API', 'In observations:0.1->bodyProcess(): ' . json_encode($value));
 
     return $value['value'];
   }
@@ -179,7 +185,7 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
   public function dateProcess($value) {
     // watchdog('Called: dateProcess()', 'RESTful API; observations:0.1');
-    watchdog('RESTful API', 'In observations:0.1 -> dateProcess(): ' . '$value: ' . json_encode($value));
+    // watchdog('RESTful API', 'In observations:0.1->dateProcess(): ' . '$value: ' . json_encode($value));
 
     // If in format 'dd/mm/yyyy'
     if (preg_match('/^\d{2}\/\d{2}\/\d{4}/', $value)) {

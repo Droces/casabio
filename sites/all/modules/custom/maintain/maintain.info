@@ -9,5 +9,5 @@ description = General functionality for CasaBio maintainers.
 ; ==============================================================================
 ;                           SCRIPTS
 
-; scripts[] =     scripts/maintain.js
+scripts[] =     scripts/maintain.js
 

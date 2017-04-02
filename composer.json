@@ -1,0 +1,7 @@
+{
+  "require": {
+    "phpexiftool/phpexiftool": "~0.1.0",
+    "symfony/console": ">=2.0,<=2.2.x-dev",
+    "symfony/dom-crawler": ">=2.0,<=2.2.x-dev"
+  }
+}

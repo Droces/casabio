@@ -1,0 +1,13 @@
+<?php
+/**
+ * @file
+ * 
+ */
+
+/**
+ * @mainpage
+ * Welcome to the CasaBio's developer's documentation.
+ *
+ * @section custom_modules Custom CasaBio Modules
+ * - @link /api/casa_core Casa Core @endlink
+ */

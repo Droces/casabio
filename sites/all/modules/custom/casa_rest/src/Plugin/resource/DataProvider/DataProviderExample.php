@@ -26,7 +26,7 @@ class DataProviderExample extends DataProvider implements DataProviderInterface 
    * {@inheritdoc}
    */
   public function index() {
-    dpm('Called: DataProviderExample::index()');
+    // dpm('Called: DataProviderExample::index()');
   }
 
   /**
@@ -83,7 +83,7 @@ class DataProviderExample extends DataProvider implements DataProviderInterface 
    *   An array of data for the thing being viewed.
    */
   public function view($identifier) {
-    dpm('Called: view()');
+    // dpm('Called: view()');
 
     // TODO: Compare this with 1.x logic.
     $ids = explode(static::IDS_SEPARATOR, $path);
@@ -116,7 +116,7 @@ class DataProviderExample extends DataProvider implements DataProviderInterface 
    *   An array of structured data for the things being viewed.
    */
   public function viewMultiple(array $identifiers) {
-    dpm('Called: viewMultiple()');
+    // dpm('Called: viewMultiple()');
   }
 
   /**

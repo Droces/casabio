@@ -623,10 +623,14 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['fields']['field_pictures_observation']['table'] = 'field_data_field_pictures_observation';
   $handler->display->display_options['fields']['field_pictures_observation']['field'] = 'field_pictures_observation';
   $handler->display->display_options['fields']['field_pictures_observation']['label'] = 'Pictures';
+  $handler->display->display_options['fields']['field_pictures_observation']['empty'] = '<em class="subtle">no pictures</em>';
   $handler->display->display_options['fields']['field_pictures_observation']['type'] = 'entityreference_entity_view';
   $handler->display->display_options['fields']['field_pictures_observation']['settings'] = array(
     'view_mode' => 'thumbnail',
     'links' => 1,
+    'use_content_language' => 1,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '<em class="subtle">no pictures</em>',
   );
   $handler->display->display_options['fields']['field_pictures_observation']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_pictures_observation']['delta_offset'] = '0';
@@ -642,6 +646,7 @@ function views_user_contributions_views_default_views() {
   $handler->display->display_options['fields']['field_collection']['id'] = 'field_collection';
   $handler->display->display_options['fields']['field_collection']['table'] = 'field_data_field_collection';
   $handler->display->display_options['fields']['field_collection']['field'] = 'field_collection';
+  $handler->display->display_options['fields']['field_collection']['empty'] = '<em class="subtle">no collection</em>';
   $handler->display->display_options['fields']['field_collection']['settings'] = array(
     'link' => 1,
     'empty_fields_handler' => 'EmptyFieldText',

@@ -19,6 +19,13 @@
 // }
 
 
+  require 'vendor/autoload.php';
+
+  use Monolog\Logger;
+  use PHPExiftool\Reader;
+  use PHPExiftool\Driver\Value\ValueInterface;
+
+
 
 
 
@@ -26,14 +33,6 @@
  * Implements hook_menu().
  */
 function casa_upload_menu() {
-
-  $items['contribute/upload'] = array(
-    'title'             => 'Contribute Multiple Observations', // Because this is the first step, this needs to be clear. The steps block shows it's the upload page.
-    'page callback'     => 'get_upload_form_content',
-    'access callback'   => 'user_access',
-    'access arguments'  => array('can contribute content'),
-    'type'              => MENU_NORMAL_ITEM,
-  );
 
   $items['ajax/contribute/save-uploaded'] = array(
     'page callback'     => 'save_uploaded_file_callback',
@@ -114,7 +113,6 @@ function get_upload_form_content() {
 
   // module_load_include('inc', 'node', 'node.pages');
   // $form = drupal_get_form('collection' . '_node_form', $collection, ['form_view_mode' => 'contribute']);
-
 
   $file_url = drupal_get_path('module', 'casa_upload') . '/intro.html';
   $intro_markup = file_get_contents($file_url);
@@ -249,7 +247,12 @@ function get_upload_form_content() {
       '#type' => 'container',
       'form' => get_edit_selected_form('picture'),
       '#attributes' => array(
+        'title' => 'Edit Pictures',
         'class' => array('edit_form_wrapper'),
+        'data-transform' => 'to-dialog',
+        'data-width' => '800',
+        'data-is-modal' => 'true',
+        'data-is-resizable' => 'true',
       ),
     ),
 
@@ -279,6 +282,13 @@ function get_upload_form_content() {
 
 
 
+/**
+ * @param $uid
+ *   The collections author's user ID.
+ *
+ * @return
+ *   An array as expected by ajax_deliver().
+ */
 function get_collections_by_user_callback($uid) {
 
   $nodes = get_collections_by_user($uid);
@@ -296,11 +306,17 @@ function get_collections_by_user_callback($uid) {
 
 function get_collections_by_user($uid) {
 
+  if (!is_valid_eid($uid)) {
+    throw new InvalidArgumentException("Parameter $uid, " . $uid . ", needs to be a valid UID.", 1);
+  }
+
   $query = new EntityFieldQuery();
 
-  $query->entityCondition('entity_type', 'node')
+  $query
+    ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'collection')
     ->propertyCondition('uid', $uid)
+    ->propertyOrderBy('nid', 'DESC')
     // ->addMetaData('account', user_load(1)) // Run the query as user 1.
   ;
 
@@ -314,12 +330,17 @@ function get_collections_by_user($uid) {
   $nodes = [];
 
   foreach ($nids as $nid) {
-    $collection = node_load($nid);
+    // $collection = node_load($nid);
+    $collection = entity_metadata_wrapper('node', $nid);
+    // dpm($collection->raw(), '$collection->raw()');
+    $date = format_date($collection->created->value(), 'short');
+    $num_pictures = $collection->field_count_pictures->value();
+    $num_observations = $collection->field_count_observations->value();
     $nodes[] = array(
       'type' => 'collection',
       'id' => $nid,
       'attributes' => array (
-        'label' => $collection->title,
+        'label' => $date . '  ' . $collection->label() . ' (' . $num_pictures . ' pics, ' . $num_observations . ' obs)',
       ),
     );
   }
@@ -331,6 +352,7 @@ function get_collections_by_user($uid) {
 
 
 function save_uploaded_file_callback() {
+  // throw new Exception("Error Processing Request", 1);
 
   $request_body = file_get_contents("php://input");
   // $request_body = file_get_contents("drupal://input"); // Use inputstream module.
@@ -341,11 +363,17 @@ function save_uploaded_file_callback() {
   $temp_name = $post['temp_name'];
   $file_name = $post['file_name'];
 
-  // $path = '/var/www/html' . base_path() . file_directory_temp() . '/' . $temp_name . '.tmp';
-  $path = DRUPAL_ROOT . '/' . file_directory_temp() . '/' . $temp_name . '.tmp';
-  // dpm($path, '$path');
-  $exif = exif_read_data($path);
-  dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+  // $file_path = '/var/www/html' . base_path() . file_directory_temp() . '/' . $temp_name . '.tmp';
+  $file_path = DRUPAL_ROOT . '/' . file_directory_temp() . '/' . $temp_name . '.tmp';
+  // dpm($file_path, '$file_path');
+
+
+  // $exif = exif_read_data($file_path);
+  $exif = casa_read_exif($file_path);
+  // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+
+  // $filehash = md5_file($path);
+  // dpm($filehash, '$filehash');
 
   $temp_file = array(
     'tmppath' => 'temporary://' . $temp_name . '.tmp',
@@ -354,9 +382,9 @@ function save_uploaded_file_callback() {
   );
 
   $picture = _casa_upload_generate_entity($temp_file, $collection);
-  // dpm($picture -> raw(), '$picture');
+  // dpm($picture->raw(), '$picture');
 
-  $file_basic = $picture -> field_image -> raw();
+  $file_basic = $picture->field_image->raw();
   // dpm($file_basic, '$file_basic');
   $fid = $file_basic['fid'];
   $file = file_load($fid);
@@ -368,7 +396,7 @@ function save_uploaded_file_callback() {
     ->getResourceManager()
     ->getPlugin('pictures:0.1');
 
-  $query['filter'] = array('id' => $picture -> getIdentifier());
+  $query['filter'] = array('id' => $picture->getIdentifier());
   $get_result = restful()
     ->getFormatterManager()
     ->format($handler->doGet('', $query));
@@ -379,6 +407,26 @@ function save_uploaded_file_callback() {
   $response = array('#type' => 'ajax', '#commands' => $picture_output);
 
   return $response;
+}
+
+
+
+
+function casa_read_exif($file_path) {
+  // dpm($file_path, '$file_path');
+
+  $logger = new Logger('exiftool');
+  $reader = Reader::create($logger);
+
+  $metadatas = $reader->files($file_path)->getOneOrNull()->getMetadatas();
+  $metadata_array = array();
+  foreach ($metadatas as $metadata) {
+    $metadata_array[$metadata->getTag() . ''] = $metadata->getValue()->asString();
+  }
+  // dpm($metadata_array, '$metadata_array');
+
+  // return $exif;
+  return $metadata_array;
 }
 
 
@@ -478,19 +526,24 @@ function save_uploaded_files($form, &$form_state, $collection) {
 
 
 /**
- * Internal function for entity generation. Gets called for each file that is uploaded: creates a node for it.
+ * Internal function for entity generation. Gets called for each file that is 
+ * uploaded: creates a node for it.
  *
  * @param $tmpfile
- * @param $collection
+ * @param $collection_nid
  *   The node ID of the collection that the picture should reference.
  * @param $context
  *
  * @return boolean
  *   Returns true if entity is successfully created, or null otherwise.
  */
-function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
+function _casa_upload_generate_entity($tmpfile, $collection_nid, &$context) {
   // dpm('Reached: _casa_upload_generate_entity');
-  // dpm($tmpfile, '$tmpfile'); // <====================== dpm
+  // dpm($tmpfile, '$tmpfile');
+
+  if (!is_valid_eid($collection_nid)) {
+    throw new InvalidArgumentException("Parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+  }
 
   // Most of this function's code was copied from the bulk_media_upload module
 
@@ -503,7 +556,7 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
 
   // Save media file.
   $save_media_file_result = save_media_file($tmpfile, $mediafield_info);
-  // dpm($save_media_file_result, '$save_media_file_result'); // <====================== dpm
+  // dpm($save_media_file_result, '$save_media_file_result');
 
   $file = $save_media_file_result[0];
   $uri = $save_media_file_result[1];
@@ -524,16 +577,16 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
     // $test_node_raw = node_load(107);
     $picture = entity_metadata_wrapper('node', $entity);
 
-    // dpm($picture -> nid -> value(), 'nid');
+    // dpm($picture->nid->value(), 'nid');
 
     $file_instance = file_stream_wrapper_get_instance_by_uri($uri);
-    // dpm($file_instance, '$file_instance'); // <====================== dpm
+    // dpm($file_instance, '$file_instance');
 
-    // dpm($file_instance -> realpath(), '$file_instance -> realpath()'); // <====================== dpm
-    // $exif = exif_read_data($file_instance -> realpath());
+    // dpm($file_instance->realpath(), '$file_instance->realpath()');
+    // $exif = exif_read_data($file_instance->realpath());
     // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
     $exif = $tmpfile['exif'];
-    // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
+    // dpm($exif, "exif on tmpfile" ); // Shows a FileDateTime of now because the file has just been copied
 
     // dpm($cause_error);
 
@@ -541,25 +594,37 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
     $date_time;
     if (function_exists('get_date_time')) {
       $date_time = get_date_time($exif);
+      // dpm(get_date_time($exif), 'get_date_time($exif)');
     }
     if (isset($date_time)) {
-      // dpm($date_time -> getTimestamp(), 'date taken');
-      $picture -> field_date_taken -> set($date_time -> getTimestamp());
+      if ($date_time) {
+        // dpm($date_time->getTimestamp(), 'date taken');
+        $picture->field_date_taken->set($date_time->getTimestamp());
+      }
     }
 
     $new_location = geofield_compute_values(array(
-      'lat' => get_latitude($exif),
-      'lon' => get_longitude($exif),
+      // For exif_get_data()...
+      // 'lat' => get_latitude($exif),
+      // 'lon' => get_longitude($exif),
+      // For ExifTool
+      'lat' => floatval($exif['Composite:GPSLatitude']),
+      'lon' => floatval($exif['Composite:GPSLongitude']),
     ), 'latlon');
     // dpm($new_location, 'new_location');
+    // Must be in format: array('lat' => 44,'lon' => -93);
 
-    $picture -> field_location -> set($new_location);
+    $picture->field_location->set($new_location);
 
-    $picture -> field_collection -> set($collection);
+    $picture->field_collection->set($collection_nid);
 
-    $picture -> field_exif -> set(json_encode($exif));
+    // Remove thumbnail image, which can't be encoded into JSON.
+    unset($exif['Composite:ThumbnailImage']);
+    
+    $picture->field_exif->set(json_encode($exif));
+    // dpm(json_encode($exif), 'json_encode($exif)');
 
-    $picture -> save();
+    $picture->save();
 
     entity_save($entity_type, $entity);
   //
@@ -567,15 +632,22 @@ function _casa_upload_generate_entity($tmpfile, $collection, &$context) {
   $context['message'] = t('Importing: @filename', array('@filename' => $file->filename));
   $context['results']['ids'][] = $entity->$entity_info['entity keys']['id'];
 
-  $context['results']['collection'] = $collection;
+  $context['results']['collection'] = $collection_nid;
 
   return $picture;
 }
 
 
 
-
-
+/**
+ * 
+ *
+ * @param $tmpfile
+ * @param $mediafield_info
+ *
+ * @return
+ *   NULL if the save failed, or an array of the file and uri if it succeeded.
+ */
 function save_media_file($tmpfile, $mediafield_info) {
   global $user;
   $scheme = variable_get('file_default_scheme', 'public') . '://';
@@ -593,7 +665,7 @@ function save_media_file($tmpfile, $mediafield_info) {
 
     if (!file_prepare_directory($prepare_directory, FILE_CREATE_DIRECTORY)) {
       drupal_set_message(t('The file directory @dir does not exist or is not writable. Please contact an administrator.', array('@dir' => $prepare_directory)), 'error');
-      return;
+      return NULL;
     }
   }
 
@@ -616,6 +688,14 @@ function save_media_file($tmpfile, $mediafield_info) {
 
 /**
  * Creates an entity representing the file that has been saved in Drupal.
+ *
+ * @param $entity_info
+ * @param $entity_type
+ * @param $bundle
+ * @param $file
+ *
+ * @return
+ *   The created entity.
  */
 function create_entity($entity_info, $entity_type, $bundle, $file) {
   global $user;
@@ -626,14 +706,14 @@ function create_entity($entity_info, $entity_type, $bundle, $file) {
   // Create the new entity.
   $entity = entity_create($entity_type, array(
     $entity_info['entity keys']['bundle'] => $bundle,
-    $label_field => $file -> filename,
+    $label_field => $file->filename,
   ));
 
   // If the entity has a property tied to UID, set it so that, e.g., nodes will be assigned an author.
   $info = entity_get_property_info($entity_type);
   foreach ($info['properties'] as $property) {
     if (isset($property['schema field']) && $property['schema field'] == 'uid') {
-      $entity -> uid = $user -> uid;
+      $entity->uid = $user->uid;
       break;
     }
   }
@@ -644,41 +724,55 @@ function create_entity($entity_info, $entity_type, $bundle, $file) {
 
 
 
-
-
 /**
  * Creates a new Drupal file entity from a URI.
+ * 
+ * @param $uri
+ *   The uniform resource indicator that indicates where the file is currently.
+ * @param $user
+ *   The user that should be set as the file's author.
+ * 
+ * @return
+ *   A file object.
  */
 function create_new_file($uri, $user) {
+
+  // @TODO validate parameters
+  // Validate $user by attempting to load it.
+
   $file = new StdClass;
-  $file -> uid = $user->uid;
-  $file -> filename = basename($uri); // @decide Should this be made 'safer'?
-  $file -> uri = $uri;
-  $file -> filemime = file_get_mimetype($uri);
-  $file -> filesize = @filesize($uri);
-  $file -> timestamp = REQUEST_TIME;
-  // dpm($file -> timestamp, 'timestamp');
-  // $file -> field_time_taken = REQUEST_TIME;
-  $file -> status = FILE_STATUS_PERMANENT;
-  $file -> is_new = TRUE;
-  $file -> status = FILE_STATUS_PERMANENT; // @decide Duplicate, mistake?
+  $file->uid = $user->uid;
+  $file->filename = basename($uri); // @decide Should this be made 'safer'?
+  $file->uri = $uri;
+  $file->filemime = file_get_mimetype($uri);
+  $file->filesize = @filesize($uri);
+  $file->timestamp = REQUEST_TIME;
+  // dpm($file->timestamp, 'timestamp');
+  // $file->field_time_taken = REQUEST_TIME;
+  $file->status = FILE_STATUS_PERMANENT;
+  $file->is_new = TRUE;
+  $file->status = FILE_STATUS_PERMANENT; // @decide Duplicate, mistake?
   file_save($file);
   return $file;
 }
 
 
 
-
-
 /**
  * Adds a reference to a file to the node's media field.
+ *
+ * @param $entity
+ * @param $mediafield_name
+ * @param $file
+ * @param $lang
+ *   (optional) A language code to use for...? Defaults to LANGUAGE_NONE.
  */
 function add_file_reference($entity, $mediafield_name, $file, $lang = LANGUAGE_NONE) {
   $fieldinfo = field_info_field($mediafield_name);
   $filefields = array('image', 'file');
 
   $settings = array();
-  $settings['fid'] = $file -> fid;
+  $settings['fid'] = $file->fid;
 
   // Additional values for filefield (and imagefield).
   if(in_array($fieldinfo['module'], $filefields)){
@@ -686,7 +780,7 @@ function add_file_reference($entity, $mediafield_name, $file, $lang = LANGUAGE_N
     $settings['description'] = '';
   };
 
-  $entity -> $mediafield_name = array($lang => array(0 => $settings));
+  $entity->$mediafield_name = array($lang => array(0 => $settings));
 }
 
 
@@ -695,6 +789,10 @@ function add_file_reference($entity, $mediafield_name, $file, $lang = LANGUAGE_N
 
 /**
  * Finished function for batch.
+ *
+ * @param $success
+ * @param $results
+ * @param $operations
  */
 function _casa_upload_batch_finished($success, $results, $operations) {
   // dpm($results, 'results');
@@ -715,6 +813,10 @@ function _casa_upload_batch_finished($success, $results, $operations) {
 
 /**
  * Finished function for batch.
+ *
+ * @param $success
+ * @param $results
+ * @param $operations
  */
 function _casa_upload_last_batch_finished($success, $results, $operations) {
 

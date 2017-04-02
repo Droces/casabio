@@ -20,7 +20,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 0,
       ),
@@ -63,7 +66,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 4,
       ),
@@ -106,7 +112,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 1,
       ),
@@ -149,7 +158,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 2,
       ),
@@ -192,7 +204,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 6,
       ),
@@ -235,7 +250,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 5,
       ),
@@ -278,7 +296,10 @@ function taxonomy_habitats_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 3,
       ),

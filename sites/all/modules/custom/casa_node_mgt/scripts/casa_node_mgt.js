@@ -3,6 +3,19 @@
  * A JavaScript file for…
  */
 
+/**
+ * CONTENTS
+ * 
+ * Drupal.casa_node_mgt.
+ *   convert_form_to_node()
+ *   normalise_node()
+ *   simplify_node_fields()
+ * 
+ * normalise_field()
+ * denormalise_field_value()
+ * parts_to_object()
+ */
+
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it with an "anonymous closure". See:
 // - https://drupal.org/node/1446420
@@ -142,11 +155,11 @@ Drupal.casa_node_mgt = {
 
       // Determine the correct field name (for API)
       // @todo fix: For pictures only!
-      if (Drupal.edit_selected.is_page('observation_info')) {
+      if (Drupal.contribute.is_page('observation_info')) {
         field_name = settings.API.observations_field_names_map[field_name];
       }
-      else if (Drupal.edit_selected.is_page('picture_info')
-        || Drupal.edit_selected.is_page('upload')) {
+      else if (Drupal.contribute.is_page('picture_info')
+        || Drupal.contribute.is_page('upload')) {
         field_name = settings.API.pictures_field_names_map[field_name];
       }
       // console.log('field_name: ', field_name);

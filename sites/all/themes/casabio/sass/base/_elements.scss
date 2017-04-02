@@ -74,8 +74,17 @@ blockquote > p {
 
 blockquote {}
 
+code,
+pre {
+    font-family: monospace, monospace;
+}
 code {}
-pre {}
+pre {
+    background: rgba(black, 0.03);
+    border: 1px solid rgba(black, 0.26);
+    padding: 0.5em;
+    font-size: 0.8em;
+}
 
 img {
     width: auto;
@@ -84,8 +93,8 @@ img {
 }
 
 main {
-    span,
-    a,
+    p span,
+    p a,
     label,
     strong,
     em { // Basically, all inline elements that don't have a visible edge
@@ -98,17 +107,24 @@ main {
 
 fieldset {
     padding: 1em;
-    margin-top: 1em;
     margin-bottom: 1em;
-    @include border-radius ( $corner-radius-large );
+    border-radius: $corner-radius-large;
     padding: 1em;
     background-color: rgba(black, 0.03);
     box-sizing: border-box;
     position: relative;
+    border: 1px solid #c0c0c0;
+
+    * + & {
+        margin-top: 2em;
+    }
 
     &.collapsible {
         padding-top: 1em + 0.4em;
-        margin-top: 1em + 1.3em; // Extra to account for lifted legend
+
+        * + & {
+            margin-top: 1em + 1.3em; // Extra to account for lifted legend
+        }
     }
 
     legend {
@@ -118,10 +134,14 @@ fieldset {
         position: absolute;
         left: 0px;
         top: -1em;
-            background: #dbdbdb;
-            border: 1px solid rgb(204, 204, 204);
-            border-radius: 3px;
-            padding: 0.4em 0.7em;
+        background: #dbdbdb;
+        border: 1px solid rgb(204, 204, 204);
+        border-radius: 3px;
+        padding: 0.4em 0.7em;
+
+        & + * {
+            padding-top: 1.5em;
+        }
 
         a {
             width: 100%;
@@ -156,6 +176,42 @@ fieldset {
     html.js &.collapsed {
         border-width: 1px;
         height: 2em;
+    }
+}
+details {
+    margin: 1em 0;
+    padding: 0;
+    background-color: rgba(black, 0.03);
+    box-sizing: border-box;
+    position: relative;
+    border: 1px solid #dadada;
+    // border-radius: $corner-radius-large;
+    border-radius: 5px;
+
+    summary {
+        // font-weight: 600;
+        box-sizing: border-box;
+        // width: 100%;
+        display: block;
+        left: 0px;
+        border: none;
+
+        background: #dadada;
+        padding: 1em 1.4em 1em 1.4em;
+        border-radius: 4px 4px 0 0;
+        font-weight: bold;
+        color: $colour-links;
+        // text-transform: uppercase;
+        cursor: pointer;
+
+        span {
+          font-size: 2em;
+          vertical-align: middle;
+          margin-right: 0.4em;
+        }
+    }
+    .details-contents {
+        padding: 1em;
     }
 }
 
@@ -263,6 +319,8 @@ h1, h2, h3, h4, h5, h6 { // use of h5 and h6 are not recommended
     }
 
     a {
+        font-weight: inherit;
+        
         &,
         &:link,
         &:visited,
@@ -291,6 +349,7 @@ h1 {
 }
 h2 {
     line-height: $h2-line-height;
+    // font-weight: bold;
 }
 h3 {
     line-height: $h3-line-height;
@@ -309,6 +368,15 @@ h6 {
 header h1 ~ p {
     margin-top: -0.8em;
     margin-bottom: 1.6em;
+}
+
+h1 .prefix,
+h1 .suffix {
+  font-weight: 200;
+}
+h2 .prefix,
+h2 .suffix {
+  font-weight: 400;
 }
 
 
@@ -337,6 +405,7 @@ a,
     &.active,
     &[aria-selected="true"] { /* in Drupal, this is a link that points to the current (active) page */
         font-weight: bold;
+        color: inherit;
     }
 }
 

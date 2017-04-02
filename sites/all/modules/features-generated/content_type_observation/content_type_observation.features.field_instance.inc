@@ -565,6 +565,72 @@ function content_type_observation_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-observation-field_filenames'.
+  $field_instances['node-observation-field_filenames'] = array(
+    'bundle' => 'observation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 16,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'thumbnail' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_filenames',
+    'label' => 'Filenames',
+    'required' => 0,
+    'settings' => array(
+      'linkit' => array(
+        'button_text' => 'Search',
+        'enable' => 0,
+        'profile' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 3,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'node-observation-field_locality'.
   $field_instances['node-observation-field_locality'] = array(
     'bundle' => 'observation',
@@ -649,7 +715,7 @@ function content_type_observation_field_default_field_instances() {
   // Exported field_instance: 'node-observation-field_location'.
   $field_instances['node-observation-field_location'] = array(
     'bundle' => 'observation',
-    'default_value' => NULL,
+    'default_value' => array(),
     'deleted' => 0,
     'description' => 'The place where this observation took place. This overrides the location of the collection, since it is more specific.
 NB. Widget type needs to be WKT for the API to function correctly.',
@@ -725,8 +791,18 @@ NB. Widget type needs to be WKT for the API to function correctly.',
     'widget' => array(
       'active' => 1,
       'module' => 'geofield',
-      'settings' => array(),
-      'type' => 'geofield_wkt',
+      'settings' => array(
+        'allow_edit' => 1,
+        'data_storage' => 'single',
+        'feature_types' => array(
+          'path' => 0,
+          'point' => 'point',
+          'polygon' => 0,
+        ),
+        'openlayers_map' => 'map_widget_single_point',
+        'showInputField' => 0,
+      ),
+      'type' => 'geofield_geojson',
       'weight' => 4,
     ),
   );
@@ -910,6 +986,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'medium',
         ),
         'type' => 'entityreference_entity_view',
@@ -928,6 +1005,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'medium',
         ),
         'type' => 'entityreference_entity_view',
@@ -940,6 +1018,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'medium',
         ),
         'type' => 'entityreference_entity_view',
@@ -952,6 +1031,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_emptyfieldtext_empty_text' => '<em class="no-value">No pictures</em>',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'small',
         ),
         'type' => 'entityreference_entity_view',
@@ -970,6 +1050,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_emptyfieldtext_empty_text' => '<img typeof="foaf:Image" src="http://localhost/Current/CasaBio/sites/default/files/default_images/placeholder-CasaBio-650x500.png" alt="" height="500" width="650">',
           'empty_fields_handler' => 'EmptyFieldText',
           'links' => 0,
+          'use_content_language' => TRUE,
           'view_mode' => 'small',
         ),
         'type' => 'entityreference_entity_view',
@@ -994,6 +1075,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
       'settings' => array(
         'fields' => array(),
         'type_settings' => array(
+          'allow_clone' => 0,
           'allow_existing' => 1,
           'allow_new' => 1,
           'delete_references' => 0,
@@ -1245,6 +1327,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
   t('Date observed');
   t('Description');
   t('External ID');
+  t('Filenames');
   t('For observations are from an external source: The unique ID code used to identify this observation in the source’ database');
   t('For observations that aren\'t contributed directly into CasaBio; Where this observation comes from.');
   t('Full name of the person who originally recorded this observation');

@@ -13,5 +13,7 @@
 </nav>
 
 <main role="main">
-  <?php print render($page['content']); ?>
+  <div role="presentation">
+    <?php print render($page['content']); ?>
+  </div>
 </main>

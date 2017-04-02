@@ -10,27 +10,44 @@
 (function ($, Drupal, window, document, undefined) {
 
 var page_is_setup = false;
+var current_page;
 
 var map;
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.contribute = {
   attach: function(context, settings) {
+    // console.log('context: ', context);
+    // console.log('settings: ', settings);
 
     if (! page_is_setup) {
+      current_page = settings.contribute.current_page;
 
       page_is_setup = true;
     }
 
-  }/*,
-  weight: 6*/
+  },
+  weight: 3
 };
 
 
 
 Drupal.contribute = {
 
+  is_page: function(page) {
+    if (typeof current_page == 'undefined') {
+      throw "In Drupal.contribute.is_page(), current_page is undefined";
+    }
+    return current_page == page;
+  },
+
   get_collection_nid: function() {
+    var nid;
+
+    if (Drupal.contribute.is_page('upload')) {
+      return Drupal.casa_upload.get_collection_to_use();
+    }
+  
     var path = window.location.pathname;
     var path_parts = path.split('/');
     var nid = path_parts[path_parts.length - 1];
@@ -40,10 +57,19 @@ Drupal.contribute = {
 
 
 
+  /**
+   * @param node
+   *   node object as returned by API.
+   */
   build_selectable_element: function(node, bundle, row_index, settings) {
+    // console.log('Called: build_selectable_element');
+    // console.log('node: ', node);
+    
     var main_picture_src = node['attributes']['image']['formats']['medium_square'];
-    var colorbox_href = node['attributes']['image']['formats']['very_large'];
-    var colorbox_rel = node['attributes']['collection']
+
+    var lightbox_href = node['attributes']['image']['formats']['very_large'];
+    var lightbox_rel = node['attributes']['collection'];
+    var title = node['attributes']['label'];
 
     // console.log('node: ', node);
     var new_selectable = $('<article data-nid="' + node['id'] + '" '
@@ -60,11 +86,12 @@ Drupal.contribute = {
     ].join("\n"));
 
     if (bundle == 'picture') {
-      // Enable colorbox trigger
-      var colorbox_trigger = $('<a href="' + colorbox_href + '" class="colorbox" '
-        + 'rel="'+ colorbox_rel + '">' + 'lightbox</a>')
-        .colorbox();
-      new_selectable.append(colorbox_trigger);
+      // Enable lightbox trigger
+      var lightbox_trigger = $('<a href="' + lightbox_href + '" data-lightbox="no-group" '
+        + 'rel="'+ lightbox_rel + '" data-title="' + title + '">' + 'Expand</a>');
+      new_selectable.append(lightbox_trigger);
+
+      // <a href="url" data-lightbox="no-group" data-title="Acacia caffra_0.jpg">Expand</a>
     }
 
     // Attach listeners to the new element

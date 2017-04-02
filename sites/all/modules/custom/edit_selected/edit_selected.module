@@ -123,6 +123,7 @@ function edit_selected_init() {
     // Include required JavaScript files and libraries
     $js_files = array(
       // libraries_get_path('openlayers3') . '/build/ol-debug.js',
+      
       libraries_get_path('jquery.hotkeys') . '/jquery.hotkeys.js',
       drupal_get_path('module', 'selection') . '/scripts/selection.js',
       drupal_get_path('module', 'edit_selected') . '/scripts/edit_selected.js',
@@ -141,16 +142,16 @@ function edit_selected_init() {
 
     drupal_add_library('system', 'drupal.collapse');
 
-    // Add a JS setting variable: current_page
+    // // Add a JS setting variable: current_page
 
-    $known_pages = array('upload', 'picture_info', 'observation_info');
+    // $known_pages = array('upload', 'picture_info', 'observation_info');
 
-    foreach ($known_pages as $page_name) {
-      if (is_page($page_name)) {
-        drupal_add_js(array('edit_selected' =>
-          array('current_page' => $page_name)), 'setting');
-      }
-    }
+    // foreach ($known_pages as $page_name) {
+    //   if (is_page($page_name)) {
+    //     drupal_add_js(array('edit_selected' =>
+    //       array('current_page' => $page_name)), 'setting');
+    //   }
+    // }
 
     // if (is_page('picture_info')) {
     //   drupal_add_js(array('edit_selected' =>
@@ -303,6 +304,10 @@ function interactions_by_collection($collection_nid) {
 
 function contribute_mo_observation_page($collection_nid) {
   // dpm($collection_nid, '$collection_nid');
+  
+  if (! is_valid_eid($collection_nid)) {
+    throw new InvalidArgumentException("URL parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+  }
 
   $content = array();
 
@@ -328,7 +333,12 @@ function contribute_mo_observation_page($collection_nid) {
     '#type' => 'fieldset',
     $block_content,
     '#attributes' => array(
+      'title' => 'Edit Observations',
       'class' => array('edit_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
     ),
   );
 
@@ -338,7 +348,12 @@ function contribute_mo_observation_page($collection_nid) {
     '#type' => 'fieldset',
     $id_form_content,
     '#attributes' => array(
+      'title' => 'Identify observations',
       'class' => array('identify_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
     ),
   );
 
@@ -347,7 +362,12 @@ function contribute_mo_observation_page($collection_nid) {
     '#type' => 'fieldset',
     get_interaction_form(),
     '#attributes' => array(
+      'title' => 'Add interaction',
       'class' => array('interaction_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
     ),
   );
 
@@ -390,7 +410,7 @@ function get_interaction_form() {
   );
 
 
-  // Embed an identification form
+  // Embed an identification form - needed to choose interaction species
 
   global $user;
   $bundle = 'identification';
@@ -408,8 +428,15 @@ function get_interaction_form() {
   $form['field_identified_species']['#access'] = FALSE;
 
   $content['identification_form'] = array(
-    $form,
+    'form' => $form,
     '#weight' => 1,
+    '#attributes' => array(
+      'class' => array('identification_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
+    ),
   );
 
 
@@ -426,8 +453,15 @@ function get_interaction_form() {
 
   module_load_include('inc', 'node', 'node.pages');
   $content['interaction_form'] = array(
-    drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'add_to_observation']),
+    'form' => drupal_get_form($bundle . '_node_form', $node, ['form_view_mode' => 'add_to_observation']),
     '#weight' => 2,
+    '#attributes' => array(
+      'class' => array('interaction_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
+    ),
   );
   return $content;
 }
@@ -437,6 +471,10 @@ function get_interaction_form() {
 
 function contribute_mo_picture_page($collection_nid) {
   // dpm($collection_nid, '$collection_nid');
+  
+  if (! is_valid_eid($collection_nid)) {
+    throw new InvalidArgumentException("URL parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+  }
 
   $content = array();
 
@@ -462,7 +500,12 @@ function contribute_mo_picture_page($collection_nid) {
     '#type' => 'fieldset',
     $block_content,
     '#attributes' => array(
+      'title' => 'Edit Pictures',
       'class' => array('edit_form_wrapper'),
+      'data-transform' => 'to-dialog',
+      'data-width' => '800',
+      'data-is-modal' => 'true',
+      'data-is-resizable' => 'true',
     ),
   );
 
@@ -591,16 +634,16 @@ function array_replace_recursive_search(array $array1, array $array2) {
 
 
 
-// =============================================================================
-/**
- * Determines if the current page is the specified page.
- */
-function is_page($name) {
-  $casa_paths = array(
-    'upload' => 'contribute/upload',
-    'picture_info' => 'contribute/multiple-observations/picture-info*',
-    'observation_info' => 'contribute/multiple-observations/observation-info*',
-  );
+// // =============================================================================
+// /**
+//  * Determines if the current page is the specified page.
+//  */
+// function is_page($name) {
+//   $casa_paths = array(
+//     'upload' => 'contribute/upload',
+//     'picture_info' => 'contribute/multiple-observations/picture-info*',
+//     'observation_info' => 'contribute/multiple-observations/observation-info*',
+//   );
 
-  return drupal_match_path(current_path(), $casa_paths[$name]);
-}
+//   return drupal_match_path(current_path(), $casa_paths[$name]);
+// }

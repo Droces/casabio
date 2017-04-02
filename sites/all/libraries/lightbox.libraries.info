@@ -1,0 +1,7 @@
+name =              Lightbox
+machine name =      lightbox
+description =       Provides an interface to the Lightbox library by Lokesh Dhakar. See lokeshdhakar.com/projects/lightbox2/.
+version =           2.8.2
+
+files[css][] =      dist/css/lightbox.css
+; files[js][] =       dist/js/lightbox.js ; Needs to be pulled in in the footer

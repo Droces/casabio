@@ -260,6 +260,9 @@ function _observations_resource_update($nid, $node) {
   // dpm($node, '$node');
   // dpm($nid, '$nid');
 
+  // if (! is_valid_eid($nid)) {
+  //   throw new InvalidArgumentException("Parameter $nid, " . $nid . ", needs to be a valid NID.", 1);
+  // }
   // If the node isn't an observation
   if ($node['type'] != 'observation') {
     services_error("Can only update observations.", 406); // 406: Not Acceptable
@@ -272,11 +275,17 @@ function _observations_resource_update($nid, $node) {
   module_load_include('inc', 'services', 'resources/node_resource');
 
   if (count($nids) == 1) {
+    if (! is_valid_eid($nid)) {
+      throw new Exception("Parameter $nid, " . $nid . ", needs to be a valid NID.", 1);
+    }
     return _node_resource_update($nid, $node);
   }
   else {
     $nodes = [];
     foreach ($nids as $nid) {
+      if (! is_valid_eid($nid)) {
+        throw new Exception("Parameter $nid, " . $nid . ", needs to contain valid NIDs.", 1);
+      }
       $nodes[] = _node_resource_update($nid, $node);
     }
     return $nodes;
@@ -374,6 +383,9 @@ function _observations_resource_community_identifications($nid) {
  */
 function _observations_resource_add_interaction($nid, $params) {
 
+  if (! is_valid_eid($nid)) {
+    throw new InvalidArgumentException("Parameter $nid, " . $nid . ", needs to be a valid NID.", 1);
+  }
   try {
     $interaction = observation_add_interaction($nid, $params);
     return $interaction;
