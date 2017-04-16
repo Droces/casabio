@@ -177,13 +177,7 @@ function casabio_preprocess_node(&$variables, $hook) {
 function casabio_preprocess_user_profile(&$variables, $hook) {
   // dpm($variables, 'variables');
 
-  // 'user_picture'
-  // 'field_collector_code'
-  // 'field_full_name'
-  // 'field_reliability'
-  // 'summary'
-
-  global $user;
+  $user = $variables['elements']['#account'];
   // dpm($user, '$user');
 
   $variables['user_profile']['edit_url'] = array(
@@ -191,7 +185,7 @@ function casabio_preprocess_user_profile(&$variables, $hook) {
     '#markup' => url('user/' . $user->uid . '/edit'),
   );
   $variables['user_profile']['username'] = array(
-    '#markup' => $variables['user']->name,
+    '#markup' => $user->name,
   );
 }
 

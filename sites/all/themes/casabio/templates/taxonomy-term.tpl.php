@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default theme implementation to display a term.
@@ -41,6 +40,7 @@
  * @ingroup themeable
  */
 ?>
+
 <div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>" data-vocabulary="<?php print $term->vocabulary_machine_name; ?>" data-view-mode="<?php print $view_mode; ?>">
 
   <?php if (isset($content['term_block_link'])): ?>

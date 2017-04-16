@@ -54,7 +54,7 @@
  * Implements hook_menu().
  */
 function edit_selected_menu() {
-  $items['ajax/number_specimens'] = array(
+  $items['services/number_specimens'] = array(
     // 'title'             => 'Number Specimens',
     'page callback'     => 'number_specimens_callback',
     // 'page arguments'    => array('casa_upload_upload_form'),
@@ -64,7 +64,7 @@ function edit_selected_menu() {
     'type'              => MENU_CALLBACK,
   );
 
-  $items['ajax/identifications/by_collection/%'] = array(
+  $items['services/identifications/by_collection/%'] = array(
     'page callback'     => 'identifications_by_collection',
     'page arguments'    => array(3),
     'access callback'   => TRUE,
@@ -74,7 +74,7 @@ function edit_selected_menu() {
     'type'              => MENU_CALLBACK,
   );
 
-  $items['ajax/interactions/by_collection/%'] = array(
+  $items['services/interactions/by_collection/%'] = array(
     'page callback'     => 'interactions_by_collection',
     'page arguments'    => array(3),
     'access callback'   => TRUE,

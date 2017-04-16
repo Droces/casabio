@@ -605,8 +605,18 @@ a.colorbox-inline {
   a[data-lightbox],
   a.colorbox,
   a.colorbox-inline {
-    right: auto;
-    left: 100%;
+    // right: auto;
+    // left: 100%;
+    opacity: 0;
+    @include transition(opacity 0.3s ease);
+  }
+  &:hover,
+  &:focus {
+    a[data-lightbox],
+    a.colorbox,
+    a.colorbox-inline {
+      opacity: 1;
+    }
   }
 }
 

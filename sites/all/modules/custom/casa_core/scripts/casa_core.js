@@ -441,7 +441,9 @@ function submit_identification(identification, success_callbacks, always_callbac
     data: JSON.stringify(identification, null, 2),
   };
 
-  var toastr_info = toastr.info('Saving identification…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Saving identification…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
   // Send jq xhr request.
   var jqxhr = $.ajax(request_params);

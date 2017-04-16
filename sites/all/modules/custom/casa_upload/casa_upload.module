@@ -34,7 +34,7 @@
  */
 function casa_upload_menu() {
 
-  $items['ajax/contribute/save-uploaded'] = array(
+  $items['services/contribute/save-uploaded'] = array(
     'page callback'     => 'save_uploaded_file_callback',
     'access callback'   => 'user_access',
     'access arguments'  => array('can contribute content'),
@@ -42,7 +42,7 @@ function casa_upload_menu() {
     'delivery callback' => 'ajax_deliver',
   );
 
-  $items['ajax/collections/%'] = array(
+  $items['services/collections/%'] = array(
     'page callback'     => 'get_collections_by_user_callback',
     'page arguments'    => array(2),
     'access callback'   => TRUE,

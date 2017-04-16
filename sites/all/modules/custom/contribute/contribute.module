@@ -295,23 +295,6 @@ function contribute_other_page_callback() {
     ,
   );
 
-
-  global $user;
-  // If administrator, add Maintainer options.
-  if (in_array('Administrator', $user->roles) || in_array('Maintainer', $user->roles)) {
-    $content['#markup'] .= '<h2>Maintainer Tools</h2>'
-
-      . '<p>' . l('Add a Taxon (species, genus, etc.)', 'contribute/taxon')
-      . ' &nbsp;&nbsp;(learn about ' . l('taxa', 'help') . ')</p>'
-
-      . '<p>' . l('Add multiple Taxa', 'taxa/lookup-multiple') .'</p>'
-
-      . '<p>' . l('Maintain most popular Taxa', 'maintain/taxa/most-popular') .'</p>'
-
-      . '<p>' . l('Import etymologies', 'taxa/import/etymologies') .'</p>'
-    ;
-  }
-
   return $content;
 }
 

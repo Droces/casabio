@@ -46,7 +46,9 @@ function expand_taxonomy_branch(button) {
     var target = button.parent().siblings( '.children' );
 
     if (button.attr('aria-expanded') === 'false') {
-      var toastr_info = toastr.info('Expanding…'); // @todo add an 'undo' button
+      var toastr_info = toastr.info('Expanding…', null, {
+        'timeOut': '-1'
+      }); // @todo add an 'undo' button
     }
 
     var jqxhr = $.get(url);

@@ -64,7 +64,7 @@ module_load_include('inc', 'casa_term_mgt', 'term_forms');
  * Implements hook_menu().
  */
 function casa_term_mgt_menu() {
-  $items['ajax/taxa/get-children/%'] = array(
+  $items['services/taxa/get-children/%'] = array(
     'title'             => 'Taxa Children',
     'page callback'     => 'provide_taxa_children_callback',
     'page arguments'    => array(3),
@@ -323,7 +323,7 @@ function render_browse_taxa_tree_children($vid, $tree, $depth) {
 
     // Button
     if ($leaves) {
-      $ajax_url = base_path() . 'ajax/taxa/get-children/' . $branch->tid;
+      $ajax_url = base_path() . 'services/taxa/get-children/' . $branch->tid;
 
       $content .= '<span class="action">'
         . '<button class="expand raised" aria-expanded="false"'
@@ -778,7 +778,7 @@ function lookup_gbif($sc_name) {
   $taxon_info = array();
   $is_found = ! empty($json->results);
   // $is_found = TRUE; // For testing only.
-  if($is_found) {
+  if ($is_found) {
     foreach ($json->results as $key => $result) {
       if ($result->synonym === FALSE) {
 
@@ -1543,11 +1543,16 @@ function get_gbif_key($tid) {
     // dpm('Performing GBIF key lookup');
     $taxon_info = lookup_gbif($sc_name);
     // dpm($taxon_info, '$taxon_info');
-    $gbif_key = $taxon_info['key'];
 
-    if (! $gbif_key) {
+    if (! $taxon_info) {
       return NULL;
     }
+
+    $gbif_key = $taxon_info['key'];
+
+    // if (! $gbif_key) {
+    //   return NULL;
+    // }
 
     if (! $external_refs) {
       $external_refs = new stdClass();;

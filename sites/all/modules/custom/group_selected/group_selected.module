@@ -58,9 +58,18 @@
  * Implements hook_menu().
  */
 function group_selected_menu() {
-  $items['ajax/collections/%/group_pictures'] = array(
+  $items['services/collections/%/group_pictures'] = array(
     'title' => 'Group Selected Processor Page',
     'page callback' => 'group_pictures_callback',
+    'page arguments' => array(2),
+    'access callback' => TRUE,  // Create a permission for this? array('administer bulk media upload'),
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  $items['services/collections/%/auto_identify_groups'] = array(
+    'title' => 'Auto Identify Processor Page',
+    'page callback' => 'auto_identify_groups_callback',
     'page arguments' => array(2),
     'access callback' => TRUE,  // Create a permission for this? array('administer bulk media upload'),
     'type' => MENU_CALLBACK,
@@ -97,7 +106,7 @@ function group_selected_init() {
     drupal_add_js($file);
 
     // Tinysort - for sorting HTML elements
-    // $file = 'https://cdnjs.cloudflare.com/ajax/libs/tinysort/2.3.6/tinysort.min.js';
+    // $file = 'https://cdnjs.cloudflare.com/services/libs/tinysort/2.3.6/tinysort.min.js';
     $file = drupal_get_path('module', 'group_selected') . '/scripts/tinysort.min.js';
     drupal_add_js($file);
   }
@@ -178,19 +187,15 @@ function group_selected_block_view($delta = '') {
 
 
 
-
-
-
-// =============================================================================
 /**
  * A menu callback function for grouping all pictures of a collection into
  * observations. This must be called via AJAX.
  *
- * @param $collection
+ * @param $collection_nid
  *   The nid of the collection that the observations should reference.
  */
-function group_pictures_callback($collection) {
-  // dpm($collection, '$collection');
+function group_pictures_callback($collection_nid) {
+  // dpm($collection_nid, '$collection_nid');
   // dpm($_POST, '_POST');
 
   // For development only:
@@ -210,9 +215,44 @@ function group_pictures_callback($collection) {
 
 
 
+/**
+ * A menu callback function for grouping all pictures of a collection into
+ * observations. This must be called via AJAX.
+ *
+ * @param $collection_nid
+ *   The nid of the collection that the observations should reference.
+ */
+function auto_identify_groups_callback($collection_nid) {
+  // dpm($collection_nid, '$collection_nid');
+  // dpm($_POST, '_POST');
+
+  $observations = get_observations_referencing_collection($collection_nid);
+  // dpm($observations, '$observations');
+  $result = array();
+
+  try {
+    foreach ($observations as $observation_nid => $observation_repr) {
+      $observation = entity_metadata_wrapper('node', $observation_nid);
+      $result[] = identify_from_filenames($observation);
+    }
+  }
+  catch (Exception $e) {
+    $response = array('#type' => 'ajax',
+      '#commands' => $e->getMessage());
+  }
+
+  // drupal_set_message(t("Pictures grouped successfully"), 'status');
+
+  // $commands[] = ajax_command_replace('#MYMODULE-wrapper', 'Hey ! Some AJAX content !');
+  $response = array(
+    '#type' => 'ajax',
+    '#commands' => array('Taxa nids identified' => $result),);
+
+  return $response;
+}
 
 
-// =============================================================================
+
 /**
  * @param string[] $nids
  *   Array of node id arrays; Each inner array represents an observation within
@@ -382,8 +422,8 @@ function secondary_toolbar_block_content() {
 
 /**
  * Set's the observation's count, location, and pictures fields.
- *
- * @param $observation
+ * 
+ * @param EntityMetadataWrapper $observation
  *   The observation whose fields should be set. Within an entity_metadata_wrapper.
  * @param $picture_nids
  *   An array of nids of the pictures that this observation should include.
@@ -401,7 +441,6 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
   // dpm($date, 'date');
 
   $filenames = [];
-  $taxon = NULL;
   foreach ($picture_nids as $nid) {
     $picture = entity_metadata_wrapper('node', node_load($nid));
 
@@ -409,14 +448,6 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
     // dpm($filename, '$filename');
 
     $filenames[] = $filename;
-
-    if ($filename) {
-      $taxon_found = get_taxon_from_filename($filename); // From group_selected.module
-      if ($taxon_found) {
-        $taxon = $taxon_found;
-        // dpm($taxon, '$taxon');
-      }
-    }
   }
 
   $filenames_string = implode(', ', $filenames);
@@ -430,53 +461,67 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
 
   $observation->save();
 
-
-
   // Create identification based on file name.
+  // Now done through a separate callback.
+  // $taxon = identify_from_filenames($observation);
+}
 
 
-  // $filename = 'IMG_1278 Acanthopsis disperma.jpg';
-  // $filename = $first_of_group->field_image->value()['filename'];
-  // dpm($filename, '$filename');
+/**
+ * Create identification based on file name.
+ * 
+ * @param EntityMetadataWrapper $observation
+ */
+function identify_from_filenames(&$observation) {
+  // dpm($observation->raw(), '$observation->raw()');
+  $filenames = explode(', ', $observation->field_filenames->value());
+  // dpm($filenames, '$filenames');
 
-  // $taxon = get_taxon_from_filename($filename); // From group_selected.module
-  // dpm($taxon, $filename);
+  // Find the taxon
 
-  if ($taxon) {
-    $taxon_loaded = taxonomy_term_load($taxon);
-    // dpm($taxon_loaded, '$taxon_loaded');
-    $taxon_name = $taxon_loaded->name;
-    $observation->title->set($taxon_name);
-    $observation->save();
+  $taxon_nid = NULL;
+  foreach ($filenames as $filename) {
+    $taxon_nid_found = get_taxon_from_filename($filename); // From group_selected.module
+    if ($taxon_nid_found) {
+      $taxon_nid = $taxon_nid_found;
+      // dpm($taxon_nid, '$taxon_nid');
+    }
+  }
+  // dpm($taxon_nid, '$taxon_nid');
 
+  // Create identification
+
+  if ($taxon_nid) {
     global $user;
 
     $values = array(
-      'type' =>     'identification',
-      'uid' =>      $user->uid,
-      'status' =>   1,
-      'comment' =>  0,
-      'promote' =>  0,
-    );
-
-    $identification_raw = entity_create('node', $values);
-    $identification = entity_metadata_wrapper('node', $identification_raw);
-
-    $identification->title->                    set($taxon_name);
-    $identification->field_observation->        set($observation->getIdentifier());
-    $identification->field_identified_species-> set($taxon);
-    $identification->field_certainty->          set(8); // Highly likely
-    $identification->save();
-    // dpm($identification->field_observation->value(), '$identification observation');
-    // dpm($identification, 'identification');
+      'uid' =>                    $user->uid,
+      'species_tid' =>            $taxon_nid,
+      'observation_subj_nid' =>   $observation->getIdentifier(),
+      'certainty' =>              8,);
+    create_identification($values);
   }
+  else {
+    return NULL;
+  }
+
+  // Update observation's name
+
+  $taxon_loaded = taxonomy_term_load($taxon_nid);
+  // dpm($taxon_loaded, '$taxon_loaded');
+  $taxon_name = $taxon_loaded->name;
+  // dpm($taxon_name, '$taxon_name');
+
+  $observation->title->set($taxon_name);
+  $observation->save();
+
+  return $taxon_nid;
 }
 
 
 
 
 
-// =============================================================================
 /**
  * Searches the database for a taxon with a name matching the given filename.
  *
@@ -484,6 +529,8 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
  * If multiple matching taxa are found, only the first result will be returned.
  * Can match species with 2-word names, or other taxa.
  * Can split the filename by spaces, dashes or underscores.
+ * 
+ * @param string $filename
  */
 function get_taxon_from_filename($filename) {
   $taxon = null;

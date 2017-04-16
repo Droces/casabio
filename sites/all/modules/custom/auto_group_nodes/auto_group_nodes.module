@@ -17,7 +17,7 @@
  */
 function auto_group_nodes_menu() {
 
-  $items['ajax/pictures/auto_group/%/%'] = array(
+  $items['services/pictures/auto_group/%/%'] = array(
     'title'             => 'Upload Pictures',
     'page callback'     => 'auto_group_pictures_callback',
     'page arguments'    => array(3, 4),

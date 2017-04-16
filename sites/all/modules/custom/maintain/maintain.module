@@ -39,7 +39,7 @@ hook_views_pre_view()
  * Implements hook_menu().
  */
 function maintain_menu() {
-  $items['ajax/popular_taxa_form/%'] = array(
+  $items['services/popular_taxa_form/%'] = array(
     'page callback'     => 'maintain_popular_taxa_form_callback',
     'page arguments'    => array(2),
     'delivery callback' => 'deliver_raw_html',
@@ -62,6 +62,7 @@ function maintain_menu() {
     'access callback'   => 'user_access',
     'access arguments'  => array('can contribute content'),
     'type'              => MENU_NORMAL_ITEM,
+    'menu_name'         => 'menu-maintain',
   );
 
   return $items;
@@ -261,12 +262,32 @@ function maintain_popular_taxa_page() {
 
 function maintain_page() {
 
-  $page_content = array(
-    '#type' => 'markup',
-    '#markup' => l('Maintain Taxa', 'maintain/taxa/most-popular'),
-  );
+  $content = array();
+  global $user;
 
-  return $page_content;
+  // If administrator, add Maintainer options.
+  if (in_array('Administrator', $user->roles) || in_array('Maintainer', $user->roles)) {
+    $content['#markup'] = 
+      '<h2>Maintainer Tools</h2>'
+
+      . '<p>' . l('Add a Taxon (species, genus, etc.)', 'contribute/taxon') . '</p>'
+      . '<p>' . l('Add multiple Taxa', 'taxa/lookup-multiple') .'</p>'
+      . '<p>' . l('Maintain most popular Taxa', 'maintain/taxa/most-popular') .'</p>'
+      . '<p>' . l('Import etymologies', 'taxa/import/etymologies') .'</p>'
+
+      . '<h2>Maintainer Views</h2>'
+      // Admin views
+      . '<p>' . l('Observations', 'admin/observations') .'</p>'
+      . '<p>' . l('Taxa', 'admin/taxa') .'</p>'
+      . '<p>' . l('Collections', 'admin/collections') .'</p>'
+      . '<p>' . l('Identifications', 'admin/identifications') .'</p>'
+      . '<p>' . l('Pictures', 'admin/pictures') .'</p>'
+      . '<p>' . l('Habitats', 'admin/habitats') .'</p>'
+      . '<p>' . l('Users', 'maintain/users') .'</p>'
+    ;
+  }
+
+  return $content;
 }
 
 

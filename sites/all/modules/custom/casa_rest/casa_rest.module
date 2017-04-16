@@ -41,10 +41,17 @@ function casa_rest_init() {
   $pictures_field_names_map
     = Drupal\casa_rest\Plugin\resource\pictures\Pictures__0_1::$field_names_map;
 
+  // If this is a page within the Contribute MO section
+  if (drupal_match_path(current_path(), '*contribute/multiple*')) {
+    // Pass this array to the JS
+    drupal_add_js(array('API' => array(
+      'observations_field_names_map' => $observations_field_names_map,
+      'pictures_field_names_map' => $pictures_field_names_map,
+    ),), 'setting');
+  }
+
   // Pass this array to the JS
   drupal_add_js(array('API' => array(
-    'path' => 'services',
-    'observations_field_names_map' => $observations_field_names_map,
-    'pictures_field_names_map' => $pictures_field_names_map,
+    'path' => 'services'
   ),), 'setting');
 }

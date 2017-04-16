@@ -104,7 +104,7 @@ Drupal.behaviors.group_selected = {
     groupables = $('.groupable');
     group_elements = $('.group');
     // var toolbar = $('[role="toolbar"][aria-label*="primary"]');
-    save_groups_url = Drupal.settings.basePath + 'ajax/collections/%/group_pictures';
+    save_groups_url = Drupal.settings.basePath + 'services/collections/%/group_pictures';
 
     // Functions that should only happen once per page load
     if (! page_is_setup) {
@@ -177,7 +177,9 @@ function populate_groups_map() {
 //                                              Local functions
 
 function fetch_groups(success_callbacks, always_callbacks) {
-  var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Loading…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
   var collection_nid = Drupal.contribute.get_collection_nid();
   // console.log('collection_nid: ', collection_nid);
 
@@ -469,9 +471,11 @@ function display_groups() {
  * Sends an AJAX request to the Auto Group module to auto-group the collection.
  */
 function call_auto_group() {
-  var toastr_info = toastr.info('Auto-grouping pictures…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Auto-grouping pictures…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
   var url = Drupal.settings.basePath
-    + 'ajax/pictures/auto_group'
+    + 'services/pictures/auto_group'
     + '/' + Drupal.casa_core.get_collection_nid()
     + '/' + $('#auto-group-num').val();
   // console.log( "url: ", url );
@@ -957,7 +961,9 @@ function save_groups(groups_in, message, success_callbacks, always_callbacks) {
   // Send request
 
   if (message) {
-    var toastr_info = toastr.info('Saving picture groups…'); // @todo add an 'undo' button
+    var toastr_info = toastr.info('Saving picture groups…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
   }
 
   var collection_nid = Drupal.casa_core.get_collection_nid();

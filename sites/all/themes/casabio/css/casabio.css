@@ -2415,8 +2415,17 @@ a.colorbox-inline {
 [data-view-mode="thumbnail"] a[data-lightbox],
 [data-view-mode="thumbnail"] a.colorbox,
 [data-view-mode="thumbnail"] a.colorbox-inline {
-  right: auto;
-  left: 100%; }
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  -moz-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease; }
+
+[data-view-mode="thumbnail"]:hover a[data-lightbox],
+[data-view-mode="thumbnail"]:hover a.colorbox,
+[data-view-mode="thumbnail"]:hover a.colorbox-inline, [data-view-mode="thumbnail"]:focus a[data-lightbox],
+[data-view-mode="thumbnail"]:focus a.colorbox,
+[data-view-mode="thumbnail"]:focus a.colorbox-inline {
+  opacity: 1; }
 
 /* -----------------------------------------------------------------------------
                                                                 Messages
@@ -4595,111 +4604,115 @@ article a, article .ui-widget-content a, .ui-widget-content article a,
 .selectable .field:not([class*="image"]) {
   display: none; }
 
-.node-picture.selectable img,
-[data-type="picture"].selectable img,
-.node-observation.selectable img,
-[data-type="observation"].selectable img,
-article.picture.selectable img,
-.node-picture.selectable img {
-  -webkit-transition: -webkit-transform 0.3s ease;
-  -moz-transition: -moz-transform 0.3s ease;
-  transition: transform 0.3s ease; }
-
-.node-picture.selectable .field.image,
-[data-type="picture"].selectable .field.image,
-.node-observation.selectable .field.image,
-[data-type="observation"].selectable .field.image,
-article.picture.selectable .field.image,
-.node-picture.selectable .field.image {
-  font-size: 0.85em;
-  font-weight: 600;
-  display: none;
-  display: block; }
-  .node-picture.selectable .field.image[aria-hidden="false"],
-  [data-type="picture"].selectable .field.image[aria-hidden="false"],
-  .node-observation.selectable .field.image[aria-hidden="false"],
-  [data-type="observation"].selectable .field.image[aria-hidden="false"],
-  article.picture.selectable .field.image[aria-hidden="false"],
-  .node-picture.selectable .field.image[aria-hidden="false"] {
+.node-picture,
+[data-type="picture"],
+.node-observation,
+[data-type="observation"],
+article.picture,
+.node-picture {
+  position: relative; }
+  .node-picture.selectable img,
+  [data-type="picture"].selectable img,
+  .node-observation.selectable img,
+  [data-type="observation"].selectable img,
+  article.picture.selectable img,
+  .node-picture.selectable img {
+    -webkit-transition: -webkit-transform 0.3s ease;
+    -moz-transition: -moz-transform 0.3s ease;
+    transition: transform 0.3s ease; }
+  .node-picture.selectable .field.image,
+  [data-type="picture"].selectable .field.image,
+  .node-observation.selectable .field.image,
+  [data-type="observation"].selectable .field.image,
+  article.picture.selectable .field.image,
+  .node-picture.selectable .field.image {
+    font-size: 0.85em;
+    font-weight: 600;
+    display: none;
+    display: block; }
+    .node-picture.selectable .field.image[aria-hidden="false"],
+    [data-type="picture"].selectable .field.image[aria-hidden="false"],
+    .node-observation.selectable .field.image[aria-hidden="false"],
+    [data-type="observation"].selectable .field.image[aria-hidden="false"],
+    article.picture.selectable .field.image[aria-hidden="false"],
+    .node-picture.selectable .field.image[aria-hidden="false"] {
+      display: block;
+      position: absolute;
+      top: 1em;
+      left: 3.3em;
+      width: 60%;
+      height: 76%;
+      overflow: hidden;
+      word-break: break-all; }
+      .node-picture.selectable .field.image[aria-hidden="false"]::after,
+      [data-type="picture"].selectable .field.image[aria-hidden="false"]::after,
+      .node-observation.selectable .field.image[aria-hidden="false"]::after,
+      [data-type="observation"].selectable .field.image[aria-hidden="false"]::after,
+      article.picture.selectable .field.image[aria-hidden="false"]::after,
+      .node-picture.selectable .field.image[aria-hidden="false"]::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%; }
+  .node-picture.selectable .field-data,
+  [data-type="picture"].selectable .field-data,
+  .node-observation.selectable .field-data,
+  [data-type="observation"].selectable .field-data,
+  article.picture.selectable .field-data,
+  .node-picture.selectable .field-data {
+    font-size: 0.8em;
+    font-weight: 600;
+    display: none;
     display: block;
     position: absolute;
-    top: 1em;
-    left: 3.3em;
-    width: 60%;
+    top: 3em;
+    left: 1.3em;
+    width: 80%;
     height: 76%;
     overflow: hidden;
-    word-break: break-all; }
-    .node-picture.selectable .field.image[aria-hidden="false"]::after,
-    [data-type="picture"].selectable .field.image[aria-hidden="false"]::after,
-    .node-observation.selectable .field.image[aria-hidden="false"]::after,
-    [data-type="observation"].selectable .field.image[aria-hidden="false"]::after,
-    article.picture.selectable .field.image[aria-hidden="false"]::after,
-    .node-picture.selectable .field.image[aria-hidden="false"]::after {
+    word-break: break-all;
+    line-height: 1.1; }
+    .node-picture.selectable .field-data::after,
+    [data-type="picture"].selectable .field-data::after,
+    .node-observation.selectable .field-data::after,
+    [data-type="observation"].selectable .field-data::after,
+    article.picture.selectable .field-data::after,
+    .node-picture.selectable .field-data::after {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%; }
-
-.node-picture.selectable .field-data,
-[data-type="picture"].selectable .field-data,
-.node-observation.selectable .field-data,
-[data-type="observation"].selectable .field-data,
-article.picture.selectable .field-data,
-.node-picture.selectable .field-data {
-  font-size: 0.8em;
-  font-weight: 600;
-  display: none;
-  display: block;
-  position: absolute;
-  top: 3em;
-  left: 1.3em;
-  width: 80%;
-  height: 76%;
-  overflow: hidden;
-  word-break: break-all;
-  line-height: 1.1; }
-  .node-picture.selectable .field-data::after,
-  [data-type="picture"].selectable .field-data::after,
-  .node-observation.selectable .field-data::after,
-  [data-type="observation"].selectable .field-data::after,
-  article.picture.selectable .field-data::after,
-  .node-picture.selectable .field-data::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; }
-  .node-picture.selectable .field-data span,
-  [data-type="picture"].selectable .field-data span,
-  .node-observation.selectable .field-data span,
-  [data-type="observation"].selectable .field-data span,
-  article.picture.selectable .field-data span,
-  .node-picture.selectable .field-data span {
-    margin-bottom: 0.8em;
-    display: inline-block; }
-
-.node-picture.selectable .property-nid,
-.node-picture.selectable .views-field-created,
-.node-picture.selectable .views-field-field-date-taken,
-[data-type="picture"].selectable .property-nid,
-[data-type="picture"].selectable .views-field-created,
-[data-type="picture"].selectable .views-field-field-date-taken,
-.node-observation.selectable .property-nid,
-.node-observation.selectable .views-field-created,
-.node-observation.selectable .views-field-field-date-taken,
-[data-type="observation"].selectable .property-nid,
-[data-type="observation"].selectable .views-field-created,
-[data-type="observation"].selectable .views-field-field-date-taken,
-article.picture.selectable .property-nid,
-article.picture.selectable .views-field-created,
-article.picture.selectable .views-field-field-date-taken,
-.node-picture.selectable .property-nid,
-.node-picture.selectable .views-field-created,
-.node-picture.selectable .views-field-field-date-taken {
-  display: none; }
+    .node-picture.selectable .field-data span,
+    [data-type="picture"].selectable .field-data span,
+    .node-observation.selectable .field-data span,
+    [data-type="observation"].selectable .field-data span,
+    article.picture.selectable .field-data span,
+    .node-picture.selectable .field-data span {
+      margin-bottom: 0.8em;
+      display: inline-block; }
+  .node-picture.selectable .property-nid,
+  .node-picture.selectable .views-field-created,
+  .node-picture.selectable .views-field-field-date-taken,
+  [data-type="picture"].selectable .property-nid,
+  [data-type="picture"].selectable .views-field-created,
+  [data-type="picture"].selectable .views-field-field-date-taken,
+  .node-observation.selectable .property-nid,
+  .node-observation.selectable .views-field-created,
+  .node-observation.selectable .views-field-field-date-taken,
+  [data-type="observation"].selectable .property-nid,
+  [data-type="observation"].selectable .views-field-created,
+  [data-type="observation"].selectable .views-field-field-date-taken,
+  article.picture.selectable .property-nid,
+  article.picture.selectable .views-field-created,
+  article.picture.selectable .views-field-field-date-taken,
+  .node-picture.selectable .property-nid,
+  .node-picture.selectable .views-field-created,
+  .node-picture.selectable .views-field-field-date-taken {
+    display: none; }
 
 /* -----------------------------------------------------------------------------
                                           Nodes
@@ -5121,20 +5134,37 @@ li.views-row-2 .node-identification[data-view-mode="teaser"] .show {
   margin-bottom: 0.3em; }
 
 .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] {
-  width: 940px; }
-  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .show {
-    width: 394px;
+  width: 940px;
+  padding: 0; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container.outer > .show,
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container.outer > .show img {
+    width: 170px; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container.outer > .tell {
+    width: auto;
+    padding: 0; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container .col-container .show {
+    width: 264px;
     padding-right: 2em; }
-    .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .show > * {
+    .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container .col-container .show > * {
       display: table-cell;
       width: 130px;
       height: 130px;
       vertical-align: top; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .col-container .col-container .tell {
+    padding: 0 0 0.2em 0;
+    font-size: 0.75em; }
   .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] h2 {
     font-size: 1.2em;
-    font-weight: bold; }
+    font-weight: bold;
+    margin: 0.4em 0.5em; }
     .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] h2 div {
       display: inline; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-label-inline .field-label,
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-label-inline .field-items {
+    display: inline;
+    padding-bottom: 0; }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-label {
+    text-transform: uppercase; }
   .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .content:after {
     content: "";
     display: table;
@@ -5158,7 +5188,6 @@ li.views-row-2 .node-identification[data-view-mode="teaser"] .show {
     .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-name-field-pictures > .field-items > .field-item:nth-child(2n) {
       margin-left: 2px; }
   .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .taxonomy-term-description {
-    font-size: 0.85em;
     overflow: hidden;
     width: 100%;
     height: 4.2em;
@@ -5174,9 +5203,12 @@ li.views-row-2 .node-identification[data-view-mode="teaser"] .show {
       right: 0;
       background-image: -webkit-linear-gradient( left , rgba(255, 255, 255, 0), white);
       background-image: linear-gradient(to right, rgba(255, 255, 255, 0), white); }
+    .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .taxonomy-term-description .field-label,
+    .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .taxonomy-term-description p:first-of-type {
+      display: inline; }
+    .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .taxonomy-term-description .field-label {
+      padding-right: 0.8em; }
   .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-name-field-etymology {
-    font-size: 0.75em;
-    color: #5c5c5c;
     overflow: hidden;
     width: 100%;
     height: 2.8em;
@@ -5192,6 +5224,17 @@ li.views-row-2 .node-identification[data-view-mode="teaser"] .show {
       right: 0;
       background-image: -webkit-linear-gradient( left , rgba(255, 255, 255, 0), white);
       background-image: linear-gradient(to right, rgba(255, 255, 255, 0), white); }
+  .taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] .field-name-field-taxon-rank {
+    position: relative;
+    z-index: 10;
+    background: grey;
+    color: white;
+    display: inline-block;
+    padding: 0 0.2em;
+    border-radius: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    width: 0.8em; }
 
 .taxonomy-term[data-vocabulary="taxa"][data-view-mode="full"] .field-name-field-taxon-rank {
   font-size: 1.2em;

@@ -66,7 +66,7 @@ produces:
 ###############################################################################
 parameters:
   # ---------------- Authentication
-  # Session-id:
+  # Session-id:ices/
   #   in: header
   #   name: Cookie
   #   description: Session id. This is required; although a browser will save and submit it automatically. # typically looks like; SESS5913ad7ed2adf92cab1103dad2f5596c=213d28535c6972e16430a4e1e03ce7ea.
@@ -187,10 +187,10 @@ paths:
   # ==========================================================================#
   #                                                   AJAX                    #
   # --------------------------------------------------------------------------#
-  /ajax/observations/create-blank: # casa_node_mgt_menu()
+  /observations/create-blank: # casa_node_mgt_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Creates observations that don't have pictures. __ DEV __
       # parameters:
         # - $ref: '#/parameters/nid'
@@ -200,10 +200,10 @@ paths:
           # schema:
           #   $ref: "#/definitions/Identification"
 
-  /ajax/images/rotate: # casa_node_mgt_menu()
+  /images/rotate: # casa_node_mgt_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Rotates images. __ DEV __
       parameters:
         - name: Image rotation
@@ -217,10 +217,10 @@ paths:
           # schema:
           #   $ref: "#/definitions/Identification"
 
-  /ajax/pictures/auto_group/{collectionId}/{maxTimeGap}: # auto_group_nodes_menu()
+  /pictures/auto_group/{collectionId}/{maxTimeGap}: # auto_group_nodes_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         - name: collectionId
@@ -238,10 +238,10 @@ paths:
         200:
           description: OK
 
-  /ajax/taxa/get-children/{taxonId}: # casa_taxa_mgt_menu()
+  /taxa/get-children/{taxonId}: # casa_taxa_mgt_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         - name: taxonId
@@ -253,10 +253,10 @@ paths:
         200:
           description: OK
 
-  /ajax/contribute/save-uploaded: # casa_upload_menu()
+  /contribute/save-uploaded: # casa_upload_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         - name: Temp file
@@ -268,10 +268,10 @@ paths:
         200:
           description: OK
 
-  /ajax/number_specimens: # edit_selected_menu()
+  /number_specimens: # edit_selected_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         - name: Specimen info
@@ -283,10 +283,10 @@ paths:
         200:
           description: OK
 
-  /ajax/collections/{collectionId}/group_pictures_into_observations: # group_selected_menu()
+  /collections/{collectionId}/group_pictures: # group_selected_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         # - $ref: '#/parameters/X-CSRF-Token'
@@ -299,15 +299,34 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/Collection-for-submission"
+            type: array
+            items:
+              $ref: "#/definitions/Nid-group"
       responses:
         200:
           description: OK
 
-  /ajax/collections/{userId}: # casa_taxa_mgt_menu()
+  /collections/{collectionId}/auto_identify_groups: # group_selected_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
+      summary: Desc. __ DEV __
+      description: "NOTE: Remove API's URL root ()."
+      parameters:
+        # - $ref: '#/parameters/X-CSRF-Token'
+        - name: collectionId
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+
+  /collections/{userId}: # casa_taxa_mgt_menu()
+    post:
+      tags:
+        - Utilities
       summary: Desc. __ DEV __
       description: "Provides all collections contributed by user."
       parameters:
@@ -320,10 +339,10 @@ paths:
         200:
           description: OK
 
-  /ajax/popular_taxa_form/{taxonId}: # maintain_menu()
+  /popular_taxa_form/{taxonId}: # maintain_menu()
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       parameters:
         - name: taxonId
@@ -335,10 +354,10 @@ paths:
         200:
           description: OK
 
-  /ajax/remote_status:
+  /remote_status:
     post:
       tags:
-        - AJAX
+        - Utilities
       summary: Desc. __ DEV __
       # parameters:
       responses:
@@ -970,6 +989,15 @@ definitions:
         example: {
           "longitude": 0,
           "latitude": 0}
+
+  # Collection nids:
+
+  Nid-group:
+    description: "Array in the format [{'id' => 345, 'pictures' => [34, 35]}]"
+    properties:
+      id:
+        type: integer
+        format: int64
 
   Identification:
     properties:

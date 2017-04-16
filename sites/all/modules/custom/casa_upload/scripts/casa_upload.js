@@ -86,7 +86,9 @@ function set_up_uploader(context, settings) {
   PLuploader.bind('FilesAdded', function(up, files) {
 
     if (! milestones.first_picture_uploaded) {
-      toastr.info('When your pictures have been uploaded, you can edit them below.', null, {timeOut: 10000});
+      toastr.info('When your pictures have been uploaded, you can edit them below.', null, {
+        'timeOut': '-1'
+      });
     }
 
     if (collection_to_use == null) {
@@ -206,9 +208,11 @@ function load_collection_pictures(collection_nid, context, settings) {
 
 
 function save_temp_file(request_body, settings, success_callbacks, always_callbacks) {
-  var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Loading…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
-  var url = Drupal.settings.basePath + 'ajax/contribute/save-uploaded';
+  var url = Drupal.settings.basePath + 'services/contribute/save-uploaded';
 
   var request_settings = {
     type: "POST",
@@ -324,7 +328,9 @@ function set_collection() {
 
 
 function create_collection(title, success_callbacks, always_callbacks) {
-  var toastr_info = toastr.info('Creating collection…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Creating collection…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
   var url = api_url + '/v0.1/collections';
   var security_token = Drupal.es_api_interactions.get_token();
@@ -377,9 +383,11 @@ function create_collection(title, success_callbacks, always_callbacks) {
 
 
 // function get_collection_pictures(settings, success_callbacks, always_callbacks) {
-//   var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+//   var toastr_info = toastr.info('Loading…', null, {
+    //   'timeOut': '-1'
+    // }); // @todo add an 'undo' button
 
-//   var url = Drupal.settings.basePath + 'ajax/contribute/save-uploaded';
+//   var url = Drupal.settings.basePath + 'services/contribute/save-uploaded';
 
 //   var request_settings = {
 //     type: "POST",

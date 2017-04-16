@@ -69,7 +69,9 @@ Drupal.es_api_interactions = {
 
     // console.log('toastr.options: ', toastr.options);
     if (show_message) {
-      var toastr_info = toastr.info('Fetching token…'); // @todo add an 'undo' button
+      var toastr_info = toastr.info('Fetching token…', null, {
+        'timeOut': '-1'
+      }); // @todo add an 'undo' button
     }
 
     var ajax_settings = {
@@ -136,7 +138,9 @@ Drupal.es_api_interactions = {
     show_message = (typeof show_message === 'undefined') ?  true : show_message;
 
     if (show_message) {
-      var toastr_info = toastr.info('Loading…');
+      var toastr_info = toastr.info('Loading…', null, {
+        'timeOut': '-1'
+      });
     }
 
     if ((typeof collection_nid === 'undefined') || (! collection_nid)) {
@@ -226,7 +230,7 @@ Drupal.es_api_interactions = {
 
     var collection_nid = get_collection_nid();
 
-    var url = Drupal.casa_core.get_site_url() + 'ajax/identifications/by_collection/' + collection_nid;
+    var url = Drupal.casa_core.get_site_url() + 'services/identifications/by_collection/' + collection_nid;
 
     // var jqxhr = $.get(url);
     var request_params = {
@@ -236,7 +240,9 @@ Drupal.es_api_interactions = {
     }
 
     if (show_message) {
-      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+      var toastr_info = toastr.info('Loading…', null, {
+        'timeOut': '-1'
+      }); // @todo add an 'undo' button
     }
 
     var jqxhr = $.ajax(request_params);
@@ -281,7 +287,7 @@ Drupal.es_api_interactions = {
 
     var collection_nid = get_collection_nid();
 
-    var url = Drupal.casa_core.get_site_url() + 'ajax/interactions/by_collection/' + collection_nid;
+    var url = Drupal.casa_core.get_site_url() + 'services/interactions/by_collection/' + collection_nid;
 
     // var jqxhr = $.get(url);
     var request_params = {
@@ -291,7 +297,9 @@ Drupal.es_api_interactions = {
     }
 
     if (show_message) {
-      var toastr_info = toastr.info('Loading…'); // @todo add an 'undo' button
+      var toastr_info = toastr.info('Loading…', null, {
+        'timeOut': '-1'
+      }); // @todo add an 'undo' button
     }
 
     var jqxhr = $.ajax(request_params);
@@ -354,7 +362,9 @@ Drupal.es_api_interactions = {
       },
       url: url
     }
-    var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
+    var toastr_info = toastr.info('Saving…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
@@ -443,7 +453,9 @@ Drupal.es_api_interactions = {
       attempt_num = 1;
     }
 
-    var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
+    var toastr_info = toastr.info('Saving…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
     var jqxhrs = [];
     var all_successful = true;
     var request_group_id = 0; // Not used yet...
@@ -542,7 +554,9 @@ Drupal.es_api_interactions = {
   delete_nodes: function(type, nids, context, success_callbacks, always_callbacks) {
     // console.log('nids: ', nids);
 
-    var toastr_info = toastr.info('Deleting…'); // @todo add an 'undo' button
+    var toastr_info = toastr.info('Deleting…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
     // var jqxhrs = [];
     var all_successful = true;
     var request_group_id = 0; // Not used yet...
@@ -623,6 +637,51 @@ Drupal.es_api_interactions = {
     }
     var jqxhr = $.ajax(settings);
     return jqxhr;
+  },
+
+
+  /**
+   * @return boolean
+   *   Returns true if successful, or false otherwise.
+   */
+  auto_identify_observations: function(collection_nid) {
+    // console.log('params: ', params);
+
+    var settings = {
+      type: "POST",
+      contentType: "application/json",
+      data: '',
+      headers: {
+        // "access-token": Drupal.es_api_interactions.get_token()
+        // Session id header is not specified, because it's automatically added by browser (it's a cookie).
+      },
+      url: Drupal.casa_core.get_site_url() + 'services/collections/' + collection_nid + '/auto_identify_groups'
+    }
+    var toastr_info = toastr.info('Identifying…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
+    var jqxhr = $.ajax(settings);
+
+    jqxhr.fail(function( data ) {
+      if(jqxhr.readyState < 4)  {
+        // toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem identifying the observations.');
+        console.log( "In jqxhr.fail(), data: ", data );
+      }
+    });
+
+    jqxhr.done(function( data ) {
+      // console.log( "In jqxhr.done(), data: ", data );
+
+      toastr.success('The observations have been identfied.');
+    });
+
+    jqxhr.always(function( data ) {
+      toastr_info.remove();
+      // Drupal.casa_utilities.invoke_callbacks(always_callbacks);
+    });
   }
 
 };
@@ -733,9 +792,11 @@ function save_add_interaction(params, nid, context, success_callbacks, always_ca
       "access-token": Drupal.es_api_interactions.get_token()
       // Session id header is not specified, because it's automatically added by browser (it's a cookie).
     },
-    url: Drupal.casa_core.get_site_url() + 'ajax/observations/' + nid + '/add_interaction'
+    url: Drupal.casa_core.get_site_url() + 'services/observations/' + nid + '/add_interaction'
   }
-  var toastr_info = toastr.info('Saving…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Saving…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
   var jqxhr = $.ajax(settings);
 
   jqxhr.fail(function( data ) {

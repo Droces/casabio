@@ -136,6 +136,11 @@ function duplicate_observation($observation) {
  */
 function create_interaction($values) {
 
+  if (! array_key_exists('uid', $values)) {
+    global $user;
+    $values['uid'] = $user->uid;
+  }
+
   $interaction_raw = entity_create('node', array(
     'type' => 'interaction',
     'title' => '',
@@ -146,23 +151,33 @@ function create_interaction($values) {
 
   $interaction = entity_metadata_wrapper('node', $interaction_raw);
 
-  $interaction->field_observation->set(
-    $values['field_observation']);
+  if (array_key_exists('field_observation', $values)) {
+    $interaction->field_observation->set(
+      $values['field_observation']);
+  }
 
-  $interaction->field_interaction_activity->set(
-    $values['field_interaction_activity']);
+  if (array_key_exists('field_interaction_activity', $values)) {
+    $interaction->field_interaction_activity->set(
+      $values['field_interaction_activity']);
+  }
 
-  $interaction->field_observation_object->set(
-    $values['field_observation_object']);
+  if (array_key_exists('field_observation_object', $values)) {
+    $interaction->field_observation_object->set(
+      $values['field_observation_object']);
+  }
 
-  $interaction->body->set(
-    $values['body']);
+  if (array_key_exists('body', $values)) {
+    $interaction->body->set(
+      $values['body']);
+  }
 
-  $interaction->title->set(
-    $values['field_observation']
-      . ' ' . $interaction->field_interaction_activity->value()
-      . ' ' . $interaction->field_observation_object->raw()
-  );
+  if (array_key_exists('field_observation', $values)) {
+    $interaction->title->set(
+      $values['field_observation']
+        . ' ' . $interaction->field_interaction_activity->value()
+        . ' ' . $interaction->field_observation_object->raw()
+    );
+  }
 
   $interaction->save();
 
@@ -178,6 +193,11 @@ function create_interaction($values) {
  */
 function create_identification($values) {
 
+  if (! array_key_exists('uid', $values)) {
+    global $user;
+    $values['uid'] = $user->uid;
+  }
+
   $identification_raw = entity_create('node', array(
     'type' =>   'identification',
     'title' =>  '',
@@ -188,22 +208,32 @@ function create_identification($values) {
   // dpm($identification_raw, '$identification_raw');
   $identification = entity_metadata_wrapper('node', $identification_raw);
 
-  // $tid = 88216;
-  $taxon = taxonomy_term_load($values['species_tid']);
-  // dpm($taxon, '$taxon');
+  if (array_key_exists('species_tid', $values)) {
+    // $tid = 88216;
+    $taxon = taxonomy_term_load($values['species_tid']);
+    // dpm($taxon, '$taxon');
 
-  if (!$taxon || $taxon->vocabulary_machine_name != 'taxa') {
-    throw new Exception("Tid, " . $values['species_tid'] . ", is not the tid of a taxon.", 1);
+    if (!$taxon || $taxon->vocabulary_machine_name != 'taxa') {
+      throw new Exception("Tid, " . $values['species_tid'] . ", is not the tid of a taxon.", 1);
+    }
+
+    $identification->title->set(
+      $taxon->name);
+
+    $identification->field_identified_species->set(
+      $taxon);
   }
 
-  $identification->title->set(
-    $taxon->name);
-  $identification->field_observation->set(
-    $values['observation_subj_nid']);
-  $identification->field_identified_species->set(
-    $taxon);
-  $identification->field_certainty->set(
-    $values['certainty']);
+  if (array_key_exists('observation_subj_nid', $values)) {
+    $identification->field_observation->set(
+      $values['observation_subj_nid']);
+  }
+
+  if (array_key_exists('certainty', $values)) {
+    $identification->field_certainty->set(
+      $values['certainty']);
+  }
+
   $identification->save();
 
   return $identification;

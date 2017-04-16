@@ -97,7 +97,9 @@ Drupal.behaviors.edit_selected = {
 
       define_variables(context, settings);
 
-      page_setup_loadings_message = toastr.info('Page setup loading…');
+      page_setup_loadings_message = toastr.info('Page setup loading…', null, {
+        'timeOut': '-1'
+      });
 
       // fetch_selectables_data
       if (Drupal.contribute.is_page('picture_info')) {
@@ -332,7 +334,7 @@ Drupal.edit_selected = {
       }
 
       // Set 'Number Specimens' form's 'nids' (hidden) field
-      $('form[action="ajax/number_specimens"] input[name="nids"]')
+      $('form[action="services/number_specimens"] input[name="nids"]')
         .val(Drupal.selection.get_selected_nids().join(','));
 
       Drupal.form_prefiller.prefill_form(edit_form, selectables_data, settings);
@@ -550,6 +552,12 @@ function add_listeners(context, settings) {
 
   $(document).on('dialog_closed', function(event) {
     dialog_close_handler();
+  });
+
+
+  $('[data-trigger="#auto-identify"]').on('click', function () {
+    var collection_nid = Drupal.casa_core.get_collection_nid();
+    Drupal.es_api_interactions.auto_identify_observations(collection_nid);
   });
 
 
@@ -978,9 +986,11 @@ function create_layer(point) {
 
 function rotate_selected(button) {
     // console.log('called: rotate_selected()');
-    var toastr_info = toastr.info('Rotating pictures…'); // @todo add an 'undo' button
+    var toastr_info = toastr.info('Rotating pictures…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
 
-    var url = Drupal.settings.basePath + 'ajax/images/rotate';
+    var url = Drupal.settings.basePath + 'services/images/rotate';
     var selecteds_nids = Drupal.selection.get_selected_nids();
     var rotation_params = {
       'nids': selecteds_nids.join( "|" ),
@@ -1060,12 +1070,14 @@ function manage_form_number_specimens(form, success_callbacks, always_callbacks)
 
   var request_params = {
     // url: form.attr('action'),
-    url: Drupal.casa_core.get_site_url() + 'ajax/number_specimens',
+    url: Drupal.casa_core.get_site_url() + 'services/number_specimens',
     type: form.attr('method'),
     data: form.serialize()
   };
 
-  var toastr_info = toastr.info('Numbering observations…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Numbering observations…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
   // Send jq xhr request.
   var jqxhr = $.ajax(request_params);
@@ -1100,11 +1112,13 @@ function manage_form_add_blank_obs(form, success_callbacks, always_callbacks) {
   form.find('#collection-id').val(Drupal.casa_core.get_collection_nid());
   // console.log('form.serialize: ', form.serialize());
 
-  var toastr_info = toastr.info('Adding picture-less observations…'); // @todo add an 'undo' button
+  var toastr_info = toastr.info('Adding picture-less observations…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
   var request_params = {
     // url: form.attr('action'),
-    url: Drupal.casa_core.get_site_url() + 'ajax/observations/create-blank',
+    url: Drupal.casa_core.get_site_url() + 'services/observations/create-blank',
     type: form.attr('method'),
     data: form.serialize(),
   };
@@ -1365,7 +1379,9 @@ function show_field_indicators(context, field_shown, button) {
   }
 
   if (fields_with_data_count == 0 && field_name != 'no_fields') {
-    toastr.info('None of the selectables have a value for this field.');
+    toastr.info('None of the selectables have a value for this field.', null, {
+      'timeOut': '-1'
+    });
   }
 
   // console.log('field_shown: ' + field_shown);

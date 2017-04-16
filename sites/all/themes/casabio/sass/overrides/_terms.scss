@@ -61,26 +61,59 @@
 
   &[data-view-mode="field_guide"] {
     width: 940px;
+    padding: 0;
 
-    .show {
-      width: $field-guide-image-height * 3 + ($field-guide-grid-gutter * 2);
-      padding-right: 2em;
+    // // For dev only
+    // a.block {
+    //   display: none;
+    // }
 
-      & > * {
-        display: table-cell;
-        width: $field-guide-image-height;
-        height: $field-guide-image-height;
-        vertical-align: top;
+    .col-container.outer {
+      & > .show,
+      & > .show img {
+        width: $field-guide-image-height + 40px;
+      }
+      & > .tell {
+        width: auto;
+        padding: 0;
+      }
+    }
+
+    .col-container .col-container {
+      .show {
+        width: $field-guide-image-height * 2 + ($field-guide-grid-gutter * 2);
+        padding-right: 2em;
+
+        & > * {
+          display: table-cell;
+          width: $field-guide-image-height;
+          height: $field-guide-image-height;
+          vertical-align: top;
+        }
+      }
+      .tell {
+        padding: 0 0 0.2em 0;
+        font-size: 0.75em;
       }
     }
 
     h2 {
       font-size: 1.2em;
       font-weight: bold;
+      margin: 0.4em 0.5em;
 
       div {
         display: inline;
       }
+    }
+
+    .field-label-inline .field-label,
+    .field-label-inline .field-items {
+      display: inline;
+      padding-bottom: 0;
+    }
+    .field-label {
+      text-transform: uppercase;
     }
 
     .content {
@@ -121,13 +154,19 @@
       // padding-left: $field-guide-grid-gutter;
     }
     .taxonomy-term-description {
-      font-size: 0.85em;
 
       @include overflow_fade(white, 1.4em * 3, 3em, 1.4em);
+
+      .field-label,
+      p:first-of-type {
+        display: inline;
+      }
+      .field-label {
+        padding-right: 0.8em;
+      }
     }
     .field-name-field-etymology {
-      font-size: 0.75em;
-      color: #5c5c5c;
+      // color: #5c5c5c;
 
       @include overflow_fade(white, 1.4em * 2, 3em, 1.4em);
     }
@@ -137,7 +176,22 @@
     //   color: grey;
     //   font-size: 0.8em;
     // }
+    .field-name-field-taxon-rank {
+      position: relative;
+      z-index: 10;
+      background: grey;
+      color: white;
+      display: inline-block;
+      padding: 0 0.2em;
+      border-radius: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      width: 0.8em;
+    }
   }
+
+
+
   &[data-view-mode="full"] {
     .field-name-field-taxon-rank {
       font-size: 1.2em;

@@ -132,8 +132,6 @@ function _preprocess_taxonomy_term(&$variables) {
         case 'full':
           // dpm($variables, '$variables');
 
-          $variables['rank'] = $term->field_taxon_rank->value();
-
           // Embed the taxon tree
 
           $taxa_tree_markup = get_taxa_tree_as_markup($variables['term'], '');
@@ -201,12 +199,14 @@ function _preprocess_taxonomy_term(&$variables) {
                 '#weight' => 2
               );
 
-              $species_epithet = explode(' ', $term->label())[1];
+              $term_label_exploded = explode(' ', $term->label());
+              $species_epithet = array_key_exists(1, $term_label_exploded) ?
+                $term_label_exploded[1]
+                : $term_label_exploded[0];
               $variables['content']['field_etymology']['#title'] =
                 'Etymology of ' . $species_epithet;
             }
           }
-
 
           $variables['content']['parent']['#weight'] = -5;
           $variables['content']['parent_etymology']['#weight'] = -4;
@@ -218,6 +218,22 @@ function _preprocess_taxonomy_term(&$variables) {
           // dpm($variables, '$variables');
           if ($variables['content']['field_pictures']) {
             unset($variables['content']['field_pictures'][4]);
+          }
+
+          if (array_key_exists('description', $variables['content'])) {
+            $variables['content']['description']['#prefix']
+              .= '<div class="field-label">Description:</div>';
+              
+            $variables['content']['description']['#attributes']['class']
+              = array('field-label-inline');
+          }
+
+
+          if ($variables['content']['field_taxon_rank']) {
+            $rank = $term->field_taxon_rank->value();
+            $variables['content']['field_taxon_rank'][0]['#markup'] =
+              '<span title="' . $rank . '">' 
+                . substr($rank, 0, 1) . '</span>';
           }
           break;
 

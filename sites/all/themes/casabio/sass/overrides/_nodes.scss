@@ -208,6 +208,8 @@ article,
 [data-type="observation"],
 article.picture,
 .node-picture {
+  position: relative;
+  
   &.selectable {
 
     img {

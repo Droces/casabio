@@ -4,6 +4,7 @@
   <button class="flat" data-display="#display-shortcuts">Keyboard shortcuts…</button>
   <button class="flat" data-display="#create-blank-observations"><strong>+</strong> picture-less observations…</button>
   <button class="flat" data-display="#number-specimens">Number specimens…</button>
+  <button class="flat" data-trigger="#auto-identify">Auto-identify</button>
 
 </div>
 
@@ -16,7 +17,7 @@
   <p>Picture-less observations are useful when you've recorded a species you saw
     but were not able to take a photograph of it.</p>
 
-  <form action="ajax/observations/create-blank" method="post">
+  <form action="services/observations/create-blank" method="post">
     <input id="count" type="text" name="count" value="1" size="2" />
     <button type="submit">Create</button>
     <input id="collection-id" name="collection-id" type="hidden" />
@@ -26,7 +27,7 @@
 <!-- Numbering specimens form -->
 <div id="number-specimens" data-transform="to-dialog" data-width="450" style="display: none;"
   title="Number observations: ">
-  <form action="ajax/number_specimens" method="post">
+  <form action="services/number_specimens" method="post">
 
     <p>Numbering specimens (observations) is for scientific use, such as for
       submitting plant specimens to a herbarium.</p>

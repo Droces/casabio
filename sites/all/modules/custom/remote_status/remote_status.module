@@ -11,7 +11,7 @@
 function remote_status_menu() {
   $items = array();
 
-  $items['ajax/remote_status'] = array(
+  $items['services/remote_status'] = array(
     'page callback'     => 'remote_status_page',
     'access callback'   => TRUE,
     // 'access callback'   => 'user_access',

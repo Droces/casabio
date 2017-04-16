@@ -106,7 +106,7 @@ function casa_node_mgt_init() {
  */
 function casa_node_mgt_menu() {
 
-  $items['ajax/observations/create-blank'] = array(
+  $items['services/observations/create-blank'] = array(
     // 'title'               => 'Casa Upload Summary',
     'page callback'       => 'create_blank_observations_callback',
     // 'page arguments'      => array('2'),
@@ -116,7 +116,7 @@ function casa_node_mgt_menu() {
     'delivery callback'   => 'ajax_deliver',
   );
 
-  $items['ajax/images/rotate'] = array(
+  $items['services/images/rotate'] = array(
     // 'title'               => 'Casa Upload Summary',
     'page callback'       => 'rotate_pictures_callback',
     // 'page arguments'      => array('2'),
@@ -126,7 +126,7 @@ function casa_node_mgt_menu() {
     'delivery callback'   => 'ajax_deliver',
   );
 
-  $items['ajax/observations/%/add_interaction'] = array(
+  $items['services/observations/%/add_interaction'] = array(
     // 'title'               => 'Casa Upload Summary',
     'page callback'       => 'observations_add_interaction_callback',
     'page arguments'      => array(2),
@@ -783,8 +783,9 @@ function casa_node_mgt_node_insert($node) {
 
     case 'identification_community':
       taxa_assess_community_identification($node);
-
+      
       save_locality_to_taxon($node->nid);
+
       break;
   }
 }
@@ -1037,10 +1038,14 @@ function provide_node_info_to_js() {
 
   // dpm($fields_output, '$fields_output');
 
-  // Pass this array to the JS
-  drupal_add_js(array('node_info' => array(
-    'fields_info' => $fields_output,
-  ),), 'setting');
+
+  // If this is a page within the Contribute MO section
+  if (drupal_match_path(current_path(), '*contribute/multiple*')) {
+    // Pass this array to the JS
+    drupal_add_js(array('node_info' => array(
+      'fields_info' => $fields_output,
+    ),), 'setting');
+  }
 }
 
 

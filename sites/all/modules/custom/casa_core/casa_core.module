@@ -109,10 +109,18 @@ function casa_core_menu() {
 
   $items['my/contributions'] = array(
     'title'             => 'Contributions',
-    'page callback'     => 'my_contributions_page_callback',
+    'page callback'     => 'my_contributions_goto_page_callback',
     'access callback'   => TRUE,
     'type'              => MENU_NORMAL_ITEM,
     'menu_name'         => 'menu-my',
+  );
+
+  $items['user/%/contributions'] = array(
+    'title'             => 'Contributions',
+    'page callback'     => 'my_contributions_page_callback',
+    'page arguments'    => array(1),
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
   );
 
   $items['my/herbarium_labels/%'] = array(
@@ -311,8 +319,13 @@ function latest_page_callback() {
 
 
 
-function my_contributions_page_callback() {
-  return '';
+function my_contributions_goto_page_callback() {
+  global $user;
+  drupal_goto('user/' . $user->uid . '/contributions');
+}
+function my_contributions_page_callback($uid) {
+  $user = user_load($uid);
+  return '<h1>' . $user->name . '’s Contributions</h1>';
 }
 
 

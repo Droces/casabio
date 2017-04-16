@@ -331,16 +331,17 @@ function save_locality_to_taxon($identification_nid, $locality = NULL) {
    ->field_identified_species->raw();
   // dpm($species_tid, '$species_tid');
   $species = entity_metadata_wrapper('taxonomy_term', $species_tid);
-  // dpm($species->value(), '$species');
+  // dpm($species->raw(), '$species');
 
-  // dpm($locality, '$locality');
 
-  // @TODO Validation of this locality for this species
+
+  // // @TODO Validation of this locality for this species
   $passed_validation = TRUE;
 
-  if (! $passed_validation) {
-    return NULL;
-  }
+  // if (! $passed_validation) {
+  //   return NULL;
+  // }
+
 
   // Get locality from identification
   if (! $locality) {
@@ -351,14 +352,19 @@ function save_locality_to_taxon($identification_nid, $locality = NULL) {
      ->field_locality->raw();
 
     if (! $localities) {
-      return;
+      return NULL;
     }
 
-    $locality = $localities->raw();
+    $locality = $localities;
     // dpm($locality, '$locality');
   }
 
-  $has_locality = in_array($locality->nid, $species->field_localities->raw());
+  if (property_exists($species, 'field_localities')) {
+    $has_locality = in_array($locality->nid, $species->field_localities->raw());
+  }
+  else {
+    $has_locality = FALSE;
+  }
   // dpm($has_locality, '$has_locality');
 
   if ($passed_validation && ! $has_locality) {
