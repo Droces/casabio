@@ -828,6 +828,36 @@ function lookup_gbif($sc_name) {
  *   An array in the form "['vulnerability' => '', 'vulnerability_criteria' => '']".
  */
 function lookup_iucn($sc_name) {
+
+  // See https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Status_iucn3.1.svg/1000px-Status_iucn3.1.svg.png
+  
+  // ** EXTINCT **
+  // EX - Extinct (black)
+  // EW - Extinct in the Wild (black)
+
+  // ** THREATENED **
+  // CR - Critically Endangered (red)
+  // EN - Endangered (orange)
+  // VU - Vulnerable (yellow)
+
+  // ** OTHER **
+  // NE - Not Evaluated (grey)
+  // DD - Data Deficient (grey)
+
+  // ** LOWER RISK **
+  // NT - Near Threatened (lime)
+  // LC - Least Concern (green)
+
+  // Extinct (EX)               – No known individuals remaining.
+  // Extinct in the wild (EW)   – Known only to survive in captivity, or as a naturalized population outside its historic range.
+  // Critically endangered (CR) – Extremely high risk of extinction in the wild.
+  // Endangered (EN)            – High risk of extinction in the wild.
+  // Vulnerable (VU)            – High risk of endangerment in the wild.
+  // Near threatened (NT)       – Likely to become endangered in the near future.
+  // Least concern (LC)         – Lowest risk. Does not qualify for a more at-risk category. Widespread and abundant taxa are included in this category.
+  // Data deficient (DD)        – Not enough data to make an assessment of its risk of extinction.
+  // Not evaluated (NE)         – Has not yet been evaluated against the criteria.
+
   $sc_name = 'loxodonta africana';
   // dpm($sc_name, 'sc_name');
   $token = '9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee';
