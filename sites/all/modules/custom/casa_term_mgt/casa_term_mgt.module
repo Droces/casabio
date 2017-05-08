@@ -858,7 +858,7 @@ function lookup_iucn($sc_name) {
   // Data deficient (DD)        – Not enough data to make an assessment of its risk of extinction.
   // Not evaluated (NE)         – Has not yet been evaluated against the criteria.
 
-  $sc_name = 'loxodonta africana';
+  // $sc_name = 'loxodonta africana';
   // dpm($sc_name, 'sc_name');
   $token = '9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee';
   $lookup_url =  'http://apiv3.iucnredlist.org/api/v3/species/'
@@ -891,6 +891,27 @@ function lookup_iucn($sc_name) {
   }
   // dpm($taxon_info, '$taxon_info');
   return $taxon_info;
+}
+
+
+
+/**
+ * Calls lookup_iucn() on the taxon.
+ * 
+ * @param EntityMetadataWrapper
+ */
+function update_vulnerability($taxon) {
+  return NULL; // Can't work until we get a key
+
+  // $sc_name = $taxon->field_scientific_name->value();
+  $sc_name = strtolower($taxon->label());
+  // dpm($sc_name, '$sc_name');
+  $taxon_info = lookup_iucn($sc_name);
+  if ($taxon_info) {
+    // dpm($taxon_info, '$taxon_info');
+    $taxon->field_vulnerability->set($taxon_info['vulnerability']);
+    $taxon->save();
+  }
 }
 
 

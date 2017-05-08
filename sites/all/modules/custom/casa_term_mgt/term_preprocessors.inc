@@ -77,6 +77,8 @@ function _preprocess_taxonomy_term(&$variables) {
   switch ($variables['vocabulary_machine_name']) {
     case 'taxa':
 
+      // update_vulnerability($term);
+
       // Display parent taxon's name
     
       $parents = taxonomy_get_parents($tid);
