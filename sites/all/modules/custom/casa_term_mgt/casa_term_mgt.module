@@ -34,6 +34,8 @@
   taxa_lookup_multiple_form_submit()
   taxa_lookup()
   lookup_catalogueoflife()
+  lookup_gbif()
+  lookup_iucn()
 
   create_taxon()
   contribute_habitat_page_callback()
@@ -669,8 +671,10 @@ function taxa_lookup_multiple_form_submit($form_id, &$form_state) {
 /**
  * Looks up a taxon from an external service, and if found and not in CasaBio, adds it.
  * 
- * @param $sc_name
- * @param $taxa_service
+ * @param string $sc_name
+ *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
+ * @param string $taxa_service
+ *   Code of a biodiversity data service. Eg. 'CoL' or 'gbif'
  */
 function taxa_lookup($sc_name, $taxa_service) {
 
@@ -716,7 +720,7 @@ function taxa_lookup($sc_name, $taxa_service) {
 
 
 /**
- * @param $sc_name
+ * @param string $sc_name
  *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
  *
  * @return
@@ -760,7 +764,7 @@ function lookup_catalogueoflife($sc_name) {
 
 
 /**
- * @param $sc_name
+ * @param string $sc_name
  *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
  *
  * @return
@@ -809,6 +813,51 @@ function lookup_gbif($sc_name) {
         break;
       }
     }
+  }
+  // dpm($taxon_info, '$taxon_info');
+  return $taxon_info;
+}
+
+
+
+/**
+ * @param string $sc_name
+ *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
+ *
+ * @return
+ *   An array in the form "['vulnerability' => '', 'vulnerability_criteria' => '']".
+ */
+function lookup_iucn($sc_name) {
+  $sc_name = 'loxodonta africana';
+  // dpm($sc_name, 'sc_name');
+  $token = '9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee';
+  $lookup_url =  'http://apiv3.iucnredlist.org/api/v3/species/'
+    . str_replace(' ', '%20', $sc_name)
+    . '?token=' . $token;
+  // dpm($lookup_url, 'lookup_url');
+
+  $response = drupal_http_request($lookup_url, array());
+  // dpm($response, 'response');
+
+  if (!isset($response->data)) {
+    drupal_set_message(t('Lookup failed.'), 'error', FALSE);
+    // dpm($response, '$response');
+    return NULL;
+  }
+
+  $json = json_decode($response->data);
+  // dpm($json, 'json');
+
+  $taxon_info = array();
+  $is_found = ! empty($json->result);
+  // $is_found = TRUE; // For testing only.
+  if ($is_found) {
+    $result_info = $json->result[0];
+    // dpm($result_info, 'result_info');
+    $taxon_info = array(
+      'vulnerability' => $result_info->category,
+      'vulnerability_criteria' => $result_info->criteria,
+    );
   }
   // dpm($taxon_info, '$taxon_info');
   return $taxon_info;

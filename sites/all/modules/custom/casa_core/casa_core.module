@@ -78,7 +78,7 @@ function casa_core_init() {
   //   drupal_add_js($path);
   // }
 
-
+  // lookup_iucn('');
   // calculate_users_reliability();
 
   // once_record_observations_localities_to_taxa();
