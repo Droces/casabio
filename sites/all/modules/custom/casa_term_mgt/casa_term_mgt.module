@@ -666,7 +666,12 @@ function taxa_lookup_multiple_form_submit($form_id, &$form_state) {
 }
 
 
-
+/**
+ * Looks up a taxon from an external service, and if found and not in CasaBio, adds it.
+ * 
+ * @param $sc_name
+ * @param $taxa_service
+ */
 function taxa_lookup($sc_name, $taxa_service) {
 
   // Check if it exists.
@@ -683,6 +688,11 @@ function taxa_lookup($sc_name, $taxa_service) {
     case 'CoL':
       $taxon_info = lookup_catalogueoflife($sc_name);
       $service_name = 'Catalogue of Life';
+      break;
+
+    case 'gbif':
+      $taxon_info = lookup_gbif($sc_name);
+      $service_name = 'GBIF';
       break;
 
     default:
