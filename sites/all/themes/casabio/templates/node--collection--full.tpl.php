@@ -20,13 +20,18 @@
     hide($content['links']);
   ?>
   <div class="col-container">
-    <div class="col-1-2">
+    <?php
+      hide($content['field_main_image']);
+      hide($content['field_location']);
+      hide($content['field_locations']);
+    ?>
+    <!-- <div class="col-1-2">
       <?php
-        print render($content['field_main_image']);
-        print render($content['field_location']);
-        print render($content['field_locations']);
+        // print render($content['field_main_image']);
+        // print render($content['field_location']);
+        // print render($content['field_locations']);
       ?>
-    </div>
+    </div> -->
     <div class="col-2-2">
       <section class="field-group">
         <?php

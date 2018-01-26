@@ -46,3 +46,4 @@ This does not apply to constants or constructors.
 
 ## Testing
 
+In a terminal from the site root directory, run `phpunit`

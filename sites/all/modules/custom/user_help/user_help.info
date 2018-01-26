@@ -1,0 +1,44 @@
+; ==============================================================================
+;                           BASICS
+
+name =          User Help
+description =   Tours and helpful info.
+
+core =          7.x
+package =       Casabio
+; configure =   admin/config/content/example
+; php =         5.3
+
+
+
+; ==============================================================================
+;                           DEPENDENCIES
+
+; dependencies[] = views
+
+
+
+; ==============================================================================
+;                           STYLESHEETS
+
+; stylesheets[all][] = libraries/joyride/dist/foundation.joyride.css
+; stylesheets[all][] = libraries/joyride/dist/foundation.joyride.min.css
+; stylesheets[all][] = libraries/joyride/dist/solo.joyride.css
+; stylesheets[all][] = libraries/joyride/dist/solo.joyride.min.css
+
+stylesheets[all][] = libraries/shepherd/dist/css/shepherd-theme-arrows.css
+; stylesheets[all][] = libraries/shepherd/dist/css/shepherd-theme-default.css
+
+
+; ==============================================================================
+;                           SCRIPTS
+
+; scripts[] = libraries/joyride/dist/foundation.joyride.js
+; scripts[] = libraries/joyride/dist/foundation.joyride.min.js
+; scripts[] = libraries/joyride/dist/solo.joyride.js
+; scripts[] = libraries/joyride/dist/solo.joyride.min.js
+
+scripts[] = libraries/shepherd/dist/js/tether.js
+scripts[] = libraries/shepherd/dist/js/shepherd.min.js
+
+scripts[] = js/user_help.js

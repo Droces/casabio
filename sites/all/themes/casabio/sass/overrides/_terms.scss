@@ -12,18 +12,23 @@
  */
 
 
-[data-view-mode="teaser"],
-[data-view-mode="small"],
-[data-view-mode="field_guide"] {
+.taxonomy-term[data-view-mode="teaser"],
+.taxonomy-term[data-view-mode="small"],
+.taxonomy-term[data-view-mode="field_guide"] {
+  display: flex;
+
   .show,
   .tell,
   .first,
   .middle,
   .last {
-    display: table-cell;
+    // display: table-cell;
+    flex: 1 1 auto;
     vertical-align: top;
   }
   .show {
+    flex: 0 0 auto;
+    
     .field-type-image .field-item > img {
       border-top-left-radius: $corner_radius-regular;
     }
@@ -42,6 +47,62 @@
 
 
 /* -----------------------------------------------------------------------------
+                                                            Term-specific fields
+*/
+  // EX - Extinct (black)
+  // EW - Extinct in the Wild (black)
+
+  // ** THREATENED **
+  // CR - Critically Endangered (red)
+  // EN - Endangered (orange)
+  // VU - Vulnerable (yellow)
+
+  // ** OTHER **
+  // NE - Not Evaluated (grey)
+  // DD - Data Deficient (grey)
+
+  // ** LOWER RISK **
+  // NT - Near Threatened (lime)
+  // LC - Least Concern (green)
+.taxonomy-term[data-vocabulary="taxa"][data-view-mode="field_guide"] {
+  .field-name-field-vulnerability {
+    .field-item span {
+      border-radius: 3px;
+      display: inline-block;
+      padding: 0 0.2em;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .EX,
+    .EW,
+    .CR,
+    .NE,
+    .DD,
+    .LC {
+      color: white;
+    }
+    .EN,
+    .VU,
+    .NT {
+      color: black;
+    }
+
+    .EX {background: black;}
+    .EW {background: black;}
+    .CR {background: red;}
+    .EN {background: orange;}
+    .VU {background: yellow;}
+    .NE {background: grey;}
+    .DD {background: grey;}
+    .NT {background: limegreen;}
+    .LC {background: green;}
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
                                                             Taxa
 */
 .taxonomy-term[data-vocabulary="taxa"] {
@@ -56,54 +117,81 @@
     margin-bottom: 0.3em;
   }
 
-  $field-guide-image-height: 130px;
+  $field-guide-image-width: 170px;
   $field-guide-grid-gutter: 2px;
+  $field-guide-show-width: $field-guide-image-width * 3 + ($field-guide-grid-gutter * 2);
 
   &[data-view-mode="field_guide"] {
     width: 940px;
     padding: 0;
 
-    // // For dev only
-    // a.block {
-    //   display: none;
-    // }
-
-    .col-container.outer {
-      & > .show,
-      & > .show img {
-        width: $field-guide-image-height + 40px;
-      }
-      & > .tell {
-        width: auto;
-        padding: 0;
-      }
+    // For dev only
+    a.block {
+      display: none;
     }
 
-    .col-container .col-container {
-      .show {
-        width: $field-guide-image-height * 2 + ($field-guide-grid-gutter * 2);
-        padding-right: 2em;
+    header.term,
+    .tell {
+      box-sizing: border-box;
 
-        & > * {
-          display: table-cell;
-          width: $field-guide-image-height;
-          height: $field-guide-image-height;
-          vertical-align: top;
-        }
-      }
-      .tell {
-        padding: 0 0 0.2em 0;
-        font-size: 0.75em;
+      @media all and (min-width: 850px) {
+        width: calc(100% - #{$field-guide-show-width});
+        padding-left: 20px;
       }
     }
+    header.term {
+      padding-top: 0.7em;
 
-    h2 {
-      font-size: 1.2em;
-      font-weight: bold;
-      margin: 0.4em 0.5em;
+      @media all and (min-width: 850px) {
+        float: right;
+      }
 
       div {
         display: inline;
+      }
+    }
+    h2 {
+      display: inline;
+      font-size: 1.2em;
+      font-weight: bold;
+      // margin: 0.4em 0.5em;
+    }
+
+    // & > .show,
+    // & > .show img {
+    //   width: $field-guide-image-width;
+    // }
+    // & > .tell {
+    //   width: auto;
+    //   padding: 0;
+    // }
+
+    .show {
+      display: block;
+      text-align: center;
+
+      @media all and (min-width: 550px) {
+        & > * {
+          display: table-cell;
+          width: $field-guide-image-width;
+          height: $field-guide-image-width;
+          vertical-align: top;
+        }
+      }
+      @media all and (min-width: 850px) {
+        float: left;
+        width: $field-guide-show-width;
+      }
+    }
+    .tell {
+      padding: 0 0 0.2em 20px;
+      font-size: 0.75em;
+      clear: both;
+      display: block;
+
+      @media all and (min-width: 850px) {
+        clear: right;
+        display: inline-block;
       }
     }
 
@@ -121,8 +209,8 @@
     }
     .ol-map {
       // @extend .left;
-      // width: $field-guide-image-height;
-      // height: $field-guide-image-height;
+      // width: $field-guide-image-width;
+      // height: $field-guide-image-width;
 
       .ol-overlaycontainer-stopevent {
         display: none;
@@ -137,16 +225,21 @@
       @include group;
       // padding-left: $field-guide-grid-gutter;
 
+      & > .field-items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
       & > .field-items > .field-item {
-        width: ($field-guide-image-height - $field-guide-grid-gutter) / 2;
-        height: ($field-guide-image-height - $field-guide-grid-gutter) / 2;
-        float: left;
+        width: ($field-guide-image-width - $field-guide-grid-gutter) / 2;
+        height: ($field-guide-image-width - $field-guide-grid-gutter) / 2;
+        // float: left;
 
         &:nth-child(n+3) {
           margin-top: $field-guide-grid-gutter;
         }
         &:nth-child(2n) {
-          margin-left: $field-guide-grid-gutter;
+          // margin-left: $field-guide-grid-gutter;
         }
       }
     }
@@ -155,7 +248,7 @@
     }
     .taxonomy-term-description {
 
-      @include overflow_fade(white, 1.4em * 3, 3em, 1.4em);
+      // @include overflow_fade(white, 1.4em * 3, 3em, 1.4em);
 
       .field-label,
       p:first-of-type {
@@ -168,7 +261,7 @@
     .field-name-field-etymology {
       // color: #5c5c5c;
 
-      @include overflow_fade(white, 1.4em * 2, 3em, 1.4em);
+      // @include overflow_fade(white, 1.4em * 2, 3em, 1.4em);
     }
     // .field-name-field-taxon-rank {
     //   font-weight: normal;
@@ -210,7 +303,7 @@
     }  
   }
 }
-.taxa-tree {
+.term-tree {
   ul {
     margin: 0;
     padding-left: 0.6em;

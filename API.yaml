@@ -93,6 +93,12 @@ parameters:
     description: "The resource's identifier number"
     type: number
     required: true
+  ids:
+    name: ids
+    in: path
+    description: "The resource's identifier numbers, separated by commas"
+    type: string
+    required: true
 
   Picture:
     name: Picture
@@ -133,6 +139,16 @@ parameters:
   #   required: true
   #   schema:
   #     $ref: "#/definitions/Interaction-for-submission"
+
+
+  # ---------------- Other entities
+  User:
+    name: User
+    in: body
+    description: "The user's attributes."
+    required: true
+    schema:
+      $ref: "#/definitions/User"
 
 
   # ---------------- Filters, sorting, pagination
@@ -387,11 +403,16 @@ paths:
   # ==========================================================================#
   #                                                   Authentication          #
   # --------------------------------------------------------------------------#
-  /login:
-    get:
+  /v1.0/login:
+    post:
       tags:
         - Authentication
       summary: "Login a user"
+      parameters:
+        - name: username:password
+          in: body
+          required: true
+          type: text
       description: "Login a user and return a JSON along with the authentication cookie."
       responses:
         200:
@@ -422,12 +443,29 @@ paths:
   # --------------------------------------------------------------------------#
   /v1.0/users:
     get:
+      tags:
+        - Users
       summary: "View a list of registered users."
       parameters:
         - $ref: '#/parameters/Pagination'
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Range'
-      description: "View a list of users registered in CasaBio. Requires authentication."
+      description: "View a list of users registered in CasaBio."
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
+  /v0.1/user:
+    post:
+      tags:
+        - Users
+      summary: "Create a new user."
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/User'
+      description: "Create a new user. Requires authentication."
       responses:
         200:
           description: "Successful"
@@ -580,6 +618,22 @@ paths:
         200:
           description: "Successful"
 
+  /api/pictures/{ids}:
+    patch:
+      tags:
+        - Pictures
+      summary: "Update pictures"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Picture'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Picture"
+
   # ==========================================================================#
   #                                                   Observations            #
   # --------------------------------------------------------------------------#
@@ -605,6 +659,20 @@ paths:
         #   description: "Bad credentials. Anonymous user resolved for a resource that requires authentication."
         404:
           description: "Page not found."
+
+    post:
+      tags:
+        - Observations
+      summary: "Create an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Observation'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
 
   /v0.1/observations/{id}:
     get:
@@ -661,6 +729,22 @@ paths:
       responses:
         200:
           description: "Successful"
+
+  /api/observations/{ids}:
+    patch:
+      tags:
+        - Observations
+      summary: "View an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Observation'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
 
   # ==========================================================================#
   #                                                   Collections             #
@@ -899,7 +983,7 @@ definitions:
       author:
         type: integer
         format: int64
-      description:
+      body:
         type: object
         properties:
           value:
@@ -1098,3 +1182,12 @@ definitions:
       observationObject:
         type: integer
         format: int64
+
+  User:
+    properties:
+      label:
+        type: string
+      pass:
+        type: string
+      mail:
+        type: string

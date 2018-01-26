@@ -39,6 +39,16 @@ function content_type_picture_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 2,
       ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'list_default',
+        'weight' => 2,
+      ),
       'small' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -110,6 +120,17 @@ function content_type_picture_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 7,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 6,
       ),
       'small' => array(
         'label' => 'above',
@@ -196,6 +217,22 @@ function content_type_picture_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'date',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+        ),
+        'type' => 'date_default',
+        'weight' => 9,
       ),
       'small' => array(
         'label' => 'above',
@@ -289,6 +326,16 @@ function content_type_picture_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 11,
       ),
       'small' => array(
         'label' => 'above',
@@ -396,6 +443,18 @@ function content_type_picture_field_default_field_instances() {
           'empty_fields_handler' => 'EmptyFieldText',
           'image_link' => '',
           'image_style' => 'very_large_cropped',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+      'search_result' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'image_link' => 'file',
+          'image_style' => 'large',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -515,6 +574,18 @@ function content_type_picture_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 6,
       ),
+      'search_result' => array(
+        'label' => 'above',
+        'module' => 'openlayers_geofield',
+        'settings' => array(
+          'data' => 'full',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'map_layer_preset' => 'openlayers_geofield_map_geofield_formatter:openlayers_geofield_layer_formatter',
+        ),
+        'type' => 'openlayers_geofield',
+        'weight' => 10,
+      ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
@@ -595,6 +666,16 @@ function content_type_picture_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 5,
       ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
       'small' => array(
         'label' => 'inline',
         'settings' => array(),
@@ -631,7 +712,7 @@ function content_type_picture_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(),
-      'type' => 'options_select',
+      'type' => 'options_buttons',
       'weight' => 8,
     ),
   );
@@ -663,6 +744,16 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 4,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'taxonomy_term_reference_link',
         'weight' => 4,
       ),
       'small' => array(
@@ -740,6 +831,16 @@ function content_type_picture_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 3,
+      ),
+      'search_result' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'list_default',
         'weight' => 3,
       ),
       'small' => array(

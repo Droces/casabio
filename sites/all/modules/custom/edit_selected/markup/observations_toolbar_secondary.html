@@ -4,7 +4,7 @@
   <button class="flat" data-display="#display-shortcuts">Keyboard shortcuts…</button>
   <button class="flat" data-display="#create-blank-observations"><strong>+</strong> picture-less observations…</button>
   <button class="flat" data-display="#number-specimens">Number specimens…</button>
-  <button class="flat" data-trigger="#auto-identify">Auto-identify</button>
+  <button class="flat" data-display="#auto-identify-dialog">Auto-identify…</button>
 
 </div>
 
@@ -64,6 +64,8 @@
   <div id="show-fields-radios" class="radios inline">
     <input type="radio" name="show-fields" id="show-no_fields" value="no_fields" checked>
       <label for="show-no_fields">No fields</label>
+    <input type="radio" name="show-fields" id="show-filenames" value="filenames"/>
+      <label for="show-filenames">Filenames</label>
     <!-- <input type="radio" name="show-fields" id="show-label" value="label"/>
       <label for="show-label">Name</label> -->
     <!-- <input type="radio" name="show-fields" id="show-count" value="count"/>
@@ -86,4 +88,15 @@
       <label for="show-interactions">Interactions</label>
   </div>
   </form>
+</div>
+
+
+<!-- Auto-identify dialog -->
+<div id="auto-identify-dialog" data-transform="to-dialog" style="display: none;"
+  title="Auto-identify Pictures">
+  <p>This feature will identify your observations based on the filenames of the pictures in each observation.</p>
+  <p>For instance, if you have renamed a picture's filename to "Tara spinosa 01.jpg", the system will create an identification for that observation with the species "Tara spinosa" and certainty of "Highly likely".</p>
+  <p>If the system cannot find any taxa based on a filename, it will simply skip it.</p>
+  <button data-trigger="#auto-identify">Auto-identify</button>
+  <button data-close="#auto-identify-dialog">Skip</button>
 </div>

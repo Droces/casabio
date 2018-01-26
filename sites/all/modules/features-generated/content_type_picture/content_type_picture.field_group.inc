@@ -21,7 +21,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Basic info',
-    'weight' => '5',
+    'weight' => '6',
     'children' => array(
       0 => 'field_image',
       1 => 'field_collection',
@@ -39,7 +39,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_info|node|picture|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -52,7 +52,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Location',
-    'weight' => '6',
+    'weight' => '8',
     'children' => array(
       0 => 'field_location',
     ),
@@ -67,7 +67,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_location|node|picture|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -80,7 +80,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Metadata',
-    'weight' => '7',
+    'weight' => '9',
     'children' => array(
       0 => 'field_exif',
     ),
@@ -94,7 +94,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_metadata|node|picture|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -109,10 +109,11 @@ function content_type_picture_field_group_info() {
     'label' => 'Sections',
     'weight' => '0',
     'children' => array(
-      0 => 'group_info',
-      1 => 'group_tags',
-      2 => 'group_location',
-      3 => 'group_metadata',
+      0 => 'group_description',
+      1 => 'group_info',
+      2 => 'group_tags',
+      3 => 'group_location',
+      4 => 'group_metadata',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(
@@ -122,7 +123,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_sections|node|picture|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -135,7 +136,7 @@ function content_type_picture_field_group_info() {
   $field_group->parent_name = 'group_sections';
   $field_group->data = array(
     'label' => 'Tags',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_beauty',
       1 => 'field_usefulness',
@@ -153,7 +154,7 @@ function content_type_picture_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_tags|node|picture|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

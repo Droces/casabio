@@ -9,6 +9,8 @@
  * @link /api/casa_documentation CasaBio @endlink CasaCore module.
  */
 
+use Drupal\Casabio\casa_core;
+
 /**
  * CONTENTS
  *
@@ -37,6 +39,9 @@
  */
 
 module_load_include('inc', 'casa_core', 'other_queries');
+module_load_include('inc', 'casa_core', 'historian');
+module_load_include('inc', 'casa_core', 'achievements');
+module_load_include('inc', 'casa_core', 'herbarium_labels');
 
 
 
@@ -45,9 +50,6 @@ module_load_include('inc', 'casa_core', 'other_queries');
  */
 function casa_core_init() {
   // dpm('Call: casa_core_init');
-
-  // add $settings['user']['is_logged_in'] = true; for logged-in users
-  drupal_add_js(array('user' => array('is_logged_in' => user_is_logged_in())), 'setting');
 
   // Add core JS libraries
   drupal_add_library('system', 'ui.dialog', TRUE);
@@ -67,8 +69,13 @@ function casa_core_init() {
   drupal_add_js($js_files_footer, array('scope' => 'footer'));
 
   // Add JS settings
-  drupal_add_js(array('API_path' => 'services'), 'setting');
+  drupal_add_js(array(
+    'API_path' => 'services',
+    // add $settings['user']['is_logged_in'] = true; for logged-in users
+    'user' => array('is_logged_in' => user_is_logged_in()),
+  ), 'setting');
 
+  drupal_add_js(array('current_path' => current_path()), 'setting');
 
   // // Include required JavaScript files and libraries
   // $js_files = array(
@@ -82,6 +89,29 @@ function casa_core_init() {
   // calculate_users_reliability();
 
   // once_record_observations_localities_to_taxa();
+
+  // save_etymologies_to_similar_taxa();
+}
+
+
+
+/**
+ * Implements hook_init().
+ */
+function get_site_setting($setting) {
+  // dpm($setting, '$setting');
+  $site_settings_file = 'site_settings.json';
+  $file_url = drupal_get_path('module', 'casa_core') . '/' . $site_settings_file;
+  // dpm($file_url, '$file_url');
+  // $site_settings = yaml_parse_file($file_url);
+  $site_settings = json_decode(file_get_contents($file_url));
+  // dpm($site_settings, '$site_settings');
+  if (property_exists($site_settings, $setting)) {
+    return $site_settings->{$setting};
+  }
+  else {
+    throw new Exception("'" . $setting . "'' is not a site setting", 1);
+  }
 }
 
 
@@ -164,20 +194,64 @@ function casa_core_menu() {
     'type'              => MENU_NORMAL_ITEM,
   );
 
+  $items['ml-data/images/%/%'] = array(
+    'title'             => 'ML Data Images',
+    'page callback'     => 'ml_data_images_callback',
+    'page arguments'    => array(2, 3),
+    'access callback'   => TRUE,
+    'type'              => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  $items['admin/config/system/site-settings'] = array(
+    'title'               => 'Site settings',
+    'description'         => 'Configuration for entire CasaBio site',
+    'page callback'       => 'drupal_get_form',
+    'page arguments'      => array('site_settings_form'),
+    'access arguments'    => array('access administration pages'),
+    // 'menu_name'           => 'main-menu',
+    'type'                => MENU_NORMAL_ITEM,
+  );
+
+  $items['test'] = array(
+    'title'             => 'Test Page',
+    'page callback'     => 'test_page_callback',
+    // 'page arguments'    => array(),
+    'access callback'   => TRUE,
+    'type'              => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
 
 
 /**
- * Implements hook_menu_alter().
+ * Page callback: Current posts settings
+ *
+ * @see current_posts_menu()
  */
-// function casa_core_menu_alter(&$items) {
-//   dpm('casa_core_menu_alter()');
-//   dpm($items, '$items');
-// }
+function site_settings_form($form, &$form_state) {
+
+  $form['skip_save_callbacks'] = array(
+    '#type'               => 'checkbox',
+    '#title'              => 'Skip save callbacks?',
+    '#description'        => 'Whether to skip the functions that run automatically each time some content is saved.',
+    '#default_value'      => variable_get('skip_save_callbacks'),
+  );
+
+  return system_settings_form($form);
+}
 
 
+
+function herbarium_labels_callback($collection_nid = '') {
+  return casa_core\_herbarium_labels_callback($collection_nid);
+}
+
+function herbarium_labels_printable_callback($collection_nid = '') {
+  return casa_core\_herbarium_labels_printable_callback($collection_nid);
+}
 
 
 
@@ -207,41 +281,47 @@ function home_page_callback() {
 
 function signup_login_section() {
 
-  $tabs = array(
+  $aside = array(
     '#prefix' => '<aside class="tabs">',
     '#suffix' => '</aside>',
     '#tree' => TRUE,
   );
 
-  $tabs['tablist'] = array(
-    '#markup' => '<div role="tablist">'
-      . '<button role="tab" data-name="login" aria-selected>Log in</button>'
-      . '<button role="tab" data-name="signup">Sign up</button>'
-      . '</div>',
-  );
+  if (! user_is_logged_in()) {
+    $aside['heading'] = array(
+      '#markup' => '<h3>Sign up to contribute photos and information!</h3>',
+      '#weight' => 1,
+    );
+    $aside['tablist'] = array(
+      '#markup' => '<div role="tablist">'
+        . '<button role="tab" data-name="login" aria-selected>Log in</button>'
+        . '<button role="tab" data-name="signup">Sign up</button>'
+        . '</div>',
+      '#weight' => 2,
+    );
 
-  $tabs['tabpanel-1'] = array(
-    '#prefix' => '<div role="tabpanel" data-name="login" aria-selected>',
-    '#suffix' => '</div>',
-    '#tree' => TRUE,
-    '#weight' => "1",
-  );
-  $tabs['tabpanel-2'] = array(
-    '#prefix' => '<div role="tabpanel" data-name="signup">',
-    '#suffix' => '</div>',
-    '#tree' => TRUE,
-  );
+    $aside['tabpanel-1'] = array(
+      '#prefix' => '<div role="tabpanel" data-name="login" aria-selected>',
+      '#suffix' => '</div>',
+      '#tree' => TRUE,
+      '#weight' => 3,
+    );
+    $aside['tabpanel-2'] = array(
+      '#prefix' => '<div role="tabpanel" data-name="signup">',
+      '#suffix' => '</div>',
+      '#tree' => TRUE,
+      '#weight' => 4,
+    );
 
-  if (!user_is_logged_in()) {
-    $tabs['tabpanel-1']['login'] = drupal_get_form('user_login');
-    $tabs['tabpanel-2']['register'] = drupal_get_form('user_register_form');
+    $aside['tabpanel-1']['login'] = drupal_get_form('user_login');
+    $aside['tabpanel-2']['register'] = drupal_get_form('user_register_form');
   }
   else {
     global $user;
     // dpm($user, '$user');
-    $tabs['tabpanel-1']['heading'] = array(
+    $aside['heading'] = array(
       '#markup' => '<h3>Welcome back ' . $user->name . '</h3>',
-      '#weight' => 1);
+      '#weight' => 1,);
   }
 
 
@@ -255,7 +335,7 @@ function signup_login_section() {
     '#suffix' => '</section>',
     '#tree' => TRUE,
   );
-  $content['signup_login']['tabs'] = $tabs;
+  $content['signup_login']['tabs'] = $aside;
 
   // dpm($content, '$content');
   return $content;
@@ -308,7 +388,7 @@ function latest_page_callback() {
   );
 
   global $user;
-  if (user_has_min_role($user, 'Maintainer')) {
+  if (user_access('can maintain content')) {
     $content['new_contrib_ways']['#markup'] .= 
       '  <li><span class="pane">Patrol recent contributions (<em>Maintainers</em>)</span></li>';
   }
@@ -336,119 +416,6 @@ function contribute_request_page_callback() {
 
 
 
-function herbarium_labels_callback($collection_nid = '') {
-  if (! $collection_nid) {
-    return NULL;
-  }
-
-  $link_to_printable = '<p>' . l(
-    'View printable version', current_path() . '/printable') . '</p>';
-
-  return $link_to_printable . herbarium_labels_render($collection_nid);
-}
-
-
-
-function herbarium_labels_printable_callback($collection_nid = '') {
-  if (! $collection_nid) {
-    return NULL;
-  }
-
-  $print_css = drupal_get_path('module', 'casa_core') . '/print.css';
-  $print_css_tag = '<link rel="stylesheet" type="text/css" href="' . base_path() . $print_css . '"></link>';
-
-  return $print_css_tag . herbarium_labels_render($collection_nid);
-}
-
-
-
-function herbarium_labels_render($collection_nid) {
-  $content = '';
-
-  global $user;
-  // $collection_nid = '72953';
-  $range_max = 5000;
-
-  $collection = entity_metadata_wrapper('node', $collection_nid);
-  if (! $user->uid === $collection->author->uid->value()) {
-    drupal_set_message(t("You may only view your own collections"), 'error', FALSE);
-  }
-
-  $observations = get_observations_by_user($user->uid, $collection_nid, $range_max);
-  // dpm($observations, '$observations');
-
-  function field($label, $value) {
-    return '<p class="field">' . label($label) . ': ' . value($value) .'</p>';
-  }
-
-  function label($text) {
-    return '<span class="name" contenteditable="true">' . $text . '</span>';
-  }
-
-  function value($text) {
-    if (! $text) {
-      $text = '[no value]';
-    }
-    return '<span class="value" contenteditable="true">' . $text . '</span>';
-  }
-
-  foreach ($observations as $observation_representation) {
-    $observation = entity_metadata_wrapper('node', $observation_representation->nid);
-
-    $content .= '<article class="node-observation view-mode-teaser">';
-
-    $content .= field('Title', '');
-    $content .= field('Provisional species name', $observation->label()); // eg. Family Genus species
-
-    $content .= field('Collector (aka. Legit)', $user->name);
-
-    $observation_id = $observation->field_observation_id->value();
-    $content .= field('Collector number', $observation_id);
-
-    $localities = $observation->field_locality->value();
-    $location_text = '';
-    foreach ($localities as $locality) {
-      $location_text .= $locality->name . ', ';
-    }
-    $content .= field('Location', $location_text); // eg. South Africa, W. Cape, Cape Town, Rondebosch Common
-
-    $location = $observation->field_location->value();
-    $coordinates = $location['lon'] . ', ' . $location['lat'];
-    $coordinates = $coordinates === ', ' ? '' : $coordinates;
-    $content .= field('Coordinates', $coordinates); // eg. (decimal degrees)
-    
-    // $content .= field('Altitude', '');
-
-    $body = $observation->body->value()['value'];
-    $content .= field('Description / notes', $body);
-    $content .= field('Filenames', $observation->field_filenames->value());
-
-    $pictures_markup = '';
-    $pictures = $observation->field_pictures_observation->value();
-    foreach ($pictures as $picture_raw) {
-      $picture = entity_metadata_wrapper('node', $picture_raw);
-      $image = $picture->field_image->value();
-      // dpm($image, '$image');
-      $picture_renderable = theme('image_style', array(
-        'style_name' =>'thumbnail',
-        'path' => $image['uri'],
-      ));
-      // dpm($picture_renderable, '$picture_renderable');
-      $pictures_markup .= $picture_renderable;
-    }
-    $content .= field('', $pictures_markup);
-
-    // $content .= field('Habitat info', '');
-    $content .= field('CasaBio number', $observation->getIdentifier());
-
-    $content .= '</article>';
-  }
-
-  return $content;
-}
-
-
-
 /**
  * Implements hook_user_login().
  */
@@ -464,13 +431,14 @@ function casa_core_user_login(&$edit, $account) {
   }
 
   $is_first_login = $account->access == 0;
+  drupal_add_js(['isFirstLogin' => $is_first_login], 'setting');
+
   if ($is_first_login) {
     drupal_set_message(t("Welcome to CasaBio! This is your personal home page."), 'status', FALSE);
   }
   else {
     drupal_set_message(t("Welcome back."), 'status', FALSE);
   }
-  drupal_goto('latest');
 }
 
 
@@ -478,18 +446,21 @@ function casa_core_user_login(&$edit, $account) {
 /**
  * Implements hook_form_alter().
  */
-function casa_core_form_alter(&$form, &$form_state, $form_id) {
-  // dpm($form, '$form');
+function casa_core_form_alter(&$form, &$form_state, $form_id) {}
 
-  // // Make all form action buttons 'raised'
-  // foreach ($form['actions'] as $key => $action_button) {
-  //   if ($action_button['#type'] == 'submit') {
-  //     $action_button['actions'][$key]['#attributes'] = array(
-  //       'class' => array('raised'),
-  //     );
-  //   }
-  // }
+
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_register_form.
+ */
+function casa_core_form_user_login_alter(&$form, &$form_state, $form_id) {
+  // dpm($form, '$form');
+  $form['#submit'][] = 'casa_user_login_submit';
 }
+function casa_user_login_submit() {
+  $form_state['redirect'] = 'latest';
+}
+
 
 
 
@@ -504,6 +475,7 @@ function casa_core_form_user_register_form_alter(&$form, &$form_state, $form_id)
   unset($form['#group_children']['account']);
 
   $form['field_bio']['#access'] = FALSE;
+  $form['field_history']['#access'] = FALSE;
   $form['mollom']['#access'] = FALSE;
   $form['timezone']['#access'] = FALSE;
   $form['overlay_control']['#access'] = FALSE;
@@ -524,8 +496,10 @@ function casa_core_form_user_profile_form_alter(&$form, &$form_state, $form_id) 
   global $user; // The current user, not the user being edited.
   $is_admin = in_array('Administrator', $user->roles);
   // dpm($is_admin, '$is_admin');
+  
+  $form['field_history']['#access'] = FALSE;
 
-  if(!$is_admin) {
+  if (! $is_admin) {
     $form['field_reliability']['#access'] = FALSE;
   }
 }
@@ -609,7 +583,7 @@ function calculate_users_reliability() {
   // dpm($user, '$user');
 
   $users = get_users();
-  dpm($users, '$users');
+  // dpm($users, '$users');
 
   foreach ($users as $uid => $user_representation) {
     $user = user_load($uid);
@@ -736,7 +710,9 @@ function casa_core_views_ajax_data_alter(&$commands, $view) {
 function user_has_min_role($user, $role_name) {
   switch ($role_name) {
     case 'Maintainer':
-      return in_array('Maintainer', $user->roles) || in_array('Administrator', $user->roles);
+      return in_array('Maintainer', $user->roles)
+        || in_array('Super maintainer', $user->roles)
+        || in_array('Administrator', $user->roles);
       break;
     
     default:
@@ -1011,6 +987,12 @@ function casa_core_block_info() {
     // 'cache' => DRUPAL_NO_CACHE,
   );
 
+  $blocks['user_stats'] = array(
+    'info' => t('User stats'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+    // 'cache' => DRUPAL_NO_CACHE,
+  );
+
   return $blocks;
 }
 
@@ -1025,7 +1007,12 @@ function casa_core_block_view($delta = '') {
   switch ($delta) {
     case 'site_stats':
       $block['subject'] = t('Site Stats');
-      $block['content'] = site_stats_block_view();
+      $block['content'] = casa_core\site_stats_block_view();
+      break;
+
+    case 'user_stats':
+      $block['subject'] = t('User Stats');
+      $block['content'] = casa_core\user_stats_block_view();
       break;
   }
 
@@ -1033,19 +1020,188 @@ function casa_core_block_view($delta = '') {
 }
 
 
+function casa_core_cron() {
+  // batch_update_taxa();
+}
 
-function site_stats_block_view() {
-  $content = '';
 
-  determine_site_stats();
+/**
+ * Calculates how long something has taken.
+ * 
+ * @param float $start
+ *   Unix timestamp when period began in microseconds.
+ *   
+ */
+function calc_duration($start, $name) {
+  $end = microtime(TRUE);
+  $duration = round(($end - $start), 2);
+  // watchdog('duration', $name . ': ' . $duration);
+  return $duration;
+}
 
-  $iois = get_site_stats_iois();
 
-  $content .= '<ul class="non-list cols-4">';
-  foreach ($iois as $name => $info) {
-    $val = variable_get('count_' . $name);
-    $content .= '<li><strong>' . $info['label'] . '</strong>: ' . $val . '</li>';
+
+function test_page_callback() {
+  // return import_synonyms('synonyms.csv');
+  setup_batches();
+  return '';
+}
+
+function setup_batches() {
+  $file_url = drupal_get_path('module', 'casa_core') . '/synonyms.csv';
+  $file_data = explode(PHP_EOL, file_get_contents($file_url));
+  // dpm($file_data, '$file_data');
+
+  $batch = array(
+    'title' => t('Importing synonyms'),
+    'operations' => [
+      [
+        'import_synonyms',
+        [$file_data,],
+      ],
+    ],
+    'finished' => 'import_synonyms_finished',
+    'file' => drupal_get_path('module', 'casa_core') . '/includes/batch_processes.inc',
+  );
+  batch_set($batch);
+  // dpm(batch_get(), 'batch_get()');
+
+  // Only needed if not inside a form _submit handler.
+  // Setting redirect in batch_process.
+  batch_process('');
+}
+
+// function import_synonyms($filename) {
+//   $file_url = drupal_get_path('module', 'casa_core') . '/' . $filename;
+//   $file_data = explode(PHP_EOL, file_get_contents($file_url));
+//   // dpm($file_data, '$file_data');
+//   dpm("Total: " . (count($file_data) - 2));
+//   $processed = 0; //
+
+//   foreach ($file_data as $index => $line) {
+//     if ($index == 0)
+//       continue;
+//     $data = explode('|', $line);
+//     // dpm($data, '$data');
+//     if (count($data) < 6)
+//       continue;
+    
+//     // Assumes that all text fields are enclosed in ""
+//     $taxon_name = substr($data[3], 1, -1);
+//     // $taxon_name = 'Viridiplantae';
+//     // dpm($taxon_name, '$taxon_name');
+//     $taxon_reps = get_taxa_with_sci_name($taxon_name, 'is', $results_limit = 10);
+//     // dpm($taxon_reps, '$taxon_reps');
+//     if (! $taxon_reps) {
+//       dpm('Taxon "' . $taxon_name . '" not found');
+//       continue;
+//     }
+//     $taxon = entity_metadata_wrapper('taxonomy_term', array_keys($taxon_reps)[0]);
+//     // dpm($taxon->raw(), '$taxon->raw()');
+    
+//     // Assumes that all text fields are enclosed in ""
+//     $synonym_name = substr($data[1], 1, -1);
+//     // $synonym_name = 'Viridiplantae';
+//     // dpm($synonym_name, '$synonym_name');
+//     $synonym_reps = get_taxa_with_sci_name($synonym_name, 'is', $results_limit = 10);
+//     // dpm($synonym_reps, '$synonym_reps');
+//     if ($synonym_reps) {
+//       $synonym_tid = array_keys($synonym_reps)[0];
+//       // dpm($synonym_tid, '$synonym_tid');
+//       $taxon->field_synonym_of->set([$synonym_tid]);
+//     }
+//     else {
+//       dpm('Synonym "' . $synonym_name . '" not found');
+//     }
+
+//     $field_synonym_status = $data[6];
+//     // dpm($field_synonym_status, '$field_synonym_status');
+//     if ($field_synonym_status) {
+//       $taxon->field_synonym_status->set($field_synonym_status);
+//     }
+
+//     // dpm($taxon->raw(), '$taxon->raw()');
+//     $processed++;
+//     $taxon->save();
+//   }
+//   dpm("Updated: " . $processed);
+
+//   return '';
+// }
+
+
+/**
+ * @deprecated
+ */
+function count_user_first_identifications($uid) {
+  $first_identis_count = 0;
+  $identifications = get_nodes_by_user($uid, 'identification', NULL, 10000);
+  // dpm($identifications, '$identifications');
+  foreach (array_keys($identifications) as $nid) {
+    $identi = entity_metadata_wrapper('node', $nid);
+    $term = $identi->field_identified_species->value();
+    // dpm($term, '$term');
+    if (! $term) {
+      continue;
+    }
+    $first_identi = get_first_identifications_of_taxon($term->tid, 1);
+    // dpm($first_identi, '$first_identi');
+    if ($first_identi) {
+      $first_identis_count ++;
+    }
   }
-  $content .= '</ul>';
-  return $content;
+  return $first_identis_count;
+}
+
+
+
+/**
+ * Implements hook_ranking().
+ */
+// function casa_core_ranking() {
+// }
+
+
+function save_etymologies_to_similar_taxa() {
+  $taxa = get_taxa(1, ['field_etymology']);
+  // dpm($taxa, '$taxa');
+
+  foreach ($taxa as $tid => $taxon_rep) {
+    $term = entity_metadata_wrapper('taxonomy_term', $tid);
+    $rank = $term->field_taxon_rank->value();
+    // dpm($rank, '$rank');
+    $name_parts = explode(' ', $term->label());
+
+    $name_to_search = (strtolower($rank) == 'species') ?
+      end($name_parts) :
+      $term->label();
+    // dpm($name_to_search, '$name_to_search');
+    // $name_to_search = 'capensis'; // For dev
+
+    $similar_taxa = get_taxa_with_name($name_to_search, 'contains', $rank, NULL, ['field_etymology']);
+    // dpm($similar_taxa, '$similar_taxa');
+
+    foreach ($similar_taxa as $s_tid => $s_taxon_rep) {
+      // $similar_term = taxonomy_term_load($tid);
+      $similar_term_w = entity_metadata_wrapper('taxonomy_term', $tid);
+      // dpm($similar_term_w->raw(), '$similar_term_w');
+    }
+  }
+}
+
+
+
+function taxonomy_get_children_all($tid, $vid = 0, $key = 'tid') {
+  $result = [];
+  $children = taxonomy_get_children($tid, $vid, $key);
+  foreach ($children as $tid => $term) {
+    $result[$tid] = $term;
+    $below = taxonomy_get_children_all($tid, $vid, $key);
+    if (!empty($below)) {
+      foreach ($below as $below_tid => $below_term) {
+        $result[$below_tid] = $below_term;
+      }
+    }
+  }
+  return $result;
 }

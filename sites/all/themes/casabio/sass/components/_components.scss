@@ -120,29 +120,43 @@ main .field-group-tab-wrapper {
 */
 .tabs {
   margin: 0.5em 0;
-  border-bottom: solid 1px grey;
+  border-bottom: solid 1px desaturate($colour-links, 60%);
 
-	& > li {
+  &,
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+	li {
     display: inline-block;
+    text-align: center;
 
 		a {
-			margin-bottom: 0;
-
+      @include pointer-target;
+      background: none;
       border-radius: 4px 4px 0 0;
-      display:          inline-block;
-      text-decoration:  none;
-      // width:            auto;
-      font-size:        0.9em;
-      // line-height:   $pointer_target-line-height;
-      vertical-align:   baseline;
-      text-transform:   capitalize;
-      background-color: grey;
-      box-shadow:       none /* 0px 0px 0.3em rgba(black, 0.1) */;
-      color:            white;
-      font-weight:      600;
-      border:           none /* solid 1px #CFCFCF */;
-      text-shadow:      -0.03em -0.03em 0.04em rgba(black, 0.3);
-      padding:          $pointer_target-padding;
+      max-width: 20em;
+      // border: solid 1px #c6c6c6;
+      // border-width: 1px 1px 0 1px;
+      color: #625f5f;
+      letter-spacing: 0;
+
+      &.active {
+        color: $colour-links;
+        position: relative;
+
+        &::after {
+          content: "";
+          width: 100%;
+          height: 3px;
+          background: #0099cb;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          display: block;
+        }
+      }
 		}
 	}
 }
@@ -454,7 +468,34 @@ ul.contextual-links {
     background-color: rgba(#002451, 0.7);
   }
 }
-.ol-control
+.ol-control {}
+.ol-viewport {
+  $triangle-size: 5px;
+  .dialog {
+    background: rgba(white, 0.9);
+    padding: 1em;
+    font-size: 0.85em;
+    border-radius: 4px;
+    max-width: 350px;
+    position: relative;
+
+    & > div {
+      max-height: 70px;
+      overflow: auto;
+    }
+
+    &::after {
+      content: "";
+      border-color: rgba(white, 0.9) transparent;
+      border-width: $triangle-size $triangle-size 0px $triangle-size;
+      border-style: solid;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: 0 - $triangle-size;
+    }
+  }
+}
 
 
 
@@ -577,24 +618,31 @@ ul.contextual-links {
 /* -----------------------------------------------------------------------------
                                                                 Lightboxes
 */
-a[data-lightbox],
-a.colorbox,
-a.colorbox-inline {
+@mixin over-picture-button {
   position: absolute !important;
-  top: 0;
-  right: 0;
-  color: transparent;
-  z-index: 20;
-
-  @extend %font-icon;
-  @extend .icon-enlarge2;
+  z-index: $z-page-content + 12;
+  color: white;
   padding: 0.4em;
   width: 1em;
   overflow: hidden;
   font-size: 1.2em;
   background: rgba(black, 0.35);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+a[data-lightbox],
+a.colorbox,
+a.colorbox-inline {
+  @include over-picture-button;
+  color: transparent;
+  top: 0;
+  right: 0;
 
-  &::before{
+  @extend %font-icon;
+  @extend .icon-enlarge2;
+
+  &::before {
     color: white;
   }
   &:not(:first-of-type) {
@@ -618,6 +666,18 @@ a.colorbox-inline {
       opacity: 1;
     }
   }
+}
+
+
+
+/* -----------------------------------------------------------------------------
+                                                                Flags
+*/
+.flag-message {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0.2em;
+  border: solid 1px #dedede;
 }
 
 

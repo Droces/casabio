@@ -833,8 +833,8 @@ function blocks_views_default_fe_block_settings() {
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
-        'region' => 'content',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'casabio',
         'weight' => -19,
       ),
@@ -883,7 +883,8 @@ function blocks_views_default_fe_block_settings() {
     'delta' => 'summary_of_user_s_content-block',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => 'my/contributions',
+    'pages' => 'my/contributions
+user/*/contributions',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
@@ -964,7 +965,8 @@ function blocks_views_default_fe_block_settings() {
     'delta' => 'user_observations-block_1',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => 'my/contributions',
+    'pages' => 'my/contributions
+user/*/contributions',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
@@ -991,7 +993,8 @@ function blocks_views_default_fe_block_settings() {
     'delta' => 'user_pictures-block_1',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => 'my/contributions',
+    'pages' => 'my/contributions
+user/*/contributions',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(
@@ -1018,7 +1021,8 @@ function blocks_views_default_fe_block_settings() {
     'delta' => 'user_s_collections-block',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => 'my/contributions',
+    'pages' => 'my/contributions
+user/*/contributions',
     'roles' => array(),
     'themes' => array(
       'casabio' => array(

@@ -14,26 +14,41 @@
 
 /**
  * CONTENTS
- *
- * - variable declarations -
- *
- * Drupal.behaviors.selection.attach()
- *
- * Drupal.edit_selected
- *  .find_selectables()
- *  .get_selecteds_indexes()
- *  .are_selecteds()
- *  .set_selecteds_indexes()
- *  .selecteds_indexes_push()
- *  .selecteds_indexes_remove()
- *  .add_selection_listeners()
- *  .get_selected_selectables() // Simplest get function.
- *  .get_selected_nids()
- *  .get_selectable()
- *  .get_index()
- *  .deselect()
- *  .deselect_all()
- */
+ 
+  - variable declarations -
+ 
+  Drupal.behaviors.selection.attach()
+ 
+  Drupal.edit_selected
+    .find_selectables()
+    .get_selecteds_indexes()
+    .are_selecteds()
+    .set_selecteds_indexes()
+    .selecteds_indexes_push()
+    .selecteds_indexes_remove()
+    .add_selection_listeners()
+    .get_selected_selectables() // Simplest get function.
+    .get_selected_nids()
+    .get_selectable()
+    .get_index()
+    .deselect_all()
+
+  disable_image_drag()
+  set_up_page()
+  register_selection()
+  register_focus()
+  toggle_selected_element()
+  adjust_buttons()
+
+  set_up_keypress_mgmt()
+  handle_keypress_see_shortcuts()
+  handle_keypress_select()
+  handle_keypress_prev()
+  get_focussed_prev()
+  handle_keypress_next()
+  get_focussed_next()
+  handle_keypress_group()
+*/
 
 /*
  * @todo Change primary storage array `selecteds_indexes`
@@ -46,6 +61,8 @@ var selectables; // View row numbers of the
 // The selecteds array temporarily stores the 'pictures' that are currently selected
 // The indexes refer to the 'result numbers' of the elements within the view content (for easy JQuery retrieval)
 var selecteds_indexes = []; // View row numbers of the
+
+var selecteds = []; // View row numbers of the
 
 var mouseIsDown = false;   // Tracks status of mouse button
 
@@ -110,9 +127,14 @@ Drupal.selection = {
     return selecteds_indexes;
   },
 
+  /**
+   * Determines if there are any selectables currently selected.
+   */
   are_selecteds: function() {
-    var num_selected = Drupal.selection.get_selecteds_indexes().length;
-    return num_selected > 0 ? true : false;
+    // var num_selected = Drupal.selection.get_selecteds_indexes().length;
+    var are_selecteds = selectables.filter('.selected').length > 0 ? true : false;
+    // console.log('are_selecteds: ', are_selecteds);
+    return are_selecteds;
   },
 
   set_selecteds_indexes: function( array ) {
@@ -135,6 +157,11 @@ Drupal.selection = {
     // console.log('first_element: ', first_element);
     // console.log('last_element: ', last_element);
 
+    var settings = {
+      cleanup: false,
+      push_index: false
+    };
+
     var select_on = false;
     selectables.each(function(key, element) {
       var selectable = $(element);
@@ -144,21 +171,35 @@ Drupal.selection = {
           select_on = true;
         }
         else {
-          register_selection( selectable ); // For the last one.
+          register_selection( selectable, settings ); // For the last one.
           select_on = false;
         }
       }
 
       if (select_on && (! selectable.hasClass('selected'))) {
-        register_selection( selectable );
+        register_selection( selectable, settings );
       }
-
     });
+
+
+    selectables.each(function() {
+      selecteds_indexes.push($(this).index());
+    });
+    // console.log('selecteds_indexes: ', selecteds_indexes);
+
+    adjust_buttons();
+    adjust_toolbar();
+
+    $(document).trigger( "selection:select_all" );
   },
 
   add_selection_listeners: function(selectable) {
     selectable.find('.selectable-target').mousedown( function(event) {
       event.preventDefault(); // Prevents browser's "text selection"
+
+      var settings = {
+        cleanup: true
+      };
 
       var selectable = $(this).parents('.selectable');
 
@@ -169,16 +210,19 @@ Drupal.selection = {
         );
       }
       else {
-        register_selection( selectable );
+        register_selection( selectable, settings );
       }
       register_focus( selectable );
     });
 
     selectable.find('.selectable-target').mouseenter( function(event) {
+      var settings = {
+        cleanup: true
+      };
       var selectable = $(this).parents('.selectable');
 
       if (mouseIsDown) {
-        register_selection( selectable );
+        register_selection( selectable, settings );
       }
     });
   },
@@ -186,20 +230,22 @@ Drupal.selection = {
 
 
   /**
-   * @returns a list of Jquery elements
+   * @return a list of Jquery elements
    */
   get_selected_selectables: function(id) {
-    var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
+    // var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
     // console.log('selecteds_indexes received: ', selecteds_indexes);
 
-    selecteds = [];
+    // selecteds = [];
 
-    $.each( selecteds_indexes, function( key, index ) {
-      selecteds.push(selectables.filter('.views-row-' + index ));
-      // console.log('elements: ', element.length);
-    });
+    // $.each( selecteds_indexes, function( key, index ) {
+    //   // selecteds.push(selectables.filter('.views-row-' + index ));
+    //   selecteds.push(selectables.filter('.selected'));
+    //   // console.log('elements: ', element.length);
+    // });
 
-    return selecteds;
+    // return selecteds;
+    return selectables.filter('.selected');
   },
 
 
@@ -208,15 +254,15 @@ Drupal.selection = {
    * Gets the array of selectable indexes, and creates an array of the nids from it.
    */
   get_selected_nids: function() {
-    var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
+    // var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
     // console.log('selecteds_indexes received: ', selecteds_indexes);
 
     selecteds_nids = [];
 
-    $.each( selecteds_indexes, function( key, index ) {
-      var selectable = selectables.filter('.views-row-' + index );
-      // console.log('elements: ', selectable.length);
-      var nid = selectable.find( ".property-nid" ).html().trim();
+    selectables.filter('.selected').each(function( key, index ) {
+      // var selectable = selectables.filter('.views-row-' + (index - 1) );
+      // console.log('selectable: ', $(this));
+      var nid = $(this).find( ".property-nid" ).html().trim();
       // console.log('nid: ', nid);
       selecteds_nids.push( nid );
     });
@@ -228,7 +274,7 @@ Drupal.selection = {
 
 
   /**
-   * @returns a Jquery element, regardless of whether it's in a group
+   * @return a Jquery element, regardless of whether it's in a group
    */
   get_selectable: function(id) {
     return selectables.filter('.views-row-' + id );
@@ -261,31 +307,12 @@ Drupal.selection = {
 
 
   /**
-   * Does not remove the element from the 'selecteds' arrays
-   */
-  deselect: function(index) {
-    // console.log('call: Drupal.selection.deselect()');
-
-    var element = Drupal.selection.get_selectable( index );
-    element.removeClass( "selected" );
-
-    adjust_buttons();
-    adjust_toolbar();
-  },
-
-
-
-  /**
-   * Calls Drupal.selection.deselect() for all selected elements.
+   * Deselects all selected elements.
    */
   deselect_all: function() {
     // console.log('call: Drupal.selection.deselect_all()');
 
-    $.each( selecteds_indexes, function( key, index ) {
-      Drupal.selection.deselect(index); // Cannot use index as parameter, because the loop won't work
-      // Drupal.selection.deselect(selecteds_indexes[0]);
-    });
-    selecteds_indexes = [];
+    selectables.filter('.selected').removeClass( "selected" );
 
     adjust_buttons();
     adjust_toolbar();
@@ -295,27 +322,6 @@ Drupal.selection = {
 
 }
 
-
-
-
-/* CONTENTS
-
-  disable_image_drag()
-  set_up_page()
-  register_selection()
-  register_focus()
-  toggle_selected_element()
-  adjust_buttons()
-
-  set_up_keypress_mgmt()
-  handle_keypress_see_shortcuts()
-  handle_keypress_select()
-  handle_keypress_prev()
-  get_focussed_prev()
-  handle_keypress_next()
-  get_focussed_next()
-  handle_keypress_group()
-*/
 
 
 
@@ -350,7 +356,7 @@ function set_up_page(context) {
  * @param checked
  *   Boolean indicating if the target's checked attribute should be set to true.
  */
-function register_selection(target) {
+function register_selection(target, settings) {
   // console.log('Call: register_selection');
 
   var checked = toggle_selected_element( target );
@@ -359,19 +365,31 @@ function register_selection(target) {
   var index = Drupal.selection.get_index(target);
   // console.log('index: ', index);
 
-  if (checked) {
+  if (typeof settings.push_index == 'undefined') {
+    settings.push_index = true;
+  }
+
+  if (checked && settings.push_index) {
     // Add the picture to the 'selecteds' arrays
     selecteds_indexes.push( index );
-  } else {
+  }
+  else if (settings.push_index) {
     // Remove the picture from the 'selecteds' arrays
     selecteds_indexes.splice( $.inArray( index, selecteds_indexes), 1 );
   }
   // console.log("selecteds_indexes: ", selecteds_indexes);
 
-  adjust_buttons();
-  adjust_toolbar();
+  settings = (typeof settings !== 'undefined') ? settings : {
+    cleanup: false
+  };
 
-  target.trigger( "selection:select" );
+  if (settings.cleanup) {
+    // console.log('cleanup');
+    adjust_buttons();
+    adjust_toolbar();
+
+    target.trigger( "selection:select" );
+  }
 }
 
 
@@ -405,13 +423,14 @@ function toggle_selected_element(target) {
  * Enables and disables the buttons according to selections.
  */
 function adjust_buttons() {
+  // console.log('adjust_buttons()');
 
   // if( selecteds_indexes.length ) {
   //   $( '#deselect_all' ).attr('disabled', false);
   // } else {
   //   $( '#deselect_all' ).attr('disabled', true);
   // }
-  $( '#deselect_all' ).attr('disabled', selecteds_indexes.length ? false : true);
+  $( '#deselect_all' ).attr('disabled', ! Drupal.selection.are_selecteds());
 }
 
 
@@ -421,9 +440,10 @@ function adjust_buttons() {
  */
 function adjust_toolbar() {
   var toolbar = $('[role="toolbar"][aria-label*="primary"]');
-  toolbar.attr('aria-expanded', selecteds_indexes.length ? true : false);
+  toolbar.attr('aria-expanded', Drupal.selection.are_selecteds());
 
-  toolbar.find('.selection-count .count').html(selecteds_indexes.length);
+  var selection_count = selectables.filter('.selected').length;
+  toolbar.find('.selection-count .count').html(selection_count);
 }
 
 
@@ -465,8 +485,13 @@ function handle_keypress_see_shortcuts() {
 }
 
 function handle_keypress_select() {
+  var settings = {
+    cleanup: true,
+    push_index: false
+  };
+
   var focussed = selectables.filter('.focussed');
-  register_selection( focussed );
+  register_selection(focussed, settings);
 }
 
 function handle_keypress_unselect_all() {
@@ -522,7 +547,9 @@ function handle_keypress_next(context) {
 
 
 function handle_keypress_select_all(context) {
+  // Drupal.casa_utilities.start_timer('select_all');
   Drupal.selection.select_multiple(selectables.first(), selectables.last());
+  // Drupal.casa_utilities.end_timer('select_all');
   return false;
 }
 

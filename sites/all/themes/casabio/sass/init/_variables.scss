@@ -18,7 +18,7 @@ $w-v-wide:              1350px;
 
 $pointer_target-size:   40px;
 
-$pointer_target-padding:      0.6em 1.2em; /* used by buttons */
+$pointer_target-padding:      0.7em 1.1em; /* used by buttons */
 $pointer_target-line-height:  1.3;
 
 $data-field-padding:    0.3em 0.5em; /* used by table cells and text fields */
@@ -64,7 +64,8 @@ $z-sidebars:            30;
 $z-header-footer:       40;
 
 $z-sticky-elements:     50;
-$z-floating-elements:   60;  //like hover-popups
+$z-floating-elements:   60;  // Like hover-popups
+$z-admin-menu:          999; // Defined by Admin Menu module
 
 
 // -----------------------------------------------------------------------------

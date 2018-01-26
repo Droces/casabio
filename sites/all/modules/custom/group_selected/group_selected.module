@@ -5,32 +5,41 @@
  */
 
 
-
-
-// =============================================================================
-/* CONTENTS
-
-  [NU] = Function is not currently used
-
-  includes
-  constants
-
-  // Generic module hook functions
-  [NU] group_selected_observation_help()
-  group_selected_menu()
-  group_selected_init()
-
-  // Block functions
-  group_selected_block_info()
-  group_selected_block_view()
-
-  group_pictures_callback()
-  group_pictures()
-  delete_referring_nodes()
-  selected_buttons_block_content()
-  set_observation_fields()
-  get_taxon_from_filename()
+/**
+ * CONTENTS
+ * 
+ * [NU] = Function is not currently used
+ * 
+ * includes
+ * constants
+ * 
+ * // Generic module hook functions
+ * [NU] group_selected_observation_help()
+ * group_selected_menu()
+ * group_selected_init()
+ * 
+ * // Block functions
+ * group_selected_block_info()
+ * group_selected_block_view()
+ * 
+ * group_pictures_callback()
+ * group_pictures()
+ * delete_referring_nodes()
+ * selected_buttons_block_content()
+ * set_observation_fields()
+ * get_taxon_from_filename()
 */
+
+
+function time_elapsed($string = '')
+{
+  static $last = null;
+  $now = microtime(true);
+  if ($last != null) {
+    dpm(str_pad(round(($now - $last), 4), 5, '0') . ' ELAPSED: ' . $string);
+  }
+  $last = $now;
+}
 
 
 
@@ -209,7 +218,7 @@ function group_pictures_callback($collection_nid) {
   $groups = json_decode($request_body, TRUE);
   // dpm($nids, '$nids');
 
-  $response = group_pictures($collection, $groups);
+  $response = group_pictures($collection_nid, $groups);
   return $response;
 }
 
@@ -226,14 +235,34 @@ function auto_identify_groups_callback($collection_nid) {
   // dpm($collection_nid, '$collection_nid');
   // dpm($_POST, '_POST');
 
-  $observations = get_observations_referencing_collection($collection_nid);
-  // dpm($observations, '$observations');
-  $result = array();
+  $query_params = drupal_get_query_parameters();
+  // dpm($query_params, '$query_params');
 
+  $offset = (empty($query_params['offset'])) ? 0 : $query_params['offset'];
+
+  $function_start = microtime(true);
+
+  $possible_matches = taxonomy_get_term_by_name($name, 'taxa');
+
+  $max_results = 5;
+
+  $total_observations = (int) get_observations_referencing_collection($collection_nid, ['is_count' => TRUE]);
+  $observations = get_observations_referencing_collection($collection_nid, [], $offset, $max_results);
+  $observations_processed = count($observations);
+  // dpm($observations, '$observations');
+  $tids = array();
+  // dpm($tids, '$tids');
+
+  // For testing
+  // $observations = array_slice($observations, 0, 1, TRUE);
+  // dpm($observations, '$observations');
+
+  // time_elapsed();
   try {
     foreach ($observations as $observation_nid => $observation_repr) {
       $observation = entity_metadata_wrapper('node', $observation_nid);
-      $result[] = identify_from_filenames($observation);
+      $tids[] = identify_from_filenames($observation);
+      // time_elapsed('nid ' . $observation_nid);
     }
   }
   catch (Exception $e) {
@@ -241,13 +270,24 @@ function auto_identify_groups_callback($collection_nid) {
       '#commands' => $e->getMessage());
   }
 
-  // drupal_set_message(t("Pictures grouped successfully"), 'status');
+
+  // $function_end = microtime(true);
+  // dpm(str_pad(round(($function_end - $function_start), 4), 5, '0') . ' ELAPSED: auto_identify_groups_callback()');
+
+  if ($offset + $max_results >= $total_observations) {
+    drupal_set_message($total_observations . " observations auto-identified.", 'status');
+  }
+
+  $result = array(
+    'Taxa tids identified' => $tids,
+    'total_observations' => $total_observations,
+    'observations_processed' => $observations_processed,
+  );
 
   // $commands[] = ajax_command_replace('#MYMODULE-wrapper', 'Hey ! Some AJAX content !');
   $response = array(
     '#type' => 'ajax',
-    '#commands' => array('Taxa nids identified' => $result),);
-
+    '#commands' => $result,);
   return $response;
 }
 
@@ -259,7 +299,9 @@ function auto_identify_groups_callback($collection_nid) {
  *   the collection, and each nid inside it is a picture within that obervation.
  *
  * @param $groups
- *   Array in the format [{'id' => 345, 'pictures' => [34, 35]}].
+ *   Array in the format [{'id' => 345, 'pictures' => [34, 35]}]. The 'id' is 
+ *   the node ID of the observation (if it exists), or any value to serve as a 
+ *  temporary id if it's a new group.
  */
 function group_pictures($collection, $groups) {
   // dpm($collection, '$collection');
@@ -286,6 +328,23 @@ function group_pictures($collection, $groups) {
     'promote' =>  0,
   );
 
+  // First delete groups that no longer have pictures
+  foreach ($groups as $group) {
+    $nid = $group['id'];
+    // dpm($nid, '$nid');
+    $group_nids = $group['pictures'];
+    // dpm($group_nids, '$group_nids');
+
+    // If the group contains no pictures, delete it.
+    if (! $group_nids) {
+      node_delete($nid);
+      $result['altered_nodes'][] = array(
+        'id' => $nid,
+      );
+    }
+  }
+
+  // Loop through all again, updating and saving the non-deleted pictures
   foreach ($groups as $group) {
 
     $nid = $group['id'];
@@ -295,54 +354,49 @@ function group_pictures($collection, $groups) {
     $group_nids = $group['pictures'];
     // dpm($group_nids, '$group_nids');
 
+    // If this was a deleted group
+    if (! $group_nids) {
+      continue;
+    }
 
     $entity_raw;
 
-    // If the group contains no nids, delete it.
-    if (! $group_nids) {
-      node_delete($nid);
-      $result['altered_nodes'][] = array(
-        'id' => $nid,
-      );
+    if ($status == 'altered') {
+      // Fetch it
+      $entity_raw = node_load($nid);
     }
     else {
-      if ($status == 'altered') {
-        // Fetch it
-        $entity_raw = node_load($nid);
-      }
-      else {
-        // Create a new node (an observation)
-        $entity_raw = entity_create('node', $values);
-      }
+      // Create a new node (an observation)
+      $entity_raw = entity_create('node', $values);
+    }
 
-      // Wrap the node to make dealing with the values of the entity's properties and fields easier
-      $observation = entity_metadata_wrapper('node', $entity_raw);
+    // Wrap the node to make dealing with the values of the entity's properties and fields easier
+    $observation = entity_metadata_wrapper('node', $entity_raw);
 
-      try {
-        // In auto_group_nodes.module
-        set_observation_fields($observation, $group_nids, $collection);
-      }
-      catch (Exception $e) {
-        $result = array(
-          'result' => 'failure',
-          'reason' => $e->getMessage()
-        );
-      }
+    try {
+      // In auto_group_nodes.module
+      set_observation_fields($observation, $group_nids, $collection);
+    }
+    catch (Exception $e) {
+      $result = array(
+        'result' => 'failure',
+        'reason' => $e->getMessage()
+      );
+    }
 
-      $observation->save();
-      // dpm($observation, 'observation');
+    $observation->save();
+    // dpm($observation, 'observation');
 
-      if ($status == 'new') {
-        $result['new_nodes'][] = array(
-          'temp_id' => $nid,
-          'id' => $observation->getIdentifier(),
-        );
-      }
-      else if ($status == 'altered') {
-        $result['altered_nodes'][] = array(
-          'id' => $observation->getIdentifier(),
-        );
-      }
+    if ($status == 'new') {
+      $result['new_nodes'][] = array(
+        'temp_id' => $nid,
+        'id' => $observation->getIdentifier(),
+      );
+    }
+    else if ($status == 'altered') {
+      $result['altered_nodes'][] = array(
+        'id' => $observation->getIdentifier(),
+      );
     }
 
   }
@@ -432,6 +486,7 @@ function secondary_toolbar_block_content() {
  */
 function set_observation_fields(&$observation, $picture_nids, $collection) {
   // dpm($picture_nids, '$picture_nids');
+  // dpm($collection, '$collection');
 
   $first_of_group = entity_metadata_wrapper('node', node_load($picture_nids[0]));
 
@@ -450,7 +505,7 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
     $filenames[] = $filename;
   }
 
-  $filenames_string = implode(', ', $filenames);
+  $filenames_string = implode('|', $filenames);
   $observation->field_filenames->           set($filenames_string);
 
   $observation->field_count->               set(1);
@@ -458,6 +513,16 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
   $observation->field_location->            set($location);
   $observation->field_date_observed->       set($date); // Taken from first picture
   $observation->field_collection->          set($collection);
+
+  // Get a fully loaded entity object for the logged in user.
+  $user = entity_metadata_wrapper('user', $GLOBALS['user']->uid);
+  // dpm($user->raw(), '$user');
+
+  $observer_name = $user->field_full_name->value();
+  if ($observer_name) {
+    // dpm($observer_name, '$observer_name');
+    $observation->field_observer_name->set($observer_name);
+  }
 
   $observation->save();
 
@@ -471,22 +536,36 @@ function set_observation_fields(&$observation, $picture_nids, $collection) {
  * Create identification based on file name.
  * 
  * @param EntityMetadataWrapper $observation
+ * 
+ * @return
+ *   The taxon tid if one is found, otherwise NULL.
  */
 function identify_from_filenames(&$observation) {
+  // dpm($observation, '$observation');
+  // If this observation already has identifications, skip it
+  $existing_identifications = get_identifications_refing_observation('identification', $observation->getIdentifier());
+  // dpm($existing_identifications, '$existing_identifications');
+  if (count($existing_identifications) >= 1) {
+    return array_keys($existing_identifications);
+  }
+
+
   // dpm($observation->raw(), '$observation->raw()');
-  $filenames = explode(', ', $observation->field_filenames->value());
+  $filenames = explode('|', $observation->field_filenames->value());
   // dpm($filenames, '$filenames');
 
   // Find the taxon
 
   $taxon_nid = NULL;
   foreach ($filenames as $filename) {
-    $taxon_nid_found = get_taxon_from_filename($filename); // From group_selected.module
-    if ($taxon_nid_found) {
-      $taxon_nid = $taxon_nid_found;
+    $taxon_tid_found = get_taxon_from_filename($filename); // From group_selected.module
+    if ($taxon_tid_found) {
+      $taxon_nid = $taxon_tid_found;
       // dpm($taxon_nid, '$taxon_nid');
+      break;
     }
   }
+  // time_elapsed('tid found ' . $taxon_nid . ': ');
   // dpm($taxon_nid, '$taxon_nid');
 
   // Create identification
@@ -504,16 +583,7 @@ function identify_from_filenames(&$observation) {
   else {
     return NULL;
   }
-
-  // Update observation's name
-
-  $taxon_loaded = taxonomy_term_load($taxon_nid);
-  // dpm($taxon_loaded, '$taxon_loaded');
-  $taxon_name = $taxon_loaded->name;
-  // dpm($taxon_name, '$taxon_name');
-
-  $observation->title->set($taxon_name);
-  $observation->save();
+  // time_elapsed('taxon created: ');
 
   return $taxon_nid;
 }
@@ -533,15 +603,22 @@ function identify_from_filenames(&$observation) {
  * @param string $filename
  */
 function get_taxon_from_filename($filename) {
+  // dpm($filename, '$filename');
   $taxon = null;
 
-  // Trim off everything after the first period.
-  $name = substr($filename, 0, strpos($filename, '.'));
+  // Trim off everything after the last period.
+  $name = substr($filename, 0, strrpos($filename, '.'));
   // dpm($name, 'name');
+
+  // Remove special characters
+  $name = preg_replace('/\.|\,|\;/', '', $name);
+  // dpm($name, '$name');
 
   // ---------------------------------------------------------------------------
   // Try with whole name (can match any taxon).
+  // dpm('trying whole name');
 
+  // dpm($name, 'name searched for');
   $possible_matches = taxonomy_get_term_by_name($name, 'taxa');
   // dpm($possible_matches, 'possible_matches');
 
@@ -550,11 +627,14 @@ function get_taxon_from_filename($filename) {
     $taxon = $keys[0]; // Just the first one.
     return $taxon;
   }
+  // time_elapsed();
 
   // ---------------------------------------------------------------------------
   // Split filename into words.
+  // dpm('trying filename split pairs');
 
-  $regex = '/ +|-+|_+/'; // Can match spaces, dashes, or underscores
+  // Can match spaces, dashes, or underscores
+  $regex = '/ +|-+|_+/';
   $words = preg_split($regex, $name);
   // dpm($words, '$words');
 
@@ -563,9 +643,11 @@ function get_taxon_from_filename($filename) {
 
   for ($i = 0; $i < count($words) - 1; $i++) {
     $species_name = $words[$i] . ' ' . $words[$i + 1];
-    // dpm($species_name, 'species_name');
+
+    // dpm($species_name, 'species_name searched for');
     $possible_matches = taxonomy_get_term_by_name($species_name, 'taxa');
     // dpm($possible_matches, 'possible_matches');
+    // time_elapsed();
 
     if (count($possible_matches) >= 1) {
       $keys = array_keys($possible_matches);
@@ -573,11 +655,15 @@ function get_taxon_from_filename($filename) {
       return $taxon;
     }
   }
+  // time_elapsed();
 
   // ---------------------------------------------------------------------------
   // Try with each individual word at a time (can match any taxon).
+  // dpm('trying each filename split');
 
   foreach ($words as $word) {
+
+    // dpm($word, 'word searched for');
     $possible_matches = taxonomy_get_term_by_name($word, 'taxa');
     // dpm($possible_matches, 'possible_matches');
 
@@ -587,6 +673,7 @@ function get_taxon_from_filename($filename) {
       return $taxon;
     }
   }
+  // time_elapsed();
 
   return $taxon;
 }

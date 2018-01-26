@@ -16,7 +16,7 @@ $scale:         0.6;
   position: absolute;
   left: calc(50% - 45px / 2);
   top: calc(50% - 45px / 2);
-  z-index: 60;
+  z-index: $z-page-content + 12;
 }
 
 .f_circleG{

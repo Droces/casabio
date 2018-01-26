@@ -448,9 +448,22 @@ input[type="radio"] + label,
 input[type="checkbox"] + label {
   font-size: 0.85em; }
 
-input[type="radio"][data-values-status="mixed"],
-input[type="checkbox"][data-values-status="mixed"] {
+input:not([type="submit"])[data-values-status="mixed"],
+textarea[data-values-status="mixed"],
+select[data-values-status="mixed"] {
   box-shadow: 0 0 4px #ffcf00; }
+
+.fieldset-description,
+form .description {
+  background: rgba(0, 0, 0, 0.08);
+  border: solid 1px rgba(0, 0, 0, 0.2);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 1em;
+  font-size: 0.85em; }
+  .fieldset-description p:first-child,
+  form .description p:first-child {
+    margin-top: 0; }
 
 /* -----------------------------------------------------------------------------
                                                             Buttons
@@ -462,6 +475,16 @@ input[type="reset"],
 input[type="submit"],
 input[type="button"],
 .ui-widget.ui-widget-content button {
+  font-size: 0.9em;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  padding: 0.7em 1.1em;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  background: #0099cb;
+  color: white;
+  text-transform: uppercase;
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -469,24 +492,15 @@ input[type="button"],
   appearance: none;
   border-radius: 0.4em;
   cursor: pointer;
-  display: inline-block;
   outline: 0;
   overflow: visible;
-  text-decoration: none;
   width: auto;
-  font-size: 0.9em;
   margin: 0.4em;
   vertical-align: baseline;
-  text-transform: uppercase;
-  font-weight: 600;
   border: none;
-  padding: 0.6em 1.2em;
   position: relative;
-  height: 40px;
   box-sizing: border-box;
-  box-shadow: none;
-  background: none;
-  color: #0099cb; }
+  box-shadow: none; }
   button:hover, button:focus,
   a.button:hover,
   a.button:focus,
@@ -549,42 +563,13 @@ input[type="button"],
     input[type="button"].active:active,
     .ui-widget.ui-widget-content button.active:active {
       background: #007398; }
-  button[disabled].raised, .form-actions button[disabled][type="submit"],
-  .form-actions button[disabled][type="button"], .form-actions a[disabled].button[type="submit"],
-  .form-actions a[disabled].button[type="button"], .form-actions a[disabled][role="button"][type="submit"],
-  .form-actions a[disabled][role="button"][type="button"], .form-actions input[disabled][type="submit"],
-  .form-actions input[disabled][type="button"], .form-actions
-  .ui-widget.ui-widget-content button[disabled][type="submit"],
-  .form-actions
-  .ui-widget.ui-widget-content button[disabled][type="button"],
-  a.button[disabled].raised,
-  a[role="button"][disabled].raised,
-  input[type="reset"][disabled].raised,
-  input[type="submit"][disabled].raised,
-  input[type="button"][disabled].raised,
-  .ui-widget.ui-widget-content button[disabled].raised,
-  .ui-widget.ui-widget-content .form-actions button[disabled][type="submit"],
-  .ui-widget.ui-widget-content
-  .form-actions button[disabled][type="button"],
-  .ui-widget.ui-widget-content .form-actions a[disabled].button[type="submit"], .form-actions
-  .ui-widget.ui-widget-content a[disabled].button[type="submit"],
-  .ui-widget.ui-widget-content
-  .form-actions a[disabled].button[type="button"],
-  .form-actions
-  .ui-widget.ui-widget-content a[disabled].button[type="button"],
-  .ui-widget.ui-widget-content .form-actions a[disabled][role="button"][type="submit"], .form-actions
-  .ui-widget.ui-widget-content a[disabled][role="button"][type="submit"],
-  .ui-widget.ui-widget-content
-  .form-actions a[disabled][role="button"][type="button"],
-  .form-actions
-  .ui-widget.ui-widget-content a[disabled][role="button"][type="button"],
-  .ui-widget.ui-widget-content .form-actions input[disabled][type="submit"], .form-actions
-  .ui-widget.ui-widget-content input[disabled][type="submit"],
-  .ui-widget.ui-widget-content
-  .form-actions input[disabled][type="button"],
-  .form-actions
-  .ui-widget.ui-widget-content input[disabled][type="button"], .form-actions .ui-widget.ui-widget-content button[disabled][type="submit"],
-  .form-actions .ui-widget.ui-widget-content button[disabled][type="button"] {
+  button[disabled],
+  a.button[disabled],
+  a[role="button"][disabled],
+  input[type="reset"][disabled],
+  input[type="submit"][disabled],
+  input[type="button"][disabled],
+  .ui-widget.ui-widget-content button[disabled] {
     background: #ADADAD;
     color: rgba(255, 255, 255, 0.6);
     text-shadow: none; }
@@ -778,7 +763,7 @@ input[type="button"],
     content: "";
     border-color: transparent #6f6f6f;
     border-style: solid;
-    border-width: 20px 14px;
+    border-width: 17px 14px;
     position: absolute;
     top: 0px; }
   button.pointing-right::after,
@@ -1212,6 +1197,8 @@ body {
   z-index: -10;
   position: relative;
   height: 100%; }
+  body.mceContentBody {
+    background-color: white; }
 
 acronym, abbr {
   border-bottom: 1px dotted #222;
@@ -1389,7 +1376,7 @@ main > * > label {
   position: relative; }
   [aria-enabled="false"]::before {
     content: "";
-    z-index: 50;
+    z-index: 11;
     position: absolute;
     width: 100%;
     height: 100%;

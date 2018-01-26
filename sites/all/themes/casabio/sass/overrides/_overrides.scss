@@ -33,7 +33,7 @@
     font-weight: 600;
     border-radius: 0.2em 0.2em 0 0;
     line-height: 1.1em;
-    border: solid 1px transparent;
+    border: solid 1px rgba(grey, 0.8);
     font-size: 0.9em;
     margin-bottom: -1px;
 
@@ -98,12 +98,13 @@ body.page-home { /* the Home page */
 
     [role="tablist"] {
       [role="tab"] {
-        background: none;
-        color: inherit;
+        background: rgba(white, 0.8);
+        color: $colour-links;
         text-shadow: none;
 
         &[aria-selected] {
           background: white;
+          color: inherit;
         }
       }
     }

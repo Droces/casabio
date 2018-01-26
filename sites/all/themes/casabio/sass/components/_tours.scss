@@ -1,0 +1,25 @@
+.shepherd-step.shepherd-theme-arrows {
+  z-index: 98;
+
+  .shepherd-content {
+    background: #323232;
+    color: white;
+  }
+  &.shepherd-element-attached-top.shepherd-element-attached-center .shepherd-content::before {
+    border-bottom-color: #323232;
+  }
+  &.shepherd-element-attached-bottom.shepherd-element-attached-center .shepherd-content::before {
+    border-top-color: #323232;
+  }
+
+  .shepherd-text {
+    max-width: 30em;
+  }
+
+  &:not(.last) .shepherd-content footer .shepherd-buttons li .shepherd-button:not(.next),
+  &.last .shepherd-content footer .shepherd-buttons li .shepherd-button:not(.end) {
+    padding: .75em;
+    color: lighten(#3288e6, 10%);
+    background: transparent;
+  }
+}

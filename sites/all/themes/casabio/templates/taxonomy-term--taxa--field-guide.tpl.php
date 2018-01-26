@@ -5,65 +5,72 @@
  */
 ?>
 
+<?php /*dpm($term);*/ ?>
+
 <div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes . " view-mode-" . $view_mode; ?>" data-vocabulary="<?php print $term->vocabulary_machine_name; ?>" data-view-mode="<?php print $view_mode; ?>">
 
   <?php if (isset($content['term_block_link'])): ?>
     <?php print render($content['term_block_link']); ?>
   <?php endif; ?>
 
-  <div class="col-container outer">
 
-    <section class="show">
-      <?php if (isset($content['field_representative_picture'])): ?>
-        <?php print render($content['field_representative_picture']); ?>
-      <?php endif; ?>
-    </section>
+  <header class="term">
+    <!-- Prefix: Rank -->
+    <?php if (isset($content['field_taxon_rank'])) {
+      print '<span class="prefix">' . render($content['field_taxon_rank']) . '</span>';
+    } ?>
 
-
-    <section class="tell">
-
-      <h2><a href="<?php print $term_url; ?>">
-        <!-- Prefix: Rank -->
-        <?php if (isset($content['field_taxon_rank'])) {
-          print '<span class="prefix">' . render($content['field_taxon_rank']) . '</span>';
-        } ?>
-
-        <!-- Title -->
+    <!-- Title -->
+    <a href="<?php print $term_url; ?>">
+      <h2 class="<?php print $title_class; ?>">
         <?php print $term_name; ?>
+      </h2>
+    </a>
 
-        <!-- Suffix: Common names -->
-        <?php if (isset($content['field_common_names'])) {
-          print '<span class="suffix">(' . render($content['field_common_names'][0]) . ')</span>';
-        } ?>
-        <?php /*print render($content['field_taxon_rank']);*/ ?>
-      </a></h2>
+    <!-- Suffix: Common names -->
+    <?php if (isset($content['field_common_names'])) {
+      print '<span class="suffix">' . render($content['field_common_names'][0]) . '</span>';
+    } ?>
+    <?php /*print render($content['field_taxon_rank']);*/ ?>
+    
+    <?php if (isset($content['field_vulnerability'])): ?>
+      <?php print render($content['field_vulnerability']); ?>
+    <?php endif; ?>
+    
+    <?php hide($content['field_num_children']);
+      if (isset($content['field_num_children'])):
+        if ($num_children > 0): ?>
+      <?php print render($content['field_num_children']) . ' ' . $children_suffix; ?>
+    <?php endif; endif; ?>
+  </header>
 
-      <div class="col-container">
-        <section class="show">
 
-          <?php if (isset($content['field_pictures'])): ?>
-            <?php print render($content['field_pictures']); ?>
-          <?php endif; ?>
+  <section class="show">
+    <?php if (isset($content['field_representative_picture'])): ?>
+      <?php print render($content['field_representative_picture']); ?>
+    <?php endif; ?>
 
-          <?php if (isset($content['field_range'])): ?>
-            <?php /*print render($content['field_range']);*/ ?>
-            <?php hide($content['field_range']); ?>
-          <?php endif; ?>
+    <?php if (isset($content['field_pictures'])): ?>
+      <?php print render($content['field_pictures']); ?>
+    <?php endif; ?>
 
-          <?php if (isset($content['locations'])): ?>
-            <?php print render($content['locations']); ?>
-          <?php endif; ?>
-        </section>
+    <?php if (isset($content['field_range'])): ?>
+      <?php /*print render($content['field_range']);*/ ?>
+      <?php hide($content['field_range']); ?>
+    <?php endif; ?>
 
-        <section class="tell">
+    <?php if (isset($content['locations'])): ?>
+      <?php print render($content['locations']); ?>
+    <?php endif; ?>
+  </section>
 
-          <div class="content" role="presentation">
-            <?php hide($content['field_common_names']); ?>
-            <?php print render($content); ?>
-          </div>
+  <section class="tell">
 
-        </section>
-      </div>
-    </section>
-  </div>
+    <div class="content" role="presentation">
+      <?php hide($content['field_common_names']); ?>
+      <?php print render($content); ?>
+    </div>
+
+  </section>
+
 </div>

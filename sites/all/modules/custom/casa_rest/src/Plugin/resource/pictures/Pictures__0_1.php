@@ -10,6 +10,8 @@ namespace Drupal\casa_rest\Plugin\resource\pictures;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful\Plugin\resource\ResourceNode;
 
+
+
 /**
  * Class Pictures
  * @package Drupal\casa_rest\Plugin\resource\pictures
@@ -73,6 +75,10 @@ class Pictures__0_1 extends ResourceNode implements ResourceInterface {
         //   'majorVersion' => 0,
         //   'minorVersion' => 1,
         // ),
+      ),
+
+      'status' => array(
+        'property' => 'status',
       ),
 
       self::$field_names_map['field_date_taken'] => array(

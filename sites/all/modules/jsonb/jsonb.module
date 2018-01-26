@@ -1,0 +1,180 @@
+<?php
+
+/**
+ * @file
+ * JSONB module for Drupal 7.
+ *
+ * Provides a JSON(B) field type to be used for storing JSON in modern
+ * databases like PostgreSQL.
+ */
+
+define('JSONB_UI_EDIT_ALLOWED', 'allow');
+define('JSONB_UI_EDIT_HIDE', 'hide');
+
+/**
+ * Implements hook_field_info().
+ */
+function jsonb_field_info() {
+  return [
+    'json' => [
+      'label' => 'JSON',
+      'description' => t('Store JSON data in a column optimised storage size. Use this only if you do not need to query the data inside the JSON.'),
+      'default_widget' => 'jsonb_textarea',
+      'default_formatter' => 'jsonb_text',
+    ],
+    'jsonb' => [
+      'label' => 'JSONB',
+      'description' => t('Store JSON data in a column optimised for indexing, so it can be queried much like a database table. Requires PostgreSQL 9.4.'),
+      'default_widget' => 'jsonb_textarea',
+      'default_formatter' => 'jsonb_text',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * @see jsonb_field_widget_error()
+ */
+function jsonb_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if (drupal_strlen($item['value'])) {
+      $value = json_decode($item['value']);
+
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        $errors[$field['field_name']][$langcode][$delta][] = [
+          'error' => 'jsonb_invalid_json',
+          'message' => t('JSON field must contain a valid JSON object.'),
+        ];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function jsonb_field_is_empty($item, $field) {
+  $value = trim($item['value']);
+
+  return $value === NULL || $value === '';
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ * @see jsonb_field_formatter_view()
+ */
+function jsonb_field_formatter_info() {
+  return [
+    // This formatter just displays the JSON data as (escaped) code on the page.
+    'jsonb_text' => [
+      'label' => t('Show JSON as text'),
+      'field types' => ['json', 'jsonb'],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @see jsonb_field_formatter_info()
+ */
+function jsonb_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = [];
+
+  if ($display['type'] == 'jsonb_text') {
+    foreach ($items as $delta => $item) {
+      $element[$delta] = [
+        '#type' => 'html_tag',
+        '#tag' => 'code',
+        '#value' => check_plain($item['value']),
+        '#attributes' => ['class' => ['jsonb-text-value']],
+        '#attached' => [
+          'css' => [
+            drupal_get_path('module', 'jsonb') . '/css/jsonb.base.css',
+            drupal_get_path('module', 'jsonb') . '/css/jsonb.theme.css',
+          ],
+        ],
+      ];
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * @see jsonb_field_widget_form()
+ */
+function jsonb_field_widget_info() {
+  return [
+    'jsonb_textarea' => [
+      'label' => t('Textarea'),
+      'field types' => ['json', 'jsonb'],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function jsonb_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  if ($widget['type'] == 'jsonb_textarea') {
+    $form['ui_edit'] = [
+      '#type' => 'radios',
+      '#title' => t('UI editor'),
+      '#description' => t('Whether to allow the editor user interface to edit JSON data.'),
+      '#options' => [
+        JSONB_UI_EDIT_ALLOWED => t('Allow'),
+        JSONB_UI_EDIT_HIDE => t('Hide'),
+      ],
+      '#default_value' => (!empty($settings['ui_edit'])) ? $settings['ui_edit'] : JSONB_UI_EDIT_ALLOWED,
+    ];
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function jsonb_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $widget = $element;
+  $widget['#delta'] = $delta;
+
+  if ($instance['widget']['type'] == 'jsonb_textarea') {
+    $widget += [
+      '#type' => 'textarea',
+      '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+      '#rows' => 10,
+      '#attributes' => ['class' => ['jsonb-textarea']],
+      '#attached' => [
+        'css' => [drupal_get_path('module', 'jsonb') . '/css/jsonb.admin.css'],
+      ],
+      '#access' => $instance['widget']['settings']['ui_edit'] != JSONB_UI_EDIT_HIDE,
+    ];
+  }
+
+  $element['value'] = $widget;
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * @see jsonb_field_validate()
+ * @see form_error()
+ */
+function jsonb_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'jsonb_invalid_json':
+      form_error($element, $error['message']);
+      break;
+  }
+}

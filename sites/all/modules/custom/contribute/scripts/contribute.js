@@ -35,10 +35,12 @@ Drupal.behaviors.contribute = {
 Drupal.contribute = {
 
   is_page: function(page) {
-    if (typeof current_page == 'undefined') {
+    // throw "is_page()";
+    // console.log('current_page: ', current_page);
+    if (typeof current_page === 'undefined') {
       throw "In Drupal.contribute.is_page(), current_page is undefined";
     }
-    return current_page == page;
+    return current_page === page;
   },
 
   get_collection_nid: function() {

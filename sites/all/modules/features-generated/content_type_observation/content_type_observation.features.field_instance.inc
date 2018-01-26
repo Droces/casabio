@@ -25,7 +25,7 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'inline' => array(
         'label' => 'above',
@@ -204,7 +204,7 @@ function content_type_observation_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'inline' => array(
         'label' => 'above',
@@ -296,7 +296,7 @@ function content_type_observation_field_default_field_instances() {
           'link_class' => '',
         ),
         'type' => 'entityreference_count_formatter_default',
-        'weight' => 15,
+        'weight' => 12,
       ),
       'inline' => array(
         'label' => 'above',
@@ -479,6 +479,66 @@ function content_type_observation_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-observation-field_elevation'.
+  $field_instances['node-observation-field_elevation'] = array(
+    'bundle' => 'observation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'prefix_suffix' => 1,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 6,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_elevation',
+    'label' => 'Elevation',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => 'm',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-observation-field_external_id'.
   $field_instances['node-observation-field_external_id'] = array(
     'bundle' => 'observation',
@@ -494,7 +554,7 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'inline' => array(
         'label' => 'above',
@@ -580,7 +640,7 @@ function content_type_observation_field_default_field_instances() {
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 16,
+        'weight' => 13,
       ),
       'inline' => array(
         'label' => 'above',
@@ -642,8 +702,8 @@ function content_type_observation_field_default_field_instances() {
         'label' => 'inline',
         'module' => 'taxonomy',
         'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Unknown',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
@@ -708,7 +768,7 @@ function content_type_observation_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -803,7 +863,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'showInputField' => 0,
       ),
       'type' => 'geofield_geojson',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -818,7 +878,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 14,
+        'weight' => 15,
       ),
       'inline' => array(
         'label' => 'above',
@@ -1107,7 +1167,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'inline' => array(
         'label' => 'above',
@@ -1192,7 +1252,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
           'empty_fields_handler' => '',
         ),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'inline' => array(
         'label' => 'above',
@@ -1263,14 +1323,12 @@ NB. Widget type needs to be WKT for the API to function correctly.',
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-locality-field_range'.
-  $field_instances['taxonomy_term-locality-field_range'] = array(
-    'bundle' => 'locality',
+  // Exported field_instance: 'node-observation-field_subject_classification'.
+  $field_instances['node-observation-field_subject_classification'] = array(
+    'bundle' => 'observation',
     'default_value' => array(
       0 => array(
-        'dataType' => 'WKT',
-        'geom' => 'GEOMETRYCOLLECTION EMPTY',
-        'input_format' => 'wkt',
+        'value' => 'organism',
       ),
     ),
     'deleted' => 0,
@@ -1278,19 +1336,228 @@ NB. Widget type needs to be WKT for the API to function correctly.',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'geofield',
+        'module' => 'list',
         'settings' => array(
-          'data' => 'full',
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
         ),
-        'type' => 'geofield_wkt',
+        'type' => 'list_default',
+        'weight' => 14,
+      ),
+      'inline' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'text' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_subject_classification',
+    'label' => 'Subject classification',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-locality-field_is_private'.
+  $field_instances['taxonomy_term-locality-field_is_private'] = array(
+    'bundle' => 'locality',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'list',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'list_default',
+        'weight' => 1,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_is_private',
+    'label' => 'Is private',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-locality-field_range'.
+  $field_instances['taxonomy_term-locality-field_range'] = array(
+    'bundle' => 'locality',
+    'default_value' => array(),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'leaflet',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'height' => 400,
+          'icon' => array(
+            'html' => '',
+            'htmlClass' => '',
+            'iconAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconImageStyle' => '',
+            'iconSize' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconType' => 'marker',
+            'iconUrl' => '',
+            'popupAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowUrl' => '',
+          ),
+          'leaflet_map' => 'OSM Mapnik',
+          'popup' => array(
+            'show' => 0,
+            'text' => '',
+          ),
+          'vector_display' => array(
+            'clickable' => 0,
+            'color' => '',
+            'dashArray' => '',
+            'fill' => 0,
+            'fillColor' => '',
+            'fillOpacity' => '',
+            'opacity' => '',
+            'stroke' => 0,
+            'stroke_override' => 0,
+            'weight' => '',
+          ),
+          'zoom' => array(
+            'initialZoom' => -1,
+            'maxZoom' => -1,
+            'minZoom' => 1,
+            'scrollWheelZoom' => 1,
+          ),
+        ),
+        'type' => 'geofield_leaflet',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'small' => array(
+        'label' => 'hidden',
+        'module' => 'leaflet',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'height' => 200,
+          'icon' => array(
+            'html' => '',
+            'htmlClass' => '',
+            'iconAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconImageStyle' => '',
+            'iconSize' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'iconType' => 'marker',
+            'iconUrl' => '',
+            'popupAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowAnchor' => array(
+              'x' => '',
+              'y' => '',
+            ),
+            'shadowUrl' => '',
+          ),
+          'leaflet_map' => 'OSM Mapnik',
+          'popup' => array(
+            'show' => 0,
+            'text' => '',
+          ),
+          'vector_display' => array(
+            'clickable' => 0,
+            'color' => '',
+            'dashArray' => '',
+            'fill' => 0,
+            'fillColor' => '',
+            'fillOpacity' => '',
+            'opacity' => '',
+            'stroke' => 0,
+            'stroke_override' => 0,
+            'weight' => '',
+          ),
+          'zoom' => array(
+            'initialZoom' => -1,
+            'maxZoom' => -1,
+            'minZoom' => 1,
+            'scrollWheelZoom' => 1,
+          ),
+        ),
+        'type' => 'geofield_leaflet',
         'weight' => 0,
       ),
     ),
@@ -1316,7 +1583,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
         'showInputField' => 0,
       ),
       'type' => 'openlayers_geofield',
-      'weight' => 32,
+      'weight' => 4,
     ),
   );
 
@@ -1326,12 +1593,14 @@ NB. Widget type needs to be WKT for the API to function correctly.',
   t('Count');
   t('Date observed');
   t('Description');
+  t('Elevation');
   t('External ID');
   t('Filenames');
   t('For observations are from an external source: The unique ID code used to identify this observation in the source’ database');
   t('For observations that aren\'t contributed directly into CasaBio; Where this observation comes from.');
   t('Full name of the person who originally recorded this observation');
   t('In the form ‘CBO0000001’');
+  t('Is private');
   t('Locality');
   t('Location');
   t('Name of observer');
@@ -1341,6 +1610,7 @@ NB. Widget type needs to be WKT for the API to function correctly.',
   t('Range');
   t('Source');
   t('Specimen ID');
+  t('Subject classification');
   t('The area of land that the observation was made within.');
   t('The number of animals / plants / specimens seen at this location.');
   t('The number or code that uniquely identifies this plant or animal specimen when it has been collected, and is used by scientific institutes to refer to the specimen. The format of this ID will be specific to the collector. It can simply be an integer number, or it can be a code comprised of the name of the collector or the date the specimen was collected.');

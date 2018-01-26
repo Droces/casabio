@@ -51,6 +51,15 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
     }
   }
 
+  &.groupings-headings {
+    div.title {
+      font-weight: bold;
+      font-size: $h2-font-size;
+      margin-top: 2em;
+      margin-bottom: 0.6em;
+    }
+  }
+
   &.grid-2 {
     .views-row {
       width: 49%;
@@ -137,6 +146,21 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
 
 
 /* -----------------------------------------------------------------------------
+                                                            Views page
+*/
+body.page-views {
+  .view-grouping-header {
+    font-size: $h2-font-size;
+    font-weight: bold;
+    line-height: 1;
+    margin-top: 1.4em;
+    margin-bottom: 0.3em;
+  }
+}
+
+
+
+/* -----------------------------------------------------------------------------
                                                             Exposed filters
 */
 // The exposed form may be in a block and not inside the actual view
@@ -185,14 +209,18 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
     }
   }
 
-  label[title] {
-    border-bottom: none;
+  label {
+    display: inline-block;
+    
+    &[title] {
+      border-bottom: none;
+    }
   }
 
   // label[title]::after,
   .description {
     @extend .tooltip_q;
-    float: right;
+    // float: right;
   }
   div.description {
     display: none;
@@ -250,4 +278,13 @@ $zen-column-count: 4; // views are within #content, which has 4 columns
 
 .pager-current {
   font-weight: bold;
+}
+
+.view-id-taxa_field_guide {
+  .view-grouping > .view-grouping-header {
+    margin-left: -200px;
+  }
+  .view-grouping-content > .view-grouping-header {
+    margin-left: -100px;
+  }
 }

@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the jsonb module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ *
+ * @see http://drupal.org/node/146939
+ * @see schemaapi
+ * @see hook_field_schema()
+ *
+ * @ingroup jsonb
+ */
+function jsonb_field_schema($field) {
+  assert(in_array($field['type'], ['json', 'jsonb']), new RuntimeException('Someone tried to get schema info a JSON/JSONB field with an invalid type. Something is very wrong.'));
+
+  return [
+    'columns' => [
+      'value' => [
+        'type' => 'text',
+        // For MySQL only. PostgreSQL only uses sizes on ints and varchars.
+        'size' => 'big',
+        // Will be json or jsonb depending on the field type.
+        'pgsql_type' => $field['type'],
+        'not null' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function jsonb_requirements($phase) {
+  $requirements = array();
+  return $requirements;
+}

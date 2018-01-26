@@ -139,13 +139,22 @@ Drupal.form_prefiller = {
     }
 
     field_values_mixed = field_values.filter( onlyUnique ).length > 1  ? true : false; //selecteds_indexes.length
-    // console.log('field_values_mixed: ', field_values_mixed);
+    // console.log(field_name + ' field_values_mixed: ', field_values_mixed);
 
     // For mixed-values fields, display a message to notify the user
     if( field_values_mixed ) {
-      // console.log('field_values_mixed');
-      field.attr( 'data-values-status', "mixed" );
-      field.filter('[type="checkbox"]').prop("indeterminate", true);
+      // console.log('field_values mixed: ', field_values);
+
+      field.filter('select, textarea')
+        .val(null)
+        .attr('data-values-status', "mixed" );
+
+      $.each(field_values, function(index, value) {
+        // console.log('value: ', value);
+        field.filter('[type="checkbox"][value="' + value[0] + '"]')
+          .prop("indeterminate", true)
+          .attr('data-values-status', "mixed" );
+      });
     }
 
     // For single-value fields, set the form item's value to the field value

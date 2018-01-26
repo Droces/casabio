@@ -21,12 +21,13 @@ function taxonomy_taxa_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Basic info',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_taxon_rank',
       1 => 'field_range',
       2 => 'field_localities',
-      3 => 'description',
+      3 => 'field_rank',
+      4 => 'description',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -39,7 +40,7 @@ function taxonomy_taxa_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_info|taxonomy_term|taxa|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -52,7 +53,7 @@ function taxonomy_taxa_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Names',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_common_names',
       1 => 'field_scientific_name',
@@ -65,10 +66,10 @@ function taxonomy_taxa_field_group_info() {
         'classes' => 'group names',
         'description' => '',
       ),
-      'formatter' => 'closed',
+      'formatter' => 'open',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_names|taxonomy_term|taxa|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -81,7 +82,7 @@ function taxonomy_taxa_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Pictures',
-    'weight' => '3',
+    'weight' => '6',
     'children' => array(
       0 => 'field_representative_picture',
       1 => 'field_pictures',
@@ -97,7 +98,7 @@ function taxonomy_taxa_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_pictures|taxonomy_term|taxa|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -114,6 +115,15 @@ function taxonomy_taxa_field_group_info() {
     'children' => array(
       0 => 'field_lsid',
       1 => 'field_etymology',
+      2 => 'field_external_references',
+      3 => 'field_vulnerability',
+      4 => 'field_long_etymology',
+      5 => 'field_etymology_applies_to',
+      6 => 'field_synonym_of',
+      7 => 'field_journal_info',
+      8 => 'field_authors',
+      9 => 'field_year_sci_name',
+      10 => 'field_sci_name_status',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -126,7 +136,7 @@ function taxonomy_taxa_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_scientific|taxonomy_term|taxa|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

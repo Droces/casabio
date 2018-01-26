@@ -71,7 +71,7 @@ Position must be relative!
     top: 50%;
     width: 100%;
     left: 0;
-    z-index: 10;
+    z-index: $z-page-content + 8;
 
     display: none; // Only here while there isn't more than 1 slide
 

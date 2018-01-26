@@ -1,0 +1,18 @@
+<?php
+/**
+ * @file
+ * Description…
+ */
+
+function user_help_user_login(&$edit, $account) {
+
+  // $js_files = array(
+  //   drupal_get_path('module', 'user_help') . '/js/user_help.js';
+  //   drupal_get_path('module', 'user_help') . '/libraries/shepherd/dist/js/tether.js',
+  //   drupal_get_path('module', 'user_help') . '/libraries/shepherd/dist/js/shepherd.min.js',
+  // );
+
+  // foreach ($js_files as $path) {
+  //   drupal_add_js($path);
+  // }
+}

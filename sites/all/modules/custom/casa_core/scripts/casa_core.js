@@ -48,8 +48,6 @@ var api_url; // =                 site_url + 'services'; // using RESTful module
 
 var security_token =      null;
 
-var timers = {};
-
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.casa_core = {
@@ -58,8 +56,6 @@ Drupal.behaviors.casa_core = {
 
     if (! page_is_setup) {
       // Drupal.casa_utilities.start_timer('casa_core');
-
-      // console.log('settings["node_info"]["fields_info"]: ', settings['node_info']['fields_info']);
 
       site_url = settings.basePath;
       if (! site_url) {
@@ -85,6 +81,8 @@ Drupal.behaviors.casa_core = {
           event.preventDefault();
         }
       });
+
+      set_up_printables(context);
 
       // Drupal.casa_utilities.end_timer('casa_core');
       page_is_setup = true;
@@ -134,9 +132,9 @@ Drupal.casa_core = {
 
   fetch_token: function(success_callbacks, always_callbacks) {
     var ajax_settings = {
-      // type: "POST",
-      type: "GET",
-      contentType: "application/json",
+      // type: 'POST',
+      type: 'GET',
+      contentType: 'application/json',
       // url: api_url + '/users/token'
       url: api_url + '/login-token',
     }
@@ -234,10 +232,38 @@ function set_up_dialogs(context) {
   // Adds div element that will contain information about keyboard shortcuts.
   $( 'body', context).append("<div id='display-shortcuts' data-transform='to-dialog' style='display: none;' title='Keyboard Shortcuts'></div>");
 
+  // $('.as-json[rel="opens-dialog"]', context).click(function(event) {
+  //   // console.log('$(this): ', $(this));
+  //   event.preventDefault();
+  //   // $.getJSON($(this).attr('href'), function(data) {
+  //   //   console.log('data: ', data);
+  //   //   alert(data.message);
+  //   // });
+  //   $.ajax({
+  //     url: $(this).attr('href'),
+  //     // dataType: "jsonp",
+  //     success: function( response ) {
+  //       console.log('data: ', data);
+  //       // alert(data.message);
+  //     }
+  //   });
+  //   return false;
+  // });
+
   // Transform elements to dialogs.
-  var to_dialog = $('[data-transform="to-dialog"]', context);
+  var to_dialog = $('[data-transform="to-dialog"], .transform-to-dialog', context);
+  // console.log(to_dialog, 'to_dialog');
 
   to_dialog.each(function(index, element) {
+    // console.log(element, 'element');
+
+    var title = '';
+    if ($(this).attr('data-title')) {
+      title = $(this).attr('data-title');
+    }
+    else if ($(this).hasClass('block')) {
+      title = $(this).find('.block-title').html();
+    }
 
     var width = $(this).attr('data-width');
     width = typeof width != 'undefined' ? width : 600;
@@ -255,9 +281,10 @@ function set_up_dialogs(context) {
       autoOpen: false,
       resizable: is_resizable,
       width: width,
+      title: title,
       position: get_dialogs_position(),
       open: function( event, ui ) {
-        $(document).trigger('dialog_opened');
+        $(document).trigger('dialog_opened', $(this));
       },
       close: function( event, ui ) {
         $(document).trigger('dialog_closed');
@@ -304,12 +331,19 @@ function add_listeners(context, settings) {
         var do_open = false;
       }
     }
-
-    if (target == '.edit_form_wrapper') {}
       
     if (do_open) {
       $(target).dialog('open');
     }
+  });
+
+  // Close a dialog when close button clicked.
+  $('[data-close]', context).click(function(event) {
+    event.preventDefault();
+    var target = $(this).attr('data-close');
+    // console.log('target: ', target);
+
+    $(target).dialog('close');
   });
 
   // Handle submission of 'identification agreement form'
@@ -427,7 +461,7 @@ function submit_identification_contribute_new(form) {
  * Manages "add identification" form submission from an Observation node page.
  */
 function submit_identification(identification, success_callbacks, always_callbacks) {
-  console.log( 'identification for submission: ', identification);
+  // console.log( 'identification for submission: ', identification);
 
   var request_params = {
     // url: form.attr('action'),
@@ -454,13 +488,14 @@ function submit_identification(identification, success_callbacks, always_callbac
   });
 
   jqxhr.success(function(data) {
-    toastr.success('Your identification has been saved successfully. Reloading in 3 seconds…');
+    toastr.success('Your identification has been saved successfully. Reloading…');
 
     Drupal.casa_utilities.invoke_callbacks(success_callbacks);
 
-    var reload_timeout = window.setTimeout(function(){
-      document.location.reload();
-    }, 3000);
+    // var reload_timeout = window.setTimeout(function(){
+    //   document.location.reload();
+    // }, 3000);
+    document.location.reload();
   });
 
   jqxhr.always(function( data ) {
@@ -523,7 +558,7 @@ function set_up_toastr() {
 
 function set_up_userlink_hover_dialogs(context) {
   // var user_links = $('main a[href*="/user/"], main a[href*="/users/"]', context);
-  var user_links = $('main a.user-link', context);
+  var user_links = $('.node a.user-link', context);
 
   user_links.each(function() {
     var href = $(this).attr('href');
@@ -553,8 +588,10 @@ function set_up_userlink_hover_dialogs(context) {
   // });
 
   // When a link to a user is hovered, show a dialog displaying user info
-  user_links.on('mouseenter', function() {
+  // user_links.on('mouseenter', function() {
+  user_links.on('click', function(event) {
     // console.log('User linked hovered');
+    event.preventDefault();
 
     var link = this;
 
@@ -566,11 +603,11 @@ function set_up_userlink_hover_dialogs(context) {
     }, user_link_delay * 1000);
   });
 
-  $('a[href*="/user/"], a[href*="/users/"]').on('mouseleave', function() {
-    var username = $(this).attr('data-username');
-    var dialog_element = $('.user-dialog[data-username="' + username + '"]');
-    dialog_element.dialog( "close" );
-  });
+  // $('a[href*="/user/"], a[href*="/users/"]').on('mouseleave', function() {
+  //   var username = $(this).attr('data-username');
+  //   var dialog_element = $('.user-dialog[data-username="' + username + '"]');
+  //   dialog_element.dialog( "close" );
+  // });
 
   page_is_setup = true;
 }
@@ -590,7 +627,7 @@ function show_userlink_hover_dialog(link) {
 
     if (! dialog_element.hasClass('dialog-fetched')) {
       var username = dialog_element.attr('data-username');
-      var url = Drupal.casa_core.get_site_url() + '/user/tooltip/' + username;
+      var url = Drupal.casa_core.get_site_url() + 'user/tooltip/' + username;
 
       dialog_element.load(url, function(){
         // console.log('opened');
@@ -600,6 +637,82 @@ function show_userlink_hover_dialog(link) {
     }
 
     dialog_element.dialog( "open" );
+}
+
+
+
+
+function set_up_printables(context) {
+  var nidsField = $('input#nids', context);
+
+  $('a.printables', context)
+    .attr('data', 'test')
+    .on('click', function(event) {
+
+    // Update the URL using the fields
+
+    // event.preventDefault();
+    var href = $(this).attr('href');
+    var herbarium = $('input#herbarium').val();
+    var nids = nidsField.val();
+    $(this).attr('href', href + '?herbarium=' + herbarium + '&nids=' + nids);
+  });
+
+  $('.printable .remove').on('click', function() {
+    var nid = $(this).attr('data-nid');
+    // console.log(nid, 'nid');
+    var nids = (nidsField.val()) ? nidsField.val().split(',') : [];
+
+    if ($(this).hasClass('add')) {
+      add_printable($(this), nidsField, nids, nid);
+    }
+    else {
+      remove_printable($(this), nidsField, nids, nid);
+    }
+  });
+
+  $('button#remove_all').on('click', function() {
+    nidsField.val('');
+
+    $('.printable').each(function() {
+      $(this).find('.remove')
+        .html('Add').addClass('add');
+    });
+  });
+
+
+  $('button#add_spec_numbered').on('click', function() {
+    add_printables($('.printable').not('[data-specimen_id=""]'), nidsField);
+  });
+
+  $('button#add_all').on('click', function() {
+    add_printables($('.printable'), nidsField);
+  });
+}
+function add_printable(button, nidsField, nids, nid) {
+  nids.push(nid);
+  nidsField.val(nids.join(','));
+  button.html('Remove').removeClass('add');
+}
+
+function add_printables(printables, nidsField) {
+  var nids = [];
+  printables.each(function() {
+    var nid = $(this).find('.remove').attr('data-nid');
+    // console.log(nid, 'nid');
+    add_printable($(this).find('.remove'), nidsField, nids, nid);
+    nids = nidsField.val().split(',');
+  });
+}
+
+function remove_printable(button, nidsField, nids, nid) {
+  var position = nids.indexOf(nid);
+  // console.log(position, 'position');
+  if (position > -1) {
+    nids.splice(position, 1);
+  }
+  nidsField.val(nids.join(','));
+  button.html('Add').addClass('add');
 }
 
 

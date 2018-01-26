@@ -27,7 +27,6 @@ function content_type_collection_field_group_info() {
       1 => 'field_date_collected',
       2 => 'field_collector',
       3 => 'field_representative_picture',
-      4 => 'field_featured_pictures',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -40,7 +39,7 @@ function content_type_collection_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_info|node|collection|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -66,7 +65,7 @@ function content_type_collection_field_group_info() {
       ),
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_sections|node|collection|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.

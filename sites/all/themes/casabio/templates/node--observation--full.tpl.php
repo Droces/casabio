@@ -57,6 +57,26 @@
           <?php endif;
         ?>
       </section>
+      <section>
+        <?php print render($content['edit_link']); ?>
+        
+        <?php
+          global $user;
+          $account = user_load($user->uid);
+          // print flag_lists_user_page($account);
+          $lists_block = flag_lists_block_view('flag_lists');
+
+          if (isset($lists_block['content'])):
+        ?>
+
+        <div class="my-lists" data-transform="to-dialog" data-title="My Lists">
+        <?php print $lists_block['content']; ?>
+          <p><a href="<?php print base_path(); ?>my/lists">Go to my lists</a></p>
+        </div>
+        <button data-display=".my-lists">Add to my lists</button>
+
+        <?php endif;?>
+      </section>
       <section class="field-group">
         <h2>Basic Info</h2>
 
@@ -70,9 +90,10 @@
           hide($content['new_identification_form']);
           hide($content['new_interaction_form']);
           hide($content['comments']);
-        ?>
 
-        <?php print render($content); ?>
+          // dpm($content, '$content');
+          print render($content);
+        ?>
 
       </section>
       <section class="field-group">

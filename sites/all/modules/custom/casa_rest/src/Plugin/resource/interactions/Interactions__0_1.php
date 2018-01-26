@@ -28,7 +28,7 @@ use Drupal\restful\Plugin\resource\ResourceNode;
  *     "bundles": {
  *       "interaction"
  *     },
- *     "range" = 500,
+ *     "range" = 5000,
  *   },
  *   majorVersion = 0,
  *   minorVersion = 1

@@ -21,6 +21,8 @@
 (function ($, Drupal, window, document, undefined) {
 
 
+var timers = {};
+
 
 Drupal.casa_utilities = {
 
@@ -41,6 +43,7 @@ Drupal.casa_utilities = {
       sURLVariables = sPageURL.split('&'),
       parameter_name,
       i;
+    // console.log('sPageURL: ', sPageURL);
 
     for (i = 0; i < sURLVariables.length; i++) {
       parameter_name = sURLVariables[i].split('=');
@@ -135,6 +138,7 @@ Drupal.casa_utilities = {
       var end = new Date();
       var duration = end.getTime() - timers[name].getTime();
       console.log("Timer " + name + " duration: " + duration + "msec");
+      delete(timers[name]);
     }
   },
 

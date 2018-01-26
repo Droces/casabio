@@ -464,9 +464,25 @@ function casabio_form_comment_node_observation_form_alter(&$form, &$form_state, 
  * "Returns HTML for a single local task link."
  */
 function casabio_menu_local_task($variables) {
+  // dpm($variables, '$variables');
+
+  // Make a link from the task element
   $link = $variables['element']['#link'];
   $link['localized_options']['html'] = TRUE;
+
+  // Rename search link text
+  switch ($link['path']) {
+    case 'search/term':
+      $link['title'] = 'Species & other taxa, and categorisations';
+      break;
+
+    case 'search/node':
+      $link['title'] = 'Observations, collections, and other contributions';
+      break;
+  }
+
   $link_markup = l($link['title'], $link['href'], $link['localized_options']);
+  // Return the link as a list item
   return '<li>' . $link_markup . '</li>' . "\n";
 }
 /**
@@ -474,13 +490,25 @@ function casabio_menu_local_task($variables) {
  * "Returns HTML for primary and secondary local tasks."
  */
 function casabio_menu_local_tasks($variables) {
+  // dpm($variables, '$variables');
   $output = '';
+  // If these are primary tasks
   if (!empty($variables['primary'])) {
-    $variables['primary']['#prefix'] =
-      '<div class="contextual-links-wrapper"><ul class="contextual-links">';
-    $variables['primary']['#suffix'] = '</ul></div>';
+    $tasks_are_search = substr($variables['primary'][0]['#link']['path'], 0, 7) === 'search/';
+
+    if ($tasks_are_search) {
+      $variables['primary']['#prefix'] =
+        '<div><ul class="tabs">';
+      $variables['primary']['#suffix'] = '</ul></div>';
+    }
+    else {
+      $variables['primary']['#prefix'] =
+        '<div class="contextual-links-wrapper"><ul class="contextual-links">';
+      $variables['primary']['#suffix'] = '</ul></div>';
+    }
     $output .= drupal_render($variables['primary']);
   }
+  // If these are secondary tasks
   if (!empty($variables['secondary'])) {
     $variables['secondary']['#prefix'] = '<ul class="tabs secondary clearfix">';
     $variables['secondary']['#suffix'] = '</ul>';
@@ -503,3 +531,28 @@ function casabio_menu_local_tasks($variables) {
 
 //   // return '<a href="' . $href . '"' . $attributes . '>' . $content . '</a>';
 // }
+
+
+
+/**
+ * Display a single views grouping.
+ */
+function casabio_views_view_grouping($vars) {
+  // dpm($vars, '$vars');
+  $view = $vars['view'];
+  $title = $vars['title'];
+  $content = $vars['content'];
+
+  if ((int) $title > 0) {
+    $term = taxonomy_term_load($title);
+    $term_renderable = taxonomy_term_view($term, 'field_guide');
+    $title = drupal_render($term_renderable);
+  }
+
+  $output = '<div class="view-grouping">';
+  $output .= '<div class="view-grouping-header">' . $title . '</div>';
+  $output .= '<div class="view-grouping-content">' . $content . '</div>' ;
+  $output .= '</div>';
+
+  return $output;
+}

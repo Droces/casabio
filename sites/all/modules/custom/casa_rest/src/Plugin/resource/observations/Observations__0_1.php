@@ -28,7 +28,7 @@ use Drupal\restful\Plugin\resource\ResourceNode;
  *     "bundles": {
  *       "observation"
  *     },
- *     "range" = 500,
+ *     "range" = 5000,
  *   },
  *   majorVersion = 0,
  *   minorVersion = 1
@@ -51,6 +51,8 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
     'field_external_id' =>    'externalId',
     'field_location' =>       'location',
     'field_filenames' =>      'filenames',
+    'field_history' =>        'history',
+    'field_subject_classification' =>      'subject_classification',
   );
 
 
@@ -74,10 +76,12 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
       self::$field_names_map['body'] => array(
         'property' => 'body',
         // 'sub_property' => 'value',
-        'process_callbacks' => array(
-          array($this, 'bodyProcess'),
-        ),
+        // 'format' => 'full_html',
+        // 'process_callbacks' => array(
+        //   array($this, 'bodyProcess'),
+        // ),
       ),
+      
 
       self::$field_names_map['field_collection'] => array(
         'property' => 'field_collection',
@@ -86,12 +90,10 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
       self::$field_names_map['field_observer_name'] => array(
         'property' => 'field_observer_name',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_date_observed'] => array(
         'property' => 'field_date_observed',
-        // 'sub_property' => '',
         'process_callbacks' => array(
           array($this, 'dateProcess'),
         ),
@@ -100,22 +102,18 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
       self::$field_names_map['field_count'] => array(
         'property' => 'field_count',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_specimen_id'] => array(
         'property' => 'field_specimen_id',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_locality'] => array(
         'property' => 'field_locality',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_pictures_observation'] => array(
         'property' => 'field_pictures_observation',
-        // 'sub_property' => '',
       ),
 
       // $field_names_map['field_observation_id'] => array(
@@ -125,12 +123,10 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
       self::$field_names_map['field_source'] => array(
         'property' => 'field_source',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_external_id'] => array(
         'property' => 'field_external_id',
-        // 'sub_property' => '',
       ),
 
       self::$field_names_map['field_location'] => array(
@@ -143,7 +139,14 @@ class Observations__0_1 extends ResourceNode implements ResourceInterface {
 
       self::$field_names_map['field_filenames'] => array(
         'property' => 'field_filenames',
-        // 'sub_property' => '',
+      ),
+
+      self::$field_names_map['field_history'] => array(
+        'property' => 'field_history',
+      ),
+
+      self::$field_names_map['field_subject_classification'] => array(
+        'property' => 'field_subject_classification',
       ),
     );
 

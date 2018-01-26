@@ -84,6 +84,28 @@ function edit_selected_menu() {
     'type'              => MENU_CALLBACK,
   );
 
+  $items['services/api/observations/%'] = array(
+    'page callback'     => 'services_observations_callback',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'delivery callback' => 'ajax_deliver',
+    'type'              => MENU_CALLBACK,
+  );
+
+  $items['services/api/pictures/%'] = array(
+    'page callback'     => 'services_pictures_callback',
+    'page arguments'    => array(3),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    // 'file'              => 'casa_upload.upload.inc',
+    'delivery callback' => 'ajax_deliver',
+    'type'              => MENU_CALLBACK,
+  );
+
+
+
   $items['contribute/multiple-observations/observation-info/%'] = array(
     // 'title'             => 'Observation Information',
     'page callback'     => 'contribute_mo_observation_page',
@@ -297,6 +319,133 @@ function interactions_by_collection($collection_nid) {
   $result = array('data' => $interactions);
   $response = array('#type' => 'ajax', '#commands' => $result);
   return $response;
+}
+
+
+
+
+function services_observations_callback($nids_string) {
+  // return test_page_callback($nids_string);
+
+  $response = [];
+  // watchdog('start', 'services_nodes_callback(): ', [], WATCHDOG_DEBUG);
+  $start = microtime(TRUE);
+  $result = services_nodes_callback($nids_string, 'observation');
+  $duration = calc_duration($start, 'services_nodes_callback()');
+  $response['api_duration'] = $duration;
+  return $result;
+}
+
+function services_pictures_callback($nids_string) {
+  return services_nodes_callback($nids_string, 'picture');
+}
+
+/**
+ * Using the API.
+ */
+function services_nodes_callback($nids_string, $type, $node_data = NULL) {
+  // dpm($nids_string, '$nids_string');
+  // dpm($type, '$type');
+  dpm($node_data, '$node_data');
+
+  if (! $node_data) {
+    $node_data = (array) json_decode(file_get_contents('php://input'));
+  }
+
+  $nids = explode(',', $nids_string);
+
+  // Convert geofields into expected format
+  foreach ($node_data as $field_name => $field_value) {
+    if ($field_name == 'location') {
+      $node_data['location'] = [
+        'longitude' => $node_data['location']->longitude,
+        'latitude' => $node_data['location']->latitude
+      ];
+    }
+    if (gettype($field_value) == 'object') {
+      if (isset($field_value->value)) {
+        // dpm($field_value);
+        $field_value = (array) $field_value;
+        // dpm($field_value);
+      }
+    }
+  }
+
+  // if ($field_name == 'location') {
+
+  $result = array(
+    'type' => $type,
+    'node_data' => $node_data,
+  );
+
+  // $response = array('#type' => 'ajax', '#commands' => $result);
+  // return $response;
+
+
+  $handler = restful()
+    ->getResourceManager()
+    ->getPlugin($type . 's:0.1');
+
+  foreach ($nids as $key => $nid) {
+    // $result[$nid] = '';
+    // Save tags separately, only ADDING new tags to existing tags (not overwriting)
+    
+    // Node data for this iteration (this entity)
+    $i_node_data = $node_data;
+    $i_node_data = api_add_entity_tags($nid, $i_node_data, $result);
+
+    // If there is no data to save, simply save status as 'published'
+    if (! $i_node_data) {
+      $i_node_data['status'] = 1;
+    }
+    // $result['i_node_data'] = $i_node_data;
+
+    // dpm($nid, '$nid');
+    $start = microtime(TRUE);
+    $patch_result = $handler->doPatch($nid, $i_node_data);
+    $result_json = restful()
+      ->getFormatterManager()
+      ->format($patch_result);
+    $result['updated_nodes'][] = json_decode($result_json)->data[0];
+    $result['durations'][] = calc_duration($start, 'services_nodes_callback()');
+  }
+
+  $response = array('#type' => 'ajax', '#commands' => $result);
+  return $response;
+}
+
+
+
+function api_add_entity_tags($nid, $i_node_data, &$result) {
+  if (array_key_exists('tags', $i_node_data)) {
+    // $result['i_node_data tags'] = $i_node_data['tags'];)
+
+    $new_tags = $i_node_data['tags'];
+    if (! $new_tags) {
+      $new_tags = [];
+    }
+
+    // If it's not an array, make it one
+    $new_tags = (array) $new_tags;
+    // $result['new_tags'] = $new_tags;
+
+    $node = entity_metadata_wrapper('node', $nid);
+    if (! $new_tags || $new_tags === []) {
+      $node->field_tags->set([]);
+    }
+    else {
+      $existing_tags = $node->field_tags->raw();
+      // $result['existing_tags'] = $existing_tags;
+      $tags = array_unique(array_merge($new_tags, $existing_tags));
+      // $result['updated_tags'] = $tags;
+
+      $node->field_tags->set($tags);
+    }
+
+    $node->save();
+    unset($i_node_data['tags']);
+  }
+  return $i_node_data;
 }
 
 

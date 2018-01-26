@@ -16,14 +16,14 @@ img + img {
 div.contextual-links-wrapper {
   display: none !important;
 }
-.node-observation.view-mode-teaser {
+p {
+  margin: 0;
+}
+[data-type="observation"][data-view-mode="printable"] {
   border: solid 1px grey;
   border-radius: 3px;
   margin: 1em;
   padding: 1px;
-}
-p {
-  margin: 0;
 }
 .field {
   border: solid 1px #ddd;
@@ -31,6 +31,10 @@ p {
 }
 .field:not(:first-child) {
   border-top-width: 0;
+}
+.field.title {
+  text-align: center;
+  font-size: 1.2em;
 }
 .field .name {
   font-weight: bold;
@@ -40,4 +44,12 @@ article {
   width: 28em;
   display: inline-block;
   vertical-align: top;
+}
+button {
+  display: none;
+}
+.value[contenteditable="true"] {
+  min-width: 4em;
+  display: inline-block;
+  min-height: 1em;
 }

@@ -26,3 +26,6 @@ For detailed information on the code that powers CasaBio, see the [Developer Doc
 ## REST API
 
 CasaBio has a REST API that supports all standard CRUD (create, read, update, and delete) operations on content. For example, it allows a client to view a list of observations, or create new identifications. See the [REST API Documentation](http://casabio.org/API-documentation), or contact the developers for more info.
+
+## Patches
+modules/field_group/field_group-php7-2661484-2.patch

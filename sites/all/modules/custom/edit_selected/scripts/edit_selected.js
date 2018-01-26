@@ -3,13 +3,10 @@
  * A JavaScript file for…
  */
 
-// JavaScript should be made compatible with libraries other than jQuery by
-// wrapping it with an "anonymous closure". See:
-// - https://drupal.org/node/1446420
-// - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
+
+// Immediately-invoked function expression (IIFE, aka. An "anonymous closure")
+// Makes this JavaScript compatible with libraries other than jQuery
 (function ($, Drupal, window, document, undefined) {
-
-
 
 /**
  * CONTENTS
@@ -53,10 +50,13 @@
  * handle_keypress_identify()
  */
 
+
+
 var page_is_setup = false,
     settings_of_setup,
     page_setup_loadings = [],
-    page_setup_loadings_message;
+    page_setup_loadings_message,
+    page_content_type;
 
 var edit_form,
     identify_form,
@@ -102,13 +102,18 @@ Drupal.behaviors.edit_selected = {
       });
 
       // fetch_selectables_data
-      if (Drupal.contribute.is_page('picture_info')) {
+      if (Drupal.contribute.is_page('upload')) {
+        page_content_type = 'picture';
+      }
+      else if (Drupal.contribute.is_page('picture_info')) {
+        page_content_type = 'picture';
         // console.log('Calling fetch_selectables_data()');
         page_setup_loadings.push('fetch_selectables_data');
         Drupal.es_api_interactions.fetch_selectables_data(null, 'picture', false,
           [[Drupal.edit_selected.refresh_current_field_indicator, this, []]]);
       }
       if (Drupal.contribute.is_page('observation_info')) {
+        page_content_type = 'observation';
         page_setup_loadings.push('fetch_selectables_data');
         Drupal.es_api_interactions.fetch_selectables_data(null, 'observation', false,
           [[Drupal.edit_selected.refresh_current_field_indicator, this, []]]);
@@ -137,6 +142,20 @@ Drupal.behaviors.edit_selected = {
 
       add_listeners(context, settings);
 
+      // If there are identifications, show 'Auto-identify' dialog
+      var are_identifications = false;
+      if (! are_identifications) {
+        $('[data-display="#auto-identify-dialog"]').trigger('click');
+      }
+
+      // When clicking on a checkbox, remove 'mixed' indications on all other checkboxes of that field
+      $('input[type="checkbox"]').change(function() {
+        // console.log('$(this): ', $(this));
+        $(this).parents('[class*="form-field-name"]').find('input')
+          .prop("indeterminate", false)
+          .attr('data-values-status', '' );
+      });
+
 
       // After setup (non-destructive)
 
@@ -162,6 +181,7 @@ Drupal.edit_selected = {
 
   selectables_append: function(selectable) {
     selectables = selectables.add(selectable);
+    // console.log('selectables_append(): selectables.length: ', selectables.length);
   },
 
   // ===========================================================================
@@ -169,12 +189,18 @@ Drupal.edit_selected = {
 
   set_selectables_data: function(selectables_data_in) {
     selectables_data = selectables_data_in;
+    // console.log('selectables_data: ', selectables_data);
+
+    selectables_data_in.forEach(function(currentValue, index, array) {
+      //
+    });
   },
 
   set_selectable: function(nid, selectable) {
     // If nid not provided, just append selectable to the end of the array
     if (typeof nid === 'undefined' || nid == null) {
       var index = selectables_data.push(selectable);
+      // console.log('set_selectable(): selectables_data: ', selectables_data);
       populate_selectables_map();
       // selectables_map[nid] = index;
     }
@@ -182,10 +208,12 @@ Drupal.edit_selected = {
       var index = Drupal.edit_selected.get_selectables_map()[nid];
       selectables_data[index] = selectable;
     }
+    // console.log('set_selectable(): selectables.length: ', selectables.length);
   },
 
   selectables_data_append: function(selectable) {
     selectables_data.push(selectable);
+    // console.log('selectables_data_append(): selectables_data.length: ', selectables_data);
   },
 
   get_selectables_data: function() {
@@ -257,6 +285,7 @@ Drupal.edit_selected = {
     else {
       identifications_data.push(identification_in);
     }
+    // console.log('identifications_data: ', identifications_data);
   },
 
   /**
@@ -312,12 +341,12 @@ Drupal.edit_selected = {
 
 
 
-  refresh_current_field_indicator: function(context) {
+  refresh_current_field_indicator: function() {
     // console.log('refresh_current_field_indicator()');
     var field_shown = null;
-    var radio_selected = $('#show-fields-radios input[type="radio"]:checked', context);
+    var radio_selected = $('#show-fields-radios input[type="radio"]:checked');
     // console.log('radio_selected: ', radio_selected);
-    field_shown = show_field_indicators(context, field_shown, radio_selected);
+    field_shown = show_field_indicators(field_shown, radio_selected);
   },
 
 
@@ -329,6 +358,23 @@ Drupal.edit_selected = {
       adjust_buttons();
 
       Drupal.form_prefiller.clear_form(edit_form);
+      if (page_has_map) {
+        Drupal.edit_selected.reset_features_style();
+      }
+
+      // Set 'Number Specimens' form's 'nids' (hidden) field
+      $('form[action="services/number_specimens"] input[name="nids"]')
+        .val(Drupal.selection.get_selected_nids().join(','));
+
+      Drupal.form_prefiller.prefill_form(edit_form, selectables_data, settings);
+    });
+
+
+
+    $(document).on('selection:select_all', function(event) {
+
+      Drupal.form_prefiller.clear_form(edit_form);
+      
       if (page_has_map) {
         Drupal.edit_selected.reset_features_style();
       }
@@ -484,9 +530,9 @@ function misc_page_set_up(context, settings) {
   //   .clone()
   //   .appendTo('.block-edit-selected .show');
 
-  // Element to contain the value of the selected field when one of the 'show field' radio buttons is clicked
+  // // Element to contain the value of the selected field when one of the 'show field' radio buttons is clicked
   selectables.append('<span class="field-data"></span>');
-
+  Drupal.edit_selected.refresh_current_field_indicator();
 
 }
 
@@ -509,16 +555,6 @@ function add_listeners(context, settings) {
   selectables.each(function(index, selectable) {
     Drupal.edit_selected.add_selection_listeners($(selectable), settings);
   });
-  // selectables.on('selection:select', function(event) {
-  //   adjust_buttons();
-
-  //   Drupal.form_prefiller.clear_form(edit_form);
-  //   if (page_has_map) {
-  //     Drupal.edit_selected.reset_features_style();
-  //   }
-
-  //   Drupal.form_prefiller.prefill_form(edit_form, selectables_data, settings);
-  // });
 
   $('button.rotate', context).on( 'click', function(event) {
     event.preventDefault();
@@ -527,6 +563,12 @@ function add_listeners(context, settings) {
 
   $('input, textarea, select', context ).on( 'change', function() {
     // console.log('changed');
+
+    // If not a field in a node form, ignore this
+    if (! $(this).parents('form').hasClass('node-form')) {
+      return null;
+    }
+
     // Add the changed field's name to the list in the hidden edit_selected_altered_fields field.
     manage_field_change( $( this ) );
   });
@@ -543,11 +585,16 @@ function add_listeners(context, settings) {
   var field_shown = null;
   $('#show-fields-radios input[type="radio"]', context).change(function(event) {
     // console.log('event: ', event);
-    field_shown = show_field_indicators(context, field_shown, $(this));
+    field_shown = show_field_indicators(field_shown, $(this));
   });
 
   $('[data-display="#delete-observations"]').on('click', function () {
     delete_selected_observations(context);
+  });
+
+  $('#deidentify').on('click', function(event) {
+    event.preventDefault();
+    remove_selected_identifications(context);
   });
 
   $(document).on('dialog_closed', function(event) {
@@ -560,6 +607,13 @@ function add_listeners(context, settings) {
     Drupal.es_api_interactions.auto_identify_observations(collection_nid);
   });
 
+
+  $(document).on('dialog_opened', function(event, element) {
+    // console.log('opened, element: ', $(element));
+    if ($(element).hasClass('identify_form_wrapper')) {
+      $(element).find('.collapsed .fieldset-title').trigger('click');
+    }
+  });
 
 
 
@@ -636,13 +690,11 @@ function add_listeners(context, settings) {
 
     if (Drupal.contribute.is_page('observation_info')) {
       // node['type'] = "observation";
-      var type = "observation";
-      Drupal.es_api_interactions.update_nodes(node, type, nids, context);
+      Drupal.es_api_interactions.update_nodes(node, page_content_type, nids, context);
     }
     else if (Drupal.contribute.is_page('picture_info')
       || Drupal.contribute.is_page('upload')) {
-      var type = "picture";
-      Drupal.es_api_interactions.update_nodes(node, type, nids, context);
+      Drupal.es_api_interactions.update_nodes(node, page_content_type, nids, context);
     }
 
     // --------------------------------
@@ -652,8 +704,8 @@ function add_listeners(context, settings) {
     edit_form.dialog('close');
 
     var loader = Drupal.casa_utilities.get_loader_markup();
-    $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
-      selectable.append(loader);
+    $.each(selectables.filter('.selected'), function (key, selectable) {
+      $(this).append(loader);
     });
 
     Drupal.selection.deselect_all();
@@ -672,7 +724,7 @@ function add_listeners(context, settings) {
     // console.log('identify_form: ', identify_form);
 
     var identification_nid = Drupal.es_api_interactions
-      .save_identification_from_form(identify_form, context); // Uses AJAX
+      .save_identifications_from_form(identify_form); // Uses AJAX
     
     Drupal.selection.deselect_all();
     Drupal.casa_core.close_dialogs();
@@ -723,12 +775,15 @@ function add_listeners(context, settings) {
   // When each 'loading function' of the 'page setup' is completed
   $(document).on('selectables_data_fetched', function() {
     check_page_setup_loadings_done('fetch_selectables_data');
+    // console.log('selectables_data: ', selectables_data);
   });
   $(document).on('identifications_data_fetched', function() {
     check_page_setup_loadings_done('fetch_identifications_data');
+    // console.log('selectable_data: ', selectable_data);
   });
   $(document).on('interactions_data_fetched', function() {
     check_page_setup_loadings_done('fetch_interactions_data');
+    // console.log('selectable_data: ', selectable_data);
   });
   $(document).on('token_fetched', function() {
     check_page_setup_loadings_done('fetch_token');
@@ -755,15 +810,20 @@ function check_page_setup_loadings_done(loading_completed) {
 
 function reformat_fields_for_API(node) {
   if (node['description']) {
-    node['description'] = {value: node['description']};
+    // node['description'] = {value: node['description']}; // OLD API
+    node['description'] = {
+      value: node['description']
+    };
   }
 
   if (node['location']) {
     var coords = node['location'].split(', ');
     node['location'] = {
       longitude: coords[0],
-      latitude:coords[1]
+      latitude: coords[1]
     };
+    // node['location'] = [coords[0], coords[1]];
+    // console.log("node['location']: ", node['location']);
   }
 
   if (node['dateTaken']) {
@@ -923,26 +983,42 @@ function manage_field_change(target) {
 
 
 function remove_unaltered_node_fields(node) {
-  // console.log('node: ', node);
+  console.log('node: ', node);
   // console.log('fields_altered_names: ', fields_altered_names);
 
-  $.each( node, function( key, field ) {
-    // console.log('key: ', key);
+  var fields_with_values = Object.keys(node);
+  // console.log('fields_with_values: ', fields_with_values);
 
-    var is_altered = $.inArray(key, fields_altered_names) != -1;
+  $.each( fields_altered_names, function( key, field ) {
+    // console.log('field: ', field);
+
+    // If this altered field doesn't exist in the node data
+    var is_missing = $.inArray(field, fields_with_values) == -1;
+    // console.log('is_missing: ', is_missing);
+
+    if (is_missing) {
+      node[field] = "";
+    }
+  });
+  // console.log('node: ', node);
+
+  $.each( node, function( field, value ) {
+    // console.log('field: ', field);
+
+    var is_altered = $.inArray(field, fields_altered_names) != -1;
     // console.log('is_altered: ', is_altered);
 
-    var is_checkboxes = key.split('[')[0] === 'field_tags';
-    // console.log(key + ' is_checkboxes: ', is_checkboxes);
+    var is_checkboxes = field.split('[')[0] === 'field_tags';
+    // console.log(field + ' is_checkboxes: ', is_checkboxes);
 
     // If is description field and only one selected, don't delete
-    // if (key == 'body[und][0][value]' && Drupal.selection.get_selected_selectables().length == 1) {}
+    // if (field == 'body[und][0][value]' && Drupal.selection.get_selected_selectables().length == 1) {}
 
     if ((! is_altered) && (! is_checkboxes)) {
-      delete node[key];
+      delete node[field];
     }
-
   });
+
   // console.log("node: ", node);
   return node;
 }
@@ -985,56 +1061,64 @@ function create_layer(point) {
 
 
 function rotate_selected(button) {
-    // console.log('called: rotate_selected()');
-    var toastr_info = toastr.info('Rotating pictures…', null, {
-      'timeOut': '-1'
-    }); // @todo add an 'undo' button
+  // If counter-clockwise
+  var deg = (button.attr('id') == 'rotate-ccw') ? '-90' : '90';
+  rotate(deg);
+}
 
-    var url = Drupal.settings.basePath + 'services/images/rotate';
-    var selecteds_nids = Drupal.selection.get_selected_nids();
-    var rotation_params = {
-      'nids': selecteds_nids.join( "|" ),
-      'degrees': '90'
-    };
 
-    // If counter-clockwise
-    if (button.attr('id') == 'rotate-ccw') rotation_params['degrees'] = '-90';
 
-    var jqxhr = $.post(url, rotation_params, function(data, textStatus, xhr) {
-      // console.log('Rotate POST request completed…');
-    });
 
-    jqxhr.fail(function( data ) {
-      if(jqxhr.readyState < 4)  {
-        // toastr.warning('Request was not completed.');
-      }
-      else {
-        toastr_info.remove();
-        toastr.error('Sorry; there was a problem rotating the pictures.');
-        console.log( "In jqxhr.fail(), Reason: " + data['reason'] );
-      }
-    });
+function rotate(deg) {
+  // console.log('called: rotate_selected()');
+  var toastr_info = toastr.info('Rotating pictures…', null, {
+    'timeOut': '-1'
+  }); // @todo add an 'undo' button
 
-    jqxhr.done(function( data ) {
+  var url = Drupal.settings.basePath + 'services/images/rotate';
+  var selecteds_nids = Drupal.selection.get_selected_nids();
+  var rotation_params = {
+    'nids': selecteds_nids.join( "|" ),
+    'degrees': deg
+  };
+
+  var jqxhr = $.post(url, rotation_params, function(data, textStatus, xhr) {
+    // console.log('Rotate POST request completed…');
+  });
+
+  jqxhr.fail(function( data ) {
+    if(jqxhr.readyState < 4)  {
+      // toastr.warning('Request was not completed.');
+    }
+    else {
       toastr_info.remove();
-      var result = data['result'];
-      // console.log( "Result: ", result );
+      toastr.error('Sorry; there was a problem rotating the pictures.');
+      console.log( "In jqxhr.fail(), Reason: " + data['reason'] );
+    }
+  });
 
-      if (result == "success") {
-        toastr.success('Pictures rotated successfully. Reloading the page…');
-        // console.log( "Reason: ", data['reason'] );
+  jqxhr.done(function( data ) {
+    toastr_info.remove();
+    var result = data['result'];
+    // console.log( "Result: ", result );
 
-        // Refresh the page to show updated (rotated) pictures.
-        // document.location.reload();
+    if (result == "success") {
+      toastr.success('Pictures rotated successfully. Reloading the page…');
+      // console.log( "Reason: ", data['reason'] );
 
-        rotate_picture_elements(selecteds_nids, rotation_params['degrees']);
+      // Refresh the page to show updated (rotated) pictures.
+      // document.location.reload();
 
-      } else {
-        toastr.error('Sorry; there was a problem rotating the pictures.');
-        // console.log( "In jqxhr.done(), data: ", data );
-      }
-      // console.log('data: ', data);
-    });
+      rotate_picture_elements(selecteds_nids, rotation_params['degrees']);
+
+    } else {
+      toastr.error('Sorry; there was a problem rotating the pictures.');
+      // console.log( "In jqxhr.done(), data: ", data );
+    }
+    // console.log('data: ', data);
+  });
+
+  Drupal.selection.deselect_all();
 }
 
 
@@ -1091,10 +1175,11 @@ function manage_form_number_specimens(form, success_callbacks, always_callbacks)
 
     Drupal.casa_utilities.invoke_callbacks(success_callbacks);
     
-    toastr.success('Observations have been numbered successfully. Reloading in 3 seconds…');
-    var reload_timeout = window.setTimeout(function(){
-      document.location.reload();
-    }, 3000);
+    toastr.success('Observations have been numbered successfully. Reloading…');
+    // var reload_timeout = window.setTimeout(function(){
+    //   document.location.reload();
+    // }, 3000);
+    document.location.reload();
   });
 
   jqxhr.always(function( data ) {
@@ -1134,10 +1219,11 @@ function manage_form_add_blank_obs(form, success_callbacks, always_callbacks) {
 
     Drupal.casa_utilities.invoke_callbacks(success_callbacks);
 
-    toastr.success('Picture-less observations have been created successfully. Reloading in 3 seconds…');
-    var reload_timeout = window.setTimeout(function(){
-      document.location.reload();
-    }, 3000);
+    toastr.success('Picture-less observations have been created successfully. Reloading…');
+    // var reload_timeout = window.setTimeout(function(){
+    //   document.location.reload();
+    // }, 3000);
+    document.location.reload();
   });
 
   jqxhr.always(function( data ) {
@@ -1153,6 +1239,59 @@ function delete_selected_observations(context) {
   var type = 'observation';
   var nids = Drupal.selection.get_selected_nids();
   Drupal.es_api_interactions.delete_nodes(type, nids, context);
+}
+
+
+function get_identifications_of_observations(nids) {
+  var identifications = {};
+
+  $.each(nids, function(index, observation_nid) {
+
+    var identifications_indexes = identifications_map[parseInt(observation_nid)];
+    // console.log('identifications_indexes: ', identifications_indexes);
+
+    if (typeof identifications_indexes == 'undefined') {
+      return null;
+    }
+    identifications_indexes.forEach(function(identifications_index, index) {
+      var identification = identifications_data[identifications_index];
+      identifications[identification.id] = identification;
+    });
+  });
+  return identifications;
+}
+
+
+
+function remove_selected_identifications(context) {
+  var type = 'identification';
+  var observations_nids = Drupal.selection.get_selected_nids();
+
+  // Deleselect the observations so they don't get removed after the delete
+  Drupal.selection.deselect_all();
+
+  var identifications = get_identifications_of_observations(observations_nids);
+  // console.log('identifications: ', identifications);
+
+  Drupal.es_api_interactions.delete_nodes(type, Object.keys(identifications), context);
+
+  // console.log('identifications_data: ', identifications_data);
+  $.each(identifications, function(nid, identification) {
+    // console.log('nid: ', nid);
+    // identifications_data.splice(identifications_map[nid], 1);
+
+    $.each(identifications_data, function(index, identification_data) {
+      // console.log('identification_data.id: ', identification_data.id);
+      if (nid === identification_data.id) {
+        // console.log('index: ', index);
+        identifications_data.splice(index, 1);
+        return false;
+      }
+    });
+  });
+  // console.log('identifications_data: ', identifications_data);
+  Drupal.edit_selected.populate_identifications_map();
+  Drupal.edit_selected.refresh_current_field_indicator();
 }
 
 
@@ -1184,10 +1323,12 @@ function delete_selected_observations(context) {
  * @param button
  *   The jQuery button element that was clicked to call this function.
  */
-function show_field_indicators(context, field_shown, button) {
+function show_field_indicators(field_shown, button) {
   // console.log('field_shown: ', field_shown);
   // console.log('button: ', button);
   // console.log('identifications_data: ', identifications_data);
+
+  var toastr_indicators = toastr.info('Loading…');
 
   var field_name = button.attr('value');
   // console.log('field_name: ', field_name);
@@ -1235,6 +1376,9 @@ function show_field_indicators(context, field_shown, button) {
       var is_list_field = Object.keys(list_fields).indexOf(field_name) > -1;
       if (is_list_field) {
         // console.log('selectable_data: ', selectable_data);
+        // if (typeof settings_of_setup['node_info'] == 'undefined') {
+        //   console.log('node')
+        // }
 
         var codes = selectable_data.attributes[field_name];
         // console.log('codes: ', codes);
@@ -1265,10 +1409,12 @@ function show_field_indicators(context, field_shown, button) {
         // console.log('tids: ', tids);
 
         if (tids) {
+          var tids_array = [];
           $.each(tids, function(index, tid) {
-            field_data += settings_of_setup['node_info']['fields_info']
-              [t_ref_fields[field_name]]['terms'][tid];
+            tids_array.push(settings_of_setup['node_info']['fields_info']
+              [t_ref_fields[field_name]]['terms'][tid]);
           });
+          field_data = tids_array.join(',<br>');
         }
         // console.log('field_data: ', field_data);
       }
@@ -1279,7 +1425,7 @@ function show_field_indicators(context, field_shown, button) {
         var identifications_indexes = identifications_map[parseInt(nid)];
         // console.log('identifications_indexes: ', identifications_indexes);
 
-        if (typeof identifications_indexes != 'undefined') {
+        if (typeof identifications_indexes !== 'undefined') {
 
           identifications_indexes.forEach(function(identifications_index, index) {
             if (index != 0) {
@@ -1295,6 +1441,10 @@ function show_field_indicators(context, field_shown, button) {
               + " (" + certainty_label + ')</span>';
           });
         }
+
+        // Better way to do it...
+        // @todo implement this
+        // var identifications = get_identifications_of_observations([nid]);
       }
 
 
@@ -1368,7 +1518,7 @@ function show_field_indicators(context, field_shown, button) {
 
         var selectable = Drupal.edit_selected.get_selectable_from_nid(nid);
         selectable.attr('data-is-match', 'true');
-        selectable.find('.field-data').append(field_data);
+        selectable.find('.field-data').html(field_data);
       }
 
     });
@@ -1378,11 +1528,12 @@ function show_field_indicators(context, field_shown, button) {
     field_shown = field_name;
   }
 
+
   if (fields_with_data_count == 0 && field_name != 'no_fields') {
-    toastr.info('None of the selectables have a value for this field.', null, {
-      'timeOut': '-1'
-    });
+    toastr.info('None of the ' + page_content_type + ' have a value for "' + field_name + '".');
   }
+  
+  toastr_indicators.remove();
 
   // console.log('field_shown: ' + field_shown);
   return field_shown;
@@ -1402,7 +1553,12 @@ function set_up_keypress_mgmt(context) {
       + "<tr><td><strong>x</strong> : </td><td>Select picture</td></tr>"
       + "<tr><td><strong>c</strong> : </td><td>Un-select all pictures</td></tr>"
       + "<tr><td><strong>e</strong> : </td><td>Edit selected pictures</td></tr>"
+      + "<tr><td><strong>w</strong> : </td><td>Rotatue selected pictures clockwise</td></tr>"
+      + "<tr><td><strong>q</strong> : </td><td>Rotatue selected pictures counter-clockwise</td></tr>"
     );
+  
+    $(document, context).bind('keydown', 'w',         handle_keypress_rotate_cw);
+    $(document, context).bind('keydown', 'q',         handle_keypress_rotate_ccw);
   }
 
   if (Drupal.contribute.is_page('observation_info')) {
@@ -1413,7 +1569,8 @@ function set_up_keypress_mgmt(context) {
       + "<tr><td><strong>c</strong> : </td><td>Un-select all observations</td></tr>"
       + "<tr><td><strong>e</strong> : </td><td>Edit selected observations</td></tr>"
       + "<tr><td><strong>i</strong> : </td><td>Identify selected observations</td></tr>"
-      + "<tr><td><strong>a</strong> : </td><td>Add interaction of selected observations</td></tr>");
+      + "<tr><td><strong>a</strong> : </td><td>Add interaction of selected observations</td></tr>"
+    );
 
     $(document, context).bind('keydown', 'i',         handle_keypress_identify);
     $(document, context).bind('keydown', 'a',         handle_keypress_interaction);
@@ -1423,33 +1580,39 @@ function set_up_keypress_mgmt(context) {
 }
 
 function handle_keypress_edit() {
-  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
+  var is_a_selected = selectables.filter('.selected').length > 0;
+  // console.log('is_a_selected: ', is_a_selected);
   if (! is_a_selected) {
-    edit_form.dialog('open');
+    toastr.warning('Select at least one ' + page_content_type);
+    return null;
   }
-  else {
-    toastr.warning('Select at least one');
-  }
+  edit_form.dialog('open');
 }
 
 function handle_keypress_identify() {
-  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
+  var is_a_selected = selectables.filter('.selected').length > 0;
   if (! is_a_selected) {
-    identify_form.dialog('open');
+    toastr.warning('Select at least one ' + page_content_type);
+    return null;
   }
-  else {
-    toastr.warning('Select at least one');
-  }
+  identify_form.dialog('open');
 }
 
 function handle_keypress_interaction() {
-  var is_a_selected = Drupal.selection.get_selecteds_indexes().length ? false : true;
-  if (! is_a_selected) {
-    interaction_form.dialog('open');
+  var is_a_selected = selectables.filter('.selected').length > 0;
+  if (is_a_selected) {
+    toastr.warning('Select at least one ' + page_content_type);
+    return null;
   }
-  else {
-    toastr.warning('Select at least one');
-  }
+  interaction_form.dialog('open');
+}
+
+function handle_keypress_rotate_cw() {
+  rotate('90');
+}
+
+function handle_keypress_rotate_ccw() {
+  rotate('-90');
 }
 
 // Not needed; jQuery ui Dialogs close with 'esc' automatically.

@@ -1,0 +1,9 @@
+/**
+ * @file
+ * Base styling for the JSONB module.
+ */
+
+.jsonb-text-value {
+  display: block;
+  font-family: Consolas, Menlo, Monaco, monospace;
+}

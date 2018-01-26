@@ -12,7 +12,7 @@
 <?php print $wrapper_prefix; ?>
   <?php if (!empty($title)) : ?>
     <?php /*<h3><?php print $title; ?></h3>*/ ?>
-    <?php print $title; ?>
+    <div class="title"><?php print $title; ?></div>
   <?php endif; ?>
   <?php print $list_type_prefix; ?>
     <?php foreach ($rows as $id => $row): ?>

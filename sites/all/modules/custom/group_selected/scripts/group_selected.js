@@ -47,11 +47,12 @@
  * call_auto_group()
  * group()
  * get_group()
+ * merge_groups()
  * add_temp_id()
  * ungroup_selected()
  * ungroup()
  * ungroup_all()
- * group_individuals()
+ * group_all_individuals()
  * save_groups()
  * filter_groups_to_unsaved()
  * update_temp_ids()
@@ -118,6 +119,8 @@ Drupal.behaviors.group_selected = {
       set_up_keypress_mgmt();
       
       add_page_listeners(context);
+
+      set_up_primary_toggles(context);
     }
 
     // @todo Functions that should be re-written to be able to run on every attachBehaviors().
@@ -132,6 +135,11 @@ Drupal.behaviors.group_selected = {
       // Drupal.attachBehaviors('body'); // For testing only
     }
 
+    // If there are no groups, show 'Auto-group' dialog
+    var are_groups = groups.length;
+    if (! are_groups) {
+      $('[data-display="#auto-group-dialog"]').trigger('click');
+    }
   },
   weight: 5
 };
@@ -155,6 +163,41 @@ Drupal.group_selected = {
   }
 
 };
+
+
+
+
+function set_up_primary_toggles(context) {
+  var primary_toggles = $('[data-toggle="primary"]', context);
+  primary_toggles.click(function() {
+    primary_toggles.find('i.icon-star')
+      .removeClass('icon-star').addClass('icon-star_outline');
+    $(this).find('i')
+      .removeClass('icon-star_outline').addClass('icon-star');
+
+    var picture = $(this).parents('.node-picture');
+    var group = $(this).parents('.group');
+
+    var picture_nid = picture.find('.property-nid').html().trim();
+    // console.log('picture_nid: ', picture_nid);
+    var group_nid = group.attr('id').trim();
+    // console.log('group_nid: ', group_nid);
+
+    primary_toggles.parents('.node-picture').attr('data-is-primary', '');
+    picture.attr('data-is-primary', 'true');
+
+    sort_groupables(group);
+    // console.log('groups: ', groups);
+    var index = groups[groups_map[group_nid]].pictures.indexOf(picture_nid);
+    if (index > -1) {
+      groups[groups_map[group_nid]].pictures.splice(index, 1);
+    }
+    groups[groups_map[group_nid]].pictures.unshift(picture_nid);
+    // console.log('groups: ', groups);
+    groups[groups_map[group_nid]].status = SAVED_STATUS_ALTERED;
+    save_groups(groups, false);
+  });
+}
 
 
 
@@ -265,16 +308,37 @@ function alter_page(context) {
     ungroup_all();
   });
 
+  $( '#re-group', context ).click( function(event) {
+    re_group();
+  });
+
   $( '#group', context ).click( function() {
-    group(null, SAVED_STATUS_NEW, false);
+    var behaviours = {
+      show_message: false,
+      sort_groupables: true
+    };
+    group(null, SAVED_STATUS_NEW, behaviours);
     save_groups(groups, true);
   });
   $( '#ungroup', context ).click( function() {
     ungroup_selected();
   });
   $( '#group_individuals', context ).click( function() {
-    group_individuals();
+    group_all_individuals();
   });
+
+  $( '#group-as-individuals', context ).click( function() {
+    group_selected_individuals();
+  });
+
+  // Show field indicators
+  $('#show-date-time', context ).click( function() {
+    $('.node-picture.selectable .views-field-field-date-taken').toggleClass('visible');
+  });
+  $('#show-filename', context ).click( function() {
+    $('.node-picture.selectable .views-field-title-1').toggleClass('visible');
+  });
+
 
   var dialog = Drupal.theme('group_individuals_dialog');
   dialog.appendTo('body');
@@ -302,7 +366,8 @@ function add_page_listeners(context) {
   // });
 
   $(document).on('selecteds_grouped', function(event) {
-    save_groups(groups, true);
+    // Must NOT save here, because some functions create lots of groups at once,
+    // eg. group_all_individuals().
   });
 
   $(document).on('groups_saved', function(event) {
@@ -377,7 +442,7 @@ function display_message_ungrouped_individuals(next_link) {
             next_link[0].click();
           });
 
-          group_individuals();
+          group_all_individuals();
         }
       }
     ]
@@ -409,60 +474,29 @@ function display_groups() {
     if (this_group_nid == '') {
       return null;
     }
+    // console.log('this_group_nid: ', this_group_nid);
 
     // Find all those in its group
     var all_in_group = selectables.filter('[data-group-nid="' + this_group_nid + '"]');
-    // console.log('all_in_group.length: ', all_in_group.length);
+    // console.log('all_in_group: ', all_in_group);
 
-    all_in_group.each(function() {
-      var index = Drupal.selection.get_index($(this));
-      Drupal.selection.selecteds_indexes_push( index );
-    });
+    all_in_group.addClass('selected');
 
-    var selecteds = Drupal.selection.get_selected_nids().length;
-    // console.log('selecteds: ', selecteds);
+    // var selecteds = Drupal.selection.get_selected_nids().length;
+    // // console.log('selecteds: ', selecteds);
 
 
-    group(this_group_nid, SAVED_STATUS_SAVED, false);
+    var behaviours = {
+      show_message: false,
+      sort_groupables: false
+    };
+    group(this_group_nid, SAVED_STATUS_SAVED, behaviours);
 
     // Remove the attribute of each in this group to prevent re-grouping
     all_in_group.attr('data-group-nid', '');
   });
 
   selectables.removeAttr('data-group-nid');
-
-
-
-  selectables.each(function(index, el) {
-    // var group_nid = $(this).find(".field.nid-observation .field-content" ).html();
-
-    // // First, selects all consecutive pictures that should be part of a group.
-    // // Then, at the end of those consecutive pictures, groups the selected pictures.
-    // // Then begins again for a new group.
-
-    // If this selectable is should be part of a group
-    // if (group_nid) {
-    //   // console.log("group_nid: ", group_nid);
-    //   var index = Drupal.selection.get_index($(this));
-    //   // console.log("index: ", index);
-    //   var nid = $(this).find(".field.nid-observation .field-content" ).html();
-
-    //   // If this is the first
-    //   if (this_group_nid == null) {
-    //     this_group_nid = group_nid;
-    //   }
-    //   // If this is the start of a new group
-    //   if (group_nid != this_group_nid) {
-    //     group(this_group_nid, SAVED_STATUS_SAVED, false);
-    //     this_group_nid = group_nid;
-    //   }
-    //   Drupal.selection.selecteds_indexes_push( index );
-    // }
-
-  });
-  // if (this_group_nid != null) { // For just the last group
-  //   group(this_group_nid, SAVED_STATUS_SAVED, false);
-  // }
 }
 
 
@@ -490,10 +524,11 @@ function call_auto_group() {
     // console.log( "Result: " + result );
 
     if (result == "success") {
-      toastr.success('Pictures have been auto-grouped successfully. Reloading in 3 seconds…');
-      var reload_timeout = window.setTimeout(function(){
-        document.location.reload();
-      }, 3000);
+      toastr.success('Pictures have been auto-grouped successfully. Reloading…');
+      // var reload_timeout = window.setTimeout(function(){
+      //   document.location.reload();
+      // }, 3000);
+      document.location.reload();
     } else {
       toastr.error('Sorry; there was a problem auto-grouping the pictures.');
       console.log( "Response data: ", data);
@@ -526,25 +561,37 @@ function call_auto_group() {
  *   Whether the group already exists (has been saved), is altered, or is new.
  *   If it is already saved, this function is being called to show it.
  *
- * @param show_message
- *   Whether a message should be displayed to the user to indicate the grouping success.
- *   Generally this should be false, because a message is shown as groups are being saved.
+ * @param object behaviours
+ *   Contains:
+ *     show_message: Whether a message should be displayed to the user to indicate the grouping success.
+ *       Generally this should be false, because a message is shown as groups are being saved.
+ *     sort_groupables
+ *
+ * @return jQuery object
+ *   The group object that was created or updated
  */
-function group(group_nid, saved_status, show_message) {
+function group(group_nid, saved_status, behaviours) {
   // console.log("Called: group()");
   // console.log('saved_status: ', saved_status);
 
   // -----------------------------------------------------------------
   // Manage parameters
 
-  show_message = ( show_message == 'undefined' ) ? true : show_message;
-  var selecteds_indexes = Drupal.selection.get_selecteds_indexes();
-  // console.log('selecteds_indexes: ', selecteds_indexes);
+  var selecteds = selectables.filter('.selected');
+  // console.log('selecteds: ', selecteds);
+
+  if (behaviours == 'undefined' ) {
+    behaviours = {
+      show_message: true,
+      sort_groupables: true
+    };
+  }
 
   // -----------------------------------------------------------------
   // Find the first group if any of the selected are in a group already
 
-  var group = find_first_selected_group(selecteds_indexes);
+  // A jQuery object
+  var group = find_first_selected_group(selecteds);
   // console.log('group: ', group);
 
   // -----------------------------------------------------------------
@@ -564,7 +611,7 @@ function group(group_nid, saved_status, show_message) {
   // Insert new group if no group already
 
   if (typeof group == 'undefined') {
-    group = create_group_element(selecteds_indexes, group_nid);
+    group = create_group_element(selecteds, group_nid);
     saved_status = SAVED_STATUS_NEW;
   }
   else if (saved_status == SAVED_STATUS_NEW) {
@@ -573,7 +620,7 @@ function group(group_nid, saved_status, show_message) {
   }
   // console.log('saved_status: ', saved_status);
 
-  move_elements_to_group(selecteds_indexes, group);
+  move_elements_to_group(selecteds, group);
 
   add_selected_to_groups_array(saved_status, group_nid);
 
@@ -584,7 +631,6 @@ function group(group_nid, saved_status, show_message) {
 
   // Sort group's children, because they weren't necessarily added in the
   // correct order.
-  sort_groupables(group);
 
   var group_date_added = group.children().first().find('.views-field-created .field-content').html();
   group.attr('data-date-added', group_date_added);
@@ -592,29 +638,35 @@ function group(group_nid, saved_status, show_message) {
   var group_date_taken = group.children().first().find('.views-field-field-date-taken .date-display-single').html();
   group.attr('data-date-taken', group_date_taken);
 
-  sort_groupables();
+  if (behaviours.sort_groupables) {
+    sort_groupables(group);
+  }
 
   // -----------------------------------------------------------------
   // Show message and finish up
 
-  if (show_message) {
-    toastr.success('Pictures grouped.'); // @todo add an 'undo' button
 
+  if (behaviours.show_message) {
+    toastr.success('Pictures grouped.'); // @todo add an 'undo' button
+  }
+
+
+  if (behaviours.sort_groupables) {
     $(document).trigger('selecteds_grouped');
   }
 
   Drupal.selection.deselect_all();
 
-  // sort_all(); @todo create this function
-  // Each item and group should be given 'data-date-created="yyyy-mm-dd"' attribute;
-  // items should be sorted by this;
-
-  // console.log('groups: ', groups);
+  return group;
 }
 
 
-function create_group_element(selecteds_indexes, group_nid) {
-  var first_selected = Drupal.selection.get_selectable( selecteds_indexes[0] );
+/**
+ * @return A jQuery object of a <ul> element
+ */
+function create_group_element(selecteds, group_nid) {
+  var first_selected = selecteds.eq(0);
+  // console.log('first_selected: ', first_selected);
   var element_before = first_selected.prev();
 
   var group = $( '<ul id="' + group_nid + '" class="group"></ul>' );
@@ -636,13 +688,14 @@ function create_group_element(selecteds_indexes, group_nid) {
 /**
  * Finds the first group containing one of the selecteds provided.
  *
- * @returns jQuery object
+ * @return jQuery object
  */
-function find_first_selected_group(selecteds_indexes) {
+function find_first_selected_group(selecteds_chosen) {
   var group;
 
-  $.each( selecteds_indexes, function( key, index ) {
-    var element = Drupal.selection.get_selectable( index );
+  $.each(selecteds_chosen, function( key, index ) {
+    // var element = Drupal.selection.get_selectable( index );
+    element = $(this);
 
     // If no group has been found yet, and this element is in a group
     if ((typeof group == 'undefined') && (get_group(element).length > 0)) {
@@ -654,14 +707,15 @@ function find_first_selected_group(selecteds_indexes) {
 }
 
 
-function move_elements_to_group(selecteds_indexes, new_group) {
+function move_elements_to_group(selecteds_chosen, new_group) {
   // console.log('new_group: ', new_group);
 
   // console.log('groups: ', groups);
   // console.log('groups_map', groups_map);
 
-  $.each( selecteds_indexes, function( key, index ) {
-    var element = Drupal.selection.get_selectable( index );
+  $.each(selecteds_chosen, function( key, index ) {
+    // var element = Drupal.selection.get_selectable( index );
+    var element = $(this);
     var its_group = get_group(element);
 
     // If this element is not in a group
@@ -714,7 +768,7 @@ function add_selected_to_groups_array(saved_status, group_nid) {
 
 
 /**
- * @returns jQuery object
+ * @return jQuery object
  *   The group that the node is in
  */
 function get_group(element) {
@@ -730,6 +784,7 @@ function get_group(element) {
  */
 function merge_groups(remaining_group_obj, removing_group_obj) {
   // console.log('Called: merge_groups()');
+  // console.log( 'remaining_group_obj: ', remaining_group_obj );
   // console.log( 'removing_group_obj: ', removing_group_obj );
 
   // console.log( 'groups: ', groups );
@@ -753,6 +808,7 @@ function merge_groups(remaining_group_obj, removing_group_obj) {
   }
 
   remaining_group = groups[groups_map[remaining_group_id]];
+  // console.log('remaining_group: ', remaining_group);
   removing_group = groups[groups_map[removing_group_id]];
 
   remaining_group.status = SAVED_STATUS_ALTERED;
@@ -781,43 +837,100 @@ function add_temp_id() {
 
 
 
+// /**
+//  * OLD =========
+//  * Removes groups of all selecteds, moving their elements back into the main list.
+//  */
+// function ungroup_selected() {
+
+//   var groups_to_ungroup = [];
+
+//   $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
+//     var group_id = selectable.parent( '.group' ).attr( 'id' );
+//     // console.log("group_id: ", group_id);
+//     if (typeof group_id != 'undefined') {
+//       // var group_num = parseInt(group_id.substring(group_id.search('-') + 1), 10);
+//       // console.log("group_num: ", group_num);
+//       groups_to_ungroup.push(group_id);
+//     }
+//   });
+//   // console.log('groups_to_ungroup: ', groups_to_ungroup);
+
+//   ungroup(groups_to_ungroup, false);
+
+//   toastr.success('Pictures un-grouped.');
+// }
+
+
+
 /**
  * Removes groups of all selecteds, moving their elements back into the main list.
+ * 
+ * @param cleanup
+ *   If true, when complete, deselects and sorts selectables, and shows a message
  */
-function ungroup_selected() {
+function ungroup_selected(cleanup) {
+  // console.log('ungroup_selected()');
+  // console.log('groups: ', groups);
+  // console.log('groups_map: ', groups_map);
 
-  var groups_to_ungroup = [];
+  cleanup = ( typeof cleanup == 'undefined' ) ? false : cleanup;
 
-  $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
-    var group_id = selectable.parent( '.group' ).attr( 'id' );
-    // console.log("group_id: ", group_id);
-    if (typeof group_id != 'undefined') {
-      // var group_num = parseInt(group_id.substring(group_id.search('-') + 1), 10);
-      // console.log("group_num: ", group_num);
-      groups_to_ungroup.push(group_id);
+  // $.each( Drupal.selection.get_selected_selectables(), function (key, selectable) {
+  selectables.filter('.selected').each(function() {
+    var selectable = $(this);
+
+    var group_obj = selectable.parent( '.group' );
+    // console.log('group_obj: ', group_obj);
+
+    // If not in a group, skip this one.
+    if (group_obj.length == 0) {
+      return null;
     }
+
+    var selectable_nid = selectable.find('.property-nid').html().trim();
+    // console.log("selectable_nid: ", selectable_nid);
+    var group_id = group_obj.attr( 'id' );
+    // console.log("group_id: ", group_id);
+
+    var group_pictures = groups[groups_map[group_id]].pictures;
+    // console.log("group_pictures: ", group_pictures);
+    $.each(group_pictures, function(index, nid) {
+      if (selectable_nid == nid) {
+        // console.log("Match! index: ", index);
+        groups[groups_map[group_id]].pictures.splice(index, 1);
+      }
+    });
+
+    groups[groups_map[group_id]].status = SAVED_STATUS_ALTERED;
+
+    eject_one_from_group(group_obj, selectable);
   });
-  // console.log('groups_to_ungroup: ', groups_to_ungroup);
+  // console.log('groups: ', groups);
+  save_groups(groups, true);
 
-  ungroup(groups_to_ungroup, false);
+  if (cleanup) {
+    Drupal.selection.deselect_all();
+    sort_groupables();
 
-  toastr.success('Pictures un-grouped.');
+    toastr.success('Pictures un-grouped.');
+  }
 }
 
 
 
 /**
- * Removes groups, moving their elements back into the main list, and optionally shows a message.
+ * Removes groups, moving their elements back into the main list, and optionally cleans up.
  *
  * @param int groups_to_process
  *   Array of groups' nids. eg. [567, 568]
- * @param boolean message
- *   Whether a message popup should be displayed
+ * @param boolean cleanup
+ *   If true, when complete, a cleanup popup is displayed
  */
-function ungroup(groups_to_process, message) {
+function ungroup(groups_to_process, cleanup) {
   // console.log('groups_to_process: ', groups_to_process );
 
-  message = ( typeof message == 'undefined' ) ? false : message;
+  cleanup = ( typeof cleanup == 'undefined' ) ? false : cleanup;
 
   groups_to_process.forEach(function(group_id, index) {
     // console.log( 'group_id: ', group_id );
@@ -848,13 +961,13 @@ function ungroup(groups_to_process, message) {
   // -----------------------------------------------------------------
   // Show message and finish up
 
-  if (message) {
+  if (cleanup) {
     toastr.success('Pictures un-grouped.');
+
+    sort_groupables();
+
+    Drupal.selection.deselect_all();
   }
-
-  sort_groupables();
-
-  Drupal.selection.deselect_all();
 
   adjust_buttons();
 
@@ -866,26 +979,38 @@ function ungroup(groups_to_process, message) {
  * Moves elements out of a group, back to the parent group.
  */
 function eject_all_from_group(group_obj) {
+  // $.each( groups, function( key, group ) {
+  group_obj.children().each( function() {
+    eject_one_from_group(group_obj, $(this));
+  });
+}
+
+
+/**
+ * Moves one element out of a group, back to the parent group.
+ * 
+ * @param group_obj
+ *   A jQuery object.
+ * @param element
+ *   A jQuery object.
+ */
+function eject_one_from_group(group_obj, element) {
+  // var element = Drupal.selection.get_selectable( index );
+  // console.log( "element_before length: ", element_before.length );
+
   var element_before = group_obj.prev();
   // console.log( element_before: ", element_before );
 
-  // $.each( groups, function( key, group ) {
-  group_obj.children().each( function() {
-    // var element = Drupal.selection.get_selectable( index );
-    var element = $(this);
-    // console.log( "element_before length: ", element_before.length );
+  // get_selectable(id)
 
-    // get_selectable(id)
-
-    // alert (element_before.attr("class"));
-    element.detach();
-    if ( element_before.length > 0 ) {
-      element.insertAfter( element_before );
-    }
-    else {
-      element.prependTo( group_obj.parent() );
-    }
-  });
+  // alert (element_before.attr("class"));
+  element.detach();
+  if ( element_before.length > 0 ) {
+    element.insertAfter( element_before );
+  }
+  else {
+    element.prependTo( group_obj.parent() );
+  }
 
   if (group_obj.children().length == 0) {
     group_obj.remove();
@@ -911,10 +1036,46 @@ function ungroup_all() {
 
 
 /**
+ * Makes a group for each picture that is currently ungrouped.
+ *
  * @param callback
  *   A function to be called once the rest of the function has completed.
  */
-function group_individuals(callback) {
+function group_selected_individuals(callback) {
+  // console.log('callback: ', callback);
+
+  var selecteds = selectables.filter('.selected');
+  
+  ungroup_selected(false);
+
+  Drupal.selection.deselect_all();
+
+  selecteds.each(function( index, selectable ) {
+
+    selectable = $(this);
+    selectable.addClass('selected');
+
+    var behaviours = {
+      show_message: false,
+      sort_groupables: true
+    };
+    group(null, SAVED_STATUS_NEW, behaviours);
+  });
+  // console.log('groups: ', groups);
+  save_groups(groups, true);
+
+  // toastr.success('All individual pictures grouped.');
+}
+
+
+
+/**
+ * Makes a group for each picture that is currently ungrouped.
+ *
+ * @param callback
+ *   A function to be called once the rest of the function has completed.
+ */
+function group_all_individuals(callback) {
   // console.log('callback: ', callback);
 
   Drupal.selection.deselect_all();
@@ -922,11 +1083,16 @@ function group_individuals(callback) {
   var indiv_selectables = selectables.not(".group .selectable");
 
   indiv_selectables.each(function( index, selectable ) {
-    var index = Drupal.selection.get_index($(selectable));
-    Drupal.selection.selecteds_indexes_push( index );
+    selectable = $(this);
+    selectable.addClass('selected');
 
-    group(null, SAVED_STATUS_NEW, false);
+    var behaviours = {
+      show_message: false,
+      sort_groupables: true
+    };
+    group(null, SAVED_STATUS_NEW, behaviours);
   });
+  // console.log('groups: ', groups);
   save_groups(groups, true);
 
   // toastr.success('All individual pictures grouped.');
@@ -937,8 +1103,10 @@ function group_individuals(callback) {
 /**
  * Sends all groups to be saved as observations using an HTTP POST.
  *
- * @param groups
+ * @param array groups_in
  *   A subset of the groups array; an array of 'group' objects.
+ * @param boolean message
+ *   If a message should be shown
  */
 function save_groups(groups_in, message, success_callbacks, always_callbacks) {
   // console.log('groups_in: ', groups_in);
@@ -1069,6 +1237,9 @@ function filter_groups_to_unsaved(groups_in) {
  */
 function update_temp_ids(nodes_in) {
   // console.log('nodes_in: ', nodes_in);
+  
+  // Update with the latest groups (after save)
+  group_elements = $('.group');
 
   nodes_in.forEach(function (node) {
     // console.log('node: ', node);
@@ -1133,8 +1304,7 @@ function update_saved_groups(nodes_in) {
  * Enables and disables the buttons according to selections and groups.
  */
 function adjust_buttons() {
-
-  var are_selecteds = Drupal.selection.get_selecteds_indexes().length;
+  var are_selecteds = selectables.filter('.selected').length > 0;
   var are_groups = groups.length;
 
   if( are_selecteds ) {
@@ -1163,20 +1333,20 @@ function adjust_buttons() {
  *   String indicating the direction of the sort; 'asc', 'desc', or 'rand'
  */
 function sort_groupables(container, order) {
-  var sort_attrs = ['data-date-added', 'data-date-taken']; // Later ones take preference.
+  var sort_attrs = ['data-date-added', 'data-date-taken', 'data-is-primary']; // Later ones take preference.
 
   $.each(sort_attrs, function(index, sort_attr) {
     // var sort_attr = 'data-date-added';
     // var sort_attr = 'data-date-taken';
 
     if (typeof order === 'undefined') {
-      order = 'asc';
+      order = 'desc';
     }
     if (typeof container === 'undefined') {
       container = $('.groupables ul.content');
     }
 
-    // Sort all groups and groupables directly inside container
+    // Function to sort all groups and groupables directly inside container
     tinysort(container.children().toArray(), {
       attr: sort_attr,
       order: order
@@ -1219,24 +1389,60 @@ function sort_groups_array() {
 }
 
 
+/**
+ * Removes all selected pictures from their existing groups and creates a new group for them.
+ */
+function re_group() {
+  ungroup_selected(false);
+
+  $(document).on('groups_saved', function(event) {
+    var behaviours = {
+      show_message: false,
+      sort_groupables: true
+    };
+    group(null, SAVED_STATUS_NEW, behaviours);
+    save_groups(groups, true);
+
+    $(this).off('groups_saved');
+  });
+}
+
+
 
 function set_up_keypress_mgmt() {
   Drupal.casabio.add_keypress_info(
-    '<tr><td><strong>g</strong> : </td><td>Group selected pictures</td></tr>'
-    + '<tr><td><strong>u</strong> : </td><td>Un-group selected pictures</td></tr>');
+    "<tr><td><strong>left</strong> : </td><td>Previous observation</td></tr>"
+    + "<tr><td><strong>right</strong> : </td><td>Next observation</td></tr>"
+    + "<tr><td><strong>x</strong> : </td><td>Select observation</td></tr>"
+    + "<tr><td><strong>c</strong> : </td><td>Un-select all observations</td></tr>"
+    + '<tr><td><strong>g</strong> : </td><td>Group selected pictures</td></tr>'
+    + '<tr><td><strong>u</strong> : </td><td>Un-group selected pictures</td></tr>'
+    + '<tr><td><strong>r</strong> : </td><td>Re-group selected pictures</td></tr>'
+    + '<tr><td><strong>i</strong> : </td><td>Group selected pictures as individuals</td></tr>'
+  );
 
   $(document).bind('keydown', 'g',         handle_keypress_group);
-  $(document).bind('keydown', 'u',         handle_keypress_ungroup);
+  $(document).bind('keydown', 'u',         ungroup_selected);
+  $(document).bind('keydown', 'r',         re_group);
+  $(document).bind('keydown', 'i',         group_selected_individuals);
 }
 
 function handle_keypress_group() {
-  group(null, SAVED_STATUS_NEW, false);
+  var behaviours = {
+    show_message: false,
+    sort_groupables: true
+  };
+  group(null, SAVED_STATUS_NEW, behaviours);
   save_groups(groups, true);
 }
 
-function handle_keypress_ungroup() {
-  ungroup_selected();
-}
+// function handle_keypress_ungroup() {
+//   ungroup_selected();
+// }
+
+// function handle_keypress_regroup() {
+//   re_group();
+// }
 
 
 })(jQuery, Drupal, this, this.document);

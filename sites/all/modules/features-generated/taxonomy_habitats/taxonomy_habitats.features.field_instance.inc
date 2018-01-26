@@ -33,6 +33,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
@@ -74,6 +80,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'weight' => 4,
       ),
       'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -125,6 +137,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
@@ -166,6 +184,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'weight' => 2,
       ),
       'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
@@ -217,6 +241,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
@@ -263,6 +293,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 0,
       ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'small' => array(
         'label' => 'above',
         'settings' => array(),
@@ -304,6 +340,12 @@ function taxonomy_habitats_field_default_field_instances() {
         'weight' => 3,
       ),
       'field_guide' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',

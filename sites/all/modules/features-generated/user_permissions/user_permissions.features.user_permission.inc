@@ -10,15 +10,6 @@
 function user_permissions_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: 'access API reference'.
-  $permissions['access API reference'] = array(
-    'name' => 'access API reference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'api',
-  );
-
   // Exported permission: 'access administration menu'.
   $permissions['access administration menu'] = array(
     'name' => 'access administration menu',
@@ -253,15 +244,6 @@ function user_permissions_user_default_permissions() {
       'Administrator' => 'Administrator',
     ),
     'module' => 'search_config',
-  );
-
-  // Exported permission: 'administer API reference'.
-  $permissions['administer API reference'] = array(
-    'name' => 'administer API reference',
-    'roles' => array(
-      'Administrator' => 'Administrator',
-    ),
-    'module' => 'api',
   );
 
   // Exported permission: 'administer actions'.

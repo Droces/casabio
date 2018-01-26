@@ -4,7 +4,37 @@
  * Bulk Media Upload Module
  */
 
+/**
+ * CONTENTS
+ * 
+ * // casa_upload_help()
+ * casa_upload_menu()
+ * casa_upload_init()
 
+ * get_upload_form_content()
+ * get_collections_by_user_callback()
+ * get_collections_by_user()
+ 
+ * save_uploaded_file_callback()
+ * casa_read_exif()
+ * casa_upload_node_form_submit()
+ * save_uploaded_files()
+ * _casa_upload_generate_entity()
+ * save_media_file()
+ * create_entity()
+ * create_new_file()
+ * add_file_reference()
+ * _casa_upload_batch_finished()
+ * _casa_upload_last_batch_finished()
+ */
+
+
+
+require 'vendor/autoload.php';
+
+use Monolog\Logger;
+use PHPExiftool\Reader;
+// use PHPExiftool\Driver\Value\ValueInterface;
 
 
 
@@ -17,15 +47,6 @@
 //   }
 //   return '';
 // }
-
-
-  require 'vendor/autoload.php';
-
-  use Monolog\Logger;
-  use PHPExiftool\Reader;
-  use PHPExiftool\Driver\Value\ValueInterface;
-
-
 
 
 
@@ -372,7 +393,7 @@ function save_uploaded_file_callback() {
   $exif = casa_read_exif($file_path);
   // dpm($exif, "exif" ); // Shows a FileDateTime of now because the file has just been copied
 
-  // $filehash = md5_file($path);
+  $filehash = md5_file($file_path);
   // dpm($filehash, '$filehash');
 
   $temp_file = array(
@@ -542,8 +563,13 @@ function _casa_upload_generate_entity($tmpfile, $collection_nid, &$context) {
   // dpm($tmpfile, '$tmpfile');
 
   if (!is_valid_eid($collection_nid)) {
-    throw new InvalidArgumentException("Parameter $collection_nid, " . $collection_nid . ", needs to be a valid NID.", 1);
+    throw new InvalidArgumentException("Parameter collection_nid, '" . $collection_nid . "', needs to be a valid NID.", 1);
   }
+
+  // Strip out special characters
+  $tmpfile['name'] = preg_replace('/[^a-zA-Z0-9\.\s]/', '', $tmpfile['name']);
+  // $tmpfile['name'] = preg_replace('/[\s]/', '_', $tmpfile['name']);
+  // dpm($tmpfile, '$tmpfile');
 
   // Most of this function's code was copied from the bulk_media_upload module
 
@@ -553,6 +579,7 @@ function _casa_upload_generate_entity($tmpfile, $collection_nid, &$context) {
   $mediafield_name =  'field_image'/*variable_get('casa_upload_mediafield')*/;
   $bundle =           'picture'/*variable_get('casa_upload_bundle')*/;
   $mediafield_info =  field_info_instance($entity_type, $mediafield_name, $bundle);
+  // dpm($mediafield_info, '$mediafield_info');
 
   // Save media file.
   $save_media_file_result = save_media_file($tmpfile, $mediafield_info);

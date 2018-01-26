@@ -52,27 +52,6 @@ function menu_admin_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'management_admin:<front>',
   );
-  // Exported menu link: management_feeds-log:administration-feeds-log.
-  $menu_links['management_feeds-log:administration-feeds-log'] = array(
-    'menu_name' => 'management',
-    'link_path' => 'administration-feeds-log',
-    'router_path' => 'administration-feeds-log',
-    'link_title' => 'Feeds log',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'management_feeds-log:administration-feeds-log',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -44,
-    'customized' => 1,
-    'parent_identifier' => 'management_admin:<front>',
-  );
   // Exported menu link: management_habitat:node/add/habitat.
   $menu_links['management_habitat:node/add/habitat'] = array(
     'menu_name' => 'management',
@@ -90,9 +69,9 @@ function menu_admin_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
+    'weight' => -49,
     'customized' => 1,
-    'parent_identifier' => 'management_add-terms:node',
+    'parent_identifier' => 'management_add:node/add',
   );
   // Exported menu link: management_identifications:admin/identifications.
   $menu_links['management_identifications:admin/identifications'] = array(
@@ -132,9 +111,9 @@ function menu_admin_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
+    'weight' => -48,
     'customized' => 1,
-    'parent_identifier' => 'management_add-terms:node',
+    'parent_identifier' => 'management_add:node/add',
   );
   // Exported menu link: management_observations:admin/observations.
   $menu_links['management_observations:admin/observations'] = array(
@@ -239,14 +218,13 @@ function menu_admin_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'management_add-terms:node',
+    'parent_identifier' => 'management_add:node/add',
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Admin');
   t('Collections');
-  t('Feeds log');
   t('Habitat');
   t('Identifications');
   t('Locality');

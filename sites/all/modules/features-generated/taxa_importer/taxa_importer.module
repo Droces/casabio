@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Taxa importer feature.
+ */
+
+include_once 'taxa_importer.features.inc';

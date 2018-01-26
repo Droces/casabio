@@ -57,7 +57,14 @@ function browse_page_callback() {
 /**
  * Implements hook_init().
  */
-// function browse_init() {}
+function browse_init() {
+  $aliased_path = drupal_get_path_alias(current_path());
+  // dpm($aliased_path, '$aliased_path');
+  if (drupal_match_path($aliased_path, 'browse/observations/map')
+    || drupal_match_path($aliased_path, 'explore/observations/map')) {
+    add_ol_files(TRUE);
+  }
+}
 
 
 

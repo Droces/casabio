@@ -20,16 +20,31 @@
                                                                 Header
 */
 header[role="banner"] {
-  $header-height: 180px;
+  $header-height: 90px;
   $header-height-small: 110px;
-  padding: 1.2em 0;
+  // padding: 1.2em 0;
   box-sizing: border-box;
 
-  background-color: tint( $colour-green, 5% );
-  border-bottom: solid 1px shade( $colour-green, 15% );
-  color: white;
+  // background-color: tint( $colour-green, 5% );
+  background-color: white;
+  border-bottom: solid 1px #5b5c5b; // shade( $colour-green, 15% );
+  // color: white;
 
   @extend %region-dark; // makes links light colours
+  
+  a.button,
+  .menu li a,
+  a#tour,
+  .header__logo,
+  .block {
+    display: flex;
+    align-items: center;
+    height: $header-height;
+
+    .logged-in & {
+      height: $header-height * 0.6;
+    }
+  }
 
   p {
     margin: 0;
@@ -38,8 +53,9 @@ header[role="banner"] {
     display: block;
     width: 50px;
   }
+
   a {
-    text-shadow: 0.06em 0.06em 0.06em rgba( black, 0.3);
+    text-shadow: none; // 0.06em 0.06em 0.06em rgba( black, 0.3);
 
     &,
     &:visited,
@@ -47,7 +63,18 @@ header[role="banner"] {
     &:focus,
     &:active,
     &.active, {
+      color: $colour-green; // white;
+    }
+
+    &.button {
+      background: darken( $colour-green, 0% );
       color: white;
+      text-shadow: none;
+      margin: 0;
+      border-radius: 0;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -61,7 +88,6 @@ header[role="banner"] {
     width: 100%;
 
     & > * {
-      // height: $header-height;
 
       @media all and (max-width: 640px) {
         display: inline-block;
@@ -70,9 +96,6 @@ header[role="banner"] {
       @media all and (min-width: 640px) {
         display: table-cell;
         vertical-align: middle;
-      }
-      @media all and (max-width: 700px) {
-        // height: $header-height-small;
       }
     }
   }
@@ -85,16 +108,19 @@ header[role="banner"] {
   //    }
   // }
   .header__logo {
-    // height: $header-height;
-    padding-right: 1em; // can't be margin because this is floated...
+    // padding-right: 1em; // can't be margin because this is floated...
     box-sizing: border-box;
     float: none;
+    padding: 10px 1em 10px 0;
 
     @media all and (max-width: 850px) {
       // display: none;
     }
     .header__logo-image {
-      width: 50px;
+      // width: 50px;
+      width: auto;
+      // max-height: 60px;
+      max-height: 100%;
     }
   }
 
@@ -116,11 +142,12 @@ header[role="banner"] {
 
   .region-header {
     text-align: right;
-    @include display(flex);
+    display: flex;
     justify-content: flex-end;
 
     & > * {
       @include flex(0 0 auto);
+      align-items: center;
     }
   }
 
@@ -130,23 +157,31 @@ header[role="banner"] {
     // float: right;
     margin-bottom: 0;
 
-    &:not(:first-of-type) {
-      border-left: solid 1px rgba( black, 0.3);
+    &:last-of-type {
+      border-left: solid 1px rgba( black, 0.15);
     }
   }
   .menu {
     @media all and (max-width: $w-narrow) {
+
       li {
-        display: inline-block
+        display: inline-block;
       }
     }
     @media all and (min-width: $w-narrow) {
-      @include menu-horizontal;
+      display: flex;
+
+      * > & {
+        flex: 0 1 auto;
+      }
+
+      li {
+        a {
+          box-sizing: border-box;
+        }
+      }
     }
   }
-}
-.logged-in #header {
-  padding: 0.4em 0px;
 }
 
 

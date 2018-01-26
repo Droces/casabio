@@ -33,17 +33,18 @@
       <div id="<?php print $widget->id; ?>-wrapper" class="views-exposed-widget views-widget-<?php print $id; ?>">
 
         <?php $title_attr = ''; ?>
-        <?php if (!empty($widget->description)): ?>
-          <?php $title_attr = ' title="' . $widget->description . '"'; ?>
-          <span class="description"<?php print $title_attr; ?>>
-            ?<span><?php print $widget->description; ?></span>
-          </span>
-        <?php endif; ?>
 
         <?php if (!empty($widget->label)): ?>
           <label for="<?php print $widget->id; ?>"<?php print $title_attr; ?>>
             <?php print $widget->label; ?>
           </label>
+        <?php endif; ?>
+        
+        <?php if (!empty($widget->description)): ?>
+          <?php $title_attr = ' title="' . $widget->description . '"'; ?>
+          <span class="description"<?php print $title_attr; ?>>
+            ?<span><?php print $widget->description; ?></span>
+          </span>
         <?php endif; ?>
 
         <?php if (!empty($widget->operator)): ?>

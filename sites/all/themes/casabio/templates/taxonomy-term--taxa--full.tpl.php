@@ -28,12 +28,28 @@
         <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a></h2>
       <?php endif; ?>
 
+      <?php if (isset($content['edit_link'])): ?>
+        <?php print render($content['edit_link']); ?>
+      <?php endif; ?>
       <?php if (isset($content['field_taxon_rank'])): ?>
         <p class="subtle"><?php print render ($content['field_taxon_rank']); ?></p>
       <?php endif; ?>
 
       <div class="content" role="presentation">
-        <?php print render($content); ?>
+        <?php
+          hide($content['field_history']);
+          print render($content);
+        ?>
+      </div>
+
+      <div class="visible-to-admin">
+        <?php
+          if ($is_admin) {
+            // print '<label>History:</label><br>';
+            // print $term->field_history['und'][0]['value'];
+            print render($content['field_history']);
+          }
+        ?>
       </div>
     </div>
   </div>

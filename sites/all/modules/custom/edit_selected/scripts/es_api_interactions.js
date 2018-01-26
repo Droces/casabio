@@ -18,9 +18,8 @@
  *  .fetch_token()
  *  .get_token()
  *  .fetch_selectables_data()
- *  .save_identification_from_form()
+ *  .save_identifications_from_form()
  *  .save_interaction_from_form()
- *  .update_observations()
  *  .update_nodes()
  *
  * get_collection_nid()
@@ -337,16 +336,38 @@ Drupal.es_api_interactions = {
 
 
 
-  save_identification_from_form: function(form, context, success_callbacks, always_callbacks) {
+  save_identifications_from_form: function(form, success_callbacks, always_callbacks) {
+    var settings = {
+      show_message: false,
+      cleanup: false
+    };
+    var observation_nids = Drupal.selection.get_selected_nids();
+    // console.log(observation_nids, 'observation_nids');
 
-    var identification = create_identification_from_form(form);
-    // console.log('identification: ', identification);
+    for (var i = observation_nids.length - 1; i >= 0; i--) {
+
+      if (i == 0) {
+        var settings = {
+          show_message: true,
+          cleanup: true
+        };
+      }
+
+      var identification = create_identification_from_form(form, observation_nids[i]);
+      // console.log('identification: ', identification);
+
+      Drupal.es_api_interactions.save_identification(identification, success_callbacks, always_callbacks, settings);
+    }
+  },
+
+
+
+  save_identification: function(identification, success_callbacks, always_callbacks, settings) {
 
     if (Object.keys(identification).length == 0) {
-      throw 'Interaction is empty in ' + 'Drupal.es_api_interactions.save_identification_from_form().';
+      throw 'Interaction is empty in ' + 'Drupal.es_api_interactions.save_identifications_from_form().';
     }
 
-    var observation_nid = Drupal.selection.get_selected_nids()[0]; // Used below when save is successful.
     var identification_nid = null;
 
     var url = Drupal.casa_core.get_api_resource_url('identification');
@@ -362,9 +383,12 @@ Drupal.es_api_interactions = {
       },
       url: url
     }
-    var toastr_info = toastr.info('Saving…', null, {
-      'timeOut': '-1'
-    }); // @todo add an 'undo' button
+
+    if (settings.show_message) {
+      var toastr_info = toastr.info('Saving…', null, {
+        'timeOut': '-1'
+      }); // @todo add an 'undo' button
+    }
     var jqxhr = $.ajax(request_params);
 
     jqxhr.fail(function( data ) {
@@ -379,22 +403,28 @@ Drupal.es_api_interactions = {
 
     jqxhr.done(function( data ) {
       // console.log( "In jqxhr.done(), data: ", data );
-      toastr.success('identification saved successfully.');
+      if (settings.show_message) {
+        toastr.success('identification saved successfully.');
+      }
 
       // Update selectables_data with new identification
       identification_nid = data['nid'];
 
       // Record returned identification
       Drupal.edit_selected.identifications_data_append(data.data[0]);
-      Drupal.edit_selected.populate_identifications_map();
 
-      Drupal.edit_selected.refresh_current_field_indicator(context);
-
-      Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+      if (settings.cleanup) {
+        Drupal.edit_selected.populate_identifications_map();
+        Drupal.edit_selected.refresh_current_field_indicator();
+        Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+        $(document).trigger('auto_identify_observations_batch_done', data);
+      }
     });
 
     jqxhr.always(function( data ) {
-      toastr_info.remove();
+      if (settings.show_message) {
+        toastr_info.remove();
+      }
       Drupal.casa_utilities.invoke_callbacks(always_callbacks);
     });
 
@@ -438,97 +468,14 @@ Drupal.es_api_interactions = {
   },
 
 
-
-  /**
-   * @returns true if successful, false otherwise.
-   */
   update_nodes: function(node_data, type, nids, context, attempt_num, success_callbacks, always_callbacks) {
-    // console.log('node_data: ', node_data);
+    // console.log('update_node()');
     // console.log('nids: ', nids);
 
-    if (! node_data || Object.keys(node_data).length == 0) {
-      throw 'Parameter node_data is empty in ' + 'Drupal.es_api_interactions.update_nodes().';
-    }
-    if (typeof attempt_num === 'undefined') {
-      attempt_num = 1;
-    }
-
-    var toastr_info = toastr.info('Saving…', null, {
-      'timeOut': '-1'
-    }); // @todo add an 'undo' button
-    var jqxhrs = [];
-    var all_successful = true;
-    var request_group_id = 0; // Not used yet...
-    var nids_failed = [];
-
-    nids.forEach(function(nid, index){
-      var is_last = index == nids.length - 1;
-      // console.log('is_last: ', is_last);
-      var jqxhr;
-
-      // DEVELOPMENT - for testing only
-      // @todo #remove this.
-      if (nid == '62630') {
-        nid = 'breaker';
-      }
-
-      jqxhr = Drupal.es_api_interactions.update_node(node_data, type, nid);
-      jqxhrs.push(jqxhr);
-
-      jqxhr.fail(function( data ) {
-        if(jqxhr.readyState < 4)  {
-          // toastr.warning('Request was not completed.');
-        }
-        else {
-          console.log( "In jqxhr.fail(), data: ", data );
-          all_successful = false;
-          nids_failed.push(nid);
-        }
-      });
-
-      jqxhr.done(function( data ) {
-        // console.log( "In jqxhr.done(), data: ", data );
-
-        // Update node in selectables_data with saved node info
-        Drupal.edit_selected.set_selectable(nid, data.data);
-
-        Drupal.edit_selected.update_feature(nid); // Map feature
-
-        Drupal.edit_selected.refresh_current_field_indicator(context);
-
-        Drupal.edit_selected.set_loads_finished([nid]);
-
-        Drupal.casa_utilities.invoke_callbacks(success_callbacks);
-      });
-
-      if (is_last) {
-        jqxhr.always(function( data ) {
-          toastr_info.remove();
-
-          if (all_successful) {
-            toastr.success(type + 's updated successfully.');
-          }
-          else {
-            manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num);
-          }
-          Drupal.casa_utilities.invoke_callbacks(always_callbacks);
-        });
-      }
-
-    });
-
-  },
-
-
-  /**
-   * @returns true if successful, false otherwise.
-   */
-  update_node: function(data_object, type, nid) {
-    // console.log('update_node()');
-
     var method = "PATCH";
-    var data = JSON.stringify(data_object, null, 2);
-    var url = Drupal.casa_core.get_api_resource_url(type) + '/' + nid;
+    var data = JSON.stringify(node_data, null, 2);
+    // var url = Drupal.casa_core.get_api_resource_url(type) + '/' + nid;
+    var url = Drupal.casa_core.get_api_url() + '/api/' + type + 's/' + nids.join();
 
     var settings = {
       type: method,
@@ -540,16 +487,170 @@ Drupal.es_api_interactions = {
       },
       url: url
     }
+
+    var toastr_info = toastr.info('Saving…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
+
     var jqxhr = $.ajax(settings);
-    return jqxhr;
+
+    jqxhr.fail(function( data ) {
+      if(jqxhr.readyState < 4)  {
+        toastr.warning('Request was not completed.');
+      }
+      else {
+        toastr.error('Sorry, there was a problem updating the ' + type + 's.');
+      }
+      console.log( "In jqxhr.fail(), data: ", data );
+    });
+
+    jqxhr.done(function( data ) {
+      console.log( "In jqxhr.done(), data: ", data );
+
+      // console.log('selectables_data: ', Drupal.edit_selected.get_selectables_data());
+
+      toastr.success(type + 's updated successfully.');
+
+      $.each(data.updated_nodes, function(index, node_data) {
+        // console.log('node_data: ', node_data);
+        // Update node in selectables_data with saved node info
+        Drupal.edit_selected.set_selectable(node_data.id, node_data);
+        // console.log('selectables_data: ', Drupal.edit_selected.get_selectables_data());
+
+        Drupal.edit_selected.update_feature(node_data.id); // Map feature
+
+        Drupal.edit_selected.refresh_current_field_indicator(context);
+
+        Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+      });
+
+      Drupal.casa_utilities.invoke_callbacks(always_callbacks);
+    });
+
+    jqxhr.always(function( data ) {
+      toastr_info.remove();
+
+      $.each(data.updated_nodes, function(index, node_data) {
+        Drupal.edit_selected.set_loads_finished([node_data.id]);
+      });
+    });
+    
   },
+
+
+
+  // /**
+  //  * @return true if successful, false otherwise.
+  //  */
+  // update_nodes_old: function(node_data, type, nids, context, attempt_num, success_callbacks, always_callbacks) {
+  //   // console.log('node_data: ', node_data);
+  //   // console.log('nids: ', nids);
+
+  //   if (! node_data || Object.keys(node_data).length == 0) {
+  //     throw 'Parameter node_data is empty in ' + 'Drupal.es_api_interactions.update_nodes().';
+  //   }
+  //   if (typeof attempt_num === 'undefined') {
+  //     attempt_num = 1;
+  //   }
+
+  //   var toastr_info = toastr.info('Saving…', null, {
+  //     'timeOut': '-1'
+  //   }); // @todo add an 'undo' button
+  //   var jqxhrs = [];
+  //   var all_successful = true;
+  //   var request_group_id = 0; // Not used yet...
+  //   var nids_failed = [];
+
+  //   nids.forEach(function(nid, index){
+  //     var is_last = index == nids.length - 1;
+  //     // console.log('is_last: ', is_last);
+  //     var jqxhr;
+
+  //     // DEVELOPMENT - for testing only
+  //     // @todo #remove this.
+  //     if (nid == '62630') {
+  //       nid = 'breaker';
+  //     }
+
+  //     jqxhr = Drupal.es_api_interactions.update_node(node_data, type, nid);
+  //     jqxhrs.push(jqxhr);
+
+  //     jqxhr.fail(function( data ) {
+  //       if(jqxhr.readyState < 4)  {
+  //         // toastr.warning('Request was not completed.');
+  //       }
+  //       else {
+  //         console.log( "In jqxhr.fail(), data: ", data );
+  //         all_successful = false;
+  //         nids_failed.push(nid);
+  //       }
+  //     });
+
+  //     jqxhr.done(function( data ) {
+  //       // console.log( "In jqxhr.done(), data: ", data );
+
+  //       // Update node in selectables_data with saved node info
+  //       Drupal.edit_selected.set_selectable(nid, data.data);
+
+  //       Drupal.edit_selected.update_feature(nid); // Map feature
+
+  //       Drupal.edit_selected.refresh_current_field_indicator(context);
+
+  //       Drupal.casa_utilities.invoke_callbacks(success_callbacks);
+  //     });
+
+  //     if (is_last) {
+  //       jqxhr.always(function( data ) {
+  //         toastr_info.remove();
+
+  //       Drupal.edit_selected.set_loads_finished([nid]);
+
+  //         if (all_successful) {
+  //           toastr.success(type + 's updated successfully.');
+  //         }
+  //         else {
+  //           manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num);
+  //         }
+  //         Drupal.casa_utilities.invoke_callbacks(always_callbacks);
+  //       });
+  //     }
+
+  //   });
+
+  // },
+
+
+  // /**
+  //  * @return true if successful, false otherwise.
+  //  */
+  // update_node: function(data_object, type, nid) {
+  //   // console.log('update_node()');
+
+  //   var method = "PATCH";
+  //   var data = JSON.stringify(data_object, null, 2);
+  //   // var url = Drupal.casa_core.get_api_resource_url(type) + '/' + nid;
+  //   var url = 'http://localhost/Current/CasaBio/services/observations/' + nid;
+
+  //   var settings = {
+  //     type: method,
+  //     contentType: "application/json",
+  //     data: data,
+  //     headers: {
+  //       "access-token": Drupal.es_api_interactions.get_token()
+  //       // Session id header is not specified, because it's automatically added by browser (it's a cookie).
+  //     },
+  //     url: url
+  //   }
+  //   var jqxhr = $.ajax(settings);
+  //   return jqxhr;
+  // },
 
 
 
 
 
   /**
-   * @returns true if successful, false otherwise.
+   * @return true if successful, false otherwise.
    */
   delete_nodes: function(type, nids, context, success_callbacks, always_callbacks) {
     // console.log('nids: ', nids);
@@ -617,7 +718,7 @@ Drupal.es_api_interactions = {
 
 
   /**
-   * @returns true if successful, false otherwise.
+   * @return true if successful, false otherwise.
    */
   delete_node: function(type, nid) {
 
@@ -645,6 +746,48 @@ Drupal.es_api_interactions = {
    *   Returns true if successful, or false otherwise.
    */
   auto_identify_observations: function(collection_nid) {
+    var total_processed = 0;
+    var batch_number = 1;
+
+    var toastr_info = toastr.info('Identifying…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
+
+    // Add listener for the response, to run subsequent batches
+    $(document).on('auto_identify_observations_batch_done', function(event, data) {
+      // console.log('in auto_identify_observations(), data: ', data);
+      total_processed += data['observations_processed'];
+
+      // If there are more remaining
+      if (total_processed < data['total_observations']) {
+        // toastr_info.
+        var msg = total_processed + ' / ' + data['total_observations'] + ' processed.'
+        $(toastr_info).children('.toast-message').html(msg);
+
+        batch_number ++;
+        Drupal.es_api_interactions.auto_identify_observations_batch(collection_nid, total_processed, batch_number);
+      }
+      else {
+        var msg = total_processed + ' / ' + data['total_observations'] + ' processed.'
+        $(toastr_info).children('.toast-message').html(msg);
+        
+        toastr.success(
+          data['total_observations'] + ' observations have been auto-identfied. Reloading the page…', null, {
+          'timeOut': '-1'
+        });
+
+        // var reload_timeout = window.setTimeout(function(){
+        //   document.location.reload();
+        // }, 5000);
+        document.location.reload();
+      }
+    });
+
+    // Run the first batch
+    Drupal.es_api_interactions.auto_identify_observations_batch(collection_nid, 0, batch_number);
+  },
+
+  auto_identify_observations_batch: function(collection_nid, offset, batch_number) {
     // console.log('params: ', params);
 
     var settings = {
@@ -655,11 +798,10 @@ Drupal.es_api_interactions = {
         // "access-token": Drupal.es_api_interactions.get_token()
         // Session id header is not specified, because it's automatically added by browser (it's a cookie).
       },
-      url: Drupal.casa_core.get_site_url() + 'services/collections/' + collection_nid + '/auto_identify_groups'
+      url: Drupal.casa_core.get_site_url() + 'services/collections/' 
+        + collection_nid + '/auto_identify_groups'
+        + '?offset=' + offset
     }
-    var toastr_info = toastr.info('Identifying…', null, {
-      'timeOut': '-1'
-    }); // @todo add an 'undo' button
     var jqxhr = $.ajax(settings);
 
     jqxhr.fail(function( data ) {
@@ -674,8 +816,8 @@ Drupal.es_api_interactions = {
 
     jqxhr.done(function( data ) {
       // console.log( "In jqxhr.done(), data: ", data );
-
-      toastr.success('The observations have been identfied.');
+      
+      $(document).trigger('auto_identify_observations_batch_done', data);
     });
 
     jqxhr.always(function( data ) {
@@ -708,7 +850,7 @@ function get_collection_nid() {
 /**
  * Manages the saving of a "Add identification" form from the Contribute MO > Observation Info page.
  */
-function create_identification_from_form(form) {
+function create_identification_from_form(form, observation_nid) {
   // console.log('form: ', form);
 
   var taxon_values = Drupal.casa_core.get_values_from_ref_view(form);
@@ -721,7 +863,6 @@ function create_identification_from_form(form) {
     return null;
   }
 
-  var observation_nid = Drupal.selection.get_selected_nids()[0]; // Will always be only one when submitting.
   // console.log('observation_nid: ', observation_nid);
   var observation_name = Drupal.edit_selected.get_selectable_data(observation_nid)
     ['attributes']['label'];
@@ -845,31 +986,31 @@ function save_add_interaction(params, nid, context, success_callbacks, always_ca
 }
 
 
-/**
- * Describes the save failure to the user, and re-attempts the save.
- * Should be called when multiple nodes are saved but some fail.
- */
-function manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num) {
-  // console.log('nids_failed: ', nids_failed);
-  // console.log('attempt_num: ', attempt_num);
+// /**
+//  * Describes the save failure to the user, and re-attempts the save.
+//  * Should be called when multiple nodes are saved but some fail.
+//  */
+// function manage_muli_save_failures(node_data, type, nids_failed, context, attempt_num) {
+//   // console.log('nids_failed: ', nids_failed);
+//   // console.log('attempt_num: ', attempt_num);
 
-  if (attempt_num == 1) {
-    toastr.error('Sorry, there was a problem updating the nodes. '
-      + nids_failed.length + ' nodes did not save successfully. Retrying…');
-  }
-  else if (attempt_num < 3) {
-    toastr.error('In attempt ' + attempt_num + ', '
-      + nids_failed.length + ' nodes did not save successfully. Retrying…');
-  }
+//   if (attempt_num == 1) {
+//     toastr.error('Sorry, there was a problem updating the nodes. '
+//       + nids_failed.length + ' nodes did not save successfully. Retrying…');
+//   }
+//   else if (attempt_num < 3) {
+//     toastr.error('In attempt ' + attempt_num + ', '
+//       + nids_failed.length + ' nodes did not save successfully. Retrying…');
+//   }
 
-  if (attempt_num < 3) {
-    Drupal.es_api_interactions.update_nodes(node_data, type, nids_failed, context, attempt_num + 1);
-  }
-  else {
-    toastr.error('Three unsuccessful attempts were made to save the node. You may try again.');
-    Drupal.edit_selected.set_loads_finished(nids_failed);
-  }
-}
+//   if (attempt_num < 3) {
+//     Drupal.es_api_interactions.update_nodes(node_data, type, nids_failed, context, attempt_num + 1);
+//   }
+//   else {
+//     toastr.error('Three unsuccessful attempts were made to save the node. You may try again.');
+//     Drupal.edit_selected.set_loads_finished(nids_failed);
+//   }
+// }
 
 
 })(jQuery, Drupal, this, this.document);

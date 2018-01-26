@@ -10,6 +10,12 @@
 (function ($, Drupal, window, document, undefined) {
 
 
+/**
+ * CONTENTS
+ * save_temp_file()
+ */
+
+
 var page_is_setup = false;
 
 var collection_to_use = null,
@@ -21,6 +27,8 @@ var collection_to_use = null,
       first_picture_uploaded: false,
       next_link_set: false
     },
+    PLuploader,
+    failed_upload_files = {},
     failed_files = [],
     pictures_loaded = false;
 
@@ -35,10 +43,19 @@ Drupal.behaviors.casa_upload = {
 
     if (! page_is_setup) {
 
+
+      // var retry_link = $('<a class="retry" data-temp-name="temp000">Retry.</a>');
+      // Drupal.casa_utilities.add_message_from_js(
+      //   'Picture &lsquo;filename&rsquo; failed to upload. '
+      //     + retry_link[0].outerHTML,
+      //   'error');
+
+
       api_url = settings.basePath + settings.API_path;
 
       var collection_nid = Drupal.casa_utilities.get_url_parameter_value('collection');
       // console.log('collection_nid: ', collection_nid);
+      collection_to_use = collection_nid;
       if (collection_nid) {
         load_collection_pictures(collection_nid, context, settings);
       }
@@ -52,12 +69,27 @@ Drupal.behaviors.casa_upload = {
         $('#uploader').attr('aria-enabled', true);
       });
 
+      drag_n_drop();
+
       page_is_setup = true;
     }
 
   },
   weight: 10
 };
+
+
+
+function drag_n_drop() {
+  window.addEventListener("dragover",function(e){
+    e = e || event;
+    e.preventDefault();
+  },false);
+  window.addEventListener("drop",function(e){
+    e = e || event;
+    e.preventDefault();
+  },false);
+}
 
 
 
@@ -73,17 +105,25 @@ Drupal.casa_upload = {
 
 function set_up_uploader(context, settings) {
 
-  var PLuploader = $(".plupload-element", context).pluploadQueue();
+  PLuploader = $(".plupload-element", context).pluploadQueue();
+  // {
+  //   // max_retries: 3
+  // }
+
+  // var url = PLuploader.getOption('url');
+  // console.log('url: ', url);
 
   $('#collection_choice', context)
     .find('input[type="submit"]').on('click', function () {
       set_collection();
     }); 
 
+  // PLuploader.setOption('max_retries', 3);
+
 
   // When files are added to the uploader (could have been dragged in)
 
-  PLuploader.bind('FilesAdded', function(up, files) {
+  PLuploader.bind('FilesAdded', function(uploader, files) {
 
     if (! milestones.first_picture_uploaded) {
       toastr.info('When your pictures have been uploaded, you can edit them below.', null, {
@@ -134,6 +174,20 @@ function set_up_uploader(context, settings) {
     // console.log('file: ', file);
     // console.log('response: ', response);
 
+    if (response.status != 200) {
+      // toastr.error('Sorry; there was a problem saving the picture.');
+      failed_files.push(file.id);
+      failed_upload_files[file.name] = file;
+
+      show_file_upload_failed_message(
+        collection_to_use, 
+        file.name, 
+        file.id,
+        settings);
+
+      return false;
+    }
+
     // console.log('collection_to_use: ', collection_to_use);
 
     request_body = {
@@ -153,7 +207,44 @@ function set_up_uploader(context, settings) {
   PLuploader.bind('Error', function(uploader, error) {
     console.log( "error.code: ", error.code);
     console.log( "error.message: ", error.message);
+
+    // @todo retry
   });
+
+
+  // When files are finished uploading.
+
+  PLuploader.bind('UploadComplete', function(uploader, files) {
+
+    // Display which files failed to upload in upload list
+    $.each(failed_files, function(index, file) {
+      // console.log('file: ', file);
+      $('.plupload li#' + file)
+        .removeClass('plupload_done')
+        .addClass('plupload_failed');
+        // .attr('id', file + '-failed');
+    });
+
+  });
+}
+
+
+function show_file_upload_failed_message(collection, file_name, temp_name, settings) {
+  // var retry_link = $('<a class="retry" '
+  //   // + 'data-collection="' + collection + '" '
+  //   + 'data-file_name="' + file_name + '" '
+  //   // + 'data-temp_name="' + temp_name + '" '
+  //   + '>Retry</a>');
+  Drupal.casa_utilities.add_message_from_js(
+    'Picture &lsquo;' + file_name + '&rsquo; failed to upload. '
+      // + retry_link[0].outerHTML,
+      + 'error');
+
+  // $('a.retry').once('click-retry').click(function() {
+  //   var file_name = $(this).attr('data-file_name');
+  //   console.log(PLuploader, 'PLuploader');
+  //   PLuploader.addFile(failed_upload_files[file_name], file_name);
+  // });
 }
 
 
@@ -198,6 +289,10 @@ function load_collection_pictures(collection_nid, context, settings) {
       create_picture_element(picture, row_number_index, settings);
     });
 
+
+    var edit_pictures_tour = Drupal.user_help.setup_edit_pictures_tour();
+    edit_pictures_tour.start();
+
     pictures_loaded = true;
   });
 
@@ -228,19 +323,26 @@ function save_temp_file(request_body, settings, success_callbacks, always_callba
       // toastr.warning('Request was not completed.');
     }
     else {
-      toastr_info.remove();
-      toastr.error('Sorry; there was a problem saving the picture.');
-      console.log( "In save_temp_file() jqxhr.fail(), data: ", data);
-
-      Drupal.casa_utilities.add_message_from_js(
-        'Picture &lsquo;' + request_body.file_name + '&rsquo; failed to upload.',
-        'error');
-      console.log( "data['responseText']: ", data['responseText']);
-
-      failed_files.push(request_body.temp_name);
-      // console.log('failed_files: ', failed_files);
-
     }
+
+    toastr_info.remove();
+    toastr.error('Sorry; there was a problem saving the picture.');
+    console.log( "In save_temp_file() jqxhr.fail(), data: ", data);
+    // console.log( "In save_temp_file() request_body: ", request_body);
+    // console.log( "data['responseText']: ", data['responseText']);
+
+    show_file_save_failed_message(
+      request_body.collection, 
+      request_body.file_name, 
+      request_body.temp_name,
+      settings);
+
+    failed_files.push(request_body.temp_name);
+    // console.log('failed_files: ', failed_files);
+
+    // var timeoutID = window.setTimeout(function() {
+    //   // alert('Retrying...');
+    // }, 1000);
   });
 
   jqxhr.done(function( data ) {
@@ -249,6 +351,7 @@ function save_temp_file(request_body, settings, success_callbacks, always_callba
 
     row_number_index++;
     create_picture_element(data.data[0], row_number_index, settings);
+    Drupal.edit_selected.selectables_data_append(data.data[0]);
 
     Drupal.casa_utilities.invoke_callbacks(success_callbacks);
 
@@ -274,6 +377,27 @@ function save_temp_file(request_body, settings, success_callbacks, always_callba
 }
 
 
+function show_file_save_failed_message(collection, file_name, temp_name, settings) {
+  var retry_link = $('<a class="retry" '
+    + 'data-collection="' + collection + '" '
+    + 'data-file_name="' + file_name + '" '
+    + 'data-temp_name="' + temp_name + '" '
+    + '>Retry</a>');
+  Drupal.casa_utilities.add_message_from_js(
+    'Picture &lsquo;' + file_name + '&rsquo; failed to save. '
+      + retry_link[0].outerHTML,
+    'error');
+  $('a.retry').once('click-retry').click(function() {
+    var retry_request_body = {
+      collection: $(this).attr('data-collection'),
+      temp_name: $(this).attr('data-temp_name'),
+      file_name: $(this).attr('data-file_name')
+    };
+    save_temp_file(retry_request_body, settings);
+  });
+}
+
+
 /**
  * Creates a picture element from node object returned by API.
  */
@@ -287,7 +411,6 @@ function create_picture_element(node, row_number_index, settings) {
   Drupal.edit_selected.selectables_append(new_selectable);
   Drupal.edit_selected.add_selection_listeners(new_selectable, settings);
 
-  Drupal.edit_selected.selectables_data_append(node);
   Drupal.edit_selected.populate_selectables_map();
 }
 
@@ -371,8 +494,12 @@ function create_collection(title, success_callbacks, always_callbacks) {
     collection_to_use = data['data'][0]['id'];
     // console.log('collection_to_use: ', collection_to_use);
 
-    var next_link = $('a[rel="next"]');
-    next_link.attr('href', next_link.attr('href') + collection_to_use);
+
+    if (! milestones.next_link_set) {
+      var next_link = $('a[rel="next"]');
+      next_link.attr('href', next_link.attr('href') + collection_to_use);
+      milestones.next_link_set = true;
+    }
 
     Drupal.casa_utilities.invoke_callbacks(success_callbacks);
 

@@ -1,0 +1,12 @@
+name = JSON/JSONB Field
+type = module
+description = Creates fields that use the JSON/JSONB data type to store JSON object data in Postgres. MySQL not yet supported (version 5.7.7+ forthcoming). <br><strong>Requires at least PostgreSQL 9.2 (9.4 for JSONB)</strong>
+core = 7.x
+dependencies[] = field
+php = 5.5
+; Information added by Drupal.org packaging script on 2016-09-16
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "jsonb"
+datestamp = "1474047886"
+

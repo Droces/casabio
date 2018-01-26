@@ -12,9 +12,9 @@
   height: 100%;
 }
 
-[aria-hidden="true"] {
-  display: none;
-}
+// [aria-hidden="true"] {
+//   display: none;
+// }
 
 @mixin link_as_block {
   position: absolute;
@@ -31,6 +31,7 @@ a[role="block"] {
 
 .tooltip_q {
   content: "?";
+  cursor: help;
   background-color: $colour-links;
   border-radius: 100%;
   width: 1.4em;
@@ -39,6 +40,7 @@ a[role="block"] {
   color: white;
   height: 1.4em;
   margin: 0;
+  padding: 0;
   vertical-align: inherit;
   border: none;
   font-size: 1em;
@@ -46,6 +48,10 @@ a[role="block"] {
   span {
     display: none;
   }
+}
+
+.upper {
+  text-transform: uppercase;
 }
 
 
@@ -216,7 +222,7 @@ $colour-unpublished: #CF5541;
 	}
 }
 
-.taxa-tree.expandable {
+.term-tree.expandable {
   overflow: hidden;
   position: relative;
   padding-bottom: 40px;
@@ -231,8 +237,10 @@ $colour-unpublished: #CF5541;
     border-top: solid 1px rgba(black, 0.2);
     border-radius: 0;
     background: $colour-page-bg;
+    color: $colour-links;
     margin: 0;
     z-index: 30;
+    font-weight: bold;
   }
   // &::after {
   //   content: '';

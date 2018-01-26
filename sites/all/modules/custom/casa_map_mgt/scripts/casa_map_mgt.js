@@ -44,10 +44,12 @@
 
 var page_is_setup = false;
 
+var map_container;
 var map;
 var map_tile_layer;
 var map_vector_layer;
 var draw_source;
+var popup;
 
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.casa_map_mgt = {
@@ -73,7 +75,26 @@ Drupal.behaviors.casa_map_mgt = {
         // }
       });
 
-      Drupal.casa_map_mgt.transform_placeholders_to_maps(context);
+      Drupal.casa_map_mgt.transform_placeholders_to_maps(context, settings);
+
+      $('#views-exposed-form-browse-observations-map-feed', context).submit(function() {
+        var form_values = $(this).serializeArray();
+        // console.log('form_values: ', form_values);
+        var url = $(this).attr('action');
+        var method = $(this).attr('method');
+
+        var data = {};
+
+        $.each(form_values, function(key, value) {
+          data[value.name] = value.value;
+        });
+        // console.log('data: ', data);
+
+        var results = Drupal.casa_map_mgt.query_view_w_filters(url, data, method, settings);
+        return false;
+      });
+
+      set_up_keypress_mgmt(context);
 
       // Drupal.casa_utilities.end_timer('casa_map_mgt');
       page_is_setup = true;
@@ -142,68 +163,192 @@ Drupal.casa_map_mgt = {
   /**
    * Converts map containers that contain location data into OpenLayers maps.
    */
-  transform_placeholders_to_maps: function(context) {
+  transform_placeholders_to_maps: function(context, settings) {
 
-    $('[data-transform="to-map"]', context).each(function(index, el) {
+    $('[data-transform="to-map"]', context).once('to-map').each(function(index, el) {
 
-      var map_container = $(this);
-      var map_id = $(this).attr('id');
-      var gbif_key = $(this).attr('data-gbif-key');
-      // console.log('map_id: ', map_id);
-
+      map_container = $(this);
       map_container.removeClass('hidden');
 
-      // Create the layers.
+      // // Get map container attributes
+      // var attributes = map_container[0].attributes;
+      // $.each(attributes, function (name, value) {
+      //   console.log('name: ', name);
+      //   console.log('value: ', value);
+      // });
 
-      var tile_layer = Drupal.casa_map_mgt.make_map_tile_layer('Bing');
+      var source_url = map_container.attr('data-source-url');
+      // console.log('source_url: ', source_url);
+      if (source_url) {
+        source_url = settings.basePath + source_url;
+        // console.log('source_url: ', source_url);
 
-      if (gbif_key) {
-        // console.log('gbif_key: ', gbif_key);
-        var tile_layer2 = Drupal.casa_map_mgt.make_map_tile_layer('gbif', [gbif_key]);
-      }
+        filters = [];
 
-      var vector_source = new ol.source.Vector();
-      var vector_layer = new ol.layer.Vector({
-        source: vector_source
-      });
-
-
-      // Add location features
-      var projection = tile_layer.getSource().getProjection();
-
-      var features = create_features_from_geojson(map_container.html(), projection);
-      // console.log('features: ', features);
-
-      map_container.html('');
-
-      $.each(features, function(index, feature) {
-        vector_source.addFeature(feature);
-      });
-
-
-      // Create the OpenLayers map.
-      var map = new ol.Map({
-        target: map_id,
-
-        layers: [tile_layer, tile_layer2], // vector_layer
-
-        view: new ol.View({
-          center: ol.proj.fromLonLat([0, 0]),
-          zoom: 4
-        })
-      });
-
-      // If features were found
-      if (features.length > 0) {
-        // Zoom to and center on vector layer.
-        // map.getView().fit(vector_layer.getSource().getExtent(), map.getSize());
+        Drupal.casa_map_mgt.query_view_w_filters(source_url, filters, 'GET', settings);
       }
       else {
-        map.getView().setZoom(0);
+        // console.log('map_container.html(): ', map_container.html());
+        var features_json = map_container.html();
+        var features_data = $.parseJSON(features_json).features;
+        Drupal.casa_map_mgt.add_features_to_map(map_container, features_data, settings);
       }
-      map.getView().setZoom(0);
-
     });
+  },
+
+
+  query_view_w_filters: function(url, filters, method, settings) {
+    // console.log('filters: ', filters);
+    // console.log('method: ', method);
+
+    url = settings.basePath + '/data/observations/qds';
+
+    var query_str = '';
+    if (method.toUpperCase() == 'GET') {
+      query_str += '?';
+      $.each(filters, function(key, value) {
+        // console.log('key: ', key);
+        query_str += key + '=' + value + '&';
+      });
+      filters = [];
+    }
+
+    var toastr_info = toastr.info('Fetching locations…', null, {
+      'timeOut': '-1'
+    }); // @todo add an 'undo' button
+
+    var jqxhr = $.ajax({
+      type: method,
+      url: url + query_str,
+      data: filters,
+      // success: success,
+      // dataType: dataType
+    })
+      .done(function(data) {
+        // console.log("data: ", data);
+        Drupal.casa_map_mgt.add_features_to_map(map_container, data, settings);
+      })
+      .fail(function() {
+        alert("Sorry, could not fetch map data from: " + source_url);
+      })
+      .always(function() {
+        toastr_info.remove();
+      });
+  },
+
+
+
+  add_features_to_map: function(map_container, features_data, settings) {
+    // console.log('features_data: ', features_data);
+
+    var tile_layer = Drupal.casa_map_mgt.make_map_tile_layer('Bing');
+    // console.log('tile_layer: ', tile_layer);
+
+    var projection = tile_layer.getSource().getProjection();
+    // console.log('projection: ', projection);
+
+    var map_element = map_container[0];
+    // console.log('map_element: ', map_element);
+    // console.log('map_element: ', map_element);
+
+    map_container.html('');
+
+    var vector_source = new ol.source.Vector();
+    var vector_layer = new ol.layer.Vector({
+      source: vector_source
+    });
+
+    // Add location features
+    var features = create_features_from_geojson(features_data, projection);
+    // console.log('features: ', features);
+
+
+    $.each(features, function(index, feature) {
+      vector_source.addFeature(feature);
+    });
+    // console.log('vector_source.getFeatures(): ', vector_source.getFeatures());
+
+    var gbif_key = map_container.attr('data-gbif-key');
+    var tile_layer2 = null;
+    if (gbif_key) {
+      // console.log('gbif_key: ', gbif_key);
+      tile_layer2 = Drupal.casa_map_mgt.make_map_tile_layer('gbif', [gbif_key]);
+    }
+
+    // Create the OpenLayers map.
+    var map = new ol.Map({
+      target: map_element,
+
+      layers: [tile_layer],
+
+      view: new ol.View({
+        center: ol.proj.fromLonLat([0, 0]),
+        zoom: 3
+      })
+    });
+    if (vector_layer){
+      map.addLayer(vector_layer);
+    }
+    if (tile_layer2) {
+      map.addLayer(tile_layer2);
+    }
+    // console.log('map: ', map);
+
+    // map.getView().setZoom(3);
+    
+    var popup_text = $('<div class="dialog popup white">test</div>');
+    popup = new ol.Overlay({
+      element: popup_text[0],
+      positioning: 'bottom-center',
+      offset: [0, -5]
+    });
+    map.addOverlay(popup);
+
+    map.on('click', function(event){
+      // console.log('event: ', event);
+      var features = map.getFeaturesAtPixel(event.pixel);
+      // console.log('features: ', features);
+
+      if (! features) {
+        popup.setPosition();
+      }
+
+      var names = [];
+      var i = 0;
+      $.each(features, function(key, feature) {
+        // // Limit to 10
+        // if (i == 10) {
+        //   names.push('...');
+        // }
+        // i ++;
+        // if (i >= 10) {
+        //   return;
+        // }
+
+        // console.log('feature: ', feature);
+        // console.log('feature.getProperties(): ', feature.getProperties());
+        var url = settings.basePath + 'node/' + feature.getProperties().properties.id;
+        // names.push(feature.getProperties().properties.picture);
+        names.push('<a href="' + url + '" target="_blank">' + feature.getId() + '</a>');
+      });
+      // console.log('observations: ', names.join(', '));
+      popup.setPosition(event.coordinate);
+      popup_text.html('<div>' + names.join(', ') + '</div>');
+    });
+
+    var features_extent = vector_layer.getSource().getExtent();
+    // console.log('features_extent: ', features_extent);
+    map.getView().fit(features_extent);
+    map.getView().setMaxZoom(19);
+
+    // If features were found
+    if (features.length > 0) {
+      // Zoom to and center on vector layer.
+      // map.getView().fit(vector_layer.getSource().getExtent(), map.getSize());
+    }
+    else {
+      map.getView().setZoom(1);
+    }
   },
 
 
@@ -338,6 +483,7 @@ Drupal.casa_map_mgt = {
     if (typeof layer !== 'undefined') {
       // Zoom map to the layer's extent
       var extent = layer.getSource().getExtent();
+      // console.log('extent: ', extent);
       map.getView().fit(extent, map.getSize(), {
         maxZoom: maxZoom
       });
@@ -345,6 +491,7 @@ Drupal.casa_map_mgt = {
     else {
       // Zoom map to the own map_vector_layer's extent
       var extent = map_vector_layer.getSource().getExtent();
+      // console.log('extent: ', extent);
       map.getView().fit(extent, map.getSize(), {
         maxZoom: maxZoom
       });
@@ -366,15 +513,15 @@ Drupal.casa_map_mgt = {
     // }
 
     if (typeof radius == undefined) {
-      radius = 3;
+      radius = 5;
     }
 
     if (typeof fill_colour == undefined) {
-      fill_colour = 'white';
+      fill_colour = 'red'; // 'white';
     }
 
     if (typeof stroke_colour == undefined) {
-      stroke_colour = '#bada55';
+      stroke_colour = 'red'; // '#bada55';
     }
 
     // Circle
@@ -500,15 +647,19 @@ function isOdd(num) { return num % 2;}
  *   ol.proj.Projection object for the coordinate reference system that the new 
  *   features should use. eg. ol.proj.Projection({code: "EPSG:3857"})
  */
-function create_features_from_geojson(json, crs) {
-  var features_data = $.parseJSON(json).features;
+function create_features_from_geojson(features_data, crs) {
+  // console.log('features_data: ', features_data);
   var features = [];
+
+  if (features_data.type == 'FeatureCollection') {
+    features_data = features_data.features;
+  }
 
   $.each(features_data, function(index, feature_data) {
     // console.log('index: ', index);
     // console.log('feature_data: ', feature_data);
 
-    var feature = create_feature_from_geometry(feature_data.geometry);
+    var feature = create_feature_from_geometry(feature_data);
 
     // Transform the feature's projection.
     feature.getGeometry().transform(
@@ -516,14 +667,20 @@ function create_features_from_geojson(json, crs) {
       crs // destination: EPSG:3857 (Web or Spherical Mercator, as used for example by Bing Maps or OpenStreetMap)
     );
 
-    // Style it according to it's geometry type.
+    // FOR TESTING
+    // feature = new ol.Feature({
+    //   geometry: new ol.geom.Point([10,10])
+    // });
 
-    // Point
+    // Style it according to it's geometry type.
+    var style;
+
+    // console.log('type: ', feature.getGeometry().getType());
     if (feature.getGeometry().getType() == 'Point') {
-      var style = new ol.style.Style({
+      style = new ol.style.Style({
         // Small red dot
         image: new ol.style.Circle({
-          radius: 3,
+          radius: 5,
           fill: new ol.style.Fill({color: 'red'}),
         })
       });
@@ -533,9 +690,9 @@ function create_features_from_geojson(json, crs) {
       // Set the feature's style (based on its count).
       var count = parseInt(feature_data.properties.count);
       var colour = get_qds_count_colour(count);
-      var style = create_qds_style(colour);
-      feature.setStyle(style);
+      style = create_qds_style(colour);
     }
+    feature.setStyle(style);
 
     features.push(feature);
   });
@@ -549,7 +706,9 @@ function create_features_from_geojson(json, crs) {
  * @param geometry
  *   A GeoJSON geometry object.
  */
-function create_feature_from_geometry(geometry) {
+function create_feature_from_geometry(feature_data) {
+  // console.log('feature_data', feature_data);
+  var geometry = feature_data.geometry;
   var feature_geometry;
 
   // Point
@@ -575,8 +734,20 @@ function create_feature_from_geometry(geometry) {
   }
 
   var feature = new ol.Feature({
-    geometry: feature_geometry
+    geometry: feature_geometry,
+    properties: feature_data.properties
   });
+
+  if (feature_data.properties.name) {
+    feature.setId(feature_data.properties.name);
+  }
+  else {
+    feature.setId('Unnamed');
+  }
+
+  // feature.on('click', function(){
+  //   alert(this.getId());
+  // }, feature);
 
   // console.log('feature: ', feature);
   return feature;
@@ -608,7 +779,7 @@ function get_qds_count_colour(count) {
       'colour': [255, 000, 180, 1] // pink
     },
     5: {
-      'min': 16, 'max': 100,
+      'min': 16, 'max': 1000000, // 100,
       'colour': [195, 000, 255, 1] // purple
     },
   };
@@ -694,6 +865,15 @@ function create_feature_geometry(coordinates_string, geo_type) {
   }
 
   return featureGeometry;
+}
+
+
+
+function set_up_keypress_mgmt(context) {
+
+  $(document, context).bind('keydown', 'esc', function() {
+    popup.setPosition();
+  });
 }
 
 

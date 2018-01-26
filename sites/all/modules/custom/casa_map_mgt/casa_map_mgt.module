@@ -15,14 +15,211 @@
   casa_map_mgt_form_node_form_alter()
   setup_QDS_map_container()
 
-  convert_points_to_qdss()
+  convert_geojson_points_to_qdss()
   convert_qdss_to_polygons()
   convert_qds_to_polygon()
   determine_QDS()
   determine_points_from_QDS()
   convert_QDS_to_WKT()
   create_point_collection()
+  casa_map_mgt_leaflet_map_info()
  */
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function casa_map_mgt_menu() {
+  $items['explore/observations/map'] = array(
+    'title'             => 'Explore Observations as Map',
+    'page callback'     => 'explore_observations_map_callback',
+    // 'page arguments'    => array('casa_upload_upload_form'),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    'type'              => MENU_NORMAL_ITEM, // MENU_CALLBACK,
+  );
+
+  $items['data/observations/qds'] = array(
+    'title'             => 'Explore observations',
+    'page callback'     => 'observations_qds_callback',
+    // 'page arguments'    => array(),
+    'access callback'   => TRUE,
+    // 'access arguments'  => array('bulk upload media'),
+    'delivery callback' => 'ajax_deliver',
+    'type'              => MENU_CALLBACK, // MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
+function explore_observations_map_callback() {
+  add_ol_files();
+
+  $url = 'data/observations/map';
+  $content = '<div data-transform="to-map" data-source-url="' . $url . '"></div>';
+  return $content;
+}
+
+
+function observations_qds_callback() {
+  // dpm($_GET, '$_GET');
+
+  $exposed_filters = $_POST;
+  $response_info = [];
+
+  // $params_json = file_get_contents("php://input");
+  // // $params_json = file_get_contents("drupal://input"); // Use inputstream module.
+  // // $params = json_server_parse_json($params_json); //json_decode($params_json, TRUE);
+  // // dpm($params, '$params');
+  // $response_info['params'] = $params_json;
+
+  // $query_params = drupal_get_query_parameters();
+  // dpm($query_params, 'query_params');
+  // if ($query_params) {
+  //   $param_string = '?';
+  //   foreach ($query_params as $key => $param) {
+  //     dpm($key . ': ' . $param);
+  //   }
+  // }
+
+  $content = '';
+
+  // $exposed_filters = [
+  //   // 'name' => "Abrus", // Will only work when MTL field is populated
+  //   'title' => "Abrus",
+  // ];
+
+  $locations = get_browse_observations_locations();
+  // dpm($locations, '$locations');
+  
+  if (! $locations) {
+    return '';
+  }
+
+  // Features that should be obscured because the author should not know where they are
+  $features_sensitive = [];
+  // Features that should be shown fully because the author is trusted
+  $features_exact = [];
+  global $user;
+  foreach ($locations->features as $key => $value) {
+    if ($value->properties->author_uid == $user->uid
+      || user_has_role(3, $user)
+      || user_has_role(5, $user)) {
+      $features_exact[] = $value;
+    }
+    else {
+      $features_sensitive[] = $value;
+    }
+  }
+  // dpm(count($features_exact), 'count($features_exact)');
+  // dpm(count($features_sensitive), 'count($features_sensitive)');
+
+  // Convert points to QDS's, for all points
+  $QDSs = convert_geojson_points_to_qdss((object) [
+    'type' => 'FeatureCollection', 
+    'features' => $features_sensitive,
+  ]);
+  // dpm($QDSs, '$QDSs');
+
+  // Create a (rectangle) polygon feature for each QDS
+  $qds_locations = convert_qdss_to_polygons($QDSs);
+  // dpm($qds_locations, '$qds_locations');
+
+  $features_combined = array_merge($features_exact, $qds_locations['features']);
+  // dpm($features_combined, '$features_combined');
+
+  // $locations_combined = [
+  //   'type' => 'FeatureCollection', 
+  //   'features' => $features_combined,
+  // ];
+
+
+
+  // $map_renderable = setup_QDS_map_container($locations, '');
+
+  // $content['field_locations'] = array(
+  //   'map' => $map_renderable,
+  // );
+
+
+
+  // // Convert points to QDS's, for all points
+  // $QDSs = convert_geojson_points_to_qdss($locations);
+
+  // // Create a (rectangle) polygon feature for each QDS
+  // $qds_locations = convert_qdss_to_polygons($QDSs);
+  // // dpm($qds_locations, '$qds_locations');
+
+
+
+  $result['results_count'] = count($qds_locations['features']);
+  $result['type'] = 'FeatureCollection';
+  $result['features'] = $features_combined;
+  // dpm($result, 'result');
+
+  $response = array(
+    '#type' => 'ajax', 
+    '#commands' => $result,
+  );
+  // dpm($response, 'response');
+
+  return $response;
+}
+
+
+
+
+/**
+ * Gets the locations of all observations within a collection.
+ *
+ * @param $results_limit
+ *   (optional) The maximum number of results to fetch. Defaults to 1000.
+ *
+ * @return
+ *   An array of longitudes and latitudes.
+ */
+function get_browse_observations_locations($query_string = NULL) {
+  // dpm($params, '$params');
+  $view_name = 'browse_observations_map';
+  $display_id = 'feed';
+
+  // Get the view machine id.
+  $view = views_get_view($view_name);
+  // $view->set_display($display_id);
+
+  // $filters = $view->display_handler->get_option('filters');
+  // // dpm($filters, '$filters');
+  // foreach ($exposed_filters as $key => $value) {
+  //   $filters[$key]['value'] = $value;
+  // }
+  // // dpm($filters, '$filters');
+  // $view->display_handler->set_option('filters', $filters);
+
+  // // @todo Use these instead
+  // $view->set_exposed_input($exposed_filters);
+
+  // $view->pre_execute(); 
+  // $view->execute();
+  // // $geoJSON = $view->render();
+
+  // dpm($view, '$view');
+  // dpm(count($view->result), 'count($view->result)');
+
+  // $view->post_execute(); 
+
+  // Render.
+  $geoJSON = $view->preview($display_id);
+  $locations = json_decode($geoJSON);
+
+  $results_count = count($locations->features);
+  // dpm($results_count, '$results_count');
+  $locations->count = $results_count;
+
+  return $locations;
+}
+
 
 
 /**
@@ -173,7 +370,7 @@ function setup_QDS_map_container($locations, $eid, $attributes = []) {
   // dpm($attributes, '$attributes');
 
   // Convert points to QDS's, for all points
-  $QDSs = convert_points_to_qdss($locations);
+  $QDSs = convert_geojson_points_to_qdss($locations);
 
   // Create a (rectangle) polygon feature for each QDS
   $qds_locations = convert_qdss_to_polygons($QDSs);
@@ -199,14 +396,38 @@ function setup_QDS_map_container($locations, $eid, $attributes = []) {
   );
   // dpm($map_renderable, '$map_renderable');
 
-
-  // Include the Openlayers JavaScript to render a map, and CSS to style it.
-  $openlayers_js_path = libraries_get_path('openlayers3') . '/build/ol.js';
-  drupal_add_js($openlayers_js_path, 'file');
-  $openlayers_css_path = libraries_get_path('openlayers3') . '/css/ol.css';
-  drupal_add_css($openlayers_css_path, 'file');
+  add_ol_files();
 
   return $map_renderable;
+}
+
+
+
+function add_ol_files($use_debug = FALSE) {
+  // $lib_path = libraries_get_path('openlayers3');
+  // Include the Openlayers JavaScript to render a map, and CSS to style it.
+  // if ($use_debug) {
+  //   $openlayers_js_path = $lib_path . '/build/ol-debug.js';
+  //   drupal_add_js($openlayers_js_path, 'file');
+  // }
+  // else {
+  //   $openlayers_js_path = $lib_path . '/build/ol.js';
+  //   drupal_add_js($openlayers_js_path, 'file');
+  // }
+  // $openlayers_css_path = $lib_path . '/css/ol.css';
+  // drupal_add_css($openlayers_css_path, 'file');
+
+  $lib_path = libraries_get_path('openlayers');
+  if ($use_debug) {
+    $openlayers_js_path = $lib_path . '/ol-debug.js';
+    drupal_add_js($openlayers_js_path, 'file');
+  }
+  else {
+    $openlayers_js_path = $lib_path . '/ol.js';
+    drupal_add_js($openlayers_js_path, 'file');
+  }
+  $openlayers_css_path = $lib_path . '/ol.css';
+  drupal_add_css($openlayers_css_path, 'file');
 }
 
 
@@ -216,11 +437,12 @@ function setup_QDS_map_container($locations, $eid, $attributes = []) {
  *   An array in the format of an unencoded GeoJSON feature collection. The
  *   ‘features’ item must contain an array of point features, each of which
  *   must have a longitude and a latitude.
+ *   Eg. {features => [geometry => {coordinates => [0, 0]},]}
  *
  * @return
  *   An array of strings in format: 'S17E019CD'.
  */
-function convert_points_to_qdss($locations_data) {
+function convert_geojson_points_to_qdss($locations_data) {
   $QDSs = [];
 
   if (! isset($locations_data->features)) {
@@ -265,7 +487,8 @@ function convert_qdss_to_polygons($QDSs) {
   foreach ($QDSs as $QDS => $count) {
     $location = convert_qds_to_polygon($QDS);
     $location["properties"] = [
-      "count" => $count
+      "count" => $count,
+      "name" => $QDS . ' (' . $count . ')',
     ];
     $locations['features'][] = $location;
   }
@@ -450,4 +673,104 @@ function create_point_collection($lon, $lat) {
     ),
   );
   return $locations;
+}
+
+
+
+/**
+ * Implements hook_leaflet_map_info().
+ *
+ * Return a default map for the module.
+ */
+function casa_map_mgt_leaflet_map_info() {
+  $thunderforest_key = '23a6fbc32de34edfb3403d65e0a5e45b';
+  return array(
+    'OSM Landscape' => array(
+      'label' => 'OSM Landscape',
+      'description' => t('Leaflet default map.'),
+      // 'center' is used when map contains no features, or every time the map
+      // is loaded if "force" is TRUE. Otherwise, the map will center itself
+      // intelligently based on the features in the map.
+      // RdB: bad things happen when 'center' is specified and Leaflet
+      // MarkerCluster is used, see https://drupal.org/node/2144935
+      // Also, a hard-coded center is not a great idea.
+      //'center' => array(
+      //  'lat' => 45.526513,
+      //  'lon' => -122.674833,
+      //  'force' => FALSE,
+      //),
+      'settings' => array(
+        // Setting "zoom" forces a zoom level on every map load.
+        //'zoom' => 17,
+        // The "zoomDefault" is only used when no features are present.
+        'zoomDefault' => 10,
+        'minZoom' => 0,
+        'maxZoom' => 18,
+        'dragging' => TRUE,
+        'touchZoom' => TRUE,
+        'scrollWheelZoom' => TRUE,
+        'doubleClickZoom' => TRUE,
+        'zoomControl' => TRUE,
+        'attributionControl' => TRUE,
+        'trackResize' => TRUE,
+        'fadeAnimation' => TRUE,
+        'zoomAnimation' => TRUE,
+        'closePopupOnClick' => TRUE,
+        'layerControl' => TRUE,
+      ),
+      'layers' => array(
+        'landscape' => array(
+          'urlTemplate' => '//{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=' . $thunderforest_key,
+          'options' => array(
+            'attribution' => 'OSM Landscape',
+          ),
+        ),
+        'outdoors' => array(
+          'urlTemplate' => '//{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=' . $thunderforest_key,
+          'options' => array(
+            'attribution' => 'OSM Landscape',
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_views_pre_render()
+ */
+function casa_map_mgt_views_pre_render(&$view) {
+  // dpm($view, '$view');
+
+  // if ($view->base_table !== 'node') {
+  //   return NULL;
+  // }
+
+  if ($view->name === 'browse_observations_map') {
+    // obscure_sensitive_locations_views_pre_render($view);
+  }
+}
+
+function obscure_sensitive_locations_views_pre_render(&$view) {
+  // // $view->result = [$view->result[0]];
+
+  // // unset($view->result[0]->field_field_location);
+
+  // // $lat = -27.036145;
+  // // $lon = 25.544269;
+
+  foreach ($view->result as $key => $node) {
+    if (! isset($node->field_field_location)) {
+      continue;
+    }
+    $location = $node->field_field_location;
+    $node->field_field_location_1[0]['rendered']['#markup'] = '10';
+    $node->field_field_location_2[0]['rendered']['#markup'] = '10';
+    $view->result[$key] = $node;
+    // $view->field_field_location[0]['rendered']['#markup'] = 'Latitude: 0 <br/>Longitude: 0';
+
+    // $view->result[$key]->field_field_location[0]['rendered']['#markup'] = 'test';
+  }
+  // dpm($view, '$view');
 }

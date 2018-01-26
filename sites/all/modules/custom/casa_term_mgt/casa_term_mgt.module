@@ -1,8 +1,10 @@
 <?php
 /**
  * @file
- *   Casa Taxa Management Module
+ * Miscellaneous functions that deal with taxonomy terms.
  */
+
+use Drupal\Casabio\casa_core;
 
 
 
@@ -15,10 +17,6 @@
   casa_term_mgt_menu()
   casa_term_mgt_init()
 
-  browse_taxa_tree_content()
-  get_animalia_children()
-  render_browse_taxa_tree_children()
-  provide_taxa_children_callback()
   casa_term_mgt_preprocess_page()
   casa_term_mgt_process_page()
   casa_term_mgt_preprocess_taxonomy_term()
@@ -26,37 +24,30 @@
 
   taxa_lookup_page_callback()
   taxa_lookup_multiple_page_callback()
-  browse_taxa_tree_page_callback()
-  taxa_lookup_form()
-  taxa_lookup_multiple_form()
-  // taxa_lookup_form_validate()
-  taxa_lookup_form_submit()
-  taxa_lookup_multiple_form_submit()
-  taxa_lookup()
-  lookup_catalogueoflife()
-  lookup_gbif()
-  lookup_iucn()
 
   create_taxon()
   contribute_habitat_page_callback()
   contribute_taxon_etymology_page_callback()
   casa_term_mgt_form_taxonomy_form_term_alter()
   correct_invalid_entity_fields()
-  taxa_assess_community_identification()
-  assess_new_pic_for_taxon()
-  get_picture_reliability()
-  get_observation_primary_picture_nid()
+  
   bulk_taxa_upload()
   taxa_lookup_multiple()
   import_etymologies_page_callback()
-  import_etymologies()
 
+  casa_term_mgt_taxonomy_term_presave()
+
+  get_localities_hierarchical()
  */
 
 
-module_load_include('inc', 'casa_term_mgt', 'term_preprocessors');
-module_load_include('inc', 'casa_term_mgt', 'term_queries');
-module_load_include('inc', 'casa_term_mgt', 'term_forms');
+module_load_include('inc', 'casa_term_mgt', 'includes/term_preprocessors');
+module_load_include('inc', 'casa_term_mgt', 'includes/term_queries');
+module_load_include('inc', 'casa_term_mgt', 'includes/term_forms');
+module_load_include('inc', 'casa_term_mgt', 'includes/term_lookups');
+module_load_include('inc', 'casa_term_mgt', 'includes/import_etymologies');
+module_load_include('inc', 'casa_term_mgt', 'includes/browse_taxa_tree');
+module_load_include('inc', 'casa_term_mgt', 'includes/taxa_assess_pictures');
 
 // define("ID_SOURCE_CASABIO_INDIVIDUAL", 1);
 
@@ -114,315 +105,6 @@ function casa_term_mgt_menu() {
  * Implements hook_init().
  */
 function casa_term_mgt_init() {}
-
-
-
-/**
- *
- */
-function browse_taxa_tree_content() {
-
-  $vid = 2;
-
-  $tree = array(
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101660,
-      'name' => 'Plantae',
-      'parents' => array(0),
-      // 'children' => array(
-      //   (object) array(
-      //     // 'icon' => '/images/_.png',
-      //     'tid' => 101660,
-      //     'name' => 'Plantae',
-      //     'parents' => array(0),
-      //   ),
-      // ),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101661,
-      'name' => 'Animalia',
-      'parents' => array(0),
-      // 'children' => get_animalia_children(),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101662,
-      'name' => 'Fungi',
-      'parents' => array(0),
-    ),
-  );
-
-  $content = array(
-    '#markup' => '<div class="tree expandable" role="tree">'
-      . render_browse_taxa_tree_children($vid, $tree, 1)
-      . '</div>',
-  );
-  // dpm($content, 'content');
-
-  $content['#attached']['js'] = array(
-    drupal_get_path('module', 'casa_term_mgt') . '/scripts/casa_term_mgt.js',
-  );
-
-  // dpm(taxonomy_get_tree($vid, 103109, 1, FALSE));
-
-  return $content;
-}
-
-
-
-function get_animalia_children() {
-  return array(
-    (object) array(
-      // 'icon' => '/images/_.png',
-      // 'tid' => _,
-      'show_children' => FALSE,
-      'name' => 'Chordata',
-      'parents' => array(0),
-      'children' => array(
-        (object) array(
-          'icon' => '/images/bird_drawing.png',
-          // 'tid' => _,
-          'show_children' => FALSE,
-          'name' => 'Aves',
-          'parents' => array(0),
-        ),
-        (object) array(
-          'icon' => '/images/bony_fish_drawing.png',
-          // 'tid' => _,
-          'show_children' => FALSE,
-          'name' => 'Osteichthyes',
-          'parents' => array(0),
-        ),
-        (object) array(
-          'icon' => '/images/agnatha_jawless_fish.png',
-          // 'tid' => _,
-          'show_children' => FALSE,
-          'name' => 'Agnatha',
-          'parents' => array(0),
-        ),
-      ),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      // 'tid' => '_,
-      'show_children' => FALSE,
-      'name' => 'Echinodermata',
-      'parents' => array(0),
-      'children' => array(
-        (object) array(
-          'icon' => '/images/brittlestar_drawing.png',
-          // 'tid' => _,
-          'show_children' => FALSE,
-          'name' => 'Ophiuroidea',
-          'parents' => array(0),
-        ),
-      ),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101644,
-      'name' => 'Arthropoda',
-      'parents' => array(0),
-      'children' => array(
-        (object) array(
-          'icon' => '/images/centipede_drawing.png',
-          // 'tid' => _,
-          'show_children' => FALSE,
-          'name' => 'Myriapoda',
-          'parents' => array(0),
-        ),
-      ),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101655,
-      'name' => 'Bryozoa',
-      'parents' => array(0),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101653,
-      'name' => 'Platyhelminthes',
-      'parents' => array(0),
-    ),
-    (object) array(
-      // 'icon' => '/images/_.png',
-      'tid' => 101652,
-      'name' => 'Rotifera',
-      'parents' => array(0),
-    ),
-  );
-}
-
-
-
-/**
- * Creates an html unordered list of child terms from a given taxonomy tree.
- *
- * @param $vid
- *   The identifier of the vocabulary to render from.
- * @param $tree
- *   A 'hierarchical representation of a vocabulary' such as provided by taxonomy_get_tree().
- * @param int $depth
- *   Indicates how many levels deep the tree should be rendered.
- */
-function render_browse_taxa_tree_children($vid, $tree, $depth) {
-  // dpm($vid, 'vid');
-  // dpm($tree, 'tree');
-  // dpm($depth, 'depth');
-
-  if (!is_int($depth)) throw new InvalidArgumentException(
-    "Argument $depth must be an integer; "  . gettype($depth) . " provided.", 1);
-
-  $content;
-
-  $content = '<ul role="group">';
-  foreach ($tree as $branch) {
-    // dpm($branch, '$branch'); // Best for debugging
-
-    /* Eg.
-      <li [role="treeitem"]>
-        <span class="action"><button class="expand" data-ajax="$ajax_url">+</button></span>
-        <span class="name"><a href="$term_url"></a></span>
-        <span class="count">(1)</span>
-        <div class="children"><ul>…</ul></div>
-      </li>
-    */
-
-    $leaves = NULL;
-    $rank = '';
-    $picture;
-    $image = '';
-
-    if (isset($branch->show_children)) {
-      if ($branch->show_children === FALSE) {
-        // dpm('Taxon ' . $branch->name . ' should not show children.');
-      }
-    }
-    else {
-      $term = entity_metadata_wrapper('taxonomy_term', $branch->tid);
-
-      // Get and render children terms
-
-      $parent = $branch->tid;
-      $max_depth = 1;
-      $load_entities = FALSE; // full entity load for each
-      $leaves = taxonomy_get_tree($vid, $parent, $max_depth, $load_entities);
-
-      // Get rank
-
-      $rank = ', ' . $term->field_taxon_rank->value();
-
-      $picture = $term->field_representative_picture->value();
-    }
-
-
-
-
-    $content .= '<li role="treeitem" aria-level="?" aria-expanded="?">';
-
-    // Button
-    if ($leaves) {
-      $ajax_url = base_path() . 'services/taxa/get-children/' . $branch->tid;
-
-      $content .= '<span class="action">'
-        . '<button class="expand raised" aria-expanded="false"'
-        . ' data-ajax="' . $ajax_url . '">' . '+' . '</button></span>';
-    }
-    else {
-      $content .= '<span class="action"><button class="expand" disabled="true">&nbsp;</button></span>';
-    }
-
-    // Picture
-    if ($picture) {
-      // dpm($picture, '$picture');
-      $picture_renderable = node_view($picture, 'thumbnail');
-      if ($picture_renderable) {
-        $content .= drupal_render($picture_renderable);
-      }
-    }
-
-    $icon = '';
-    // Icon
-    if (isset($branch->icon)) {
-      $module_path = base_path() . drupal_get_path('module', 'casa_term_mgt');
-      $icon .= '<img src="' . $module_path . $branch->icon . '">';
-    }
-
-    // $content .= $picture;
-
-    // Name + rank + icon link
-    $term_url = '';
-    if (isset($branch->tid)) {
-      $term_url = base_path() . 'taxonomy/term/' . $branch->tid;
-      $content .= ' <span class="name">
-        <a href="' . $term_url . '">' . $icon . $branch->name . '</a>' . $rank . '</span>';
-    }
-    else {
-      $content .= ' <span class="name">' . $icon . $branch->name . '</span>';
-    }
-
-    // Count
-    // @todo Rather use this to indicate how many species (collectively) are within this taxon.
-    // $content .= ' <span class="count">(' . ')</span>';
-
-    // Children
-    if (isset($branch->children)) {
-      $children = render_browse_taxa_tree_children($vid, $branch->children, $depth - 1);
-    }
-    elseif ($leaves) {
-      $children = $depth > 1 ? render_browse_taxa_tree_children($vid, $leaves, $depth - 1) : '';
-    }
-    else {
-      $children = '';
-    }
-
-    $content .= '<div class="children">';
-    $content .= $children;
-    $content .= '</div>';
-
-    $content .= '</li>';
-  }
-  $content .= '</ul>';
-
-  return $content;
-}
-
-
-
-/**
- * An AJAX function. Provides rendered HTML of the taxa children of an taxonomy
- * term, in the format provided by render_browse_taxa_tree_children().
- */
-function provide_taxa_children_callback($tid) {
-  // dpm('param: ' . $tid . ' is of type: ' . gettype($tid));
-
-  $vid = 2;
-  $max_depth = 1;
-  $load_entities = FALSE;
-
-  if ((int) $tid >! 0) {
-    return;
-  }
-
-  // dpm(gettype($tid));
-
-  $tree = taxonomy_get_tree($vid, (int) $tid, $max_depth, $load_entities);
-  // dpm($tree);
-
-  $content = render_browse_taxa_tree_children($vid, $tree, 1);
-  // dpm($content, 'content');
-
-  $result = array(
-    'result' => 'success',
-    'content' => $content,
-  );
-  $response = array('#type' => 'ajax', '#commands' => $result);
-
-  return $response;
-}
 
 
 
@@ -495,7 +177,7 @@ function casa_term_mgt_process_page(&$variables, $hook){
 /**
  * Implements hook_preprocess_taxonomy_term().
  */
-function casa_term_mgt_preprocess_taxonomy_term(&$variables){
+function casa_term_mgt_preprocess_taxonomy_term(&$variables) {
   _preprocess_taxonomy_term($variables);
 }
 
@@ -504,8 +186,37 @@ function casa_term_mgt_preprocess_taxonomy_term(&$variables){
 /**
  * Implements hook_process_taxonomy_term().
  */
-function casa_term_mgt_process_taxonomy_term(&$variables){
+function casa_term_mgt_process_taxonomy_term(&$variables) {
   _process_taxonomy_term($variables);
+}
+
+
+/**
+ * Implements template_preprocess_field().
+ */
+function casa_term_mgt_process_field(&$variables, $hook) {
+  // dpm($variables, '$variables');
+  switch ($variables['element']['#field_name']) {
+    case 'field_vulnerability':
+      // dpm($variables, '$variables');
+
+      // If taxon has a rank, and if Genus, don't show vulnerability
+      if ($variables['element']['#object']->field_taxon_rank) {
+        $taxon_rank = $variables['element']['#object']->field_taxon_rank[LANGUAGE_NONE][0]['value'];
+        if ($taxon_rank === 'genus' || $taxon_rank === 'Genus') {
+          $variables['items'][0]['#markup'] = '';
+          break;
+        }
+      }
+
+      $vulnerability_key = $variables['element']['#items'][0]['value'];
+      $vulnerability_val = $variables['items'][0]['#markup'];
+      $variables['items'][0]['#markup'] = '<span class="'
+        . $vulnerability_key . '" '
+        . 'title="IUCN vulnerability status: ' . $vulnerability_val . '">'
+        . $vulnerability_key . '</span>';
+      break;
+  }
 }
 
 
@@ -526,394 +237,6 @@ function taxa_lookup_multiple_page_callback() {
   return drupal_get_form('taxa_lookup_multiple_form');
 }
 
-function browse_taxa_tree_page_callback() {
-  return browse_taxa_tree_content();
-}
-
-
-/**
- * Implements hook_form(). Creates a small form for adding a taxon that CasaBio does not yet have.
- *
- * If CasaBio does not have the taxon, it will be created.
- */
-function taxa_lookup_form() {
-  $form['description'] = array(
-    '#markup' => 'Use this to search for a species (or other taxon) that CasaBio doesn’t currently have. If the species is not found, it will be added to CasaBio.',
-  );
-  $form['scientific_name'] = array(
-    '#title' => t('Scientific name'),
-    '#type' => 'textfield',
-    '#required' => TRUE,
-  );
-  $form['submit'] = array(
-    '#value' => 'Lookup using Catalogue of Life',
-    '#type' => 'submit',
-    '#name' => 'col',
-    // 'text' => array(
-    //   '#markup' => 'Search Catalogue of Life',
-    // ), // Irrelevant, since D7 FAPI doesn't support <button> elements
-  );
-  $form['submit'] = array(
-    '#value' => 'Lookup using GBIF',
-    '#type' => 'submit',
-    '#name' => 'gbif',
-    // 'text' => array(
-    //   '#markup' => 'Search GBIF (Global Biodiversity Information Facility)',
-    // ), // Irrelevant, since D7 FAPI doesn't support <button> elements
-  );
-  return $form;
-}
-
-
-/**
- * Implements hook_form(). Creates a small form for adding a taxon that CasaBio does not yet have.
- *
- * If CasaBio does not have the taxon, it will be created.
- */
-function taxa_lookup_multiple_form() {
-  $form['description'] = array(
-    '#markup' => '<p>Use this to add multiple (or a whole lot) of taxa to CasaBio at once. Each taxon will be checked if it exists in CasaBio, and if not, it will be checked if it exists in the service you select when you submit them. If it exists in that service, it will be added to CasaBio.</p>'
-      . '<p>When complete, CasaBio will inform you how many were successfully '
-      . 'added, how many were already in CasaBio, and how many were not found in'
-      . ' CasaBio or the service and thus were not successfully added.</p>'
-  );
-  $form['scientific_names'] = array(
-    '#title' => t('Scientific names'),
-    '#type' => 'textarea',
-    '#description' => t('Add each scientific name on a new line.'),
-    '#required' => TRUE,
-  );
-  $form['localities'] = array(
-    '#title' => t('Localities'),
-    '#type' => 'textfield',
-    '#description' => t('OPTIONAL. Localities (such as a country) that these taxa are found in. '
-      . 'Locality term tids, separated by a semi-colon only. Eg. "31;61".'),
-  );
-
-  $form['update_mode'] = array(
-    '#title' => t('Update mode'),
-    '#type' => 'select',
-    '#options' => array(
-        'none' =>     t('Do not update any existing taxa'),
-        'empties' =>  t('Update where field values are missing'),
-        'all' =>      t('Update all field values'),
-       ),
-    '#default_value' => 'none',
-    '#description' => t('For taxa that are already in CasaBio, choose how they should be updated.'),
-  );
-
-  $form['service'] = array(
-    '#title' => t('Service'),
-    '#type' => 'select',
-    '#options' => array(
-        'CoL' => t('Catalogue of Life'),
-        'gbif' => t('GBIF (Global Biodiversity Information Facility)'),
-       ),
-    '#default_value' => 'gbif',
-    '#description' => t('The taxonomic database that the taxa should be looked up in.'),
-  );
-  $form['submit'] = array(
-    '#value' => 'Lookup and Add',
-    '#type' => 'submit',
-    // '#name' => 'col',
-    // 'text' => array(
-    //   '#markup' => 'Search Catalogue of Life',
-    // ), // Irrelevant, since D7 FAPI doesn't support <button> elements
-  );
-  return $form;
-}
-
-
-
-// function taxa_lookup_form_validate() {}
-
-
-
-function taxa_lookup_form_submit($form_id, &$form_state) {
-  // dpm($form_id, 'form_id');
-  // dpm($form_state, 'form_state');
-
-  $sc_name = $form_state['values']['scientific_name'];
-  // dpm($sc_name, 'sc_name');
-  $taxa_service = $form_state['triggering_element']['#name'];
-
-  taxa_lookup($sc_name, $taxa_service);
-}
-
-
-
-function taxa_lookup_multiple_form_submit($form_id, &$form_state) {
-  // dpm($form_id, 'form_id');
-  // dpm($form_state, 'form_state');
-
-  // Panthera pardus
-  // Acinonyx jubatus
-  // Hermannia
-
-  // $sc_names = $form_state['values']['scientific_names'];
-  $sc_names_string = trim($form_state['values']['scientific_names']);
-  $sc_names_untrimmed = explode(PHP_EOL, $sc_names_string); // split on lines
-  $sc_names = array_map('trim', $sc_names_untrimmed);
-  // dpm($sc_names, '$sc_names');
-
-  $localities_string = trim($form_state['values']['localities']);
-  $localities_untrimmed = explode(';', $localities_string); // split on lines
-  $localities = array_map('trim', $localities_untrimmed);
-  // dpm($localities, '$localities');
-
-  $taxa_service = $form_state['values']['service'];
-  $update_mode = $form_state['values']['update_mode'];
-
-  taxa_lookup_multiple($sc_names, $taxa_service, $update_mode, $localities);
-}
-
-
-/**
- * Looks up a taxon from an external service, and if found and not in CasaBio, adds it.
- * 
- * @param string $sc_name
- *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
- * @param string $taxa_service
- *   Code of a biodiversity data service. Eg. 'CoL' or 'gbif'
- */
-function taxa_lookup($sc_name, $taxa_service) {
-
-  // Check if it exists.
-  $is_taxon_in_casabio = is_taxon_in_casabio($sc_name);
-
-  if ($is_taxon_in_casabio) {
-    drupal_set_message(t('<em>@taxon</em> already exists in CasaBio.', array('@taxon' => $sc_name)), 'warning', FALSE);
-    return NULL;
-  }
-
-  $taxon_info;
-
-  switch ($taxa_service) {
-    case 'CoL':
-      $taxon_info = lookup_catalogueoflife($sc_name);
-      $service_name = 'Catalogue of Life';
-      break;
-
-    case 'gbif':
-      $taxon_info = lookup_gbif($sc_name);
-      $service_name = 'GBIF';
-      break;
-
-    default:
-      $taxon_info = lookup_catalogueoflife($sc_name);
-      $service_name = 'Catalogue of Life';
-      break;
-  }
-
-  if(!$taxon_info) {
-    $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
-    drupal_set_message(t('<em>@taxon</em> was not found on @service.', $message_params), 'warning', FALSE);
-    return NULL;
-  }
-
-  $message_params = array('@taxon' => $sc_name, '@service' => $service_name);
-  drupal_set_message(t('<em>@taxon</em> was found on @service.', $message_params), 'status', FALSE);
-
-  create_taxon($taxon_info);
-}
-
-
-
-/**
- * @param string $sc_name
- *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
- *
- * @return
- *   An array in the form "['name' = '', 'rank' = '']" if found, or [] if not found.
- */
-function lookup_catalogueoflife($sc_name) {
-  // Settings
-  $year = 2015;
-  // $service_name = 'Catalogue of Life';
-  $lookup_url = "http://www.catalogueoflife.org"
-    . "/annual-checklist/" . $year . "/webservice?"
-    . "name=" . str_replace(' ', '+', $sc_name);
-  // dpm($lookup_url, 'lookup_url');
-
-  $response = drupal_http_request($lookup_url, array());
-  // dpm($response, 'response');
-
-  if (!isset($response->data)) {
-    drupal_set_message(t('Lookup failed.'), 'error', FALSE);
-    // dpm($response, '$response');
-    return NULL;
-  }
-
-
-  $xml = simplexml_load_string($response->data);
-  // dpm($xml, 'xml');
-
-  $taxon_info = array();
-  $is_found = isset($xml->result[0]);
-  // $is_found = TRUE; // For testing only.
-  if($is_found) {
-    $taxon_info = array(
-      'name' => $xml->result[0]->name->__toString(), // $name = 'test'; // testing
-      // dpm($name, 'result name');
-      'rank' => $xml->result[0]->rank->__toString(), // $rank = 'specum'; // testing
-    );
-  }
-  return $taxon_info;
-}
-
-
-
-/**
- * @param string $sc_name
- *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
- *
- * @return
- *   An array in the form "['name' = '', 'rank' = '']" if found, or [] if not found.
- */
-function lookup_gbif($sc_name) {
-  // Example: 'http://api.gbif.org/v1/species?name=Abrodictyum+rigidum'
-  $lookup_url = "http://api.gbif.org"
-    . "/v1/species?"
-    . "name=" . str_replace(' ', '+', $sc_name);
-
-  $response = drupal_http_request($lookup_url, array());
-  // dpm($response, 'response');
-
-  if (!isset($response->data)) {
-    drupal_set_message(t('Lookup failed.'), 'error', FALSE);
-    // dpm($response, '$response');
-    return NULL;
-  }
-
-
-  $json = json_decode($response->data);
-  // dpm($json, 'json');
-
-  $taxon_info = array();
-  $is_found = ! empty($json->results);
-  // $is_found = TRUE; // For testing only.
-  if ($is_found) {
-    foreach ($json->results as $key => $result) {
-      if ($result->synonym === FALSE) {
-
-        $taxon_info = array(
-          'name' => $result->canonicalName,
-          // dpm($name, 'result name');
-          'rank' => strtolower($result->rank),
-          'parent' => NULL,
-          'key' => $result->key,
-        );
-
-        $parent_matches = get_taxa_with_name($result->parent, 'is');
-        if ($parent_matches) {
-          $parent = reset($parent_matches);
-          $taxon_info['parent'] = $parent->tid; // Needs nid
-        }
-
-        break;
-      }
-    }
-  }
-  // dpm($taxon_info, '$taxon_info');
-  return $taxon_info;
-}
-
-
-
-/**
- * @param string $sc_name
- *   The complete scientific name of the taxon to be looked-up. Eg. 'Panthera pardus'
- *
- * @return
- *   An array in the form "['vulnerability' => '', 'vulnerability_criteria' => '']".
- */
-function lookup_iucn($sc_name) {
-
-  // See https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Status_iucn3.1.svg/1000px-Status_iucn3.1.svg.png
-  
-  // ** EXTINCT **
-  // EX - Extinct (black)
-  // EW - Extinct in the Wild (black)
-
-  // ** THREATENED **
-  // CR - Critically Endangered (red)
-  // EN - Endangered (orange)
-  // VU - Vulnerable (yellow)
-
-  // ** OTHER **
-  // NE - Not Evaluated (grey)
-  // DD - Data Deficient (grey)
-
-  // ** LOWER RISK **
-  // NT - Near Threatened (lime)
-  // LC - Least Concern (green)
-
-  // Extinct (EX)               – No known individuals remaining.
-  // Extinct in the wild (EW)   – Known only to survive in captivity, or as a naturalized population outside its historic range.
-  // Critically endangered (CR) – Extremely high risk of extinction in the wild.
-  // Endangered (EN)            – High risk of extinction in the wild.
-  // Vulnerable (VU)            – High risk of endangerment in the wild.
-  // Near threatened (NT)       – Likely to become endangered in the near future.
-  // Least concern (LC)         – Lowest risk. Does not qualify for a more at-risk category. Widespread and abundant taxa are included in this category.
-  // Data deficient (DD)        – Not enough data to make an assessment of its risk of extinction.
-  // Not evaluated (NE)         – Has not yet been evaluated against the criteria.
-
-  // $sc_name = 'loxodonta africana';
-  // dpm($sc_name, 'sc_name');
-  $token = '9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee';
-  $lookup_url =  'http://apiv3.iucnredlist.org/api/v3/species/'
-    . str_replace(' ', '%20', $sc_name)
-    . '?token=' . $token;
-  // dpm($lookup_url, 'lookup_url');
-
-  $response = drupal_http_request($lookup_url, array());
-  // dpm($response, 'response');
-
-  if (!isset($response->data)) {
-    drupal_set_message(t('Lookup failed.'), 'error', FALSE);
-    // dpm($response, '$response');
-    return NULL;
-  }
-
-  $json = json_decode($response->data);
-  // dpm($json, 'json');
-
-  $taxon_info = array();
-  $is_found = ! empty($json->result);
-  // $is_found = TRUE; // For testing only.
-  if ($is_found) {
-    $result_info = $json->result[0];
-    // dpm($result_info, 'result_info');
-    $taxon_info = array(
-      'vulnerability' => $result_info->category,
-      'vulnerability_criteria' => $result_info->criteria,
-    );
-  }
-  // dpm($taxon_info, '$taxon_info');
-  return $taxon_info;
-}
-
-
-
-/**
- * Calls lookup_iucn() on the taxon.
- * 
- * @param EntityMetadataWrapper
- */
-function update_vulnerability($taxon) {
-  return NULL; // Can't work until we get a key
-
-  // $sc_name = $taxon->field_scientific_name->value();
-  $sc_name = strtolower($taxon->label());
-  // dpm($sc_name, '$sc_name');
-  $taxon_info = lookup_iucn($sc_name);
-  if ($taxon_info) {
-    // dpm($taxon_info, '$taxon_info');
-    $taxon->field_vulnerability->set($taxon_info['vulnerability']);
-    $taxon->save();
-  }
-}
-
 
 /**
  * @param $taxon_info
@@ -932,26 +255,10 @@ function create_taxon($taxon_info, $show_message = TRUE) {
   );
 
   $term_raw = entity_create('taxonomy_term', $term_data);
-  // $term = entity_metadata_wrapper('taxonomy_term', $term_raw);
 
-  // $term->field_taxon_rank->set($taxon_info['rank']);
-
-  // // For bulk uploads, save locality
-  // if (array_key_exists('localities', $taxon_info)) {
-  //   $term->field_localities->set($taxon_info['localities']);
-  // }
-
-  // $term->save();
-  // // dpm($term->raw(), '$term');
-
-  // if ($show_message) {
-  //   $message_params = array(
-  //     '@rank' => $taxon_info['rank'],
-  //     '@taxon' => $taxon_info['name'],
-  //     '@url' => base_path() . 'taxonomy/term/' . $term->getIdentifier(),);
-  //   drupal_set_message(t('@rank <a href="@url">‘@taxon’</a> was successfully added to CasaBio.', $message_params), 'status', FALSE);
-  // }
-  update_taxon($term_raw, $taxon_info, $show_message = TRUE);
+  // dpm($term_raw, '$term_raw');
+  update_taxon($term_raw, $taxon_info, TRUE);
+  return $term_raw;
 }
 
 
@@ -975,14 +282,22 @@ function update_taxon($term_raw, $taxon_info, $show_message = TRUE, $update_mode
   $fields_updated +=
     update_taxon_field($term, [$taxon_info['parent']], 'parent', $update_mode);
 
+  $fields_updated +=
+    update_taxon_field($term, $taxon_info['num_children'], 'field_num_children', $update_mode);
+
+  $fields_updated +=
+    update_taxon_field($term, [$taxon_info['common_names']], 'field_common_names', $update_mode);
+
+  $fields_updated +=
+    update_taxon_field($term, $taxon_info['sc_name'], 'field_scientific_name', $update_mode);
+
+  $fields_updated +=
+    update_taxon_field($term, $taxon_info['canonical_name'], 'field_canonical_name', $update_mode);
+  
+  // dpm($term, '$term');
+
   // For bulk uploads, save locality
   if (array_key_exists('localities', $taxon_info)) {
-    // if ($taxon_info['localities'][0]) {
-    //   if (($update_mode === 'all') ||
-    //     ($update_mode === 'empties') && (! $term->field_localities->value())) {
-    //     $term->field_localities->set($taxon_info['localities']);
-    //   }
-    // }
     $fields_updated +=
       update_taxon_field($term, $taxon_info['localities'], 'field_localities', $update_mode);
   }
@@ -994,12 +309,17 @@ function update_taxon($term_raw, $taxon_info, $show_message = TRUE, $update_mode
     $message_params = array(
       '@rank' => $taxon_info['rank'],
       '@taxon' => $taxon_info['name'],
-      '@url' => base_path() . 'taxonomy/term/' . $term->getIdentifier(),);
+      '@url' => base_path() . 'taxonomy/term/' . $term_raw->tid,);
     drupal_set_message(t('@rank <a href="@url">‘@taxon’</a> was successfully added to CasaBio.', $message_params), 'status', FALSE);
   }
 
   // dpm($fields_updated, '$fields_updated');
-  return ($fields_updated > 0);
+  if ($fields_updated > 0) {
+    return $term;
+  }
+  else {
+    return NULL;
+  }
 }
 
 
@@ -1016,6 +336,7 @@ function update_taxon_field(&$term, $value, $field_machine_name, $update_mode) {
       ($update_mode === 'empties') && (! $current_value)) {
 
       if ($current_value !== $value) {
+        // dpm($field_machine_name, '$field_machine_name');
         $term->{$field_machine_name}->set($value);
         $field_updated = 1;
       }
@@ -1072,15 +393,10 @@ function contribute_taxon_etymology_page_callback($tid) {
  * Implements hook_form_FORM_ID_alter(). Returns a simplified 'new term' form.
  */
 function casa_term_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
-  // dpm('Reached: casa_term_mgt_form_taxonomy_form_term_alter');
+  // dpm('casa_term_mgt_form_taxonomy_form_term_alter()');
   // dpm($form, "form");
   // dpm($form_state, "form_state");
   // dpm($form_state['term'], "form_state['term']");
-
-  // // Need to unset 'relations' value to dpm() the form; otherwise runs out of memory (lots of recursion?);
-  // $form_dup = $form;
-  // $form_dup['relations'] = '- UNSET -';
-  // dpm($form_dup, "form_dup");
 
   // Remove 'additional' node settings for non-administrators
   global $user;
@@ -1089,7 +405,7 @@ function casa_term_mgt_form_taxonomy_form_term_alter(&$form, &$form_state, $form
   }
 
   module_load_include('inc', 'casa_term_mgt', 'term_forms');
-  $form = form_taxonomy_form_term_alter($form, $form_state, $form_id);
+  form_taxonomy_form_term_alter($form, $form_state, $form_id);
 
   // Correct invalid field values, if this form is for an existing term
   if ($form_state['term']->tid) {
@@ -1126,189 +442,6 @@ function correct_invalid_entity_fields($type, $entity) {
 
 
 
-/**
- * For a given community identification, calls a function that assesses whether
- * to replace the picture of the referenced taxon with the new picture.
- *
- * The taxon is referenced by the community identification provided.
- *
- * @param $new_comm_id_raw
- *   A new community identification node. It should reference a taxon, and an
- *   observation with at least one picture.
- */
-function taxa_assess_community_identification($new_comm_id_raw) {
-  // dpm($new_comm_id_raw, '$new_comm_id_raw');
-
-  // ---------------------------------------------------------------------------
-  // Get the taxon
-
-  if (!$new_comm_id_raw)
-    throw new InvalidArgumentException("Param $new_comm_id_raw needed.", 1);
-
-  $new_comm_id = entity_metadata_wrapper('node', $new_comm_id_raw);
-
-  $taxon_raw = $new_comm_id->field_identified_species->value();
-  // dpm($taxon_raw, '$taxon_raw');
-
-  if (!$taxon_raw)
-    throw new Exception("Community identifications must reference a taxon.", 1);
-
-  $taxon = entity_metadata_wrapper('taxonomy_term', $taxon_raw);
-
-  // ---------------------------------------------------------------------------
-  // Get the new picture and its reliability
-
-  $new_reliability = $new_comm_id->field_reliability->value();
-  // dpm($new_reliability, '$new_reliability');
-
-  if (!$new_reliability)
-    return NULL;
-
-  // Get the community identification's picture
-
-  $observation_raw = $new_comm_id->field_observation->value();
-  // dpm($observation_raw, '$observation_raw');
-
-  if (!$observation_raw)
-    throw new Exception("Community identifications must reference an observation.", 1);
-
-  $new_picture_nid = get_observation_primary_picture_nid($observation_raw);
-  // dpm($new_picture_nid, '$new_picture_nid');
-
-  // ---------------------------------------------------------------------------
-  // Call the assess function for the taxon
-
-  assess_new_pic_for_taxon($taxon, $new_reliability, $new_picture_nid);
-}
-
-
-/**
- * Determines if a new picture should replace a taxon's existing representative picture.
- *
- * This compares the reliabilities of the community identifications of the
- * observations referencing the (new and existing) pictures. If the 'new
- * reliability' is greater than the old, will replace the existing picture with
- * the new one.
- * See https://docs.google.com/drawings/d/13dJgc1QnqIg4WIHkGFYt66IKmEVeP87zuwEJF2uRVXw
- * for a diagram of the entities and fields used here/
- *
- * @return
- *   TRUE if the picture was replaced, false otherwise
- */
-function assess_new_pic_for_taxon($taxon, $new_reliability, $new_picture_nid) {
-  // dpm($taxon, '$taxon');
-  // dpm($new_reliability, '$new_reliability');
-  // dpm($new_picture_nid, '$new_picture_nid');
-
-  $picture_is_replaced = FALSE;
-
-  // ---------------------------------------------------------------------------
-  // Get the existing picture's reliability
-
-  $exis_pic_raw = $taxon->field_representative_picture->value();
-  // dpm($exis_pic_raw, '$exis_pic_raw');
-
-  $exis_reliability;
-  if (!$exis_pic_raw) {
-    $exis_reliability = 0;
-  }
-  else {
-    $exis_reliability = get_picture_reliability($exis_pic_raw, $taxon->getIdentifier());
-    // dpm($exis_reliability, '$exis_reliability');
-  }
-
-  // ---------------------------------------------------------------------------
-  // Compare the new and existing pictures' reliabilities
-
-  $is_new_picture_better = $new_reliability > $exis_reliability;
-  // dpm($is_new_picture_better, '$is_new_picture_better');
-
-  // ---------------------------------------------------------------------------
-  // If the new community identification has a higher reliability than the
-  // current picture's community identification, replace the reference to
-  // the old picture with the new one.
-
-  if (!$is_new_picture_better) {
-    return $picture_is_replaced;
-  }
-
-  // Replace the current picture with the new picture
-
-  $taxon->field_representative_picture->set($new_picture_nid);
-  $taxon->save();
-  $picture_is_replaced = TRUE;
-  // dpm($picture_is_replaced, '$picture_is_replaced');
-
-  // If this taxon has a parent
-  // assess_new_pic_for_taxon() for parent
-
-  return $picture_is_replaced;
-}
-
-
-/**
- * Determines the reliability of a picture.
- *
- * Gets the observation referencing the pic (there should be only 1),
- * then gets the observation's community identifications (sorted by reliability),
- * then gets the first comm identification's reliability.
- *
- * @param $tid
- *   The tid of the species taxon that the picture should be of.
- *
- * @return int
- *   An integer between 0 and 100.
- */
-function get_picture_reliability($picture, $tid) {
-
-  $observation = get_observation_referencing_pic($picture->nid);
-  // dpm($observation, '$observation');
-
-  if (!$observation)
-    return NULL;
-
-  $comm_ids = get_identifications_refing_observation(
-    'identification_community', $observation->nid, $tid);
-  // dpm($comm_ids, '$comm_ids');
-
-  if (!$comm_ids || $comm_ids == [])
-    return NULL;
-
-  // Just take the first one; they're already ordered by reliability.
-  $comm_id_raw = node_load(reset($comm_ids)->nid);
-  // dpm($comm_id_raw, '$comm_id_raw');
-
-  $comm_id = entity_metadata_wrapper('node', $comm_id_raw);
-  $reliability = $comm_id->field_reliability->value();
-  // dpm($reliability, '$reliability');
-
-  // If there is no existing reliability, set it to 0.
-  if ($reliability) {
-    return $reliability;
-  }
-  else {
-    return NULL;
-  }
-}
-
-
-function get_observation_primary_picture_nid($observation_raw) {
-
-  $observation = entity_metadata_wrapper('node', $observation_raw);
-  $pictures = $observation->field_pictures_observation->value();
-  // dpm($pictures, '$pictures');
-
-  if (!$pictures)
-    return NULL;
-
-  $new_picture_nid = $pictures[0]->nid; // Use the first, which should be the primary pic.
-  // dpm($new_picture_nid, '$new_picture_nid');
-
-  return $new_picture_nid;
-}
-
-
-
 // module_load_include('inc', 'casa_term_mgt', 'taxa_upload_data');
 function bulk_taxa_upload() {
   $file_url = drupal_get_path('module', 'casa_term_mgt') . '/taxa_upload_data.json';
@@ -1322,360 +455,254 @@ function bulk_taxa_upload() {
 }
 
 
-
-/**
- * @param $taxa
- *   An array of strings; the scientific names of the taxa.
- * 
- * @param string $update_mode
- *   Possible values: 'none', empties', 'all'
- */
-function taxa_lookup_multiple($taxa, $taxa_service, $update_mode = NULL, $localities = NULL) {
-  // dpm($taxa, '$taxa');
-
-  $lookup_existings = [];
-  $lookup_updates   = [];
-  $lookup_successes = [];
-  $lookup_failures  = [];
-
-  $update_existing =  true;
-  $service_name =     '';
-
-  if (!$taxa) {
-    return NULL;
-  }
-
-  foreach ($taxa as $sc_name) {
-
-    // Check if it exists.
-    // $is_taxon_in_casabio = is_taxon_in_casabio($sc_name);
-    $taxa_in_casabio = get_taxa_with_name($sc_name, 'is');
-
-    $taxon = NULL;
-    if ($taxa_in_casabio) {
-      $lookup_existings[] = $sc_name;
-
-      $taxon = reset($taxa_in_casabio);
-
-      if ($update_mode === 'none') {
-        continue;
-      }
-    }
-
-    // dpm($taxon, '$taxon');
-
-    $taxon_info;
-
-    switch ($taxa_service) {
-
-      case 'gbif':
-        $taxon_info = lookup_gbif($sc_name);
-        $service_name = 'GBIF';
-        break;
-
-      case 'col':
-      default:
-        $taxon_info = lookup_catalogueoflife($sc_name);
-        $service_name = 'Catalogue of Life';
-        break;
-    }
-
-    if(!$taxon_info) {
-      $lookup_failures[] = $sc_name;
-      continue;
-    }
-
-    if ($localities) {
-      $taxon_info['localities'] = $localities;
-    }
-
-    if ($taxon) {
-      $updated = update_taxon(taxonomy_term_load($taxon->tid), $taxon_info, FALSE, $update_mode);
-      if ($updated) {
-        $lookup_updates[] = $sc_name;
-      }
-    }
-    else {
-      create_taxon($taxon_info, FALSE);
-      $lookup_successes[] = $sc_name;
-    }
-  }
-
-  if ($lookup_existings) {
-    $list_existings = '<ol><li>' . implode('</li><li>', $lookup_existings) . '</li></ol>';
-    drupal_set_message('The following taxa already exists in CasaBio:'
-      . '<br>' . $list_existings, 'warning', FALSE);
-  }
-
-  if ($lookup_updates) {
-    $message_params = array('@service' => $service_name);
-    $list_updates = '<ol><li>' . implode('</li><li>', $lookup_updates) . '</li></ol>';
-    drupal_set_message(t('The following taxa were found on @service '
-      . 'and successfully updated:', $message_params)
-      . '<br>' . $list_updates, 'status', FALSE);
-  }
-
-  if ($lookup_failures) {
-    $message_params = array('@service' => $service_name);
-    $list_failures = '<ol><li>' . implode('</li><li>', $lookup_failures) . '</li></ol>';
-    drupal_set_message(t('The following taxa were not found on @service:', $message_params)
-      . '<br>' . $list_failures, 'warning', FALSE);
-  }
-
-  if ($lookup_successes) {
-    $message_params = array('@service' => $service_name);
-    $list_successes = '<ol><li>' . implode('</li><li>', $lookup_successes) . '</li></ol>';
-    drupal_set_message(t('The following taxa were found on @service '
-      . 'and successfully added to CasaBio:', $message_params)
-      . '<br>' . $list_successes, 'status', FALSE);
-  }
-}
-
-
 function import_etymologies_page_callback() {
 
   return drupal_get_form('import_etymologies_form');
 }
 
 
+
+
 /**
- * Implements hook_form(). Creates a small form for adding a taxon that CasaBio does not yet have.
+ * Implements hook_query_TAG_alter().
+ */
+function casa_term_mgt_query_condition_field_value_null_alter(QueryAlterableInterface $query) {
+  // dpm($query, '$query');
+  $table_name = 'field_data_' . $query->alterMetaData['field_name'];
+  // dpm($table_name, '$table_name');
+  $column_name = $query->alterMetaData['field_name'] . '_' . $query->alterMetaData['field_value_label'];
+  // dpm($column_name, '$column_name');
+
+  $query->leftJoin($table_name, 'o', 'taxonomy_term_data.tid = o.entity_id');
+  $query->isNull('o.' . $column_name);
+  // dpm($query, '$query');
+}
+
+
+
+/**
+ * Implements hook_taxonomy_term_presave().
+ */
+function casa_term_mgt_taxonomy_term_presave($term_unsaved) {
+  // dpm($term_unsaved, '$term_unsaved');
+  
+  $existing_term_raw = taxonomy_term_load($term_unsaved->tid);
+  // dpm($existing_term_raw, '$existing_term_raw');
+
+  if ($existing_term_raw && $existing_term_raw->vocabulary_machine_name === 'taxa') {
+    update_term_history($term_unsaved, $existing_term_raw);
+  }
+}
+
+
+
+/**
+ * If any change has been made that should be saved to history, save it.
  *
- * If a taxon already has an etymology...
- * Try: Abietinella>From the Latin ‘abie’ / ‘abies’ meaning.
+ * @param $term_unsaved
+ * @param $existing_term_raw
  */
-function import_etymologies_form() {
+function update_term_history($term_unsaved, $existing_term_raw) {
+  // return NULL;
+  
+  $term = entity_metadata_wrapper('taxonomy_term', $term_unsaved);
+  // dpm($term->raw(), '$term->raw()');
 
-  $form['#attributes'] = array(
-    'class' => array('width_narrow'),
-  );
+  $existing_term = entity_metadata_wrapper('taxonomy_term', $existing_term_raw);
+  // dpm($existing_term->raw(), '$existing_term->raw()');
 
-  $form['description'] = array(
-    '#markup' => '<p>Use this to add etymologies to taxa (species, genus, etc.) in CasaBio. Taxa that already have an etymology can be skipped.</p>',
-  );
+  $taxon_historian = new casa_core\historian($term);
 
-  $form['data'] = array(
-    '#title' => t('Taxa names and etymologies'),
-    '#description' => '<p>Each taxon / etymology pair should be separated by a pipe character (&lsquo;|&rsquo;) and be on their own line, eg: </p><pre>Taxon name|etymology<br>Taxon name...</pre>'
-      . '<p>Taxon names are <em>not</em> case sensitive.</p>',
-    // '#description' => 'In JSON format, such as: <br><pre>'
-    //   . '[<br>'
-    //   . '  {<br>'
-    //   . '    "name": "...",<br>'
-    //   . '    "etymology": "..."<br>'
-    //   . '  },<br>'
-    //   . '  {...<br>'
-    //   . ']</pre>',
-    '#type' => 'textarea',
-    '#required' => TRUE,
-  );
+  global $user;
+  // dpm($user, '$user');
+  $user_wrapped = entity_metadata_wrapper('user', $user->uid);
+  // dpm($user_wrapped->raw(), '$user_wrapped->raw()');
 
-  $form['match_type'] = array(
-    '#type' => 'select', 
-    '#title' => t('Taxon name match type'),
-    '#description' => '<p>Should the taxon name be exactly the same as the name you provide, or should your provided name be in the taxon name?</p>'
-      . '<p>For example, "Ablus" can match the genus "Ablus" (must be exact) or the species "Ablus coritus" (can contain).</p>',
-    '#options' => array(
-      'is' => t('Name must be exact (default)'),
-      'contains' => t('Name must contain'),
-    ),
-    '#default_value' => 'is',
-  );
 
-  $form['skip_or_overwrite'] = array(
-    '#type' => 'select', 
-    '#title' => t('Skip or overwrite existing etymologies'),
-    '#description' => '<p>For taxa that already have an etymology, should they be skipped, or should their existing etymology be overwritten?</p>',
-    '#options' => array(
-      'skip' => t('Skip (default)'),
-      'overwrite' => t('Overwrite'),
-    ),
-    '#default_value' => 'skip',
-  );
+  // Term events (saved to the term's History field)
+  
+  $term_events = [];
 
-  $form['submit'] = array(
-    '#value' => 'Import',
-    '#type' => 'submit',
-    '#name' => 'import',
-    '#attributes' => array(
-      'class' => array('raised', 'right'),
-    ),
-  );
+  // If scientific name is changed
+  
+  $is_sc_name_changed = ($term->field_scientific_name->value()
+    !== $existing_term->field_scientific_name->value());
+  // dpm($is_sc_name_changed, '$is_sc_name_changed');
 
-  return $form;
+  if ($is_sc_name_changed) {
+    $taxon_historian->addEvent(time(), 'Updated scientific name', $user->uid, FALSE);
+  }
+
+
+  // User History
+
+  $user_wrapped = entity_metadata_wrapper('user', $user);
+  $user_historian = new casa_core\historian($user_wrapped);
+
+  // User events (saved to the user's History field)
+
+  $user_events = [];
+  
+  if (! property_exists($user, 'field_history')) {
+    return NULL;
+  }
+
+  // If etymology is changed
+  
+  $is_etymology_changed = ($term->field_etymology->value()
+    !== $existing_term->field_etymology->value());
+  // dpm($is_etymology_changed, '$is_etymology_changed');
+
+  if ($is_etymology_changed) {
+    $action = ($existing_term->field_etymology->value()) ?
+      'Updated etymology' : 'Added etymology';
+
+    $user_historian->addEvent(time(), $action, $user->uid, FALSE);
+  }
 }
 
 
 
 /**
- * See taxa_lookup_form().
+ * Implements hook_taxonomy_term_update().
  */
-function import_etymologies_form_submit($form_id, &$form_state) {
-  // dpm($form_id, 'form_id');
-  // dpm($form_state, 'form_state');
+function casa_term_mgt_taxonomy_term_update($term) {}
 
-  // dpm($form_state['values']['data'], "form_state['values']['data']");
-  $etymology_data_raw = explode(PHP_EOL, $form_state['values']['data']);
-  // dpm($etymology_data_raw, 'etymology_data_raw');
 
-  $etymology_data = [];
-  foreach ($etymology_data_raw as $key => $name_and_etymology) {
-    $data = explode('|', $name_and_etymology);
 
-    if (! $data[0]) {
-      drupal_set_message(t('Taxon name is blank'), 'status', FALSE);
-      continue;
-    }
-    if (! array_key_exists(1, $data)) {
-      drupal_set_message(t('Etymology missing for taxon "%name"',
-        array('%name' => $data[0])), 'status', FALSE);
-      continue;
-    }
+function get_taxa_rank_children_suffix($rank) {
+  switch ($rank) {
+    case 'kingdom':
+      $children_suffix = 'phyla';
+      break;
 
-    $etymology_data[] = array(
-      'name' => $data[0],
-      'etymology' => $data[1]
-    );
+    case 'phylum':
+      $children_suffix = 'classes';
+      break;
+
+    case 'class':
+      $children_suffix = 'orders';
+      break;
+
+    case 'order':
+      $children_suffix = 'families';
+      break;
+
+    case 'family':
+      $children_suffix = 'genera';
+      break;
+
+    case 'tribe':
+      $children_suffix = 'genera';
+      break;
+
+    case 'genus':
+      $children_suffix = 'species';
+      break;
+
+    case 'species':
+      $children_suffix = 'lower taxa';
+      break;
+
+    default:
+      $children_suffix = '';
+      break;
   }
-  // dpm($etymology_data, 'etymology_data');
-
-  import_etymologies($etymology_data,
-    $form_state['values']['match_type'],
-    $form_state['values']['skip_or_overwrite']);
+  return $children_suffix;
 }
 
 
+/**
+ * Gets the name of the family.
+ */
+function get_family($observation) {
+  $identification = calc_most_reliable_comm_identi($observation->raw());
+  // dpm($identification, '$identification');
 
-function import_etymologies($etymology_data, $match_type, $skip_or_overwrite) {
-  // dpm('Importing etymologies...');
-
-  // $file_url = drupal_get_path('module', 'casa_core') . '/taxa_etymologies.json';
-  // $file_contents = file_get_contents($file_url);
-  // // dpm($file_contents, '$file_contents');
-  // $etymology_data = json_decode($file_contents);
-  // // dpm($etymology_data, '$etymology_data');
-
-  // $etymology_data = array_slice($etymology_data, 1200, 400);
-  // // dpm($etymology_data, '$etymology_data');
-
-  $taxa_not_existing = [];
-
-  $taxa_failed = [];
-
-  $taxa_skipped = [];
-
-  $count_changed = 0;
-
-  // ELXONURUS|From the Greek eleuein, to roll; oura, -urus, tailed; the racemes curl when old.
-
-  // $etymology_data = [];
-
-  foreach ($etymology_data as $index => $term_data) {
-    // dpm($term_data, '$term_data');
-
-    if (! $term_data) {
-      $taxa_failed[] = $term_data['name'];
-      continue;
-    }
-
-    $taxa = get_taxa_with_name($term_data['name'], $match_type);
-    // dpm($taxa, '$taxa');
-
-    if (empty($taxa)) {
-      $taxa_not_existing[] = $term_data['name'];
-      continue;
-    }
-
-    foreach ($taxa as $nid => $node) {
-      $taxon = entity_metadata_wrapper('taxonomy_term', $nid);
-      // dpm($taxon->raw(), '$taxon');
-
-      // If taxon already has an etymology, and existing etymologies should be skipped
-      if (($taxon->field_etymology->value()) && ($skip_or_overwrite == 'skip')) {
-        $taxa_skipped[] = $term_data['name'];
-        continue;
-      }
-
-      $taxon->field_etymology->set($term_data['etymology']);
-      $taxon->save();
-      $count_changed ++;
-    }
+  if (! $identification) {
+    return NULL;
   }
-
-  if (count($taxa_failed)) {
-    drupal_set_message(t('<strong>%count</strong> taxa failed to be processed:',
-      array('%count' => count($taxa_failed)))
-        . '<br><ul><li>' . implode('</li><li>', $taxa_failed) . '</li></ul>', 
-      'error', FALSE);
+  $taxon = entity_metadata_wrapper('taxonomy_term', $identification->field_identified_species->value());
+  // dpm($taxon->raw(), '$taxon');
+  if (strtolower($taxon->field_taxon_rank->value()) == 'genus') {
+    // dpm('is genus');
+    $parents = taxonomy_get_parents($taxon->getIdentifier());
+    // dpm($parents, '$parents');
+    $family = reset($parents);
+    return $family;
   }
-
-  if (count($taxa_not_existing)) {
-    drupal_set_message(t('<strong>%count</strong> taxa do not exist:',
-      array('%count' => count($taxa_not_existing)))
-        . '<br><ul><li>' . implode('</li><li>', $taxa_not_existing) . '</li></ul>', 
-      'warning', FALSE);
-  }
-
-  if (count($taxa_skipped)) {
-    drupal_set_message(t('<strong>%count</strong> taxa were skipped:',
-      array('%count' => count($taxa_skipped)))
-        . '<br><ul><li>' . implode('</li><li>', $taxa_skipped) . '</li></ul>', 
-      'status', FALSE);
-  }
-
-  drupal_set_message(t('<strong>%count</strong> taxa were given new etymologies.',
-    array('%count' => $count_changed)), 'status', FALSE);
-}
-
-
-
-function get_gbif_key($tid) {
-  $term = entity_metadata_wrapper('taxonomy_term', $tid);
-  $sc_name = $term->label();
-
-  $gbif_key = '';
-
-  $external_refs = json_decode($term->field_external_references->value());
-  // dpm($external_refs, '$external_refs');
-
-  if ($external_refs) {
-    if (property_exists($external_refs, 'gbif')) {
-      if (property_exists($external_refs->gbif, 'key')) {
-        $gbif_key = $external_refs->gbif->key;
-        return $gbif_key;
-      }
-    }
-  }
-
-  if (! $gbif_key) {
-    // Query the GBIF web service for the key
-
-    // dpm('Performing GBIF key lookup');
-    $taxon_info = lookup_gbif($sc_name);
-    // dpm($taxon_info, '$taxon_info');
-
-    if (! $taxon_info) {
+  elseif (strtolower($taxon->field_taxon_rank->value()) == 'species') {
+    // dpm('is species');
+    $parents = taxonomy_get_parents($taxon->getIdentifier());
+    // dpm($parents, '$parents');
+    if (! count($parents)) {
       return NULL;
     }
-
-    $gbif_key = $taxon_info['key'];
-
-    // if (! $gbif_key) {
-    //   return NULL;
-    // }
-
-    if (! $external_refs) {
-      $external_refs = new stdClass();;
-    }
-    if (! property_exists($external_refs, 'gbif')) {
-      $external_refs->gbif = new stdClass();
-    }
-    if (! property_exists($external_refs->gbif, 'key')) {
-      $external_refs->gbif->key = $gbif_key;
-    }
-    // dpm($external_refs, '$external_refs after');
-    $term->field_external_references->set(json_encode($external_refs));
-    $term->save();
+    $genus_tid = array_keys($parents)[0];
+    $genus_parents = taxonomy_get_parents($genus_tid);
+    $family = reset($genus_parents);
+    return $family;
   }
-  return $gbif_key;
+  else {
+    return NULL;
+  }
+}
+
+
+function get_localities_hierarchical($observation) {
+  $locality_text = '';
+  $localities = $observation->field_locality->value();
+  // dpm($localities, '$localities');
+  $locality = reset($localities);
+  if ($locality) {
+    $locality_text = $locality->name;
+    $locality_ancestors = taxonomy_get_parents_all($locality->tid);
+    // dpm($locality_ancestors, '$locality_ancestors');
+    if (count($locality_ancestors) > 1) {
+      foreach ($locality_ancestors as $key => $locality_ancestor) {
+        if ($key == 0) {
+          continue;
+        }
+        $locality_text .= ', ' . $locality_ancestor->name;
+      }
+    }
+    return $locality_text;
+  }
+  else {
+    return NULL;
+  }
+}
+
+
+
+/**
+ * Runs through taxa that have not been updated recently and updates them according to GBIF data.
+ */
+function batch_update_taxa() {
+  $batch_size = 500;
+
+  $tids1 = get_taxa_without_sc_name($batch_size);
+  $tids1 = $tids1 ? array_keys($tids1) : [];
+  // dpm($tids1, "tids1");
+  // dpm(count($tids1) . ' results');
+
+  $tids2 = get_taxa_without_history($batch_size - count($tids1));
+  $tids2 = $tids2 ? array_keys($tids2) : [];
+  // dpm($tids2, '$tids2');
+  // dpm(count($tids2) . ' results');
+
+  $tids = array_merge($tids1, $tids2);
+  // dpm($tids, '$tids');
+
+  $taxa = taxonomy_term_load_multiple($tids);
+  // dpm($taxa, '$taxa');
+  $taxa_names = [];
+  foreach ($taxa as $term) {
+    $taxa_names[] = $term->name;
+  }
+  // dpm($taxa_names, '$taxa_names');
+
+  $taxa = taxa_lookup_multiple($taxa_names, 'gbif', 'empties', NULL, FALSE);
+
+  watchdog('casa_core', 'Batch of updating ' . $batch_size . ' taxa completed successfully.', array(), WATCHDOG_NOTICE, 'link');
 }

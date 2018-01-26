@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Admin interface styling for the JSONB module.
+ */
+
+.jsonb-textarea {
+  font-family: Consolas, Menlo, Monaco, monospace;
+}

@@ -4,7 +4,10 @@
  * Casa Node Management module, which provides functions that manage nodes that are unique to CasaBio.
  */
 
+// namespace Drupal\Casabio\casa_node_mgt;
 
+use Drupal\Casabio\casa_core;
+use Drupal\Casabio\casa_node_mgt\preprocessors;
 
 
 // =============================================================================
@@ -55,12 +58,12 @@
 */
 
 
-module_load_include('inc', 'casa_node_mgt', 'casa_habitat_mgt');
-module_load_include('inc', 'casa_node_mgt', 'node_forms');
-module_load_include('inc', 'casa_node_mgt', 'node_queries');
-module_load_include('inc', 'casa_node_mgt', 'node_creation');
-module_load_include('inc', 'casa_node_mgt', 'node_preprocessors');
-module_load_include('inc', 'casa_node_mgt', 'node_crud_reactions');
+module_load_include('inc', 'casa_node_mgt', 'includes/casa_habitat_mgt');
+module_load_include('inc', 'casa_node_mgt', 'includes/node_forms');
+module_load_include('inc', 'casa_node_mgt', 'includes/node_queries');
+module_load_include('inc', 'casa_node_mgt', 'includes/node_creation');
+module_load_include('inc', 'casa_node_mgt', 'includes/node_preprocessors');
+module_load_include('inc', 'casa_node_mgt', 'includes/node_crud_reactions');
 
 define("ID_SOURCE_CASABIO_INDIVIDUAL", 1);
 define("ID_SOURCE_CASABIO_COMMUNITY", 2);
@@ -92,7 +95,15 @@ define("ID_SOURCE_EXTERNAL", 3);
  * Implements hook_init().
  */
 function casa_node_mgt_init() {
-  provide_node_info_to_js();
+  // dpm(current_path(), 'current_path()');
+
+  if ((! drupal_match_path(current_path(), 'services/*'))
+    && (! drupal_match_path(current_path(), 'api/*'))) {
+      // Pass this array to the JS
+    // dpm('not an API request');
+    provide_node_info_to_js();
+  }
+
   // determine_taxa_localities_for_bulk_observations();
 }
 
@@ -583,13 +594,13 @@ function casa_node_mgt_preprocess_node(&$variables, $hook) {
   // --------------------------------------------------------------------------
   //                                                  Not 'full' view modes
   if ($variables['view_mode'] != 'full') {
-    _preprocess_node_not_full($variables);
+    preprocessors\_preprocess_node_not_full($variables);
   }
 
   // --------------------------------------------------------------------------
   //                                                  Full view modes
   if ($variables['view_mode'] == 'full') {
-    _preprocess_node_full($variables);
+    preprocessors\_preprocess_node_full($variables);
   }
 
 
@@ -600,26 +611,26 @@ function casa_node_mgt_preprocess_node(&$variables, $hook) {
   switch ($variables['type']) {
 
     case 'observation':
-      _preprocess_observation($variables);
+      preprocessors\_preprocess_observation($variables);
       break;
 
     case 'picture':
-      _preprocess_picture($variables);
+      preprocessors\_preprocess_picture($variables);
 
     case 'identification':
-      _preprocess_identification($variables);
+      preprocessors\_preprocess_identification($variables);
       break;
 
     case 'identification_community':
-      _preprocess_identification_community($variables);
+      preprocessors\_preprocess_identification_community($variables);
       break;
 
     case 'interaction':
-      _preprocess_interaction($variables);
+      preprocessors\_preprocess_interaction($variables);
       break;
 
     case 'collection':
-      _preprocess_collection($variables);
+      preprocessors\_preprocess_collection($variables);
       break;
 
     case 'habitat_record':
@@ -722,18 +733,27 @@ function casa_node_mgt_preprocess_field(&$variables, $hook) {
  */
 function casa_node_mgt_node_presave($node) {
   // dpm($node, '$node in presave');
-  
+
+  if (variable_get('skip_save_callbacks')) {
+    return NULL;
+  }
 
   switch ($node->type) {
     case 'identification':
+      // Setup variables
+
       $identification = entity_metadata_wrapper('node', $node);
       $taxon = $identification->field_identified_species->value();
       // dpm($taxon, '$taxon');
 
-      // Gives the identification a name based on taxon
+      if (! $taxon) {
+        continue;
+      }
+
+
+      // Give the identification a name based on taxon
 
       $current_title = $identification->title->value();
-
       if ($current_title == 'Untitled' || $current_title == '') {
         $new_title = $taxon->name;
         $identification->title->set($new_title);
@@ -741,7 +761,14 @@ function casa_node_mgt_node_presave($node) {
       break;
 
     case 'observation':
+
+      $start = microtime(TRUE);
       filter_observation_reused_pictures($node);
+      calc_duration($start, 'filter_observation_reused_pictures()');
+
+      break;
+
+    case 'identification_community':
       break;
   }
 }
@@ -756,37 +783,80 @@ function casa_node_mgt_node_presave($node) {
 function casa_node_mgt_node_insert($node) {
   // dpm($node, 'node in insert');
 
+  if (variable_get('skip_save_callbacks')) {
+    return NULL;
+  }
+
   switch ($node->type) {
     case 'identification':
+      // Setup variables
+
+      global $user;
       $identification = entity_metadata_wrapper('node', $node);
+      // dpm($identification->raw(), '$identification->raw()');
       $observation = $identification->field_observation->value();
       // dpm($observation, '$observation');
+      $observation_wrapped = entity_metadata_wrapper('node', $observation);
 
-      // If the identification doesn't reference an observation (it must)
+      $taxon = $identification->field_identified_species->value();
+      // dpm($taxon, '$taxon');
+
+      // Validation
+
+      // Ensure the identification references an observation (it must)
       if (! $observation) {
         throw new Exception("Identifications must reference an observation.", 1);
       }
+      if (! $taxon) {
+        throw new Exception("Identifications must reference a taxon.", 1);
+      }
+
+      // Trigger callbacks
+
+      new_identification_add_history_events($user, $taxon);
       
       // Finds all matching identifications by user, keeps only one.
       filter_identifications_to_one($node);
       // dpm('Finished filter_identifications_to_one()');
 
-      // Updates matching community identification
-      $comm_identi = update_matching_comm_identi($node);
-      // dpm('Finished update_matching_comm_identi()');
+      // dpm($taxon, '$taxon');
+      assess_new_pics_for_taxon($taxon);
 
-      if ($observation) {
-        update_observation_title_from_identi($observation);
-        // dpm('Finished update_observation_title_from_identi()');
-      }
+      // dpm($node, '$node');
+      // Creates or updates matching community identification
+      $comm_identi = update_matching_comm_identi($node);
+      // dpm($comm_identi, '$comm_identi');
+
+      // Needs to be after updating the community identifcation
+      update_observation_title_from_identi($observation);
       break;
 
     case 'identification_community':
       taxa_assess_community_identification($node);
-      
-      save_locality_to_taxon($node->nid);
 
+      $observation_nid = entity_metadata_wrapper('node', $node)
+       ->field_observation->raw();
+      save_locality_to_taxon($node->nid);
       break;
+  }
+}
+
+
+
+function new_identification_add_history_events($user, $taxon) {
+  $first_id_of_taxon = get_first_identifications_of_taxon($taxon->tid, 1);
+  // dpm($first_id_of_taxon, '$first_id_of_taxon');
+
+  $taxon_wrapped = entity_metadata_wrapper('taxonomy_term', $taxon);
+  // dpm($taxon_wrapped->raw(), '$taxon_wrapped->raw()');
+  $taxon_historian = new casa_core\historian($taxon_wrapped);
+  if (! $taxon_historian->findEvent('First identification')) {
+    // Save as first identification
+    $taxon_historian->addEvent(time(), 'First identification', $user->uid, TRUE);
+  }
+  elseif (! $taxon_historian->findEvent('Second identification')) {
+    // Save as second identification
+    $taxon_historian->addEvent(time(), 'Second identification', $user->uid, TRUE);
   }
 }
 
@@ -800,15 +870,33 @@ function casa_node_mgt_node_insert($node) {
 function casa_node_mgt_node_update($node) {
   // dpm($node, 'node in update');
 
+  if (variable_get('skip_save_callbacks')) {
+    return NULL;
+  }
+
   switch ($node->type) {
     case 'identification_community':
+
+      // $start = microtime(TRUE);
       taxa_assess_community_identification($node);
+      // calc_duration($start, 'taxa_assess_community_identification()');
+      
       break;
 
     case 'observation':
       // dpm($node, 'update observation $node');
-      save_observation_locality_to_taxon($node->nid);
-      record_observation_localities_to_taxa($node->nid);
+
+      // $start = microtime(TRUE);
+      save_observation_locality_to_taxon($node);
+      // calc_duration($start, 'save_observation_locality_to_taxon()');
+
+      // $start = microtime(TRUE);
+      // update_elevation($node);
+      // calc_duration($start, 'update_elevation()');
+
+      // record_observation_localities_to_taxa($node->nid);
+
+      update_observation_title_from_identi($node);
       break;
 
     default:
@@ -851,6 +939,16 @@ function casa_node_mgt_node_delete($node) {
 
     case 'picture':
       // 
+      break;
+
+    case 'collection':
+      // Delete all observations and pictures referencing it.
+      $nodes = get_nodes_referencing_collection($node->nid);
+      // dpm($nodes, '$nodes');
+      foreach (array_keys($nodes) as $nid) {
+        node_delete($nid);
+      }
+
       break;
 
     case 'interaction':
@@ -991,6 +1089,7 @@ function observations_add_interaction_callback($nid) {
  * Used by show_field_indicators() function of edit_selected.js
  */
 function provide_node_info_to_js() {
+  // return NULL;
 
   $fields_output = array();
 
@@ -1035,28 +1134,17 @@ function provide_node_info_to_js() {
     }
 
   }
-
   // dpm($fields_output, '$fields_output');
 
-
+  // dpm(current_path(), 'current_path()');
   // If this is a page within the Contribute MO section
-  if (drupal_match_path(current_path(), '*contribute/multiple*')) {
+  if ((drupal_match_path(current_path(), '*contribute/multiple*'))
+    || (drupal_match_path(current_path(), '*contribute/upload'))) {
     // Pass this array to the JS
     drupal_add_js(array('node_info' => array(
       'fields_info' => $fields_output,
     ),), 'setting');
   }
-}
-
-
-
-function get_tids_of_vocab($vocabulary) {
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'taxonomy_term')
-    ->propertyCondition('vid', (int) $vocabulary, '=')
-    ->execute();
-  return $result['taxonomy_term'];
 }
 
 
@@ -1107,11 +1195,11 @@ function record_observation_localities_to_taxa($nid) {
   $localities = $observation->field_locality->value();
   // dpm($localities, 'observation $localities');
 
-  // Fetch it's community identifications
-  $comm_id_representations = get_identifications_refing_observation('identification_community', $nid);
+  // Fetch its community identifications
+  $comm_ids = get_identifications_refing_observation('identification_community', $nid);
   // dpm($comm_id_representations, '$comm_id_representations');
   
-  foreach ($comm_id_representations as $cir_nid => $comm_id_representation) {
+  foreach ($comm_ids as $cir_nid => $comm_id_representation) {
 
     // Load its taxon
     $comm_id_representation = entity_metadata_wrapper('node', $cir_nid);
@@ -1239,4 +1327,62 @@ function filter_observation_reused_pictures($observation_raw) {
   }
   // dpm($pictures_to_keep, '$pictures_to_keep');
   $pictures = $observation->field_pictures_observation->set($pictures_to_keep);
+}
+
+
+
+function update_elevation($node_raw) {
+  // dpm($node_raw, '$node_raw');
+
+  if ($node_raw->type != 'observation') {
+    return NULL;
+  }
+  
+  $node = entity_metadata_wrapper('node', $node_raw->nid);
+
+  $elevation = $node->field_elevation->value();
+  // dpm($elevation, '$elevation');
+  if ($elevation) {
+    if ($elevation[LANGUAGE_NONE]) {
+      return NULL;
+    }
+  }
+
+  $location = $node->field_location->value();
+  // dpm($location, '$location');
+  if (! $location) {
+    return NULL;
+  }
+  // If there is a GeoJSON value, but it's empty
+  if (array_key_exists('geom', $location)) {
+    if (! $location['geom']) {
+      return NULL;
+    }
+  }
+
+  $key = 'AIzaSyB5hqJPbaMdmCqeUfgdJz6VoKrrvUV5hmo';
+
+  $url = 'https://maps.googleapis.com/maps/api/elevation/json?locations='
+    . $location['lat'] . ',' . $location['lon'] . '&key=' . $key;
+  // dpm($url, '$url');
+
+  $response = drupal_http_request($url);
+  // dpm($response, '$response');
+  $response_data = json_decode($response->data);
+  // dpm($response_data, '$response_data');
+
+  if ($response->code !== '200') {
+    $message = t('In update_elevation(), API request error: ' . $response_data->error_message);
+    drupal_set_message($message, 'error', FALSE);
+    watchdog('casa_core', $message, array(), WATCHDOG_ERROR);
+    return NULL;
+  }
+
+  $loc_data = json_decode($response->data);
+  // dpm($loc_data, '$loc_data');
+  $new_elevation = $loc_data->results[0]->elevation;
+  // dpm($new_elevation, '$new_elevation');
+
+  $node->field_elevation->set($new_elevation);
+  $node->save();
 }

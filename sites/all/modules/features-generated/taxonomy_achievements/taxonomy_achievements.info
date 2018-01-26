@@ -1,0 +1,15 @@
+name = Taxonomy: Achievements
+core = 7.x
+package = Features: Structure
+version = 7.x-1.0
+dependencies[] = content_type_picture
+dependencies[] = features
+dependencies[] = image
+dependencies[] = number
+dependencies[] = taxonomy
+features[features_api][] = api:2
+features[field_base][] = field_score_required
+features[field_instance][] = taxonomy_term-achievements-field_image
+features[field_instance][] = taxonomy_term-achievements-field_score_required
+features[taxonomy][] = achievements
+project path = sites/all/modules/features-generated

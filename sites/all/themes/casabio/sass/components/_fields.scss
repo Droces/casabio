@@ -179,7 +179,8 @@ body.page-node {
 .field-label-inline {
   display: table-row;
 
-  div {
+  div,
+  p {
     display: inline;
   }
 
@@ -197,7 +198,7 @@ body.page-node {
   }
 }
 #autocomplete {
-  z-index: 10;
+  z-index: $z-page-content + 1;
   background: white;
 }
 

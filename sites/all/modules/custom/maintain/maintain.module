@@ -265,8 +265,8 @@ function maintain_page() {
   $content = array();
   global $user;
 
-  // If administrator, add Maintainer options.
-  if (in_array('Administrator', $user->roles) || in_array('Maintainer', $user->roles)) {
+  // If at least a maintainer, add Maintainer options.
+  if (user_access('can maintain content')) {
     $content['#markup'] = 
       '<h2>Maintainer Tools</h2>'
 
@@ -274,6 +274,7 @@ function maintain_page() {
       . '<p>' . l('Add multiple Taxa', 'taxa/lookup-multiple') .'</p>'
       . '<p>' . l('Maintain most popular Taxa', 'maintain/taxa/most-popular') .'</p>'
       . '<p>' . l('Import etymologies', 'taxa/import/etymologies') .'</p>'
+      . '<p>' . l('Add a locality', 'contribute/Locality') .'</p>'
 
       . '<h2>Maintainer Views</h2>'
       // Admin views
@@ -283,7 +284,11 @@ function maintain_page() {
       . '<p>' . l('Identifications', 'admin/identifications') .'</p>'
       . '<p>' . l('Pictures', 'admin/pictures') .'</p>'
       . '<p>' . l('Habitats', 'admin/habitats') .'</p>'
+      . '<p>' . l('Localities', 'admin/localities') .'</p>'
+      . '<p>' . l('Supporters', 'admin/supporters') .'</p>'
+      . '<p>' . l('Achievements', 'admin/achievements') .'</p>'
       . '<p>' . l('Users', 'maintain/users') .'</p>'
+
     ;
   }
 
@@ -328,7 +333,7 @@ function populate_taxa_pictures() {
   // dpm($taxa, '$taxa');
 
   $taxa = views_get_view_result('taxa_no_pictures_have_identifications', 'default');
-  dpm(count($taxa), 'Number of taxa updated: ');
+  // dpm(count($taxa), 'Number of taxa updated: ');
   // $taxa = [];
 
   // foreach (array_keys($taxa) as $tid) {

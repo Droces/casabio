@@ -1,0 +1,5 @@
+name =        User locality
+core =        7.x
+package =     Casabio
+
+description = Provides a field for users to choose a locality to filter all site content to.

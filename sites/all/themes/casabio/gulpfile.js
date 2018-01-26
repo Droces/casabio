@@ -18,7 +18,8 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('/sourcemaps'))
-    .pipe(gulp.dest('./css'));
+    .pipe(gulp.dest('./css'))
+  ;
 });
 
 

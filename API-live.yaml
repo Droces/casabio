@@ -624,6 +624,22 @@ paths:
         200:
           description: "Successful"
 
+  /api/observations/{ids}:
+    patch:
+      tags:
+        - Observations
+      summary: "View an observation"
+      description: ""
+      parameters:
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/Access token'
+        - $ref: '#/parameters/Observation'
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Observation"
+
   # ==========================================================================#
   #                                                   Collections             #
   # --------------------------------------------------------------------------#

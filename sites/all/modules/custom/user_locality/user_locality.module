@@ -1,0 +1,258 @@
+<?php
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function user_locality_menu() {
+  $items['user/%user/locality'] = array(
+    // 'title' => 'Home', // This page shouldn't display a title.
+    'page callback'     => 'drupal_get_form',
+    'page arguments'    => array('user_profile_form', 1, 'locality'),
+    'access callback'   => 'user_edit_access',
+    'access arguments'  => array(1),
+    'type'              => MENU_NORMAL_ITEM,
+    'file'              => 'user.pages.inc',
+    'file path'         => drupal_get_path('module', 'user'),
+  );
+
+  return $items;
+}
+
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function user_locality_form_alter(&$form, &$form_state, $form_id) {
+  // dpm($form_id, '$form_id');
+  if ($form_id !== 'user_profile_form')
+    return NULL;
+  // dpm($form, '$form');
+  // dpm($form_state, '$form_state');
+
+  $is_locality_form = FALSE;
+  foreach ($form_state['build_info']['args'] as $key => $value) {
+    if ($value === 'locality') {
+      $is_locality_form = TRUE;
+    }
+  }
+  if (! $is_locality_form)
+    return NULL;
+
+  $sections = [
+    'account',
+    'picture',
+    'overlay_control',
+    'contact',
+    'timezone',
+  ];
+
+  foreach ($form as $key => $value) {
+    if ((substr($key, 0, 6) === 'field_' && $key !== 'field_locality')
+      || in_array($key, $sections)) {
+      $form[$key]['#access'] = FALSE;
+    }
+  }
+}
+
+
+
+/**
+ * Implements hook_block_info().
+ */
+function user_locality_block_info() {
+  $blocks = array();
+
+  $blocks['user_locality_switcher'] = array(
+    'info' => t('User locality switcher'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+
+
+/**
+ * Implements hook_block_view().
+ */
+function user_locality_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'user_locality_switcher':
+      $block['subject'] = t('User locality switcher');
+      $block['content'] = user_locality_switcher_block_view();
+      break;
+  }
+
+  return $block;
+}
+
+
+
+function user_locality_switcher_block_view() {
+  $content = '';
+  global $user;
+  $user_wrapped = entity_metadata_wrapper('user', $user);
+  // dpm($user_wrapped->raw(), '$user_wrapped->raw()');
+  $locality = $user_wrapped->field_locality->value();
+  // dpm($locality, '$locality');
+  if ($locality) {
+    $content .= $locality->name;
+    $content .= ' (<a href="' . base_path() . 'user/' . $user->uid . '/locality">Switch</a>)';
+  }
+  else {
+    $content .= '<a>Set my locality</a>';
+  }
+  return $content;
+}
+
+
+  
+// /**
+//  * Implements hook_views_api().
+//  */
+// function shoesbits_views_api() {
+//   return array(
+//     'api' => 3,
+//   );
+// }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function user_locality_views_data_alter(&$data) {
+  // For nodes (eg. Observations)
+  $data['node']['user_locality']['title'] = 'Only within user locality';
+  $data['node']['user_locality']['help'] = "Show only results that reference the user's locality or a descendent of it.";
+  $data['node']['user_locality']['filter']['handler'] = 'user_locality_handler_user_locality_node_filter';
+
+  // For terms (eg. Taxa)
+  $data['taxonomy_term_data']['user_locality']['title'] = 'Only within user locality';
+  $data['taxonomy_term_data']['user_locality']['help'] = "Show only results that reference the user's locality or a descendent of it.";
+  $data['taxonomy_term_data']['user_locality']['filter']['handler'] = 'user_locality_handler_user_locality_term_filter';
+}
+
+class user_locality_handler_user_locality_filter extends views_handler_filter {
+  protected $table_name;
+  protected $localities; 
+
+  protected $table;
+  protected $field;
+  protected $left_table;
+  protected $left_field;
+
+  /**
+   * 
+   */
+  function operators() {
+    $operators = array(
+      '>' => array(
+        'title' => t('Filtered to user locality'),
+        'shoruser_wrappedt' => t('>'),
+        'method' => 'op_locality_filter',
+        'values' => 1,
+      ),
+    );
+
+    return $operators;
+  }
+
+  function query() {
+    $this->ensure_my_table();
+
+    $field = "$this->table_name.$this->real_field";
+
+    $this->op_locality_filter($field);
+  }
+
+  /**
+   * @return []
+   */
+  function get_user_localities() {
+    // Get the user's locality
+    global $user;
+    $user_wrapped = entity_metadata_wrapper('user', $user);
+    $locality = $user_wrapped->field_locality->raw();
+    if (! $locality)
+      return [];
+    // Include all descendents of locality
+    $localities = array_keys(taxonomy_get_children_all($locality));
+    $localities[] = $locality;
+    return $localities;
+  }
+
+  /**
+   * 
+   */
+  function op_locality_filter($field) {
+    $this->localities = $this->get_user_localities();
+    if (! $this->localities)
+      return NULL;
+
+    // Add a join for the locality table
+    $join = new views_join();
+    $def = array(
+      'table'       => $this->table,
+      'field'       => $this->field,
+      'left_table'  => $this->left_table,
+      'left_field'  => $this->left_field,
+      'type'        => 'inner',
+    );
+    $join->definition = $def;
+    $join->construct();
+    $join->adjusted = TRUE;
+    $this->query->add_table('field_locality', $this->relationship, $join, $this->table_name);
+
+    $this->query->add_where($this->options['group'], $field, $this->localities, 'IN');
+  }
+}
+
+
+
+class user_locality_handler_user_locality_node_filter extends user_locality_handler_user_locality_filter {
+
+  function query() {
+    $this->real_field = 'field_locality_tid';
+    $this->table_name = 'locality';
+    parent::query();
+  }
+
+  /**
+   * 
+   */
+  function op_locality_filter($field) {
+    $this->table       = 'field_data_field_locality';
+    $this->field       = 'entity_id';
+    $this->left_table  = 'node';
+    $this->left_field  = 'nid';
+
+    parent::op_locality_filter($field);
+  }
+}
+
+
+
+class user_locality_handler_user_locality_term_filter extends user_locality_handler_user_locality_filter {
+
+  function query() {
+    $this->real_field = 'field_localities_tid';
+    $this->table_name = 'localities';
+    parent::query();
+  }
+
+  /**
+   * 
+   */
+  function op_locality_filter($field) {
+    $this->table       = 'field_data_field_localities';
+    $this->field       = 'entity_id';
+    $this->left_table  = 'taxonomy_term_data';
+    $this->left_field  = 'tid';
+
+    parent::op_locality_filter($field);
+  }
+}

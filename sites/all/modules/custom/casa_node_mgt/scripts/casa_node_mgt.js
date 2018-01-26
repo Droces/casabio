@@ -143,6 +143,8 @@ Drupal.casa_node_mgt = {
    * to {year: "2016"}
    */
   simplify_node_fields: function(node, settings) {
+    // console.log('node: ', node);
+    // console.log('settings: ', settings);
     var node_output = {};
 
     $.each(node, function (field_name, value) {
@@ -160,6 +162,7 @@ Drupal.casa_node_mgt = {
       }
       else if (Drupal.contribute.is_page('picture_info')
         || Drupal.contribute.is_page('upload')) {
+        // console.log('Is Upload or Picture Info page');
         field_name = settings.API.pictures_field_names_map[field_name];
       }
       // console.log('field_name: ', field_name);
@@ -168,10 +171,17 @@ Drupal.casa_node_mgt = {
       if (typeof node_output[field_name] !== 'undefined') {
         // If it's already an array
         if (typeof node_output[field_name] === 'object') {
-          node_output[field_name].push(value);
+          if (value) {
+            node_output[field_name].push(value);
+          }
         }
         else {
-          node_output[field_name] = [node_output[field_name], value];
+          if (value) {
+            node_output[field_name] = [node_output[field_name], value];
+          }
+          else {
+            node_output[field_name] = [];
+          }
         }
         // console.log('node_output[field_name]: ', node_output[field_name]);
       }

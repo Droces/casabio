@@ -596,8 +596,8 @@ function get_contribute_mo_finish_content($collection_nid) {
 
   drupal_set_title('Collection ' . drupal_get_title());
 
-  $nu_pictures = get_referencings_count('field_collection', $collection_nid, 'picture');
-  $nu_observations = get_referencings_count('field_collection', $collection_nid, 'observation');
+  $nu_pictures = count_referencings('field_collection', $collection_nid, 'picture');
+  $nu_observations = count_referencings('field_collection', $collection_nid, 'observation');
 
   $content =
     '<p>You uploaded <strong>' . $nu_pictures . '</strong> pictures.<br>'
@@ -644,6 +644,7 @@ function contribute_taxon_page_callback() {
   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
   $edit = array();
   $taxonomy_form = drupal_get_form('taxonomy_form_term', $edit, $vocabulary, ['form_view_mode' => 'contribute']);
+  // dpm($taxonomy_form, '$taxonomy_form');
 
   return drupal_render($taxonomy_form);
 }

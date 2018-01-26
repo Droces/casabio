@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Theme-relevant styling for the JSONB module.
+ */
+
+.jsonb-text-value {
+  background-color: #eee;
+  color: black;
+  padding: 1em;
+}

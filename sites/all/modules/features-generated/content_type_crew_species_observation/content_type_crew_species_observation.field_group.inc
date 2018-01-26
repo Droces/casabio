@@ -43,7 +43,7 @@ function content_type_crew_species_observation_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_habitat|node|crew_species_observation|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -74,7 +74,7 @@ function content_type_crew_species_observation_field_group_info() {
       'formatter' => 'collapsible',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_info|node|crew_species_observation|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -108,7 +108,7 @@ function content_type_crew_species_observation_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_population|node|crew_species_observation|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -140,7 +140,7 @@ function content_type_crew_species_observation_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_species|node|crew_species_observation|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -171,7 +171,7 @@ function content_type_crew_species_observation_field_group_info() {
       'formatter' => 'collapsed',
     ),
   );
-  $field_groups[''] = $field_group;
+  $field_groups['group_threats|node|crew_species_observation|form'] = $field_group;
 
   // Translatables
   // Included for use with string extractors like potx.
